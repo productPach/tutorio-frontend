@@ -20,6 +20,7 @@ export const SelectBar = () => {
 
   const linkApplicationSubject = useCallback(
     (link: string) => {
+      document.body.style.overflow = "auto";
       router.push(link);
     },
     [router]
