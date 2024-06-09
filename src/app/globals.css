@@ -1,15 +1,15 @@
 @font-face {
-  font-family: 'Source Sans 3';
-  src: url('/fonts/SourceSans3-Regular.woff2') format('woff2'),
-       url('/fonts/SourceSans3-Regular.woff') format('woff');
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3-Regular.woff2") format("woff2"),
+    url("/fonts/SourceSans3-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Source Sans 3';
-  src: url('/fonts/SourceSans3-Bold.woff2') format('woff2'),
-       url('/fonts/SourceSans3-Bold.woff') format('woff');
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3-Bold.woff2") format("woff2"),
+    url("/fonts/SourceSans3-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
 }
@@ -18,7 +18,7 @@ body {
   padding: 0px;
   margin: 0;
   font-family: "Source Sans 3", sans-serif;
-  background-color: #F1F2F4;
+  background-color: #f1f2f4;
   color: #333333;
   font-size: 16px;
 }
@@ -30,4 +30,15 @@ span {
 a {
   color: #333333;
   text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style-type: none;
 }
