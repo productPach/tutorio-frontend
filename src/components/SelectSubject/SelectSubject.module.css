@@ -53,7 +53,13 @@
   margin-top: 2px;
   max-height: 240px;
   overflow-y: scroll;
+  -ms-overflow-style: none; /* Для Internet Explorer и Edge */
 }
+
+.resultContainerTutorSearch::-webkit-scrollbar {
+  display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
+}
+
 .resultTutorSearch {
   padding: 12px 20px;
   cursor: pointer;

@@ -21,6 +21,12 @@ body {
   background-color: #f1f2f4;
   color: #333333;
   font-size: 16px;
+  overflow: auto;
+  -ms-overflow-style: none; /* Для Internet Explorer и Edge */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
 }
 
 span {
@@ -41,4 +47,9 @@ ul {
 
 li {
   list-style-type: none;
+}
+
+main {
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
 }
