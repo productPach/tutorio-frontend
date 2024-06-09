@@ -109,11 +109,6 @@
   border-radius: 10px;
 }
 
-.center {
-  padding-left: calc(50% - 600px);
-  padding-right: calc(50% - 600px);
-}
-
 .header {
   width: auto;
   height: 70px;
@@ -124,6 +119,8 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
 }
 .header__logo {
   display: flex;
@@ -413,6 +410,8 @@
   justify-content: space-between;
   padding-top: 60px;
   padding-bottom: 60px;
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
 }
 .footer__left {
   width: 690px;
