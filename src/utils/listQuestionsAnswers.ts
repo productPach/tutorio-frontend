@@ -139,7 +139,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 2,
@@ -175,7 +175,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 2,
@@ -206,6 +206,42 @@ export const listQuestionsAnswers = [
                 },
                 {
                     id: 6,
+                    type: "language-subjects",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Подготовка к международному экзамену",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 2,
+                            title: "Подготовка к экзамену в посольстве",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 3,
+                            title: "Подготовка к экзамену в вузе",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 4,
+                            title: "Для себя",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 5,
+                            title: "Для работы",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 6,
+                            title: "Другое",
+                            nextPage: "/match/test",
+                        },
+                    ]
+                },
+                {
+                    id: 7,
                     type: "english",
                     answers: [
                         {
@@ -271,7 +307,7 @@ export const listQuestionsAnswers = [
                     ]
                 },
                 {
-                    id: 7,
+                    id: 8,
                     type: "chinese",
                     answers: [
                         {
@@ -327,108 +363,107 @@ export const listQuestionsAnswers = [
                     ]
                 },
                 {
-                    id: 8,
-                    type: "schoo",
-                    answers: [
-                        {
-                            id: 1,
-                            title: "Повышение успеваемости",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 2,
-                            title: "Подготовка к экзамену в вузе",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 3,
-                            title: "Подготовка к олимпиаде",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 4,
-                            title: "Для себя",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 5,
-                            title: "Для работы",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 6,
-                            title: "Другое",
-                            nextPage: "/match/test",
-                        },
-                    ]
-                },
-                {
                     id: 9,
-                    type: "schoo",
+                    type: "german",
                     answers: [
                         {
                             id: 1,
-                            title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            title: "Подготовка к ОГЭ",
+                            nextPage: "/match/class/8-9",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
-                            nextPage: "/match/test",
+                            title: "Подготовка к ЕГЭ",
+                            nextPage: "/match/class/10-11",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
-                            nextPage: "/match/test",
+                            title: "Повышение успеваемости",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 4,
-                            title: "Для себя",
-                            nextPage: "/match/test",
+                            title: "Подготовка к экзамену в вузе",
+                            nextPage: "",
                         },
                         {
                             id: 5,
-                            title: "Для работы",
-                            nextPage: "/match/test",
+                            title: "Подготовка к олимпиаде",
+                            nextPage: "",
                         },
                         {
                             id: 6,
+                            title: "ВПР",
+                            nextPage: "",
+                        },
+                        {
+                            id: 7,
+                            title: "Подготовка к экзамену в посольстве",
+                            nextPage: "",
+                        },
+                        {
+                            id: 8,
+                            title: "Подготовка к международному экзамену",
+                            nextPage: "",
+                        },
+                        {
+                            id: 9,
+                            title: "Для себя",
+                            nextPage: "",
+                        },
+                        {
+                            id: 10,
+                            title: "Для работы",
+                            nextPage: "test",
+                        },
+                        {
+                            id: 11,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "",
                         },
                     ]
                 },
                 {
                     id: 10,
-                    type: "schoo",
+                    type: "primary-school-subjects",
                     answers: [
                         {
                             id: 1,
                             title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
+                            title: "Помощь по программе",
                             nextPage: "/match/test",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
+                            title: "ВПР по математике",
                             nextPage: "/match/test",
                         },
                         {
                             id: 4,
-                            title: "Для себя",
+                            title: "ВПР по русскому",
                             nextPage: "/match/test",
                         },
                         {
                             id: 5,
-                            title: "Для работы",
+                            title: "ВПР по окружающему миру",
                             nextPage: "/match/test",
                         },
                         {
                             id: 6,
+                            title: "Подготовка к итоговому тестированию",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 7,
+                            title: "Подготовка к школе",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 8,
                             title: "Другое",
                             nextPage: "/match/test",
                         },
@@ -436,31 +471,31 @@ export const listQuestionsAnswers = [
                 },
                 {
                     id: 11,
-                    type: "schoo",
+                    type: "peterson",
                     answers: [
                         {
                             id: 1,
                             title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
+                            title: "Помощь по программе",
                             nextPage: "/match/test",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
+                            title: "ВПР по математике",
                             nextPage: "/match/test",
                         },
                         {
                             id: 4,
-                            title: "Для себя",
+                            title: "Подготовка к итоговому тестированию",
                             nextPage: "/match/test",
                         },
                         {
                             id: 5,
-                            title: "Для работы",
+                            title: "Подготовка к школе",
                             nextPage: "/match/test",
                         },
                         {
@@ -472,35 +507,20 @@ export const listQuestionsAnswers = [
                 },
                 {
                     id: 12,
-                    type: "schoo",
+                    type: "preparing-for-school",
                     answers: [
                         {
                             id: 1,
-                            title: "Повышение успеваемости",
+                            title: "Обучение чтению, письму или счёту",
                             nextPage: "/match/test",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
+                            title: "Подготовка по методике",
                             nextPage: "/match/test",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 4,
-                            title: "Для себя",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 5,
-                            title: "Для работы",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 6,
                             title: "Другое",
                             nextPage: "/match/test",
                         },
@@ -508,12 +528,12 @@ export const listQuestionsAnswers = [
                 },
                 {
                     id: 13,
-                    type: "schoo",
+                    type: "programming",
                     answers: [
                         {
                             id: 1,
                             title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 2,
@@ -522,21 +542,26 @@ export const listQuestionsAnswers = [
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
+                            title: "Подготовка к контрольной",
                             nextPage: "/match/test",
                         },
                         {
                             id: 4,
-                            title: "Для себя",
+                            title: "Для ребенка",
                             nextPage: "/match/test",
                         },
                         {
                             id: 5,
-                            title: "Для работы",
+                            title: "Для себя",
                             nextPage: "/match/test",
                         },
                         {
                             id: 6,
+                            title: "Для работы",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 7,
                             title: "Другое",
                             nextPage: "/match/test",
                         },
@@ -544,35 +569,25 @@ export const listQuestionsAnswers = [
                 },
                 {
                     id: 14,
-                    type: "schoo",
+                    type: "rki",
                     answers: [
                         {
                             id: 1,
-                            title: "Повышение успеваемости",
+                            title: "Подготовка к международному экзамену",
                             nextPage: "/match/test",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 3,
-                            title: "Подготовка к олимпиаде",
-                            nextPage: "/match/test",
-                        },
-                        {
-                            id: 4,
                             title: "Для себя",
                             nextPage: "/match/test",
                         },
                         {
-                            id: 5,
+                            id: 3,
                             title: "Для работы",
                             nextPage: "/match/test",
                         },
                         {
-                            id: 6,
+                            id: 4,
                             title: "Другое",
                             nextPage: "/match/test",
                         },
@@ -580,57 +595,153 @@ export const listQuestionsAnswers = [
                 },
                 {
                     id: 15,
-                    type: "schoo",
+                    type: "french",
                     answers: [
                         {
                             id: 1,
-                            title: "Повышение успеваемости",
-                            nextPage: "/match/test",
+                            title: "Подготовка к ОГЭ",
+                            nextPage: "/match/class/8-9",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
-                            nextPage: "/match/test",
+                            title: "Подготовка к ЕГЭ",
+                            nextPage: "/match/class/10-11",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
-                            nextPage: "/match/test",
+                            title: "Повышение успеваемости",
+                            nextPage: "/match/student-type/3890",
                         },
                         {
                             id: 4,
-                            title: "Для себя",
-                            nextPage: "/match/test",
+                            title: "Подготовка к экзамену в вузе",
+                            nextPage: "",
                         },
                         {
                             id: 5,
-                            title: "Для работы",
-                            nextPage: "/match/test",
+                            title: "Подготовка к олимпиаде",
+                            nextPage: "",
                         },
                         {
                             id: 6,
+                            title: "ВПР",
+                            nextPage: "",
+                        },
+                        {
+                            id: 7,
+                            title: "Подготовка к экзамену в посольстве",
+                            nextPage: "",
+                        },
+                        {
+                            id: 8,
+                            title: "Подготовка к международному экзамену",
+                            nextPage: "",
+                        },
+                        {
+                            id: 9,
+                            title: "Подготовка к International Baccalaureate",
+                            nextPage: "",
+                        },
+                        {
+                            id: 10,
+                            title: "Для себя",
+                            nextPage: "",
+                        },
+                        {
+                            id: 11,
+                            title: "Для работы",
+                            nextPage: "test",
+                        },
+                        {
+                            id: 12,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "",
                         },
                     ]
                 },
                 {
                     id: 16,
-                    type: "schoo",
+                    type: "spanish",
                     answers: [
                         {
                             id: 1,
+                            title: "Подготовка к ОГЭ",
+                            nextPage: "/match/class/8-9",
+                        },
+                        {
+                            id: 2,
+                            title: "Подготовка к ЕГЭ",
+                            nextPage: "/match/class/10-11",
+                        },
+                        {
+                            id: 3,
                             title: "Повышение успеваемости",
+                            nextPage: "/match/student-type/3890",
+                        },
+                        {
+                            id: 4,
+                            title: "Подготовка к экзамену в вузе",
+                            nextPage: "",
+                        },
+                        {
+                            id: 5,
+                            title: "Подготовка к олимпиаде",
+                            nextPage: "",
+                        },
+                        {
+                            id: 6,
+                            title: "ВПР",
+                            nextPage: "",
+                        },
+                        {
+                            id: 7,
+                            title: "Подготовка к экзамену в посольстве",
+                            nextPage: "",
+                        },
+                        {
+                            id: 8,
+                            title: "Подготовка к международному экзамену",
+                            nextPage: "",
+                        },
+                        {
+                            id: 9,
+                            title: "Подготовка к International Baccalaureate",
+                            nextPage: "",
+                        },
+                        {
+                            id: 10,
+                            title: "Для себя",
+                            nextPage: "",
+                        },
+                        {
+                            id: 11,
+                            title: "Для работы",
+                            nextPage: "test",
+                        },
+                        {
+                            id: 12,
+                            title: "Другое",
+                            nextPage: "",
+                        },
+                    ]
+                },
+                {
+                    id: 17,
+                    type: "italian",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Подготовка к международному экзамену",
                             nextPage: "/match/test",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
+                            title: "Подготовка к экзамену в посольстве",
                             nextPage: "/match/test",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
+                            title: "Подготовка к экзамену в вузе",
                             nextPage: "/match/test",
                         },
                         {
@@ -651,22 +762,58 @@ export const listQuestionsAnswers = [
                     ]
                 },
                 {
-                    id: 17,
-                    type: "schoo",
+                    id: 18,
+                    type: "korean",
                     answers: [
                         {
                             id: 1,
-                            title: "Повышение успеваемости",
+                            title: "Подготовка к международному экзамену",
                             nextPage: "/match/test",
                         },
                         {
                             id: 2,
-                            title: "Подготовка к экзамену в вузе",
+                            title: "Подготовка к экзамену в посольстве",
                             nextPage: "/match/test",
                         },
                         {
                             id: 3,
-                            title: "Подготовка к олимпиаде",
+                            title: "Подготовка к экзамену в вузе",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 4,
+                            title: "Для себя",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 5,
+                            title: "Для работы",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 6,
+                            title: "Другое",
+                            nextPage: "/match/test",
+                        },
+                    ]
+                },
+                {
+                    id: 19,
+                    type: "japanese",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Подготовка к международному экзамену",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 2,
+                            title: "Подготовка к экзамену в посольстве",
+                            nextPage: "/match/test",
+                        },
+                        {
+                            id: 3,
+                            title: "Подготовка к экзамену в вузе",
                             nextPage: "/match/test",
                         },
                         {
@@ -700,12 +847,12 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "8 класс",
-                            nextPage: "",
+                            nextPage: "/match/deadline/exam",
                         },
                         {
                             id: 2,
                             title: "9 класс",
-                            nextPage: "",
+                            nextPage: "/match/deadline/exam",
                         },
                     ]
                 },
@@ -716,17 +863,17 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "10 класс",
-                            nextPage: "test",
+                            nextPage: "/match/deadline/exam",
                         },
                         {
                             id: 2,
                             title: "11 класс",
-                            nextPage: "test",
+                            nextPage: "/match/deadline/exam",
                         },
                         {
                             id: 3,
                             title: "Уже закончил школу",
-                            nextPage: "test",
+                            nextPage: "/match/deadline/exam",
                         },
                     ]
                 },
@@ -799,57 +946,57 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "1 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 2,
                             title: "2 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 3,
                             title: "3 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 4,
                             title: "4 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 5,
                             title: "5 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 6,
                             title: "6 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 7,
                             title: "7 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 8,
                             title: "8 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 9,
                             title: "9 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 10,
                             title: "10 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         {
                             id: 11,
                             title: "11 класс",
-                            nextPage: "test",
+                            nextPage: "match/student-level/level",
                         },
                         
                     ]
@@ -899,12 +1046,12 @@ export const listQuestionsAnswers = [
                         {
                             id: 2,
                             title: "Школьник",
-                            nextPage: "",
+                            nextPage: "/match/class/1-11-1",
                         },
                         {
                             id: 3,
                             title: "Студент",
-                            nextPage: "",
+                            nextPage: "/match/student-course/7860-1",
                         },
                         {
                             id: 4,
@@ -914,7 +1061,7 @@ export const listQuestionsAnswers = [
                     ]
                 },
                 {
-                    id: 1,
+                    id: 2,
                     type: "9045",
                     answers: [
                         {
@@ -935,7 +1082,7 @@ export const listQuestionsAnswers = [
                     ]
                 },
                 {
-                    id: 1,
+                    id: 3,
                     type: "2330",
                     answers: [
                         {
@@ -956,6 +1103,161 @@ export const listQuestionsAnswers = [
                         {
                             id: 4,
                             title: "Взрослый",
+                            nextPage: "",
+                        },
+                    ]
+                },
+            ]
+    },
+    {
+        id: 4,
+        typeForm: "student-course",
+        question: "На каком курсе учитесь?",
+        page: [
+                {
+                    id: 1,
+                    type: "7860-1",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "1 курс",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 2,
+                            title: "2 курс",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 3,
+                            title: "3 курс",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 4,
+                            title: "4 курс",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 5,
+                            title: "5 курс",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 6,
+                            title: "6 курс",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 7,
+                            title: "Аспирантура",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 8,
+                            title: "Ординатура",
+                            nextPage: "/match/student-level/level",
+                        },
+                    ]
+                },
+                {
+                    id: 2,
+                    type: "7860-2",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "1 курс",
+                            nextPage: "",
+                        },
+                        {
+                            id: 2,
+                            title: "2 курс",
+                            nextPage: "",
+                        },
+                        {
+                            id: 3,
+                            title: "3 курс",
+                            nextPage: "",
+                        },
+                        {
+                            id: 4,
+                            title: "4 курс",
+                            nextPage: "",
+                        },
+                        {
+                            id: 5,
+                            title: "5 курс",
+                            nextPage: "",
+                        },
+                        {
+                            id: 6,
+                            title: "6 курс",
+                            nextPage: "",
+                        },
+                        {
+                            id: 7,
+                            title: "Аспирантура",
+                            nextPage: "",
+                        },
+                        {
+                            id: 8,
+                            title: "Ординатура",
+                            nextPage: "",
+                        },
+                    ]
+                },
+            ]
+    },
+    {
+        id: 5,
+        typeForm: "deadline",
+        question: "Сколько времени до экзамена?",
+        page: [
+                {
+                    id: 1,
+                    type: "exam",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Менее месяца",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 2,
+                            title: "Несколько месяцев",
+                            nextPage: "/match/student-level/level",
+                        },
+                        {
+                            id: 3,
+                            title: "Год и более",
+                            nextPage: "/match/student-level/level",
+                        },
+                    ]
+                },
+            ]
+    },
+    {
+        id: 6,
+        typeForm: "student-level",
+        question: "Какой уровень ученика?",
+        page: [
+                {
+                    id: 1,
+                    type: "level",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Низкий",
+                            nextPage: "",
+                        },
+                        {
+                            id: 2,
+                            title: "Средний",
+                            nextPage: "",
+                        },
+                        {
+                            id: 3,
+                            title: "Высокий",
                             nextPage: "",
                         },
                     ]
@@ -985,7 +1287,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 3,
                             title: "Повышение успеваемости",
-                            nextPage: "",
+                            nextPage: "match/student-type/3890",
                         },
                     ]
                 },
@@ -996,7 +1298,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "Повышение успеваемости",
-                            nextPage: "",
+                            nextPage: "match/student-type/3890",
                         },
                         {
                             id: 2,

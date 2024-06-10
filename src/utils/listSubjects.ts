@@ -199,7 +199,7 @@ export const data = [
   {
     id: 39,
     title: "Японский язык",
-    nextPage: "/match",
+    nextPage: "/match/goal/japanese",
   },
   {
     id: 40,
