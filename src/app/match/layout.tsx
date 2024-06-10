@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import styles from "./layout.module.css";
 import clsx from 'clsx';
 import Head from 'next/head';
+import Link from 'next/link';
 
 type LayoutComponent = {
   children: ReactNode
@@ -27,14 +28,14 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             />
             Москва
           </div>
-          <a href="#">
+          <Link href="/">
             <div className={styles.header__logo}>
               tutorio
               <span className={styles.header__underLogo}>
                 Cервис подбора репетиторов
               </span>
-            </div>
-          </a>
+          </div>
+          </Link>
         </div>
       </header>
       
