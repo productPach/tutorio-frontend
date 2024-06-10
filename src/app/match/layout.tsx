@@ -2,6 +2,7 @@ import Image from 'next/image';
 import React, { ReactNode } from 'react';
 import styles from "./layout.module.css";
 import clsx from 'clsx';
+import Head from 'next/head';
 
 type LayoutComponent = {
   children: ReactNode
@@ -9,12 +10,16 @@ type LayoutComponent = {
 
 const Layout: React.FC<LayoutComponent> = ({ children }) => {
   return (
-    <div>
+    <>
+      <Head>
+        <title>Tutorio — подбор репетитора</title>
+        <meta name="description" content="Бесплатно подберём репетитора под ваш запрос и бюджет. Проверенные репетиторы." />
+      </Head>
       <header>
         <div className={clsx(styles.header, styles.center)}>
         <div className={styles.header__geo}>
             <Image
-              src="../img/icon/location.svg"
+              src="/img/icon/location.svg"
               width={15}
               height={18}
               alt="Выбор города"
@@ -39,7 +44,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         <p></p>
         {/* Добавьте здесь другие элементы подвала */}
       </footer>
-    </div>
+    </>
   );
 };
 

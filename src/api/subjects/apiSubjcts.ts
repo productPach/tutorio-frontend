@@ -19,24 +19,25 @@ export const getSubjectListForSearch = async (subject: string) => {
 
   //  const data = await response.json();
 
-  const result = await data.filter((item: Subject) => {
-    const stopWords = ["по", "п"];
-    const queryWords = subject
-      .toLowerCase()
-      .split(" ")
-      .filter((word) => word.trim() !== "" && !stopWords.includes(word));
-    return (
-      subject &&
-      queryWords.every((word) => item.title.toLowerCase().includes(word))
-    );
+  const stopWords = ["п", "по", "с", "для"]; // Дополняем список стоп-слов
 
-    // return (
-    //   subject &&
-    //   item &&
-    //   item.title &&
-    //   item.title.toLowerCase().includes(subject.toLowerCase())
-    // );
+const result = data.filter((item: Subject) => {
+  const queryWords = subject
+    .toLowerCase()
+    .split(" ")
+    .filter((word) => word.trim() !== "" && !stopWords.includes(word));
+
+  // Если после фильтрации queryWords пустой, пропускаем этот item
+  if (queryWords.length === 0) {
+    return false;
+  }
+
+  return queryWords.every((word) => {
+    // Создаем регулярное выражение, которое ищет слово в начале строки или слова
+    const regex = new RegExp(`(^|\\s)${word}`, "i");
+    return regex.test(item.title.toLowerCase());
   });
+});
 
-  return result;
+return result;
 };
