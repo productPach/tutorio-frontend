@@ -1,18 +1,27 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import styles from "./page.module.css";
-import animation from "../layout.module.css";
+import styles from "../RadioListForms/RadioListForms.module.css";
+import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 
+interface Answer {
+    id: number;
+    title: string;
+    nextPage: string;
+}
+  
+interface ComponentRenderProps {
+    question: string;
+    answerArray: Answer[];
+}
 
-const Grade89th = () => {
-
+export const InputForms: React.FC<ComponentRenderProps> = ({question, answerArray}) => {
     const route = useRouter();
 
     const handleNextStep = (link: string) => {
         setIsDisabled(true);
         setIsVisible(false);
-        setTimeout(() => route.push(link), 300);
+        setTimeout(() => route.push(link), 400);
     };
 
     const [isVisible, setIsVisible] = useState(false);
@@ -22,17 +31,18 @@ const Grade89th = () => {
         setIsVisible(true);
     }, []); // Анимация будет стартовать после монтирования компонента
 
-
     return (
         <>
             <div className={`${styles.container} ${isVisible ? animation.visible : animation.hidden}`}>
-                <div className={styles.title}>В каком классе ученик?</div>
+                <div className={styles.title}>{question}</div>
+                {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
                 <div className={styles.containerAnswers}>
-                    <div className={styles.answer}>
+
+                    <div onClick={() => handleNextStep("/match/grade-8-9th")} className={styles.answer}>
                         <input type="radio" className={styles.radioInput} id="radio-1" name="goal" />
                         <label className={styles.radioLabel} htmlFor="radio-1">
                             <span className={styles.radio}></span>
-                            <p className={styles.answerTitle}>8 класс</p>
+                            <p className={styles.answerTitle}>Тест</p>
                         </label>
                     </div>
 
@@ -40,7 +50,7 @@ const Grade89th = () => {
                         <input type="radio" className={styles.radioInput} id="radio-2" name="goal" />
                         <label className={styles.radioLabel} htmlFor="radio-2">
                             <span className={styles.radio}></span>
-                            <p className={styles.answerTitle}>9 класс</p>
+                            <p className={styles.answerTitle}>Тест 2</p>
                         </label>
                     </div>
 
@@ -48,6 +58,4 @@ const Grade89th = () => {
             </div>
         </>
     );
-};
-
-export default Grade89th;
+}

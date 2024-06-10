@@ -9,7 +9,7 @@ export const data = [
   {
     id: 1,
     title: "Английский язык",
-    nextPage: "/match",
+    nextPage: "/match/goal/english",
   },
   {
     id: 2,
@@ -24,12 +24,12 @@ export const data = [
   {
     id: 4,
     title: "Биология",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 5,
     title: "География",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 6,
@@ -49,12 +49,12 @@ export const data = [
   {
     id: 9,
     title: "Информатика",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 10,
     title: "История",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 11,
@@ -69,7 +69,7 @@ export const data = [
   {
     id: 13,
     title: "Китайский язык",
-    nextPage: "/match",
+    nextPage: "/match/goal/chinese",
   },
   {
     id: 14,
@@ -89,17 +89,17 @@ export const data = [
   {
     id: 17,
     title: "Литература",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 18,
     title: "Математика",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 19,
     title: "МХК",
-    nextPage: "/match/school-subjects-no-ege",
+    nextPage: "/match/goal/school-subjects-no-ege",
   },
   {
     id: 20,
@@ -119,7 +119,7 @@ export const data = [
   {
     id: 23,
     title: "Обществознание",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 24,
@@ -134,17 +134,17 @@ export const data = [
   {
     id: 26,
     title: "Рисование",
-    nextPage: "/match",
+    nextPage: "/match/goal/artistic-subjects",
   },
   {
     id: 27,
     title: "Риторика",
-    nextPage: "/match",
+    nextPage: "/match/goal/artistic-subjects",
   },
   {
     id: 28,
     title: "Русский язык",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 29,
@@ -159,7 +159,7 @@ export const data = [
   {
     id: 31,
     title: "Физика",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 32,
@@ -174,7 +174,7 @@ export const data = [
   {
     id: 34,
     title: "Химия",
-    nextPage: "/match/school-subjects",
+    nextPage: "/match/goal/school-subjects",
   },
   {
     id: 35,
@@ -189,12 +189,12 @@ export const data = [
   {
     id: 37,
     title: "Экология",
-    nextPage: "/match/school-subjects-no-ege",
+    nextPage: "/match/goal/school-subjects-no-ege",
   },
   {
     id: 38,
     title: "Экономика",
-    nextPage: "/match/school-subjects-no-ege",
+    nextPage: "/match/goal/school-subjects-no-ege",
   },
   {
     id: 39,
@@ -209,6 +209,16 @@ export const data = [
   {
     id: 41,
     title: "Английский для взрослых",
+    nextPage: "/match",
+  },
+  {
+    id: 42,
+    title: "ЕГЭ по английскому",
+    nextPage: "/match",
+  },
+  {
+    id: 43,
+    title: "ЕГЭ по математике",
     nextPage: "/match",
   },
 ];
