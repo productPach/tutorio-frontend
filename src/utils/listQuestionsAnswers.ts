@@ -26,7 +26,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 4,
                             title: "Подготовка к экзамену в вузе",
-                            nextPage: "",
+                            nextPage: "/match/",
                         },
                         {
                             id: 5,
@@ -92,7 +92,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -128,7 +128,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -144,7 +144,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 2,
                             title: "Подготовка к экзамену / контрольной",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-type/2330",
                         },
                         {
                             id: 3,
@@ -164,7 +164,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -185,7 +185,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 3,
                             title: "Подготовка к контрольной",
-                            nextPage: "/match/test",
+                            nextPage: "/match/deadline/exam",
                         },
                         {
                             id: 4,
@@ -200,7 +200,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -236,7 +236,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -302,7 +302,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 12,
                             title: "Другое",
-                            nextPage: "",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -358,7 +358,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 10,
                             title: "Другое",
-                            nextPage: "",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -419,7 +419,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 11,
                             title: "Другое",
-                            nextPage: "",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -465,7 +465,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 8,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -501,7 +501,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -522,7 +522,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 3,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -543,7 +543,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 3,
                             title: "Подготовка к контрольной",
-                            nextPage: "/match/test",
+                            nextPage: "/match/deadline/exam",
                         },
                         {
                             id: 4,
@@ -563,7 +563,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 7,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -589,7 +589,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 4,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -655,7 +655,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 12,
                             title: "Другое",
-                            nextPage: "",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -721,7 +721,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 12,
                             title: "Другое",
-                            nextPage: "",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -757,7 +757,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -793,7 +793,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -829,7 +829,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 6,
                             title: "Другое",
-                            nextPage: "/match/test",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
@@ -946,57 +946,57 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "1 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 2,
                             title: "2 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 3,
                             title: "3 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 4,
                             title: "4 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 5,
                             title: "5 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 6,
                             title: "6 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 7,
                             title: "7 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 8,
                             title: "8 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 9,
                             title: "9 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 10,
                             title: "10 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         {
                             id: 11,
                             title: "11 класс",
-                            nextPage: "match/student-level/level",
+                            nextPage: "/match/student-level/level",
                         },
                         
                     ]
@@ -1041,7 +1041,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "Дошкольник",
-                            nextPage: "",
+                            nextPage: "/match/student-years/4470",
                         },
                         {
                             id: 2,
@@ -1056,7 +1056,7 @@ export const listQuestionsAnswers = [
                         {
                             id: 4,
                             title: "Взрослый",
-                            nextPage: "",
+                            nextPage: "/match/student-years/4470",
                         },
                     ]
                 },
@@ -1265,65 +1265,29 @@ export const listQuestionsAnswers = [
             ]
     },
     {
-        id: 30,
-        typeForm: "student",
-        question: "Как вас зовут?",
+        id: 7,
+        typeForm: "student-years",
+        question: "Укажите возраст ученика",
         page: [
                 {
                     id: 1,
-                    type: "school-subjects234324",
+                    type: "4470",
                     answers: [
                         {
                             id: 1,
-                            title: "Второй массив",
-                            nextPage: "",
-                            
-                        },
-                        {
-                            id: 2,
-                            title: "Подготовка к ЕГЭ",
-                            nextPage: "",
-                        },
-                        {
-                            id: 3,
-                            title: "Повышение успеваемости",
-                            nextPage: "match/student-type/3890",
+                            title: "Введите возраст цифрами",
+                            nextPage: "/match/student-level/level",
                         },
                     ]
                 },
                 {
                     id: 2,
-                    type: "school-subjects5464567",
+                    type: "3990",
                     answers: [
                         {
                             id: 1,
-                            title: "Повышение успеваемости",
-                            nextPage: "match/student-type/3890",
-                        },
-                        {
-                            id: 2,
-                            title: "Подготовка к экзамену в вузе",
-                            nextPage: "",
-                        },
-                        {
-                            id: 3,
-                            title: "Подготовка к олимпиаде",
-                            nextPage: "",
-                        },
-                        {
-                            id: 4,
-                            title: "Для себя",
-                            nextPage: "",
-                        },
-                        {
-                            id: 5,
-                            title: "Для работы",
-                            nextPage: "",
-                        },
-                        {
-                            id: 6,
-                            title: "Другое",
-                            nextPage: "",
+                            title: "Введите возраст цифрами",
+                            nextPage: "/match/deadline/exam",
                         },
                     ]
                 },

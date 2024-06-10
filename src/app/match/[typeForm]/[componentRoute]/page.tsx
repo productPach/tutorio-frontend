@@ -20,7 +20,7 @@ interface ComponentsList {
   [key: string]: React.ComponentType<ComponentRenderProps>;
 }
 
-const MatchPage2: React.FC = () => {
+const MatchPage: React.FC = () => {
   const { typeForm, componentRoute } = useParams<{typeForm: string, componentRoute: string}>();
 
   const ComponentsList: ComponentsList = {
@@ -30,7 +30,7 @@ const MatchPage2: React.FC = () => {
     "student-course": RadioListForms,
     "deadline": RadioListForms,
     "student-level": RadioListForms,
-    "student": InputForms,
+    "student-years": InputForms,
   }
 
   const ComponentRender = ComponentsList[typeForm];
@@ -39,10 +39,6 @@ const MatchPage2: React.FC = () => {
   const question = questionObject?.question || '';
   const answerArray = questionObject?.page.find(page => page.type === componentRoute)?.answers || [];
 
-  console.log(answerArray);
-
-
-
   return (
         <>
           {ComponentRender ? <ComponentRender question={question} answerArray={answerArray} /> : null}
@@ -50,4 +46,4 @@ const MatchPage2: React.FC = () => {
   );
 };
 
-export default MatchPage2;
+export default MatchPage;
