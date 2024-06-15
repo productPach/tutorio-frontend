@@ -13,6 +13,7 @@ interface Answer {
 
 interface ComponentRenderProps {
   question: string;
+  typeForm: string;
   answerArray: Answer[];
 }
 
@@ -37,11 +38,12 @@ const MatchPage: React.FC = () => {
 
   const questionObject = listQuestionsAnswers.find(item => item.typeForm === typeForm);
   const question = questionObject?.question || '';
+  //const typeForm = questionObject?.typeForm || '';
   const answerArray = questionObject?.page.find(page => page.type === componentRoute)?.answers || [];
 
   return (
         <>
-          {ComponentRender ? <ComponentRender question={question} answerArray={answerArray} /> : null}
+          {ComponentRender ? <ComponentRender question={question} typeForm={typeForm} answerArray={answerArray} /> : null}
         </>
   );
 };

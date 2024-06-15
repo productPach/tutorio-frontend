@@ -29,8 +29,13 @@ export const SelectBar = () => {
   // Функция для подставления предмета в поле поиска по клику + прокидываем флоу дальше
   const handleSubject = useCallback(
     (subject: string, nextPage: string) => {
+      localStorage.removeItem("currentMatch");
       setInputSearchTutor(subject);
       setResultSearchTutor([]);
+      const dataToSave = {
+        subject: subject,
+      }
+      localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       setTimeout(() => {
         linkApplicationSubject(nextPage);
       }, 1000 * 0.3);
