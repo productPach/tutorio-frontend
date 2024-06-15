@@ -29,13 +29,19 @@ export const SelectBar = () => {
   // Функция для подставления предмета в поле поиска по клику + прокидываем флоу дальше
   const handleSubject = useCallback(
     (subject: string, nextPage: string) => {
+      // Очищаем предыдущие данные заявок из LS, если они есть
       localStorage.removeItem("currentMatch");
       setInputSearchTutor(subject);
+      // Очищаем результаты, чтобы скрыть подсказки
       setResultSearchTutor([]);
-      const dataToSave = {
+      // Создаем новый объект для добавления в LS
+      const dataToSave = [{
+        id: 0,
         subject: subject,
-      }
+      }];
+      // Добавляем объект в LS
       localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+      // Делаем задержку, чтобы был красивый переход
       setTimeout(() => {
         linkApplicationSubject(nextPage);
       }, 1000 * 0.3);

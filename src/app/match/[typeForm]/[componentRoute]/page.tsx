@@ -12,6 +12,7 @@ interface Answer {
 }
 
 interface ComponentRenderProps {
+  id: number;
   question: string;
   typeForm: string;
   answerArray: Answer[];
@@ -31,19 +32,21 @@ const MatchPage: React.FC = () => {
     "student-course": RadioListForms,
     "deadline": RadioListForms,
     "student-level": RadioListForms,
+    "tutor-gender": RadioListForms,
     "student-years": InputForms,
   }
+
 
   const ComponentRender = ComponentsList[typeForm];
 
   const questionObject = listQuestionsAnswers.find(item => item.typeForm === typeForm);
   const question = questionObject?.question || '';
-  //const typeForm = questionObject?.typeForm || '';
+  const id = questionObject?.id || 0;
   const answerArray = questionObject?.page.find(page => page.type === componentRoute)?.answers || [];
 
   return (
         <>
-          {ComponentRender ? <ComponentRender question={question} typeForm={typeForm} answerArray={answerArray} /> : null}
+          {ComponentRender ? <ComponentRender id={id} question={question} typeForm={typeForm} answerArray={answerArray} /> : null}
         </>
   );
 };
