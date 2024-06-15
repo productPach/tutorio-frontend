@@ -32,6 +32,7 @@ const MatchPage: React.FC = () => {
     "student-course": RadioListForms,
     "deadline": RadioListForms,
     "student-level": RadioListForms,
+    "tutor-gender": RadioListForms,
     "student-years": InputForms,
   }
 

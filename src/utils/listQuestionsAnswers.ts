@@ -1248,17 +1248,17 @@ export const listQuestionsAnswers = [
                         {
                             id: 1,
                             title: "Низкий",
-                            nextPage: "",
+                            nextPage: "/match/tutor-gender/gender",
                         },
                         {
                             id: 2,
                             title: "Средний",
-                            nextPage: "",
+                            nextPage: "/match/tutor-gender/gender",
                         },
                         {
                             id: 3,
                             title: "Высокий",
-                            nextPage: "",
+                            nextPage: "/match/tutor-gender/gender",
                         },
                     ]
                 },
@@ -1288,6 +1288,34 @@ export const listQuestionsAnswers = [
                             id: 1,
                             title: "Введите возраст цифрами",
                             nextPage: "/match/deadline/exam",
+                        },
+                    ]
+                },
+            ]
+    },
+    {
+        id: 8,
+        typeForm: "tutor-gender",
+        question: "Важен ли пол репетитора?",
+        page: [
+                {
+                    id: 1,
+                    type: "gender",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Не важно",
+                            nextPage: "/match/when-study/schedule",
+                        },
+                        {
+                            id: 2,
+                            title: "Мужчина",
+                            nextPage: "/match/when-study/schedule",
+                        },
+                        {
+                            id: 3,
+                            title: "Женщина",
+                            nextPage: "/match/when-study/schedule",
                         },
                     ]
                 },

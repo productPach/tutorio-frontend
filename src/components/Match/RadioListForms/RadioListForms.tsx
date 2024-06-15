@@ -90,7 +90,11 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
     // Находим объект массива по ID вопроса (формы)
     const currentDataMatch = dataMatch.find(obj => obj.id === id);
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const nameProperty = currentDataMatch ? currentDataMatch[typeForm] : null;    
+    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : null; 
+    const nextPagePropertyArr = answerArray.find((obj) => obj.title === valueProperty);
+    const nextPageProperty = nextPagePropertyArr ? nextPagePropertyArr?.nextPage : "";
+
+    const isAnyRadioSelected = answerArray.some(answer => answer.title === valueProperty);
 
     return (
         <>
@@ -113,7 +117,7 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
                         {answerArray.map((answer) => {
                             return (<React.Fragment key={answer.id}>
                                 <div onClick={() => handleNextStep(answer.nextPage, answer.title)} className={styles.answer}>
-                                    <input checked={answer.title === nameProperty && true} readOnly type="radio" className={styles.radioInput} id={`radio-${answer.id}`} name="goal" />
+                                    <input checked={answer.title === valueProperty && true} readOnly type="radio" className={styles.radioInput} id={`radio-${answer.id}`} name="goal" />
                                     <label className={styles.radioLabel} htmlFor={`radio-${answer.id}`}>
                                         <span className={styles.radio}></span>
                                         <p className={styles.answerTitle}>{answer.title}</p>
@@ -125,7 +129,7 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
                     </div>
                 </div>
                 <div className={styles.wrapButton}>
-                    <button type="submit" className={styles.continueButton}>Продолжить</button>
+                    <button type="button" disabled={isAnyRadioSelected ? false : true} onClick={() => handleNextStep(nextPageProperty, valueProperty)} className={styles.continueButton}>Продолжить</button>
                 </div>
             </div>
         </>
