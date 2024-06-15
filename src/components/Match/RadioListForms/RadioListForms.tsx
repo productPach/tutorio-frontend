@@ -13,17 +13,35 @@ interface Answer {
   
 interface ComponentRenderProps {
     question: string;
+    typeForm: string;
     answerArray: Answer[];
 }
 
-export const RadioListForms: React.FC<ComponentRenderProps> = ( {question, answerArray} ) => {
+export const RadioListForms: React.FC<ComponentRenderProps> = ( {question, typeForm, answerArray} ) => {
     const route = useRouter();
 
-    const handleNextStep = (link: string) => {
+    const getDataMatchLS = localStorage.getItem("currentMatch");
+    const dataMatch = getDataMatchLS && JSON.parse(getDataMatchLS);
+
+    const handleNextStep = (link: string, title: string) => {
         setIsDisabled(true);
         setIsVisible(false);
+            const newData = {
+                [typeForm]: title,
+            }
+            const dataToSave = {... dataMatch, ... newData};
+            localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        
         setTimeout(() => route.push(link), 400);
     };
+
+    const handlePrevStep = () => {
+        setIsDisabled(true);
+        setIsVisible(false);
+        delete dataMatch[typeForm];
+        localStorage.setItem("currentMatch", JSON.stringify(dataMatch));
+        setTimeout(() => route.back(), 400);
+    }
 
     const [isVisible, setIsVisible] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -32,11 +50,13 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {question, answe
         setIsVisible(true);
     }, []); // Анимация будет стартовать после монтирования компонента
 
+    const currentDataMatch = dataMatch[typeForm];
+
     return (
         <>
             <div className={`${styles.container} ${isVisible ? animation.visible : animation.hidden}`}>
                 <div className={styles.wrap}>
-                    <div onClick={route.back} className={styles.wrapIcon}>
+                    <div onClick={handlePrevStep} className={styles.wrapIcon}>
                         <Image
                             width={20}
                             height={20}
@@ -52,8 +72,8 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {question, answe
 
                         {answerArray.map((answer) => {
                             return (<React.Fragment key={answer.id}>
-                                <div onClick={() => handleNextStep(answer.nextPage)} className={styles.answer}>
-                                    <input type="radio" className={styles.radioInput} id={`radio-${answer.id}`} name="goal" />
+                                <div onClick={() => handleNextStep(answer.nextPage, answer.title)} className={styles.answer}>
+                                    <input checked={answer.title === currentDataMatch && true} readOnly type="radio" className={styles.radioInput} id={`radio-${answer.id}`} name="goal" />
                                     <label className={styles.radioLabel} htmlFor={`radio-${answer.id}`}>
                                         <span className={styles.radio}></span>
                                         <p className={styles.answerTitle}>{answer.title}</p>
