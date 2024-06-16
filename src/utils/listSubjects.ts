@@ -4,7 +4,7 @@ export const data = [
   {
     id: 0,
     title: "Алгебра",
-    nextPage: "/match",
+    nextPage: "/match/goal/school-subjects-2",
   },
   {
     id: 1,
@@ -34,7 +34,7 @@ export const data = [
   {
     id: 6,
     title: "Геометрия",
-    nextPage: "/match",
+    nextPage: "/match/goal/school-subjects-2",
   },
   {
     id: 7,
@@ -149,7 +149,7 @@ export const data = [
   {
     id: 29,
     title: "Статистика",
-    nextPage: "/match",
+    nextPage: "/match/goal/school-subjects-2",
   },
   {
     id: 30,
@@ -164,7 +164,7 @@ export const data = [
   {
     id: 32,
     title: "Философия",
-    nextPage: "/match",
+    nextPage: "/match/goal/school-subjects-2",
   },
   {
     id: 33,
@@ -184,7 +184,7 @@ export const data = [
   {
     id: 36,
     title: "Черчение",
-    nextPage: "/match",
+    nextPage: "/match/goal/school-subjects-2",
   },
   {
     id: 37,

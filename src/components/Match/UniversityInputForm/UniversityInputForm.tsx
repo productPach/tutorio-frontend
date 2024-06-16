@@ -1,6 +1,6 @@
 "use client";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
-import styles from "../RadioListForms/RadioListForms.module.css";
+import styles from "../Match.module.css";
 import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -29,7 +29,7 @@ type DataItem = {
     [key: string]: any;
 };
 
-export const InputForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
+export const UniversityInputForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
     const route = useRouter();
 
     // Состояние текстового поля
@@ -40,7 +40,7 @@ export const InputForms: React.FC<ComponentRenderProps> = ( {id, question, typeF
     // Функция для валидации значения поля
     const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
 
-        if (/[^\d]/.test(e.target.value)) {
+        if (/^\d*$/.test(e.target.value)) {
             setErrorInput(true);
         } else {
             setErrorInput(false);
@@ -138,12 +138,12 @@ export const InputForms: React.FC<ComponentRenderProps> = ( {id, question, typeF
                             autoComplete="off"
                             value={inputValue}
                             onChange={handleInputValue}
-                            className={clsx(styles.inputStudentYears, {[styles.errorInput] : errorInput})}
-                            maxLength={2}
+                            className={clsx(styles.inputUniversityName, {[styles.errorInput] : errorInput})}
+                            maxLength={250}
                         />
                         {errorInput ? (
                             <div className={styles.errorInputText}>
-                                Пожалуйста, введите возраст ученика используя только цифры
+                                Пожалуйста, введите наименование учебного заведения
                             </div>
                         ) : null}
                 </div>

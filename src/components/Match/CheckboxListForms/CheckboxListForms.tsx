@@ -28,8 +28,11 @@ type DataItem = {
     [key: string]: any;
 };
 
-export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
+export const CheckboxListForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
     const route = useRouter();
+
+    // Создаем состояние для чекбоксов
+    const [checkbox, setCheckbox] = useState<string[]>([]);
 
     // Вытаскиваем актуальный массив c данными формы из LocalStorage
     const getDataMatchLS = localStorage.getItem("currentMatch");
@@ -39,16 +42,56 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
     // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
     const containsClassProperty = dataMatch.some(obj => obj.hasOwnProperty(typeForm));    
 
-    // Функция для перехода на следующий шаг
-    const handleNextStep = useCallback((link: string, title: string) => {
-        // Обновляем состояния для красивого эффекта перехода
-        setIsDisabled(true);
-        setIsVisible(false);
+    // Функция для обработки клика по чекбоксу
+    const handleCheckboxClick = (title: string) => {
 
+        setCheckbox(prev => {
+            // Проверяем, выбран ли уже этот ответ
+            if (prev.includes(title)) {
+                // Если выбран, убираем его из списка
+                return prev.filter(item => item !== title);
+            } else {
+                // Если не выбран, добавляем в список
+                return [...prev, title];
+            }  
+        }); 
+    };
+
+    const determineLink = (checkboxes: string[]): string | undefined => {
+        
+        // if (checkboxes.includes("Дистанционно") && !) {
+
+        // }
+        
+        const checkboxSet = new Set(checkboxes);
+      
+        if (checkboxSet.has("Дистанционно") && !checkboxSet.has("У репетитора") && !checkboxSet.has("У меня дома")) {
+          return "/match/tutor-type/price";
+        }
+        if (checkboxSet.has("У репетитора") && !checkboxSet.has("Дистанционно") && !checkboxSet.has("У меня дома")) {
+            return "/match/tutor-place/trip";
+        }
+        if (checkboxSet.has("У меня дома") && !checkboxSet.has("Дистанционно") && !checkboxSet.has("У репетитора")) {
+            return "/match/student-place/adress-1";
+        }
+        if (checkboxSet.has("Дистанционно") && checkboxSet.has("У репетитора") && !checkboxSet.has("У меня дома")) {
+          return "/match/tutor-place/trip";
+        }
+        if (checkboxSet.has("Дистанционно") && checkboxSet.has("У меня дома") && !checkboxSet.has("У репетитора")) {
+          return "/match/student-place/adress-1";
+        }
+        if (checkboxSet.has("Дистанционно") && checkboxSet.has("У меня дома") && checkboxSet.has("У репетитора")) {
+          return "/match/student-place/adress-2";
+        }
+        return undefined;
+      };
+
+    // Каждый раз, когда обновляется состояние checkbox редактируем массив ответов в LS
+    useEffect(() => {
         // Создаем новый объект, который нужно положить в массив с данными формы
         const newData = {
             id: id,
-            [typeForm]: title,
+            [typeForm]: checkbox,
         };
 
         // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
@@ -66,9 +109,20 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
             const dataToSave = [...dataMatch, newData];
             localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
         }
+
+    }, [checkbox])
+
+    // Функция для перехода на следующий шаг
+    const handleNextStep = () => {
+        // Обновляем состояния для красивого эффекта перехода
+        setIsDisabled(true);
+        setIsVisible(false);
+
+        const link : string = determineLink(checkbox) ?? "/match/tutor-type/price";
+            
         // Для красоты делаем переход через 0,4 секунды после клика
         setTimeout(() => route.push(link), 400);
-    }, [route, typeForm]);
+    };
 
     // Функция для возврата на предыдущий шаг
     const handlePrevStep = () => {
@@ -116,10 +170,10 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
 
                         {answerArray.map((answer) => {
                             return (<React.Fragment key={answer.id}>
-                                <div onClick={() => handleNextStep(answer.nextPage, answer.title)} className={styles.answer}>
-                                    <input checked={answer.title === valueProperty && true} readOnly type="radio" className={styles.radioInput} id={`radio-${answer.id}`} name="goal" />
-                                    <label className={styles.radioLabel} htmlFor={`radio-${answer.id}`}>
-                                        <span className={styles.radio}></span>
+                                <div className={styles.answer}>
+                                    <input value={checkbox} onChange={() => handleCheckboxClick(answer.title)} checked={checkbox.includes(answer.title)} type="checkbox" className={styles.checkboxInput} id={`checkbox-${answer.id}`} name="checkbox" />
+                                    <label className={styles.checkboxLabel} htmlFor={`checkbox-${answer.id}`}>
+                                        <span className={styles.checkbox}></span>
                                         <p className={styles.answerTitle}>{answer.title}</p>
                                     </label>
                                 </div>
@@ -129,7 +183,7 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
                     </div>
                 </div>
                 <div className={styles.wrapButton}>
-                    <button type="button" disabled={isAnyRadioSelected ? false : true} onClick={() => handleNextStep(nextPageProperty, valueProperty)} className={styles.continueButton}>Продолжить</button>
+                    <button type="button" disabled={checkbox.length ? false : true} onClick={() => handleNextStep()} className={styles.continueButton}>Продолжить</button>
                 </div>
             </div>
         </>
