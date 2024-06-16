@@ -132,16 +132,16 @@
        }
    }
   
-   .radioInput {
+  .radioInput {
       display: none;
       &:checked + label .radio {
         &:after {
           transform: translate(-50%, -50%) scale(1);
         }
       }
-    }
+  }
     
-    .radio {
+  .radio {
       border: 1px solid #2a2a2a;
       border-radius: 9px;
       width: 16px;
@@ -163,9 +163,9 @@
         border-radius: 6px;
         transition: 0.3s;
       }
-    }
+  }
   
-    .radio p {
+  .radio p {
       margin-left: 32px;
       position: absolute;
       top: -19px;
@@ -177,7 +177,82 @@
       -moz-user-select: none; /* Old versions of Firefox */
       -ms-user-select: none; /* Internet Explorer/Edge */
       user-select: none;
+  }
+
+    .checkboxInput {
+      display: none;
+      &:checked + label .checkbox {
+        &:after {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
     }
+
+    .checkboxLabel {
+      display: flex;
+      padding: 16px 18px 16px 18px;
+      border-radius: 10px;
+      border: 1px solid #E9E9E9;
+      cursor: pointer;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 10px;
+      height: 56px;
+      box-sizing: border-box;
+      background-color: rgb(241, 242, 244);
+  
+      &__text {
+          width: fit-content;
+          margin: 0;
+          -webkit-touch-callout: none; /* iOS Safari */
+          -webkit-user-select: none; /* Safari */
+          -khtml-user-select: none; /* Konqueror HTML */
+          -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none;
+          font-weight: 400;
+       }
+   }
+
+   .checkbox {
+    border: 1px solid #2a2a2a;
+    border-radius: 5px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    margin-top: -2px;
+  
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 10px;
+      height: 10px;
+      background-color: #2a2a2a;
+      border-radius: 3px;
+      transition: 0.3s;
+    }
+  }
+
+  .checkbox p {
+    margin-left: 32px;
+    position: absolute;
+    top: -19px;
+    font-weight: 400;
+    width: 200px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+  }
     
     .errorInput {
       background-color: #ffebee;

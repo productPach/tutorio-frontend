@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { UniversityInputForms } from '@/components/Match/UniversityInputForm/UniversityInputForm';
 import { TextForms } from '@/components/Match/TextForms/TextForms';
+import { CheckboxListForms } from '@/components/Match/CheckboxListForms/CheckboxListForms';
 
 interface Answer {
   id: number;
@@ -41,7 +42,7 @@ const MatchPage: React.FC = () => {
     "student-years": YearsInputForms,
     "student-university": UniversityInputForms,
     "timetable": TextForms,
-    //"study-place": CheckboxListForms,
+    "study-place": CheckboxListForms,
     "student-place": UniversityInputForms,
     "tutor-place": TextForms,
     "tutor-type": RadioListForms,

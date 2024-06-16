@@ -1753,12 +1753,23 @@ export const listQuestionsAnswers = [
         page: [
                 {
                     id: 1,
-                    type: "adress",
+                    type: "adress-1",
                     answers: [
                         {
                             id: 1,
                             title: "Начните вводить адрес проживания",
-                            nextPage: "/match/",
+                            nextPage: "/match/tutor-type/price",
+                        },
+                    ]
+                },
+                {
+                    id: 1,
+                    type: "adress-2",
+                    answers: [
+                        {
+                            id: 1,
+                            title: "Начните вводить адрес проживания",
+                            nextPage: "/match/tutor-place/trip",
                         },
                     ]
                 },
@@ -1793,7 +1804,17 @@ export const listQuestionsAnswers = [
                     answers: [
                         {
                             id: 1,
-                            title: "Выберите вариант с подходящим бюджетом",
+                            title: "Начинающий: до 1000 рублей",
+                            nextPage: "/match/info/wishes",
+                        },
+                        {
+                            id: 2,
+                            title: "Репетитор со средним опытом: до 1500 рублей",
+                            nextPage: "/match/info/wishes",
+                        },
+                        {
+                            id: 3,
+                            title: "Опытный репетитор: до 2500 рублей",
                             nextPage: "/match/info/wishes",
                         },
                     ]
