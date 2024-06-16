@@ -1,8 +1,9 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import styles from "../Match.module.css";
 import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 import Image from "next/image";
 
 interface Answer {
@@ -28,8 +29,25 @@ type DataItem = {
     [key: string]: any;
 };
 
-export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
+export const TextForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
     const route = useRouter();
+
+    // Состояние текстового поля
+    const [inputValue, setInputValue] = useState("");
+    // Состояние для ошибки текстового поля
+    const [errorInput, setErrorInput] = useState(false);
+
+    // Функция для валидации значения поля
+    const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
+
+        // if (/^\d*$/.test(e.target.value)) {
+        //     setErrorInput(true);
+        // } else {
+        //     setErrorInput(false);
+        // }
+
+        setInputValue(e.target.value)
+    }
 
     // Вытаскиваем актуальный массив c данными формы из LocalStorage
     const getDataMatchLS = localStorage.getItem("currentMatch");
@@ -40,7 +58,7 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
     const containsClassProperty = dataMatch.some(obj => obj.hasOwnProperty(typeForm));    
 
     // Функция для перехода на следующий шаг
-    const handleNextStep = useCallback((link: string, title: string) => {
+    const handleNextStep = useCallback((link: string, inputValue: string) => {
         // Обновляем состояния для красивого эффекта перехода
         setIsDisabled(true);
         setIsVisible(false);
@@ -48,7 +66,7 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
         // Создаем новый объект, который нужно положить в массив с данными формы
         const newData = {
             id: id,
-            [typeForm]: title,
+            [typeForm]: inputValue,
         };
 
         // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
@@ -78,58 +96,59 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ( {id, question, t
         setTimeout(() => route.back(), 400);
     }
 
-    // Состояния для красоты
     const [isVisible, setIsVisible] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
 
-    // Это нужно для того, чтобы сохранилась красота, даже если клиент воспользуется кнопкой "Назад" в браузе
     useEffect(() => {
         setIsVisible(true);
     }, []); // Анимация будет стартовать после монтирования компонента
 
-    // Находим объект массива по ID вопроса (формы)
-    const currentDataMatch = dataMatch.find(obj => obj.id === id);
-    // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : null; 
-    const nextPagePropertyArr = answerArray.find((obj) => obj.title === valueProperty);
-    const nextPageProperty = nextPagePropertyArr ? nextPagePropertyArr?.nextPage : "";
-
-    const isAnyRadioSelected = answerArray.some(answer => answer.title === valueProperty);
+    
+    useEffect(() => {
+        // Находим объект массива по ID вопроса (формы)
+        const currentDataMatch = dataMatch.find(obj => obj.id === id);
+    
+        // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
+        const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : ''; 
+        setInputValue(valueProperty);
+    }, [typeForm])
+    
+    const nextPageProperty = answerArray[0].nextPage;
 
     return (
         <>
             <div className={`${styles.container} ${isVisible ? animation.visible : animation.hidden}`}>
                 <div className={styles.wrap}>
                     <div onClick={handlePrevStep} className={styles.wrapIcon}>
-                        <Image
-                            width={20}
-                            height={20}
-                            alt="Назад"
-                            src="/img/icon/CaretLeft.svg"
-                            className={styles.iconBack}
-                        />
-                        Назад
-                    </div>
+                            <Image
+                                width={20}
+                                height={20}
+                                alt="Назад"
+                                src="/img/icon/CaretLeft.svg"
+                                className={styles.iconBack}
+                            />
+                            Назад
+                        </div>
                     <div className={styles.title}>{question}</div>
                     {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
-                    <div className={styles.containerAnswers}>
-
-                        {answerArray.map((answer) => {
-                            return (<React.Fragment key={answer.id}>
-                                <div onClick={() => handleNextStep(answer.nextPage, answer.title)} className={styles.answer}>
-                                    <input checked={answer.title === valueProperty && true} readOnly type="radio" className={styles.radioInput} id={`radio-${answer.id}`} name="goal" />
-                                    <label className={styles.radioLabel} htmlFor={`radio-${answer.id}`}>
-                                        <span className={styles.radio}></span>
-                                        <p className={styles.answerTitle}>{answer.title}</p>
-                                    </label>
-                                </div>
-                            </React.Fragment>);
-                        })}
-                        
-                    </div>
+                        <textarea 
+                            id="stydentYears"
+                            placeholder={answerArray[0].title}
+                            autoComplete="off"
+                            value={inputValue}
+                            onChange={handleInputValue}
+                            className={clsx(styles.textaraeName, {[styles.errorInput] : errorInput})}
+                            maxLength={500}
+                        >
+                        </textarea>
+                        {errorInput ? (
+                            <div className={styles.errorInputText}>
+                                Пожалуйста, введите наименование учебного заведения
+                            </div>
+                        ) : null}
                 </div>
                 <div className={styles.wrapButton}>
-                    <button type="button" disabled={isAnyRadioSelected ? false : true} onClick={() => handleNextStep(nextPageProperty, valueProperty)} className={styles.continueButton}>Продолжить</button>
+                    <button type="button" onClick={() => handleNextStep(nextPageProperty, inputValue)} className={styles.continueButton} disabled={!inputValue || errorInput}>Продолжить</button>
                 </div>
             </div>
         </>

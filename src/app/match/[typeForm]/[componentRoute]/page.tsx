@@ -1,9 +1,11 @@
 "use client";
-import { InputForms } from '@/components/Match/InputForms/InputForms';
+import { YearsInputForms } from '@/components/Match/YearsInputForm/YearsInputForms';
 import { RadioListForms } from '@/components/Match/RadioListForms/RadioListForms';
 import { listQuestionsAnswers } from '@/utils/listQuestionsAnswers';
 import { useParams } from 'next/navigation';
 import React from 'react';
+import { UniversityInputForms } from '@/components/Match/UniversityInputForm/UniversityInputForm';
+import { TextForms } from '@/components/Match/TextForms/TextForms';
 
 interface Answer {
   id: number;
@@ -33,7 +35,19 @@ const MatchPage: React.FC = () => {
     "deadline": RadioListForms,
     "student-level": RadioListForms,
     "tutor-gender": RadioListForms,
-    "student-years": InputForms,
+    "international-exam": RadioListForms,
+    "study-methods": RadioListForms,
+    "study-programms": RadioListForms,
+    "student-years": YearsInputForms,
+    "student-university": UniversityInputForms,
+    "timetable": TextForms,
+    //"study-place": CheckboxListForms,
+    "student-place": UniversityInputForms,
+    "tutor-place": TextForms,
+    "tutor-type": RadioListForms,
+    "info": TextForms,
+    //"phone": PhoneInputForms,
+    //"confirmation": ConfirmInputForms,
   }
 
 
