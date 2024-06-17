@@ -148,7 +148,11 @@ export const TextForms: React.FC<ComponentRenderProps> = ( {id, question, typeFo
                         ) : null}
                 </div>
                 <div className={styles.wrapButton}>
-                    <button type="button" onClick={() => handleNextStep(nextPageProperty, inputValue)} className={styles.continueButton} disabled={!inputValue || errorInput}>Продолжить</button>
+                    {typeForm === "tutor-place" ?
+                        <button type="button" onClick={() => handleNextStep(nextPageProperty, inputValue)} className={styles.continueButton} disabled={!inputValue || errorInput}>Продолжить</button>
+                    :
+                        <button type="button" onClick={() => handleNextStep(nextPageProperty, inputValue)} className={clsx(styles.continueButton, !inputValue && styles.continueButtonBlack)} disabled={errorInput}>{inputValue ? "Продолжить" : "Пропустить"}</button>
+                    }
                 </div>
             </div>
         </>

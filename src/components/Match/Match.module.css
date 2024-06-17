@@ -279,6 +279,15 @@
     .continueButton:hover {
       background-color: #f3d341;
     }
+
+    .continueButtonBlack {
+      background-color: #444444;
+      color: white;
+    }
+
+    .continueButtonBlack:hover {
+      background-color: #333333;
+    }
   
     .continueButton:disabled {
       background-color: #c1c1c1;

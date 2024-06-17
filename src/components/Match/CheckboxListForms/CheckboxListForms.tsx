@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../Match.module.css";
 import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
@@ -25,22 +25,31 @@ type DataItem = {
     goal?: string;
     class?: string;
     deadline?: string;
+    "study-place"?: string;
     [key: string]: any;
 };
 
 export const CheckboxListForms: React.FC<ComponentRenderProps> = ( {id, question, typeForm, answerArray} ) => {
     const route = useRouter();
 
-    // Создаем состояние для чекбоксов
-    const [checkbox, setCheckbox] = useState<string[]>([]);
+    // Создаем флаг для отслеживания первоначальной загрузки
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
+    console.log(isInitialLoad);
+    
     // Вытаскиваем актуальный массив c данными формы из LocalStorage
     const getDataMatchLS = localStorage.getItem("currentMatch");
     // Конвертируем массив c данными формы из JSON в JS объект
     const dataMatch: DataItem[] = getDataMatchLS && JSON.parse(getDataMatchLS);
+    // Получаем объект в массиве, в котором содержится свойство с typeForm текущей формы
+    const containsClassProperty = dataMatch.find(obj => obj.hasOwnProperty(typeForm)); 
+    // Создаем переменную для начального значения состояния 
+    let initialCheckboxValue : string[];
+    // Если длинна массива в объекте больше 0, то кладем это значение в initialCheckboxValue, чтобы передать в состояние при инициализации
+    containsClassProperty?.[typeForm].length ? initialCheckboxValue = containsClassProperty?.[typeForm] : initialCheckboxValue = [];
 
-    // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
-    const containsClassProperty = dataMatch.some(obj => obj.hasOwnProperty(typeForm));    
+    // Создаем состояние для чекбоксов
+    const [checkbox, setCheckbox] = useState<string[]>(initialCheckboxValue);
 
     // Функция для обработки клика по чекбоксу
     const handleCheckboxClick = (title: string) => {
@@ -58,10 +67,6 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ( {id, question
     };
 
     const determineLink = (checkboxes: string[]): string | undefined => {
-        
-        // if (checkboxes.includes("Дистанционно") && !) {
-
-        // }
         
         const checkboxSet = new Set(checkboxes);
       
@@ -86,8 +91,13 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ( {id, question
         return undefined;
       };
 
+
     // Каждый раз, когда обновляется состояние checkbox редактируем массив ответов в LS
     useEffect(() => {
+        if (isInitialLoad) {
+            setIsInitialLoad(false);
+            return;
+        }
         // Создаем новый объект, который нужно положить в массив с данными формы
         const newData = {
             id: id,
@@ -104,6 +114,11 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ( {id, question
             const dataToSave = [...filterDataMatch, newData];
             // Кладем новый массив в LS
             localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+
+            // Вариант, когда не нужно удалять все ранее записанные свойства при изменении checkbox
+            // dataMatch.splice(indexOfArray, 1, newData);
+            // // Кладем новый массив в LS
+            // localStorage.setItem("currentMatch", JSON.stringify(dataMatch));
         } else {
             // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
             const dataToSave = [...dataMatch, newData];
