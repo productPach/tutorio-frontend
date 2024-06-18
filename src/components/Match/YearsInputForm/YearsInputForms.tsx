@@ -50,7 +50,6 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
     } else {
       setErrorInput(false);
     }
-
     setInputValue(e.target.value);
   };
 
@@ -127,6 +126,27 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
+
+  useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+      // Проверяем, содержит ли inputValue только цифры
+      const isValidInput = /^\d+$/.test(inputValue);
+      if (e.key === "Enter") {
+        if (isValidInput) {
+          handleNextStep(nextPageProperty, inputValue);
+        } else {
+          setErrorInput(true);
+        }
+      }
+    };
+
+    const input = document.getElementById("stydentYears");
+    input?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      input?.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [inputValue]);
 
   return (
     <>
