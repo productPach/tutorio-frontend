@@ -8,6 +8,7 @@ import { UniversityInputForms } from "@/components/Match/UniversityInputForm/Uni
 import { TextForms } from "@/components/Match/TextForms/TextForms";
 import { CheckboxListForms } from "@/components/Match/CheckboxListForms/CheckboxListForms";
 import { AdressInputForms } from "@/components/Match/AdressInputForms/AdressInputForms";
+import { PhoneInputForms } from "@/components/Match/PhoneInputForms/PhoneInputForms";
 
 interface Answer {
   id: number;
@@ -52,7 +53,7 @@ const MatchPage: React.FC = () => {
     "tutor-place": TextForms,
     "tutor-type": RadioListForms,
     info: TextForms,
-    //"phone": PhoneInputForms,
+    "phone": PhoneInputForms,
     //"confirmation": ConfirmInputForms,
   };
 
