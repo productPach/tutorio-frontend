@@ -5,6 +5,7 @@ import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
+import ReCaptcha from "@/components/reCapcha/reCapcha";
 
 interface Answer {
   id: number;
@@ -30,7 +31,7 @@ type DataItem = {
   [key: string]: any;
 };
 
-export const YearsInputForms: React.FC<ComponentRenderProps> = ({
+export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   id,
   question,
   typeForm,
@@ -42,14 +43,23 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
   const [inputValue, setInputValue] = useState("");
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
+  // Состояние для ответа от рекапчи
+  const [verified, setVerified] = useState(false);
+
+  // Функция для валидации рекапчи
+  const handleVerify = (token: string | null) => {
+    console.log('Verified token:', token);
+    setVerified(!!token);
+  };
 
   // Функция для валидации значения поля
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    if (/[^\d]/.test(e.target.value)) {
+    if (/^\d*$/.test(e.target.value)) {
       setErrorInput(true);
     } else {
       setErrorInput(false);
     }
+
     setInputValue(e.target.value);
   };
 
@@ -127,27 +137,6 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
 
   const nextPageProperty = answerArray[0].nextPage;
 
-  useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
-      // Проверяем, содержит ли inputValue только цифры
-      const isValidInput = /^\d+$/.test(inputValue);
-      if (e.key === "Enter") {
-        if (isValidInput) {
-          handleNextStep(nextPageProperty, inputValue);
-        } else {
-          setErrorInput(true);
-        }
-      }
-    };
-
-    const input = document.getElementById("stydentYears");
-    input?.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      input?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [inputValue]);
-
   return (
     <>
       <div
@@ -170,21 +159,22 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
           {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
           <input
             id="stydentYears"
-            type="text"
+            type="tel"
             placeholder={answerArray[0].title}
             autoComplete="off"
             value={inputValue}
             onChange={handleInputValue}
-            className={clsx(styles.inputStudentYears, {
+            className={clsx(styles.inputUniversityName, {
               [styles.errorInput]: errorInput,
             })}
-            maxLength={2}
+            maxLength={250}
           />
           {errorInput ? (
             <div className={styles.errorInputText}>
-              Пожалуйста, введите возраст ученика используя только цифры
+              Пожалуйста, введите наименование учебного заведения
             </div>
           ) : null}
+          <ReCaptcha onVerify={handleVerify} />
         </div>
         <div className={styles.wrapButton}>
           <button
