@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import ReCaptcha from "@/components/reCapcha/reCapcha";
+import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 
 interface Answer {
   id: number;
@@ -21,7 +22,6 @@ interface ComponentRenderProps {
   answerArray: Answer[];
 }
 
-// Определяем тип для объекта в массиве
 type DataItem = {
   id: number;
   subject?: string;
@@ -38,84 +38,63 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   answerArray,
 }) => {
   const route = useRouter();
-
-  // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
-  // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
-  // Состояние для ответа от рекапчи
   const [verified, setVerified] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  // Функция для валидации рекапчи
   const handleVerify = (token: string | null) => {
-    console.log('Verified token:', token);
+    console.log("Verified token:", token);
     setVerified(!!token);
   };
 
-  // Функция для валидации значения поля
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    if (/^\d*$/.test(e.target.value)) {
-      setErrorInput(true);
-    } else {
-      setErrorInput(false);
-    }
-
-    setInputValue(e.target.value);
+    const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+    setInputValue(formattedPhoneNumber);
   };
 
-  // Вытаскиваем актуальный массив c данными формы из LocalStorage
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
   const getDataMatchLS = localStorage.getItem("currentMatch");
-  // Конвертируем массив c данными формы из JSON в JS объект
   const dataMatch: DataItem[] = getDataMatchLS && JSON.parse(getDataMatchLS);
 
-  // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
   const containsClassProperty = dataMatch.some((obj) =>
     obj.hasOwnProperty(typeForm)
   );
 
-  // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
     (link: string, inputValue: string) => {
-      // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
 
-      // Создаем новый объект, который нужно положить в массив с данными формы
       const newData = {
         id: id,
         [typeForm]: inputValue,
       };
 
-      // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
       if (containsClassProperty) {
-        // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
         const indexOfArray = dataMatch.findIndex((obj) =>
           obj.hasOwnProperty(typeForm)
         );
-        // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
         const filterDataMatch = dataMatch.filter(
           (obj, index) => index < indexOfArray
         );
-        // Добавляем новый объект в копию старого массива, уже отфильтрованного
         const dataToSave = [...filterDataMatch, newData];
-        // Кладем новый массив в LS
         localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       } else {
-        // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
         const dataToSave = [...dataMatch, newData];
         localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       }
-      // Для красоты делаем переход через 0,4 секунды после клика
+
       setTimeout(() => route.push(link), 400);
     },
     [route, typeForm]
   );
 
-  // Функция для возврата на предыдущий шаг
   const handlePrevStep = () => {
     setIsDisabled(true);
     setIsVisible(false);
-    // Для красоты делаем переход через 0,4 секунды после клика
     setTimeout(() => route.back(), 400);
   };
 
@@ -124,13 +103,10 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
 
   useEffect(() => {
     setIsVisible(true);
-  }, []); // Анимация будет стартовать после монтирования компонента
+  }, []);
 
   useEffect(() => {
-    // Находим объект массива по ID вопроса (формы)
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
-
-    // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
     setInputValue(valueProperty);
   }, [typeForm]);
@@ -156,32 +132,45 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             Назад
           </div>
           <div className={styles.title}>{question}</div>
-          {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
-          <input
-            id="stydentYears"
-            type="tel"
-            placeholder={answerArray[0].title}
-            autoComplete="off"
-            value={inputValue}
-            onChange={handleInputValue}
-            className={clsx(styles.inputUniversityName, {
-              [styles.errorInput]: errorInput,
-            })}
-            maxLength={250}
-          />
+          <div className={styles.inputContainer}>
+            <span
+              className={clsx(styles.inputPhoneNumberPrefix, {
+                [styles.visible]: isFocused || inputValue.length > 0,
+              })}
+            >
+              +7
+            </span>
+            <input
+              id="studentPhoneNumber"
+              type="tel"
+              placeholder="Введите номер телефона"
+              autoComplete="off"
+              value={inputValue}
+              onChange={handleInputValue}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              className={clsx(styles.inputPhoneNumber, {
+                [styles.focused]: isFocused || inputValue.length > 0,
+                [styles.errorInput]: errorInput,
+              })}
+              maxLength={15}
+            />
+          </div>
           {errorInput ? (
             <div className={styles.errorInputText}>
-              Пожалуйста, введите наименование учебного заведения
+              Пожалуйста, введите корректный номер телефона
             </div>
           ) : null}
-          <ReCaptcha onVerify={handleVerify} />
+          <div className={styles.reCaptchaContainer}>
+            <ReCaptcha onVerify={handleVerify} />
+          </div>
         </div>
         <div className={styles.wrapButton}>
           <button
             type="button"
             onClick={() => handleNextStep(nextPageProperty, inputValue)}
             className={styles.continueButton}
-            disabled={!inputValue || errorInput}
+            disabled={inputValue.length < 15 || errorInput || !verified}
           >
             Продолжить
           </button>
