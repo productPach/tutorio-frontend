@@ -1869,7 +1869,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Введите свой номер телефона",
-            nextPage: "/match/study-place/where",
+            nextPage: "/match/confirmation/student",
           },
         ],
       },
@@ -1883,12 +1883,12 @@ export const listQuestionsAnswers = [
     page: [
       {
         id: 1,
-        type: "person",
+        type: "student",
         answers: [
           {
             id: 1,
-            title: "Когда удобно заниматься?",
-            nextPage: "/match/study-place/where",
+            title: "Отправили код на номер",
+            nextPage: "/student",
           },
         ],
       },

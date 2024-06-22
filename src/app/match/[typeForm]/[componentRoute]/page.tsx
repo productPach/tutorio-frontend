@@ -9,6 +9,7 @@ import { TextForms } from "@/components/Match/TextForms/TextForms";
 import { CheckboxListForms } from "@/components/Match/CheckboxListForms/CheckboxListForms";
 import { AdressInputForms } from "@/components/Match/AdressInputForms/AdressInputForms";
 import { PhoneInputForms } from "@/components/Match/PhoneInputForms/PhoneInputForms";
+import { ConfirmInputForm } from "@/components/Match/ConfirmInputForms/ConfirmInputForm";
 
 interface Answer {
   id: number;
@@ -54,7 +55,7 @@ const MatchPage: React.FC = () => {
     "tutor-type": RadioListForms,
     info: TextForms,
     "phone": PhoneInputForms,
-    //"confirmation": ConfirmInputForms,
+    "confirmation": ConfirmInputForm,
   };
 
   const ComponentRender = ComponentsList[typeForm];
