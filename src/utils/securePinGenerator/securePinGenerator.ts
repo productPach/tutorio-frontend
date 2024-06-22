@@ -4,5 +4,9 @@ export const securePinGenerator = (): string => {
         const randomPin = Math.floor(Math.random() * 10); // Генерация случайного числа от 0 до 9
         code += randomPin.toString();
     }
-    return `Код подтверждения: ${code} `;
+    // ВНИМАНИЕ!!!
+    // Здесь нужно сохранять код подтверждения в БД
+    // Временно добавляем код в LocalStorage
+
+    return code;
 }

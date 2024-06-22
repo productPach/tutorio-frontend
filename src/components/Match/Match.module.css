@@ -305,7 +305,9 @@
 }
 
 .errorInput {
-  background-color: #ffebee;
+  background-color: #ffebee !important;
+  color: #ef5350 !important;
+  border: 1px solid #f1cece !important;
 }
 
 .errorInputText {

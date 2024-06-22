@@ -31,6 +31,10 @@ export const SelectBar = () => {
     (subject: string, nextPage: string) => {
       // Очищаем предыдущие данные заявок из LS, если они есть
       localStorage.removeItem("currentMatch");
+      // Очищаем предыдущие данные по таймеру
+      localStorage.removeItem("confirm-time");
+      // Очищаем предыдущие данные телефона
+      localStorage.removeItem("origin-phone");
       setInputSearchTutor(subject);
       // Очищаем результаты, чтобы скрыть подсказки
       setResultSearchTutor([]);
@@ -120,10 +124,12 @@ export const SelectBar = () => {
     }
   };
 
-  // Блокируем скроллинг страницы в момент, когда введено более одного символа. В этот момент показываются подсказки в выпадающем списке
-  inputSearchTutor.length > 1
+  useEffect(() => {
+    // Блокируем скроллинг страницы в момент, когда введено более одного символа. В этот момент показываются подсказки в выпадающем списке
+    inputSearchTutor.length > 1
     ? (document.body.style.overflow = "hidden")
     : (document.body.style.overflow = "auto");
+  }, [inputSearchTutor]);
 
   return (
     <div className={styles.firstSection__tutorSearch}>

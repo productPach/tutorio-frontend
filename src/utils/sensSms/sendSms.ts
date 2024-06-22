@@ -1,4 +1,4 @@
-export const sendSms = async (to: string) => {
+export const sendSms = async (to: string, msg: string) => {
   try {
     //console.log('Отправка запроса на /api/sms/sendSms с номером:', to);
     const response = await fetch('/api/sms/sendSms', {
@@ -6,7 +6,7 @@ export const sendSms = async (to: string) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ to }),
+      body: JSON.stringify({ to, msg }),
     });
     const data = await response.json();
     if (!response.ok) {

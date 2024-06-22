@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import { securePinGenerator } from '@/utils/securePinGenerator/securePinGenerator';
 
 export async function POST(request: Request) {
-  // Генерируем проверочный код
-  const msg = securePinGenerator();
+  
   try {
-    const { to: phoneNumber } = await request.json();
+    const { to: phoneNumber, msg: msg } = await request.json();
 
     if (!phoneNumber) {
       return NextResponse.json({ error: 'Не указан номер телефона' }, { status: 400 });
@@ -21,13 +19,13 @@ export async function POST(request: Request) {
       params: {
         api_id: apiId,
         to: phoneNumber,
-        msg: msg,
+        msg: `Код подтверждения: ${msg}`,
         json: 1,
       },
     });
 
     if (response.data.status === 'OK') {
-      return NextResponse.json({ message: 'SMS sent successfully' }, { status: 200 });
+      return NextResponse.json({ message: 'SMS sent successfully: ' + msg }, { status: 200 });
     } else {
       return NextResponse.json({ error: response.data.status_text || 'Failed to send SMS' }, { status: 500 });
     }

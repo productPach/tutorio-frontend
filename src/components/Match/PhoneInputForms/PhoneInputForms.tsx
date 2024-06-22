@@ -8,6 +8,7 @@ import Image from "next/image";
 import ReCaptcha from "@/components/reCapcha/reCapcha";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import { sendSms } from "@/utils/sensSms/sendSms";
+import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerator";
 
 interface Answer {
   id: number;
@@ -50,10 +51,95 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   // Добавляем в состояние неформатированный номер телефона
   const [to, setTo] = useState("");
 
+
+  const initialTimeLS = localStorage.getItem("confirm-time");; // Начальное количество минут
+  const initialTime = initialTimeLS ? JSON.parse(initialTimeLS) : {minutes: 0, seconds: 0, index: 0};
+  
+  const [minutes, setMinutes] = useState(initialTime.minutes); // Состояние для отображения минут
+  const [seconds, setSeconds] = useState(initialTime.seconds); // Состояние для отображения секунд
+  const [index, setIndex] = useState(initialTime.index); // Состояние для количества попыток повторной отправки
+  // Состояние для таймера
+  const [isTimerActive, setIsTimerActive] = useState(true);
+
+
+  // Функция для добавления ведущих нулей к числам меньше 10
+  const formatTime = (time: number) => {
+    return time < 10 ? `0${time}` : time;
+  };
+
+
+  useEffect(() => {
+      let interval = setInterval(() => {
+        // Уменьшаем счетчик времени каждую секунду
+        if (seconds > 0) {
+          setSeconds(seconds - 1);
+        }
+        if (seconds === 0) {
+          if (minutes === 0) {
+              setIsTimerActive(false);
+              clearInterval(interval);
+              // Действия по завершению таймера (например, вызов функции или обработка события)
+          } else {
+            setMinutes(minutes - 1);
+            setSeconds(59);
+          }
+        }
+      }, 1000);
+  
+      // Очистка интервала при размонтировании компонента
+      return () => clearInterval(interval);
+    }, [minutes, seconds]);
+
+    useEffect(() => {
+      const confirmTime = {
+          minutes,
+          seconds,
+          index,
+      }
+      localStorage.setItem("confirm-time", JSON.stringify(confirmTime));
+    }, [minutes, seconds, index]);
+
+
   // Отправляем SMS
   const onClickSms = () => {
-    sendSms(to);
+    // Генерируем проверочный код
+    const confirmCode = securePinGenerator();
+    // ВНИМАНИЕ!!!
+    // Здесь нужно сохранять код подтверждения в БД
+    // Временно добавляем код в LocalStorage
+    localStorage.setItem("confirm-code", JSON.stringify(confirmCode));
+    sendSms(to, confirmCode);
     handleNextStep(nextPageProperty, inputValue, to);
+    if (index === 0) {
+      setMinutes(0);
+      setSeconds(59);
+      setIndex(1);
+    }
+    if (index === 1) {
+        setMinutes(1);
+        setSeconds(59);
+        setIndex(2);
+    }
+    if (index === 2) {
+        setMinutes(4);
+        setSeconds(59);
+        setIndex(3);
+    }
+    if (index >= 3) {
+        setMinutes(14);
+        setSeconds(59);
+        setIndex(4);
+    }
+    if (index >= 4) {
+        setMinutes(29);
+        setSeconds(59);
+    }
+    const confirmTime = {
+      minutes,
+      seconds,
+      index,
+    }
+    localStorage.setItem("confirm-time", JSON.stringify(confirmTime));
   };
 
   // Функция для обновления состояния reCaptcha
@@ -71,8 +157,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
+  // Достаем массив с данными заявки
   const getDataMatchLS = localStorage.getItem("currentMatch");
   const dataMatch: DataItem[] = getDataMatchLS && JSON.parse(getDataMatchLS);
+  // Достаем оригинальный телефон
+  const getOriginPhone = localStorage.getItem("origin-phone");
+  const originPhone: string = getOriginPhone && JSON.parse(getOriginPhone);
 
   const containsClassProperty = dataMatch.some((obj) =>
     obj.hasOwnProperty(typeForm)
@@ -86,8 +176,9 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
       const newData = {
         id: id,
         [typeForm]: inputValue,
-        origin: originValue,
       };
+
+      localStorage.setItem("origin-phone", JSON.stringify(originValue));
 
       if (containsClassProperty) {
         const indexOfArray = dataMatch.findIndex((obj) =>
@@ -124,9 +215,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
-    const valuePropertyOrigin = currentDataMatch
-      ? currentDataMatch[origin]
-      : "";
+    const valuePropertyOrigin = originPhone ? originPhone : "";
     setInputValue(valueProperty);
     setTo(valuePropertyOrigin);
   }, [typeForm]);
@@ -176,13 +265,19 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
               maxLength={15}
             />
           </div>
-          {errorInput ? (
-            <div className={styles.errorInputText}>
-              Пожалуйста, введите корректный номер телефона
-            </div>
-          ) : null}
-          <div className={styles.reCaptchaContainer}>
-            <ReCaptcha onVerify={handleVerify} />
+          <div
+            className={clsx(
+              styles.sendAgainContainer,
+              isTimerActive && (minutes !== 0 || seconds !== 0) ? "" : styles.sendAgainActive
+            )}
+          >
+            {isTimerActive && (minutes !== 0 || seconds !== 0)
+              ? `Изменить телефон можно через ${formatTime(minutes)}:
+            ${formatTime(seconds)}`
+              : 
+              <div className={styles.reCaptchaContainer}>
+                <ReCaptcha onVerify={handleVerify} />
+              </div>}
           </div>
         </div>
         <div className={styles.wrapButton}>
