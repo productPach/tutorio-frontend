@@ -9,8 +9,9 @@ import React, {
 import styles from "../Match.module.css";
 import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
-import clsx from "clsx";
 import Image from "next/image";
+import clsx from "clsx";
+import { TimerSms } from "@/components/TimerSms/TimerSms";
 
 interface Answer {
   id: number;
@@ -44,14 +45,20 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
 
+  // ПЕРЕДЕЛАТЬ!!!
+  // Нужно вытаскивать код подтверждения в БД
+  // Временно вытаскиваем код из LocalStorage
+  const confirmCodeLS = localStorage.getItem("confirm-code");
+  const confirmCode: string = confirmCodeLS && JSON.parse(confirmCodeLS);
+  //console.log(confirmCode);
+  
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
 
-  const initialMinute = 0; // Начальное количество минут
-  const [minutes, setMinutes] = useState(initialMinute); // Состояние для отображения минут
-  const [seconds, setSeconds] = useState(9); // Состояние для отображения секунд
+  //console.log(errorInput);
+
 
   // Состояние для содержимого инпутов
   const [codes, setCodes] = useState(["", "", "", ""]);
@@ -65,18 +72,34 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     null,
   ]);
 
+  // Обновляем inputValue когда меняется содержимое отдельных инпутов
+  useEffect(() => {
+    const inputValue = codes.join("");
+    if (inputValue.length === 4) {
+        if (inputValue !== confirmCode) {
+          setErrorInput(true);
+          console.log("Invalid code");
+        } else {
+          setErrorInput(false);
+          console.log("Valid code");
+        }
+      }
+  }, [codes, confirmCode]);
+  
   // Функция добавления значения в инпут
   const handleChange = (value: string, index: number) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
       const newCodes = [...codes];
       newCodes[index] = value;
       setCodes(newCodes);
-
+      
       if (value && index < 3) {
         setActiveIndex(index + 1);
       }
     }
   };
+
+  //console.log(inputValue);
 
   // Функция удаления значения из инпута
   const handleKeyDown = (
@@ -84,10 +107,12 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     index: number
   ) => {
     if (e.key === "Backspace") {
+        
       // Если текущий инпут пустой и не является первым инпутом, то
       // переходим на предыдущий инпут и очищаем его содержимое
       if (index > 0 && !codes[index]) {
         setActiveIndex(index - 1);
+        setErrorInput(false);
         const newCodes = [...codes];
         newCodes[index - 1] = "";
         setCodes(newCodes);
@@ -114,31 +139,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     inputRefs.current[activeIndex]?.focus();
   }, [activeIndex]);
 
-  useEffect(() => {
-    let interval = setInterval(() => {
-      // Уменьшаем счетчик времени каждую секунду
-      if (seconds > 0) {
-        setSeconds(seconds - 1);
-      }
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(interval);
-          // Действия по завершению таймера (например, вызов функции или обработка события)
-        } else {
-          setMinutes(minutes - 1);
-          setSeconds(59);
-        }
-      }
-    }, 1000);
-
-    // Очистка интервала при размонтировании компонента
-    return () => clearInterval(interval);
-  }, [minutes, seconds]);
-
-  // Функция для добавления ведущих нулей к числам меньше 10
-  const formatTime = (time: number) => {
-    return time < 10 ? `0${time}` : time;
-  };
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
@@ -218,6 +218,8 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   const nextPageProperty = answerArray[0].nextPage;
 
+  
+
   return (
     <>
       <div
@@ -255,29 +257,19 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onKeyPress={(e) => handleKeyPress(e, index)}
-                className={styles.inputCodeConfirm}
+                className={clsx(styles.inputCodeConfirm, errorInput ? styles.errorInput : "")}
                 disabled={index !== activeIndex}
               />
             ))}
           </div>
-          <div
-            className={clsx(
-              styles.sendAgainContainer,
-              !seconds ? styles.sendAgainActive : ""
-            )}
-          >
-            {seconds
-              ? `Отправить код ещё раз через ${formatTime(minutes)}:
-            ${formatTime(seconds)}`
-              : `Отправить код ещё раз`}
-          </div>
+          <TimerSms />
         </div>
         <div className={styles.wrapButton}>
           <button
             type="button"
             onClick={() => handleNextStep(nextPageProperty, inputValue)}
             className={styles.continueButton}
-            disabled={!inputValue || errorInput}
+            disabled={codes.join("").length < 4 || errorInput}
           >
             Продолжить
           </button>
