@@ -409,6 +409,15 @@
   outline: none;
 }
 
-.inputCodeConfirm:focus-within{
+.inputCodeConfirm:focus-within {
   border: 1px solid #fad949;
+}
+
+.sendAgainContainer {
+  margin-top: 20px;
+}
+
+.sendAgainActive {
+  text-decoration: underline;
+  cursor: pointer;
 }

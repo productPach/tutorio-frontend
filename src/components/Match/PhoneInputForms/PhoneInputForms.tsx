@@ -47,15 +47,15 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   const [verified, setVerified] = useState(false);
   // Состояние для фиксации фокусирования на поле с вводом телефона
   const [isFocused, setIsFocused] = useState(false);
-  // Добавляем в состояние неформатированный номер телефона  
-  const [to, setTo] = useState('7');
-  
+  // Добавляем в состояние неформатированный номер телефона
+  const [to, setTo] = useState("");
+
   // Отправляем SMS
   const onClickSms = () => {
     sendSms(to);
-    handleNextStep(nextPageProperty, inputValue);
-  }
-  
+    handleNextStep(nextPageProperty, inputValue, to);
+  };
+
   // Функция для обновления состояния reCaptcha
   const handleVerify = (token: string | null) => {
     setVerified(!!token);
@@ -79,13 +79,14 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   );
 
   const handleNextStep = useCallback(
-    (link: string, inputValue: string) => {
+    (link: string, inputValue: string, originValue: string) => {
       setIsDisabled(true);
       setIsVisible(false);
 
       const newData = {
         id: id,
         [typeForm]: inputValue,
+        origin: originValue,
       };
 
       if (containsClassProperty) {
@@ -123,7 +124,11 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const valuePropertyOrigin = currentDataMatch
+      ? currentDataMatch[origin]
+      : "";
     setInputValue(valueProperty);
+    setTo(valuePropertyOrigin);
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
