@@ -7,6 +7,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import ReCaptcha from "@/components/reCapcha/reCapcha";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
+import { sendSms } from "@/utils/sensSms/sendSms";
 
 interface Answer {
   id: number;
@@ -38,19 +39,33 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   answerArray,
 }) => {
   const route = useRouter();
+  // Состояние для содержимого в поле номер телефона
   const [inputValue, setInputValue] = useState("");
+  // Состояние для ошибки
   const [errorInput, setErrorInput] = useState(false);
+  // Состояние для reCaptcha
   const [verified, setVerified] = useState(false);
+  // Состояние для фиксации фокусирования на поле с вводом телефона
   const [isFocused, setIsFocused] = useState(false);
+  // Добавляем в состояние неформатированный номер телефона
+  const [to, setTo] = useState("");
 
+  // Отправляем SMS
+  const onClickSms = () => {
+    sendSms(to);
+    handleNextStep(nextPageProperty, inputValue, to);
+  };
+
+  // Функция для обновления состояния reCaptcha
   const handleVerify = (token: string | null) => {
-    console.log("Verified token:", token);
     setVerified(!!token);
   };
 
+  // Функция ввода и форматирования номера телефона в поле инпута
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
     const formattedPhoneNumber = formatPhoneNumber(e.target.value);
-    setInputValue(formattedPhoneNumber);
+    setInputValue(formattedPhoneNumber.formatted);
+    setTo(formattedPhoneNumber.original);
   };
 
   const handleFocus = () => setIsFocused(true);
@@ -64,13 +79,14 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   );
 
   const handleNextStep = useCallback(
-    (link: string, inputValue: string) => {
+    (link: string, inputValue: string, originValue: string) => {
       setIsDisabled(true);
       setIsVisible(false);
 
       const newData = {
         id: id,
         [typeForm]: inputValue,
+        origin: originValue,
       };
 
       if (containsClassProperty) {
@@ -108,7 +124,11 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const valuePropertyOrigin = currentDataMatch
+      ? currentDataMatch[origin]
+      : "";
     setInputValue(valueProperty);
+    setTo(valuePropertyOrigin);
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
@@ -168,7 +188,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPageProperty, inputValue)}
+            onClick={onClickSms}
             className={styles.continueButton}
             disabled={inputValue.length < 15 || errorInput || !verified}
           >

@@ -389,3 +389,35 @@
 .reCaptchaContainer {
   margin-top: 30px;
 }
+
+.inputCodeConfirmContainer {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+
+.inputCodeConfirm {
+  width: 60px;
+  height: 54px;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 20px 0 20px;
+  background-color: rgb(241, 242, 244);
+  box-sizing: border-box;
+  text-align: center;
+  outline: none;
+}
+
+.inputCodeConfirm:focus-within {
+  border: 1px solid #fad949;
+}
+
+.sendAgainContainer {
+  margin-top: 20px;
+}
+
+.sendAgainActive {
+  text-decoration: underline;
+  cursor: pointer;
+}
