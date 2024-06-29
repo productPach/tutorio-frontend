@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
-import styles from "../Match.module.css";
-import animation from "../../../app/match/layout.module.css";
+import styles from "../SignInTutor.module.css";
+import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
@@ -10,18 +10,13 @@ import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import { sendSms } from "@/utils/sensSms/sendSms";
 import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerator";
 
-interface Answer {
-  id: number;
-  title: string;
-  nextPage: string;
-}
-
 interface ComponentRenderProps {
   id: number;
+  typeForm: string;
   question: string;
   description: string;
-  typeForm: string;
-  answerArray: Answer[];
+  placeholder: string;
+  nextPage: string;
 }
 
 type DataItem = {
@@ -35,9 +30,11 @@ type DataItem = {
 
 export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   id,
-  question,
   typeForm,
-  answerArray,
+  question,
+  description,
+  placeholder,
+  nextPage,
 }) => {
   const route = useRouter();
   // Состояние для содержимого в поле номер телефона
@@ -109,7 +106,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
     // Временно добавляем код в LocalStorage
     localStorage.setItem("confirm-code", JSON.stringify(confirmCode));
     sendSms(to, confirmCode);
-    handleNextStep(nextPageProperty, inputValue, to);
+    handleNextStep(nextPage, inputValue, to);
     if (index === 0) {
       setMinutes(0);
       setSeconds(59);
@@ -158,13 +155,13 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   const handleBlur = () => setIsFocused(false);
 
   // Достаем массив с данными заявки
-  const getDataMatchLS = localStorage.getItem("currentMatch");
-  const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+  const getDataUserLS = localStorage.getItem("current-user");
+  const dataUser: DataItem[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
   // Достаем оригинальный телефон
   const getOriginPhone = localStorage.getItem("origin-phone");
   const originPhone: string = getOriginPhone && JSON.parse(getOriginPhone);
 
-  const containsClassProperty = dataMatch.some((obj) =>
+  const containsClassProperty = dataUser && dataUser.some((obj) =>
     obj.hasOwnProperty(typeForm)
   );
 
@@ -181,17 +178,17 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
       localStorage.setItem("origin-phone", JSON.stringify(originValue));
 
       if (containsClassProperty) {
-        const indexOfArray = dataMatch.findIndex((obj) =>
+        const indexOfArray = dataUser.findIndex((obj) =>
           obj.hasOwnProperty(typeForm)
         );
-        const filterDataMatch = dataMatch.filter(
+        const filterDataUser = dataUser.filter(
           (obj, index) => index < indexOfArray
         );
-        const dataToSave = [...filterDataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        const dataToSave = [...filterDataUser, newData];
+        localStorage.setItem("current-user", JSON.stringify(dataToSave));
       } else {
-        const dataToSave = [...dataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        const dataToSave = [newData];
+        localStorage.setItem("current-user", JSON.stringify(dataToSave));
       }
 
       setTimeout(() => route.push(link), 400);
@@ -213,14 +210,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   }, []);
 
   useEffect(() => {
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const currentDataUser = dataUser && dataUser.find((obj) => obj.id === id);
+    const valueProperty = currentDataUser ? currentDataUser[typeForm] : "";
     const valuePropertyOrigin = originPhone ? originPhone : "";
     setInputValue(valueProperty);
     setTo(valuePropertyOrigin);
   }, [typeForm]);
-
-  const nextPageProperty = answerArray[0].nextPage;
 
   return (
     <>
@@ -241,6 +236,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             Назад
           </div>
           <div className={styles.title}>{question}</div>
+          <div className={styles.description}>{description}</div>
           <div className={styles.inputContainer}>
             <span
               className={clsx(styles.inputPhoneNumberPrefix, {
@@ -252,7 +248,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             <input
               id="studentPhoneNumber"
               type="tel"
-              placeholder="Введите номер телефона"
+              placeholder={placeholder}
               autoComplete="off"
               value={inputValue}
               onChange={handleInputValue}

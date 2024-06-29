@@ -144,12 +144,13 @@
   column-gap: 38px;
   align-items: center;
 }
-.header__menu a {
+.header__menu span {
   text-decoration: none;
   color: #333333;
   transition: all 0.3s;
+  cursor: pointer;
 }
-.header__menu a:hover {
+.header__menu span:hover {
   color: #000000;
   text-decoration: underline;
 }

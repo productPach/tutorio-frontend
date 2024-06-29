@@ -1,23 +1,18 @@
 "use client";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
-import styles from "../Match.module.css";
-import animation from "../../../app/match/layout.module.css";
+import styles from "../SignInTutor.module.css";
+import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 
-interface Answer {
-  id: number;
-  title: string;
-  nextPage: string;
-}
-
 interface ComponentRenderProps {
   id: number;
+  typeForm: string;
   question: string;
   description: string;
-  typeForm: string;
-  answerArray: Answer[];
+  placeholder: string;
+  nextPage: string;
 }
 
 // Определяем тип для объекта в массиве
@@ -30,12 +25,13 @@ type DataItem = {
   [key: string]: any;
 };
 
-export const TextForms: React.FC<ComponentRenderProps> = ({
+export const FioInputForms: React.FC<ComponentRenderProps> = ({
   id,
+  typeForm,
   question,
   description,
-  typeForm,
-  answerArray,
+  placeholder,
+  nextPage,
 }) => {
   const route = useRouter();
 
@@ -45,23 +41,23 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
   const [errorInput, setErrorInput] = useState(false);
 
   // Функция для валидации значения поля
-  const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    // if (/^\d*$/.test(e.target.value)) {
-    //     setErrorInput(true);
-    // } else {
-    //     setErrorInput(false);
-    // }
+  const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
+    if (/^\d*$/.test(e.target.value)) {
+      setErrorInput(true);
+    } else {
+      setErrorInput(false);
+    }
 
     setInputValue(e.target.value);
   };
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
+  const getDataUserLS = localStorage.getItem("current-user");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+  const dataUser: DataItem[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
 
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
-  const containsClassProperty = dataMatch.some((obj) =>
+  const containsClassProperty = dataUser.some((obj) =>
     obj.hasOwnProperty(typeForm)
   );
 
@@ -81,21 +77,21 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
       // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
       if (containsClassProperty) {
         // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-        const indexOfArray = dataMatch.findIndex((obj) =>
+        const indexOfArray = dataUser.findIndex((obj) =>
           obj.hasOwnProperty(typeForm)
         );
         // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
-        const filterDataMatch = dataMatch.filter(
+        const filterDataUser = dataUser.filter(
           (obj, index) => index < indexOfArray
         );
         // Добавляем новый объект в копию старого массива, уже отфильтрованного
-        const dataToSave = [...filterDataMatch, newData];
+        const dataToSave = [...filterDataUser, newData];
         // Кладем новый массив в LS
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        localStorage.setItem("current-user", JSON.stringify(dataToSave));
       } else {
         // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-        const dataToSave = [...dataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        const dataToSave = [...dataUser, newData];
+        localStorage.setItem("current-user", JSON.stringify(dataToSave));
       }
       // Для красоты делаем переход через 0,4 секунды после клика
       setTimeout(() => route.push(link), 400);
@@ -120,14 +116,12 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
 
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
+    const currentDataUser = dataUser.find((obj) => obj.id === id);
 
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const valueProperty = currentDataUser ? currentDataUser[typeForm] : "";
     setInputValue(valueProperty);
   }, [typeForm]);
-
-  const nextPageProperty = answerArray[0].nextPage;
 
   return (
     <>
@@ -148,49 +142,34 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
             Назад
           </div>
           <div className={styles.title}>{question}</div>
-          {description && (
-            <div className={styles.description}>{description}</div>
-          )}
-          <textarea
+          <div className={styles.description}>{description}</div>
+          <input
             id="stydentYears"
-            placeholder={answerArray[0].title}
+            type="text"
+            placeholder={placeholder}
             autoComplete="off"
             value={inputValue}
             onChange={handleInputValue}
-            className={clsx(styles.textaraeName, {
+            className={clsx(styles.inputUniversityName, {
               [styles.errorInput]: errorInput,
             })}
-            maxLength={500}
-          ></textarea>
+            maxLength={250}
+          />
           {errorInput ? (
             <div className={styles.errorInputText}>
-              Пожалуйста, введите наименование учебного заведения
+              Пожалуйста, укажите ФИО как в паспорте
             </div>
           ) : null}
         </div>
         <div className={styles.wrapButton}>
-          {typeForm === "tutor-place" ? (
-            <button
-              type="button"
-              onClick={() => handleNextStep(nextPageProperty, inputValue)}
-              className={styles.continueButton}
-              disabled={!inputValue || errorInput}
-            >
-              Продолжить
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => handleNextStep(nextPageProperty, inputValue)}
-              className={clsx(
-                styles.continueButton,
-                !inputValue && styles.continueButtonBlack
-              )}
-              disabled={errorInput}
-            >
-              {inputValue ? "Продолжить" : "Пропустить"}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => handleNextStep(nextPage, inputValue)}
+            className={styles.continueButton}
+            disabled={inputValue.length < 3 || errorInput}
+          >
+            Продолжить
+          </button>
         </div>
       </div>
     </>

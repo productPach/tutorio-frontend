@@ -1,9 +1,19 @@
+"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
 import clsx from "clsx";
 import { SelectBar } from "@/components/SelectSubject/SelectSubject";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+
+  const route = useRouter();
+
+  const clickToSignIn = (link: string) => {
+    // Очищаем предыдущие данные заявок из LS, если они есть
+    localStorage.removeItem("currentMatch");
+    route.push(link);
+  }
   return (
     <>
       <header>
@@ -27,8 +37,8 @@ export default function Home() {
               Москва
             </div>
             <div className={styles.header__menu}>
-              <a href="#">Репетиторам</a>
-              <a href="#">Ученикам</a>
+              <span onClick={() => clickToSignIn("/sign-in-tutor/phone")}>Репетиторам</span>
+              <span onClick={() => clickToSignIn("/sign-in-tutor")}>Ученикам</span>
             </div>
           </div>
       </header>

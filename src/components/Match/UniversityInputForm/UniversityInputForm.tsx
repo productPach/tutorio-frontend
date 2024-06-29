@@ -57,7 +57,7 @@ export const UniversityInputForms: React.FC<ComponentRenderProps> = ({
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS && JSON.parse(getDataMatchLS);
+  const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
   const containsClassProperty = dataMatch.some((obj) =>
