@@ -41,6 +41,7 @@
   background-color: #f3d341;
 }
 .searchContainer {
+  position: relative;
   grid-column: span 12;
 }
 .resultContainerTutorSearch {

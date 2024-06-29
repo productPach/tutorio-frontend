@@ -27,8 +27,8 @@ export default function Home() {
               Москва
             </div>
             <div className={styles.header__menu}>
-              <a href="#">Стать репетитором</a>
-              <a href="#">Войти</a>
+              <a href="#">Репетиторам</a>
+              <a href="#">Ученикам</a>
             </div>
           </div>
       </header>

@@ -140,8 +140,8 @@
 }
 .header__menu {
   display: flex;
-  -moz-column-gap: 18px;
-  column-gap: 18px;
+  -moz-column-gap: 38px;
+  column-gap: 38px;
   align-items: center;
 }
 .header__menu a {
