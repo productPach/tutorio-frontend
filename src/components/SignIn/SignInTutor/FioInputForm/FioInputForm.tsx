@@ -42,12 +42,11 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
 
   // Функция для валидации значения поля
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    if (/^\d*$/.test(e.target.value)) {
-      setErrorInput(true);
-    } else {
+    if (/^[a-zA-Zа-яА-Я' `]+$/.test(e.target.value)) {
       setErrorInput(false);
+    } else {
+      setErrorInput(true);
     }
-
     setInputValue(e.target.value);
   };
 
@@ -123,6 +122,27 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
     setInputValue(valueProperty);
   }, [typeForm]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        // Проверяем, содержит ли inputValue только допустимые символы
+        if (/^[a-zA-Zа-яА-Я' `]+$/.test(inputValue)) {
+          setErrorInput(false);
+          handleNextStep(nextPage, inputValue);
+        } else {
+          setErrorInput(true);
+        }
+      }
+    };
+
+    const input = document.getElementById("fioTutor");
+    input?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      input?.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [inputValue, handleNextStep, nextPage]);
+
   return (
     <>
       <div
@@ -144,7 +164,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>{description}</div>
           <input
-            id="stydentYears"
+            id="fioTutor"
             type="text"
             placeholder={placeholder}
             autoComplete="off"
