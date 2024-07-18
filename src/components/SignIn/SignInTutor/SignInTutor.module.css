@@ -149,10 +149,29 @@
     margin: -10px 0 24px 0;
     white-space: pre-line;
   }
+
+  .answerContainer {
+    border-radius: 10px;
+    min-height: 56px;
+    box-sizing: border-box;
+    background-color: rgb(241, 242, 244);
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Older Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;
+  }
   
   .answer {
-    background-color: white;
+    display: flex;
     border-radius: 10px;
+    height: 56px;
+    box-sizing: border-box;
+    background-color: rgb(241, 242, 244);
+    padding: 0 18px;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
   }
   
   .radioLabel {
@@ -240,17 +259,12 @@
   
   .checkboxLabel {
     display: flex;
-    padding: 16px 18px 16px 18px;
-    border-radius: 10px;
-    border: 1px solid #e9e9e9;
     cursor: pointer;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
-    height: 56px;
-    box-sizing: border-box;
-    background-color: rgb(241, 242, 244);
   
     &__text {
       width: fit-content;
@@ -302,6 +316,26 @@
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
+  }
+
+  .checkboxLeftContent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .checkboxRightContent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .embeded {
+    padding-left: 40px;
   }
   
   .errorInput {

@@ -26,9 +26,9 @@ export const listQuestionsForTutorSignIn = [
     {
         id: 4,
         typeForm: "subjects",
-        question: "Подтверждение номера телефона",
-        description: "Отправили код на номер",
-        placeholder: "",
+        question: "По каким предметам нужны ученики?",
+        description: "Будем показывать вам заказы по выбранным предметам",
+        placeholder: "Начните вводить предмет",
         nextPage: "/sign-in-tutor/geo",
     },
     {

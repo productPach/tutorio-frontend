@@ -1,12 +1,11 @@
 "use client";
-;
 import { ConfirmInputForm } from "@/components/SignIn/SignInTutor/ConfirmInputForms/ConfirmInputForm";
 import { FioInputForms } from "@/components/SignIn/SignInTutor/FioInputForm/FioInputForm";
 import { PhoneInputForms } from "@/components/SignIn/SignInTutor/PhoneInputForms/PhoneInputForms";
+import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/SubjectsForms";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
 import { useParams } from "next/navigation";
 import React from "react";
-
 
 interface ComponentRenderProps {
   id: number;
@@ -27,10 +26,10 @@ const SignInTutorPage: React.FC = () => {
   }>();
 
   const ComponentsList: ComponentsList = {
-    "phone": PhoneInputForms,
-    "confirmation": ConfirmInputForm,
-    "fio": FioInputForms,
-    // "subjects": ;
+    phone: PhoneInputForms,
+    confirmation: ConfirmInputForm,
+    fio: FioInputForms,
+    subjects: SubjectsForms
     // "geo": ;
     // "locations": ;
     // "photo": ;
