@@ -1,0 +1,46 @@
+@keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .loader {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+  
+  .loader::before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.05); /* Тусклая окружность */
+  }
+  
+  .loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #d9dee8; /* Полукруглая синяя часть сверху */
+    border-left-color: #d9dee8; /* Полукруглая синяя часть слева */
+    animation: spin 1s linear infinite;
+  }
+  

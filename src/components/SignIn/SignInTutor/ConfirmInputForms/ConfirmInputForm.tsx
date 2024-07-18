@@ -1,30 +1,24 @@
 "use client";
 import React, {
-  ChangeEvent,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
-import styles from "../Match.module.css";
-import animation from "../../../app/match/layout.module.css";
+import styles from "../SignInTutor.module.css";
+import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
 
-interface Answer {
-  id: number;
-  title: string;
-  nextPage: string;
-}
-
 interface ComponentRenderProps {
   id: number;
+  typeForm: string;
   question: string;
   description: string;
-  typeForm: string;
-  answerArray: Answer[];
+  placeholder: string;
+  nextPage: string;
 }
 
 // Определяем тип для объекта в массиве
@@ -39,9 +33,11 @@ type DataItem = {
 
 export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   id,
-  question,
   typeForm,
-  answerArray,
+  question,
+  description,
+  placeholder,
+  nextPage,
 }) => {
   const route = useRouter();
 
@@ -82,6 +78,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         } else {
           setErrorInput(false);
           console.log("Valid code");
+          // Обновляем состояния для красивого эффекта перехода
+          setIsDisabled(true);
+          setIsVisible(false);
+          // Для красоты делаем переход через 0,4 секунды после клика
+          setTimeout(() => route.push(nextPage), 400);
         }
       }
   }, [codes, confirmCode]);
@@ -141,12 +142,12 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
+  const getDataUserLS = localStorage.getItem("current-user");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+  const dataUser: DataItem[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
 
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
-  const containsClassProperty = dataMatch.some((obj) =>
+  const containsClassProperty = dataUser.some((obj) =>
     obj.hasOwnProperty(typeForm)
   );
 
@@ -166,21 +167,21 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
       // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
       if (containsClassProperty) {
         // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-        const indexOfArray = dataMatch.findIndex((obj) =>
+        const indexOfArray = dataUser.findIndex((obj) =>
           obj.hasOwnProperty(typeForm)
         );
         // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
-        const filterDataMatch = dataMatch.filter(
+        const filterDataUser = dataUser.filter(
           (obj, index) => index < indexOfArray
         );
         // Добавляем новый объект в копию старого массива, уже отфильтрованного
-        const dataToSave = [...filterDataMatch, newData];
+        const dataToSave = [...filterDataUser, newData];
         // Кладем новый массив в LS
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        localStorage.setItem("current-user", JSON.stringify(dataToSave));
       } else {
         // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-        const dataToSave = [...dataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+        const dataToSave = [...dataUser, newData];
+        localStorage.setItem("current-user", JSON.stringify(dataToSave));
       }
       // Для красоты делаем переход через 0,4 секунды после клика
       setTimeout(() => route.push(link), 400);
@@ -200,9 +201,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const [isDisabled, setIsDisabled] = useState(false);
 
   // Находим объект массива с введенным телефоном
-  const phoneDataMatch = dataMatch.find((obj) => obj.id === 19);
+  const phoneDataUser = dataUser.find((obj) => obj.id === 1);
   // Вытаскиваем значение данного объека из свойства phone
-  const phoneValue = phoneDataMatch ? phoneDataMatch.phone : "";
+  const phoneValue = phoneDataUser ? phoneDataUser.phone : "";
 
   useEffect(() => {
     setIsVisible(true);
@@ -210,15 +211,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
+    const currentDataUser = dataUser.find((obj) => obj.id === id);
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const valueProperty = currentDataUser ? currentDataUser[typeForm] : "";
     setInputValue(valueProperty);
   }, [typeForm]);
-
-  const nextPageProperty = answerArray[0].nextPage;
-
-  
 
   return (
     <>
@@ -240,7 +237,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           </div>
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>
-            {answerArray[0].title} +7{phoneValue}
+            {description} +7{phoneValue}
           </div>
 
           <div className={styles.inputCodeConfirmContainer}>
@@ -267,7 +264,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPageProperty, inputValue)}
+            onClick={() => handleNextStep(nextPage, inputValue)}
             className={styles.continueButton}
             disabled={codes.join("").length < 4 || errorInput}
           >

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./SelectSubject.module.css";
 import { Subject, getSubjectListForSearch } from "@/api/subjects/apiSubjcts";
 import { useRouter } from "next/navigation";
+import { Spinner } from "../Spinner/Spinner";
 
 export const SelectBar = () => {
   // Состояние для отслеживания строки поиска предмета
@@ -15,6 +16,8 @@ export const SelectBar = () => {
   const [resultSubjectIndex, setResultSubjectIndex] = useState(0);
   // Получаем ссылку в DOM на элемент в выпадающем списке, чтобы перемещать скролл к данному элементу при выделении
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  // Состояние для лоадера
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -29,6 +32,7 @@ export const SelectBar = () => {
   // Функция для подставления предмета в поле поиска по клику + прокидываем флоу дальше
   const handleSubject = useCallback(
     (subject: string, nextPage: string) => {
+      setIsLoading(true);
       // Очищаем предыдущие данные заявок из LS, если они есть
       localStorage.removeItem("currentMatch");
       // Очищаем предыдущие данные по таймеру
@@ -143,6 +147,7 @@ export const SelectBar = () => {
           onChange={(e) => handleSearchTutor(e.target.value)}
           className={errorSubject ? styles.errorInput : undefined}
         />
+        {isLoading && <Spinner />}
         {errorSubject ? (
           <div className={styles.errorInputText}>
             Пожалуйста, выберите предмет из выпадающего списка

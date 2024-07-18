@@ -26,6 +26,7 @@
     "@types/react-google-recaptcha": "^2.1.9",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "prettier": "3.3.3",
     "typescript": "5.4.5"
   }
 }
