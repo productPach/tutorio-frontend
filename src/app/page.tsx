@@ -2,7 +2,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import clsx from "clsx";
-import { SelectBar } from "@/components/SelectSubject/SelectSubject";
+import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -46,7 +46,7 @@ export default function Home() {
         <section className={clsx(styles.firstSection, styles.center)}>
           <h1>Онлайн сервис подбора репетиторов</h1>
           <h2>Выбирайте проверенных репетиторов и общайтесь с ними напрямую</h2>
-          <SelectBar />
+          <SelectSubject />
           <div className={styles.firstSection__snippetSearch}>
             <div
               className={clsx(styles.firstSection__snippet, styles.snippetMedium)}

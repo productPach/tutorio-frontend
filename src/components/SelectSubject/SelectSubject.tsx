@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "../Spinner/Spinner";
 import { Subject } from "@/types/types";
 
-export const SelectBar = () => {
+export const SelectSubject = () => {
   // Состояние для отслеживания строки поиска предмета
   const [inputSearchTutor, setInputSearchTutor] = useState("");
   // Состояние для получения результатов поиска
