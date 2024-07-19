@@ -1,13 +1,5 @@
+import { Subject } from "@/types/types";
 import { data } from "@/utils/listSubjects";
-
-// Интерфейс для объекта предметов // mock object
-export interface Subject {
-  //userId: number;
-  id: number;
-  title: string;
-  nextPage: string;
-  //ompleted: boolean;
-}
 
 // Запрос для получения списка предметов // mock object // Перенести фильтрацию на сторону сервера
 export const getSubjectListForSearch = async (subject: string) => {

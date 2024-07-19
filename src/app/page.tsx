@@ -2,18 +2,20 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import clsx from "clsx";
-import { SelectBar } from "@/components/SelectSubject/SelectSubject";
+import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
 
   const route = useRouter();
 
+  // Функция клика по ссылкам Репетиторам, Ученикам
   const clickToSignIn = (link: string) => {
     // Очищаем предыдущие данные заявок из LS, если они есть
     localStorage.removeItem("currentMatch");
     route.push(link);
   }
+
   return (
     <>
       <header>
@@ -46,7 +48,7 @@ export default function Home() {
         <section className={clsx(styles.firstSection, styles.center)}>
           <h1>Онлайн сервис подбора репетиторов</h1>
           <h2>Выбирайте проверенных репетиторов и общайтесь с ними напрямую</h2>
-          <SelectBar />
+          <SelectSubject />
           <div className={styles.firstSection__snippetSearch}>
             <div
               className={clsx(styles.firstSection__snippet, styles.snippetMedium)}
