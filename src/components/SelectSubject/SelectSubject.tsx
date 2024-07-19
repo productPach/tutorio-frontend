@@ -1,9 +1,10 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./SelectSubject.module.css";
-import { Subject, getSubjectListForSearch } from "@/api/subjects/apiSubjcts";
+import { getSubjectListForSearch } from "@/api/subjects/apiSubjcts";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../Spinner/Spinner";
+import { Subject } from "@/types/types";
 
 export const SelectBar = () => {
   // Состояние для отслеживания строки поиска предмета
