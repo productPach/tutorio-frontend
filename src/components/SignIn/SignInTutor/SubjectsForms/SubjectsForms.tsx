@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import { data } from "@/utils/listSubjects";
-import { SubjectItem } from "./Subject";
+import { SubjectItem } from "./SubjectItem";
 import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 
 interface ComponentProps {
@@ -39,6 +39,10 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   const route = useRouter();
 
   const [listSubjectChecked, setListSubjectChecked] = useState<string[]>([]);
+  // Состояние текстового поля
+  const [inputValue, setInputValue] = useState("");
+  // Состояние для ошибки текстового поля
+  const [errorInput, setErrorInput] = useState(false);
 
   const handleSubjectCheckedChange = useCallback(
     (subjectId: string, isChecked: boolean) => {
@@ -52,13 +56,6 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
     },
     []
   );
-
-  console.log(listSubjectChecked);
-
-  // Состояние текстового поля
-  const [inputValue, setInputValue] = useState("");
-  // Состояние для ошибки текстового поля
-  const [errorInput, setErrorInput] = useState(false);
 
   // Импортируем предметы
   const listSubjects = data;
