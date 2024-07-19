@@ -91,7 +91,7 @@ export const SubjectItem: React.FC<ComponentProps> = ({
 
   return (
     <div className={styles.answerContainer}>
-      <div className={styles.answer}>
+      <div className={styles.answer} onClick={clickCategorySubject}>
         <div className={styles.checkboxLeftContent}>
           <input
             type="checkbox"
@@ -107,7 +107,7 @@ export const SubjectItem: React.FC<ComponentProps> = ({
           >
             <span className={styles.checkbox}></span>
           </label>
-          <p className={styles.answerTitle} onClick={clickCategorySubject}>
+          <p className={styles.answerTitle}>
             {category.title}
           </p>
         </div>
