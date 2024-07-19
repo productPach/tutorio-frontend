@@ -7,6 +7,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { data } from "@/utils/listSubjects";
 import { SubjectItem } from "./Subject";
+import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 
 interface ComponentProps {
   id: number;
@@ -201,6 +202,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
             })}
             maxLength={250}
           />
+          {/* <SelectSubject /> */}
           <div className={styles.description}></div>
           <div className={styles.containerAnswers}>
             {listCategorySubjects.map((category) => {

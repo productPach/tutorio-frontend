@@ -9,11 +9,13 @@ export default function Home() {
 
   const route = useRouter();
 
+  // Функция клика по ссылкам Репетиторам, Ученикам
   const clickToSignIn = (link: string) => {
     // Очищаем предыдущие данные заявок из LS, если они есть
     localStorage.removeItem("currentMatch");
     route.push(link);
   }
+
   return (
     <>
       <header>
