@@ -1,5 +1,11 @@
 "use client";
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "../SignInTutor.module.css";
 import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
@@ -7,7 +13,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { data } from "@/utils/listSubjects";
 import { SubjectItem } from "./SubjectItem";
-import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
+import { Search } from "@/components/SelectSubject/Search";
 
 interface ComponentProps {
   id: number;
@@ -39,6 +45,10 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   const route = useRouter();
 
   const [listSubjectChecked, setListSubjectChecked] = useState<string[]>([]);
+  // Состояние для выбранной категории
+  const [clickedCategory, setClickedCategory] = useState("");
+  // Состояние для выбранного предмета
+  const [clickedSubject, setClickedSubject] = useState("");
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
   // Состояние для ошибки текстового поля
@@ -64,15 +74,15 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
     (subject) => subject.general
   );
 
-  // Функция для валидации значения поля
-  const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    if (/^[a-zA-Zа-яА-Я' ]+$/.test(e.target.value)) {
-      setErrorInput(false);
-    } else {
-      setErrorInput(true);
-    }
-    setInputValue(e.target.value);
-  };
+  const handleScrollToSubject = useCallback(
+    (subjectId: string, category: string) => {
+      console.log(subjectId);
+      console.log(category);
+      setClickedCategory(category);
+      setClickedSubject(subjectId);
+    },
+    []
+  );
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataUserLS = localStorage.getItem("current-user");
@@ -149,26 +159,6 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
     setListSubjectChecked(valueProperty);
   }, [typeForm]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        // Проверяем, содержит ли inputValue только допустимые символы
-        if (/^[a-zA-Zа-яА-Я' ]+$/.test(inputValue)) {
-          setErrorInput(false);
-          handleNextStep(nextPage, inputValue);
-        } else {
-          setErrorInput(true);
-        }
-      }
-    };
-
-    const input = document.getElementById("fioTutor");
-    input?.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      input?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [inputValue, handleNextStep, nextPage]);
   return (
     <>
       <div
@@ -187,19 +177,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
           </div>
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>{description}</div>
-          <input
-            id="fioTutor"
-            type="text"
-            placeholder={placeholder}
-            autoComplete="off"
-            value={inputValue}
-            onChange={handleInputValue}
-            className={clsx(styles.inputUniversityName, {
-              [styles.errorInput]: errorInput,
-            })}
-            maxLength={250}
-          />
-          {/* <SelectSubject /> */}
+          <Search handleScrollToSubject={handleScrollToSubject} />
           <div className={styles.description}></div>
           <div className={styles.containerAnswers}>
             {listCategorySubjects.map((category) => {
@@ -217,6 +195,9 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
                     countSubjectsInCategory={countSubjectsInCategory}
                     listSubjectChecked={listSubjectChecked}
                     onSubjectCheckedChange={handleSubjectCheckedChange}
+                    clickedCategory={clickedCategory}
+                    clickedSubject={clickedSubject}
+                    setClickedSubject={setClickedSubject}
                   />
                 </React.Fragment>
               );

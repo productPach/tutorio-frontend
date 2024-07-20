@@ -78,3 +78,26 @@
   color: #ff2e2e;
   margin-top: 8px;
 }
+
+
+/* Для компонента Search */
+.firstSection__tutorSearch2 input {
+  width: 100%;
+    height: 54px;
+    border: 1px solid #e9e9e9;
+    border-radius: 10px;
+    font-size: 16px;
+    padding: 0 20px 0 20px;
+    background-color: rgb(241, 242, 244);
+    box-sizing: border-box;
+}
+.firstSection__tutorSearch2 input::-moz-placeholder {
+  color: #c1c1c1;
+}
+.firstSection__tutorSearch2 input::placeholder {
+  color: #c1c1c1;
+}
+.firstSection__tutorSearch2 input:focus {
+  outline: none;
+  border: 1px solid #fad949;
+}
