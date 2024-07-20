@@ -8,13 +8,8 @@
   }
   
   .loader {
-    position: relative;
-    display: inline-block;
     width: 18px;
     height: 18px;
-    position: absolute;
-    top: 24px;
-    right: 24px;
   }
   
   .loader::before {

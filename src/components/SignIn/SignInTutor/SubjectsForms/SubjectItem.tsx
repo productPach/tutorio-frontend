@@ -112,7 +112,6 @@ export const SubjectItem: React.FC<ComponentProps> = ({
             block: "center",
           });
         }
-        console.log(clickedSubjectNumb);
         setClickedSubject("");
       }, 300);
   };

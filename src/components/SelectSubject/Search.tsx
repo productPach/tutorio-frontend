@@ -58,6 +58,8 @@ export const Search: React.FC<ComponentProps> = ({ handleScrollToSubject }) => {
       // Делаем задержку, чтобы был красивый переход
       setTimeout(() => {
         linkApplicationSubject(id, category);
+        setIsLoading(false);
+        setInputSearchTutor("");
       }, 1000 * 0.3);
     },
     [linkApplicationSubject]
@@ -134,26 +136,23 @@ export const Search: React.FC<ComponentProps> = ({ handleScrollToSubject }) => {
     }
   };
 
-  // useEffect(() => {
-  //   // Блокируем скроллинг страницы в момент, когда введено более одного символа. В этот момент показываются подсказки в выпадающем списке
-  //   inputSearchTutor.length > 1
-  //     ? (document.body.style.overflow = "hidden")
-  //     : (document.body.style.overflow = "auto");
-  // }, [inputSearchTutor]);
-
   return (
     <div className={styles.firstSection__tutorSearch2}>
       <div className={styles.searchContainer}>
         <input
           id="subjectInput"
           type="text"
-          placeholder="По какому предмету нужен репетитор? Введи только название предмета"
+          placeholder="Введите название предмета"
           autoComplete="off"
           value={inputSearchTutor}
           onChange={(e) => handleSearchTutor(e.target.value)}
           className={errorSubject ? styles.errorInput : undefined}
         />
-        {isLoading && <Spinner />}
+        {isLoading && (
+          <div className={styles.spinner2}>
+            <Spinner />
+          </div>
+        )}
         {errorSubject ? (
           <div className={styles.errorInputText}>
             Пожалуйста, выберите предмет из выпадающего списка
