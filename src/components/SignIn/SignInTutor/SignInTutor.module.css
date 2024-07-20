@@ -14,9 +14,20 @@
   }
   
   .wrapButton {
+    position: sticky;
+    bottom: 0;
     display: flex;
     flex-direction: row;
+    background-color: #f1f2f4; /* добавлено */
+    padding: 20px 0;
+    box-shadow: 0 0 30px 30px #f1f2f4;
+    z-index: 99;
   }
+
+  /* Новый стиль для белого фона */
+.whiteBackground {
+  background-color: white;  /* Или другой цвет в зависимости от ваших требований */
+}
   
   .containerAnswers {
     display: flex;
@@ -146,7 +157,7 @@
   
   .description {
     font-size: 16px;
-    margin: -10px 0 24px 0;
+    /*margin: -10px 0 24px 0;*/
     white-space: pre-line;
   }
 
@@ -288,6 +299,7 @@
     position: relative;
     cursor: pointer;
     margin-top: -2px;
+    z-index: 10;
   
     &:after {
       content: "";
@@ -457,7 +469,11 @@
     text-decoration: underline;
     cursor: pointer;
   }
-  
-  .description {
-    margin: 0 0 18px 0;
+
+  .sticky {
+    background-color: white;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 99;
   }

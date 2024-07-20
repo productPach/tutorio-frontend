@@ -44,10 +44,12 @@ export const SelectSubject = () => {
       // Очищаем результаты, чтобы скрыть подсказки
       setResultSearchTutor([]);
       // Создаем новый объект для добавления в LS
-      const dataToSave = [{
-        id: 0,
-        subject: subject,
-      }];
+      const dataToSave = [
+        {
+          id: 0,
+          subject: subject,
+        },
+      ];
       // Добавляем объект в LS
       localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       // Делаем задержку, чтобы был красивый переход
@@ -132,8 +134,8 @@ export const SelectSubject = () => {
   useEffect(() => {
     // Блокируем скроллинг страницы в момент, когда введено более одного символа. В этот момент показываются подсказки в выпадающем списке
     inputSearchTutor.length > 1
-    ? (document.body.style.overflow = "hidden")
-    : (document.body.style.overflow = "auto");
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "auto");
   }, [inputSearchTutor]);
 
   return (
@@ -148,7 +150,11 @@ export const SelectSubject = () => {
           onChange={(e) => handleSearchTutor(e.target.value)}
           className={errorSubject ? styles.errorInput : undefined}
         />
-        {isLoading && <Spinner />}
+        {isLoading && (
+          <div className={styles.spinner}>
+            <Spinner />
+          </div>
+        )}
         {errorSubject ? (
           <div className={styles.errorInputText}>
             Пожалуйста, выберите предмет из выпадающего списка

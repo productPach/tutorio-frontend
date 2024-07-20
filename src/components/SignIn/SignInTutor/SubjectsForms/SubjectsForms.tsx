@@ -159,6 +159,8 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
     setListSubjectChecked(valueProperty);
   }, [typeForm]);
 
+  console.log(listSubjectChecked);
+
   return (
     <>
       <div
@@ -177,7 +179,9 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
           </div>
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>{description}</div>
-          <Search handleScrollToSubject={handleScrollToSubject} />
+          <div className={styles.sticky}>
+            <Search handleScrollToSubject={handleScrollToSubject} />
+          </div>
           <div className={styles.description}></div>
           <div className={styles.containerAnswers}>
             {listCategorySubjects.map((category) => {

@@ -79,6 +79,16 @@
   margin-top: 8px;
 }
 
+.spinner {
+  position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+
 
 /* Для компонента Search */
 .firstSection__tutorSearch2 input {
@@ -100,4 +110,14 @@
 .firstSection__tutorSearch2 input:focus {
   outline: none;
   border: 1px solid #fad949;
+}
+
+.spinner2 {
+  position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 18px;
+    right: 24px;
 }
