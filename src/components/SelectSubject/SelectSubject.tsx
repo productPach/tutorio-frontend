@@ -32,7 +32,7 @@ export const SelectSubject = () => {
 
   // Функция для подставления предмета в поле поиска по клику + прокидываем флоу дальше
   const handleSubject = useCallback(
-    (subject: string, nextPage: string) => {
+    (id_p: string, subject: string, nextPage: string) => {
       setIsLoading(true);
       // Очищаем предыдущие данные заявок из LS, если они есть
       localStorage.removeItem("currentMatch");
@@ -47,7 +47,7 @@ export const SelectSubject = () => {
       const dataToSave = [
         {
           id: 0,
-          subject: subject,
+          subject: id_p,
         },
       ];
       // Добавляем объект в LS
@@ -96,6 +96,7 @@ export const SelectSubject = () => {
       if (e.key === "Enter" && resultSearchTutor.length > 0) {
         handleSubject(
           resultSearchTutor[resultSubjectIndex].id_p,
+          resultSearchTutor[resultSubjectIndex].title,
           resultSearchTutor[resultSubjectIndex].nextPage
         );
       }
@@ -169,7 +170,9 @@ export const SelectSubject = () => {
                     {errorSubject ? <div>errorSubject</div> : null}
                     <li
                       key={item.id}
-                      onClick={() => handleSubject(item.title, item.nextPage)}
+                      onClick={() =>
+                        handleSubject(item.id_p, item.title, item.nextPage)
+                      }
                       className={`${styles.resultTutorSearch} ${
                         index === resultSubjectIndex ? styles.highlight : ""
                       }`}
