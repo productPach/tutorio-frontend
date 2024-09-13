@@ -22,27 +22,27 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 4,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 5,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 6,
             title: "Подготовка к школе",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 7,
             title: "ДВИ",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 8,
@@ -52,12 +52,12 @@ export const listQuestionsAnswers = [
           {
             id: 9,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 10,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -68,32 +68,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 3,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -104,32 +104,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Подготовка к специализированной школе",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 3,
             title: "Подготовка к конкурсам",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -140,32 +140,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Подготовка к экзамену / контрольной",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 3,
             title: "Подготовка к школе",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -176,12 +176,12 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 3,
@@ -191,17 +191,17 @@ export const listQuestionsAnswers = [
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -217,27 +217,27 @@ export const listQuestionsAnswers = [
           {
             id: 2,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 3,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -258,17 +258,17 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 4,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 5,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 6,
@@ -278,12 +278,12 @@ export const listQuestionsAnswers = [
           {
             id: 7,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 8,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/english",
+            nextPage: "/match/internationalExam/english",
           },
           {
             id: 9,
@@ -293,17 +293,17 @@ export const listQuestionsAnswers = [
           {
             id: 10,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 11,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 12,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -319,17 +319,17 @@ export const listQuestionsAnswers = [
           {
             id: 2,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 3,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 4,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 5,
@@ -339,27 +339,27 @@ export const listQuestionsAnswers = [
           {
             id: 6,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 7,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/chinese",
+            nextPage: "/match/internationalExam/chinese",
           },
           {
             id: 8,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 9,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 10,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -380,17 +380,17 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 4,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 5,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 6,
@@ -400,27 +400,27 @@ export const listQuestionsAnswers = [
           {
             id: 7,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 8,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/german",
+            nextPage: "/match/internationalExam/german",
           },
           {
             id: 9,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 10,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 11,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -431,42 +431,42 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Помощь по программе",
-            nextPage: "/match/study-programms/name",
+            nextPage: "/match/studyProgramms/name",
           },
           {
             id: 3,
             title: "ВПР по математике",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 4,
             title: "ВПР по русскому",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 5,
             title: "ВПР по окружающему миру",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 6,
             title: "Подготовка к итоговому тестированию",
-            nextPage: "/match/study-programms/name",
+            nextPage: "/match/studyProgramms/name",
           },
           {
             id: 7,
             title: "Подготовка к школе",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 8,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -477,32 +477,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Помощь по программе",
-            nextPage: "/match/study-programms/name",
+            nextPage: "/match/studyProgramms/name",
           },
           {
             id: 3,
             title: "ВПР по математике",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 4,
             title: "Подготовка к итоговому тестированию",
-            nextPage: "/match/study-programms/name",
+            nextPage: "/match/studyProgramms/name",
           },
           {
             id: 5,
             title: "Подготовка к школе",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -513,17 +513,17 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Обучение чтению, письму или счёту",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 2,
             title: "Подготовка по методике",
-            nextPage: "/match/study-methods/name",
+            nextPage: "/match/studyMethods/name",
           },
           {
             id: 3,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -534,12 +534,12 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 3,
@@ -549,22 +549,22 @@ export const listQuestionsAnswers = [
           {
             id: 4,
             title: "Для ребенка",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 7,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -575,22 +575,22 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/rki",
+            nextPage: "/match/internationalExam/rki",
           },
           {
             id: 2,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 3,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 4,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -611,17 +611,17 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 4,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 5,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 6,
@@ -631,12 +631,12 @@ export const listQuestionsAnswers = [
           {
             id: 7,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 8,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/french",
+            nextPage: "/match/internationalExam/french",
           },
           {
             id: 9,
@@ -646,17 +646,17 @@ export const listQuestionsAnswers = [
           {
             id: 10,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 11,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 12,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -677,17 +677,17 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Повышение успеваемости",
-            nextPage: "/match/student-type/3890",
+            nextPage: "/match/studentType/3890",
           },
           {
             id: 4,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 5,
             title: "Подготовка к олимпиаде",
-            nextPage: "/match/student-type/2330",
+            nextPage: "/match/studentType/2330",
           },
           {
             id: 6,
@@ -697,12 +697,12 @@ export const listQuestionsAnswers = [
           {
             id: 7,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 8,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/spanish",
+            nextPage: "/match/internationalExam/spanish",
           },
           {
             id: 9,
@@ -712,17 +712,17 @@ export const listQuestionsAnswers = [
           {
             id: 10,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 11,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 12,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -733,32 +733,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/italian",
+            nextPage: "/match/internationalExam/italian",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 3,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -769,32 +769,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/korean",
+            nextPage: "/match/internationalExam/korean",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 3,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -805,32 +805,32 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Подготовка к международному экзамену",
-            nextPage: "/match/international-exam/japanese",
+            nextPage: "/match/internationalExam/japanese",
           },
           {
             id: 2,
             title: "Подготовка к экзамену в посольстве",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 3,
             title: "Подготовка к экзамену в вузе",
-            nextPage: "/match/student-university/name",
+            nextPage: "/match/studentUniversity/name",
           },
           {
             id: 4,
             title: "Для себя",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 5,
             title: "Для работы",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 6,
             title: "Другое",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -947,57 +947,57 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "1 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 2,
             title: "2 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 3,
             title: "3 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 4,
             title: "4 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 5,
             title: "5 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 6,
             title: "6 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 7,
             title: "7 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 8,
             title: "8 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 9,
             title: "9 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 10,
             title: "10 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 11,
             title: "11 класс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
         ],
       },
@@ -1008,22 +1008,22 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "1 класс",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
           {
             id: 2,
             title: "2 класс",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
           {
             id: 3,
             title: "3 класс",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
           {
             id: 4,
             title: "4 класс",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
         ],
       },
@@ -1031,7 +1031,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 3,
-    typeForm: "student-type",
+    typeForm: "studentType",
     question: "Кто будет заниматься?",
     description: "",
     page: [
@@ -1042,7 +1042,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Дошкольник",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 2,
@@ -1052,12 +1052,12 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Студент",
-            nextPage: "/match/student-course/7860-1",
+            nextPage: "/match/studentCourse/7860-1",
           },
           {
             id: 4,
             title: "Взрослый",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -1068,7 +1068,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Дошкольник",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
           {
             id: 2,
@@ -1078,12 +1078,12 @@ export const listQuestionsAnswers = [
           {
             id: 3,
             title: "Студент",
-            nextPage: "/match/student-course/7860-2",
+            nextPage: "/match/studentCourse/7860-2",
           },
           {
             id: 4,
             title: "Взрослый",
-            nextPage: "/match/student-years/3990",
+            nextPage: "/match/studentYears/3990",
           },
         ],
       },
@@ -1091,7 +1091,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 4,
-    typeForm: "student-course",
+    typeForm: "studentCourse",
     question: "На каком курсе учитесь?",
     description: "",
     page: [
@@ -1102,42 +1102,42 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "1 курс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 2,
             title: "2 курс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 3,
             title: "3 курс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 4,
             title: "4 курс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 5,
             title: "5 курс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 6,
             title: "6 курс",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 7,
             title: "Аспирантура",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 8,
             title: "Ординатура",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
         ],
       },
@@ -1202,17 +1202,17 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Менее месяца",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 2,
             title: "Несколько месяцев",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
           {
             id: 3,
             title: "Год и более",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
         ],
       },
@@ -1220,7 +1220,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 6,
-    typeForm: "student-level",
+    typeForm: "studentLevel",
     question: "Какой уровень ученика?",
     description: "",
     page: [
@@ -1231,17 +1231,17 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Низкий",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
           {
             id: 2,
             title: "Средний",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
           {
             id: 3,
             title: "Высокий",
-            nextPage: "/match/tutor-gender/gender",
+            nextPage: "/match/tutorGender/gender",
           },
         ],
       },
@@ -1249,7 +1249,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 7,
-    typeForm: "student-years",
+    typeForm: "studentYears",
     question: "Укажите возраст ученика",
     description: "",
     page: [
@@ -1260,7 +1260,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Введите возраст цифрами",
-            nextPage: "/match/student-level/level",
+            nextPage: "/match/studentLevel/level",
           },
         ],
       },
@@ -1279,7 +1279,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 8,
-    typeForm: "tutor-gender",
+    typeForm: "tutorGender",
     question: "Важен ли пол репетитора?",
     description: "",
     page: [
@@ -1308,7 +1308,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 9,
-    typeForm: "student-university",
+    typeForm: "studentUniversity",
     question: "В каком вузе экзамен?",
     description: "",
     page: [
@@ -1327,7 +1327,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 10,
-    typeForm: "international-exam",
+    typeForm: "internationalExam",
     question: "К какому экзамену готовитесь?",
     description: "",
     page: [
@@ -1604,7 +1604,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 11,
-    typeForm: "study-methods",
+    typeForm: "studyMethods",
     question: "По какой методике нужна подготовка?",
     description: "",
     page: [
@@ -1615,22 +1615,22 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Методика Зайцева",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 2,
             title: "Система Монтессори",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 3,
             title: 'Программа "Росток"',
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
           {
             id: 4,
             title: "По рекомендации репетитора",
-            nextPage: "/match/student-years/4470",
+            nextPage: "/match/studentYears/4470",
           },
         ],
       },
@@ -1638,7 +1638,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 12,
-    typeForm: "study-programms",
+    typeForm: "studyProgramms",
     question: "По какой программе обучаетесь?",
     description: "",
     page: [
@@ -1723,7 +1723,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Перечислите все удобные часы, например, Пн-Вт 13:00-15:00",
-            nextPage: "/match/study-place/where",
+            nextPage: "/match/studyPlace/where",
           },
         ],
       },
@@ -1731,7 +1731,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 14,
-    typeForm: "study-place",
+    typeForm: "studyPlace",
     question: "Где удобно заниматься?",
     description: "",
     page: [
@@ -1742,17 +1742,17 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Дистанционно",
-            nextPage: "/match/study-place/where",
+            nextPage: "/match/studyPlace/where",
           },
           {
             id: 2,
             title: "У репетитора",
-            nextPage: "/match/study-place/where",
+            nextPage: "/match/studyPlace/where",
           },
           {
             id: 3,
             title: "У меня дома",
-            nextPage: "/match/student-place/adress",
+            nextPage: "/match/studentAdress/adress",
           },
         ],
       },
@@ -1760,7 +1760,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 15,
-    typeForm: "student-place",
+    typeForm: "studentAdress",
     question: "Укажите ваш адрес",
     description: "",
     page: [
@@ -1771,7 +1771,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Начните вводить адрес проживания",
-            nextPage: "/match/tutor-type/price",
+            nextPage: "/match/tutorType/price",
           },
         ],
       },
@@ -1782,7 +1782,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Начните вводить адрес проживания",
-            nextPage: "/match/tutor-place/trip",
+            nextPage: "/match/tutorPlace/trip",
           },
         ],
       },
@@ -1790,7 +1790,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 16,
-    typeForm: "tutor-place",
+    typeForm: "tutorPlace",
     question: "Куда сможете приехать?",
     description:
       "Укажите районы, округа или станции метро, до которых вам удобно\nдобираться на занятия с репетитором",
@@ -1802,7 +1802,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Например, ЮВАО, метро Люблино, Братиславская, Кузьминки",
-            nextPage: "/match/tutor-type/price",
+            nextPage: "/match/tutorType/price",
           },
         ],
       },
@@ -1810,7 +1810,7 @@ export const listQuestionsAnswers = [
   },
   {
     id: 17,
-    typeForm: "tutor-type",
+    typeForm: "tutorType",
     question: "Какой репетитор вам подходит?",
     description: "",
     page: [
@@ -1850,7 +1850,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Укажите важную информацию для преподавателей",
-            nextPage: "/match/phone/number",
+            nextPage: "/match/fio/student",
           },
         ],
       },
@@ -1858,6 +1858,25 @@ export const listQuestionsAnswers = [
   },
   {
     id: 19,
+    typeForm: "fio",
+    question: "Как вас зовут?",
+    description: "Пожалуйста, укажите фамилию и имя",
+    page: [
+      {
+        id: 1,
+        type: "student",
+        answers: [
+          {
+            id: 1,
+            title: "Иванов Иван",
+            nextPage: "/match/phone/number",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 20,
     typeForm: "phone",
     question: "Номер телефона",
     description: "",
@@ -1876,7 +1895,7 @@ export const listQuestionsAnswers = [
     ],
   },
   {
-    id: 20,
+    id: 21,
     typeForm: "confirmation",
     question: "Подтверждение номера телефона",
     description: "",
@@ -1888,7 +1907,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Отправили код на номер",
-            nextPage: "/student",
+            nextPage: "/student/order",
           },
         ],
       },

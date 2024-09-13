@@ -95,7 +95,7 @@ export default function Home() {
             >
               Математика
               <Image
-                src="img/icon/23324.svg"
+                src="img/icon/fkCvxuEhaO12Mt68ulWN8.svg"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}

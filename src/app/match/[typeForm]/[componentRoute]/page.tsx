@@ -3,13 +3,15 @@ import { YearsInputForms } from "@/components/Match/YearsInputForm/YearsInputFor
 import { RadioListForms } from "@/components/Match/RadioListForms/RadioListForms";
 import { listQuestionsAnswers } from "@/utils/listQuestionsAnswers";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { UniversityInputForms } from "@/components/Match/UniversityInputForm/UniversityInputForm";
 import { TextForms } from "@/components/Match/TextForms/TextForms";
 import { CheckboxListForms } from "@/components/Match/CheckboxListForms/CheckboxListForms";
 import { AdressInputForms } from "@/components/Match/AdressInputForms/AdressInputForms";
 import { PhoneInputForms } from "@/components/Match/PhoneInputForms/PhoneInputForms";
 import { ConfirmInputForm } from "@/components/Match/ConfirmInputForms/ConfirmInputForm";
+import { FioInputForms } from "@/components/Match/FioInputForm/FioInputForm";
+import { useRouter } from "next/navigation";
 
 interface Answer {
   id: number;
@@ -30,6 +32,16 @@ interface ComponentsList {
 }
 
 const MatchPage: React.FC = () => {
+  const route = useRouter();
+  // Вытаскиваем актуальный массив c данными формы из LocalStorage
+  const getDataMatchLS = localStorage.getItem("currentMatch");
+  // Если в LS нет объекта с ключом currentMatch, делаем редирект на главную
+  useEffect(() => {
+    if (!getDataMatchLS) {
+      route.push("/");
+    }
+  }, [route]);
+
   const { typeForm, componentRoute } = useParams<{
     typeForm: string;
     componentRoute: string;
@@ -38,24 +50,25 @@ const MatchPage: React.FC = () => {
   const ComponentsList: ComponentsList = {
     goal: RadioListForms,
     class: RadioListForms,
-    "student-type": RadioListForms,
-    "student-course": RadioListForms,
+    studentType: RadioListForms,
+    studentCourse: RadioListForms,
     deadline: RadioListForms,
-    "student-level": RadioListForms,
-    "tutor-gender": RadioListForms,
-    "international-exam": RadioListForms,
-    "study-methods": RadioListForms,
-    "study-programms": RadioListForms,
-    "student-years": YearsInputForms,
-    "student-university": UniversityInputForms,
+    studentLevel: RadioListForms,
+    tutorGender: RadioListForms,
+    internationalExam: RadioListForms,
+    studyMethods: RadioListForms,
+    studyProgramms: RadioListForms,
+    studentYears: YearsInputForms,
+    studentUniversity: UniversityInputForms,
     timetable: TextForms,
-    "study-place": CheckboxListForms,
-    "student-place": AdressInputForms,
-    "tutor-place": TextForms,
-    "tutor-type": RadioListForms,
+    studyPlace: CheckboxListForms,
+    studentAdress: AdressInputForms,
+    tutorPlace: TextForms,
+    tutorType: RadioListForms,
     info: TextForms,
-    "phone": PhoneInputForms,
-    "confirmation": ConfirmInputForm,
+    fio: FioInputForms,
+    phone: PhoneInputForms,
+    confirmation: ConfirmInputForm,
   };
 
   const ComponentRender = ComponentsList[typeForm];

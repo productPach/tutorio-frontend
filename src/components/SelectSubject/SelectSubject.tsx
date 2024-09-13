@@ -95,7 +95,7 @@ export const SelectSubject = () => {
 
       if (e.key === "Enter" && resultSearchTutor.length > 0) {
         handleSubject(
-          resultSearchTutor[resultSubjectIndex].title,
+          resultSearchTutor[resultSubjectIndex].id_p,
           resultSearchTutor[resultSubjectIndex].nextPage
         );
       }

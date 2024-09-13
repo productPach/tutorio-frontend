@@ -16,5 +16,5 @@ export const formatPhoneNumber = (value: string): { formatted: string; original:
   }
 
   // Возвращаем отформатированный номер телефона и исходное значение.
-  return { formatted, original: `7${phoneNumber}` };
+  return { formatted, original: phoneNumber };
 };

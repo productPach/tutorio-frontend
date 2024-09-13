@@ -12,6 +12,34 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
+import { fetchGetToken } from "@/api/server/userApi";
+import { setCookie } from "@/utils/cookies/cookies";
+import {
+  fetchCreateStudent,
+  fetchCurrentStudent,
+} from "@/api/server/studentApi";
+import { fetchCreateOrder } from "@/api/server/orderApi";
+import {
+  subjectDataMatch,
+  goalDataMatch,
+  classDataMatch,
+  studentTypeDataMatch,
+  studentYearsDataMatch,
+  studentCourseDataMatch,
+  studentUniversityDataMatch,
+  internationalExamDataMatch,
+  studyMethodsDataMatch,
+  studyProgrammsDataMatch,
+  deadlineDataMatch,
+  studentLevelDataMatch,
+  tutorGenderDataMatch,
+  timetableDataMatch,
+  studyPlaceDataMatch,
+  studentAdressDataMatch,
+  tutorPlaceDataMatch,
+  tutorTypeDataMatch,
+  infoDataMatch,
+} from "@/utils/match/getDataOrderFromLS/getDataOrderFromLS";
 
 interface Answer {
   id: number;
@@ -34,6 +62,15 @@ type DataItem = {
   goal?: string;
   class?: string;
   deadline?: string;
+  studentLevel?: string;
+  tutorGender?: string;
+  timetable?: string;
+  studyPlace?: string[];
+  studentPlace?: string;
+  tutorPlace?: string; // заменить на массив
+  tutorType?: string;
+  info?: string;
+  fio?: string;
   [key: string]: any;
 };
 
@@ -45,20 +82,14 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
 
-  // ПЕРЕДЕЛАТЬ!!!
-  // Нужно вытаскивать код подтверждения в БД
-  // Временно вытаскиваем код из LocalStorage
-  const confirmCodeLS = localStorage.getItem("confirm-code");
-  const confirmCode: string = confirmCodeLS && JSON.parse(confirmCodeLS);
-  //console.log(confirmCode);
-  
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
+  // Состояние текстового поля с логическим выражением
+  const [isSuccess, setIsSuccess] = useState(false);
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
 
   //console.log(errorInput);
-
 
   // Состояние для содержимого инпутов
   const [codes, setCodes] = useState(["", "", "", ""]);
@@ -72,27 +103,158 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     null,
   ]);
 
+  // Вытаскиваем актуальный массив c данными формы из LocalStorage
+  const getDataMatchLS = localStorage.getItem("currentMatch");
+  // Конвертируем массив c данными формы из JSON в JS объект
+  const dataMatch: DataItem[] = getDataMatchLS
+    ? JSON.parse(getDataMatchLS)
+    : [];
+
+  // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
+  const tutorPlaceDataMatchDEV = ["0", "1", "2"];
+
+  // Авторизация пользователя
+  const getToken = async (secretCode: string) => {
+    try {
+      const jsonPhone = localStorage.getItem("origin-phone");
+      const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+      if (phone) {
+        await fetchGetToken({ phone, secretCode }).then((data) => {
+          if (data.token) {
+            const token = data.token;
+            //console.log(phone);
+            //console.log(data.token);
+            setErrorInput(false);
+            setIsSuccess(true);
+            setCookie("user", token, 30, {});
+
+            fetchCurrentStudent(token)
+              .catch(() => {
+                const fioDataMatch = dataMatch.find((obj) => obj.id === 19);
+                // Вытаскиваем значение данного объека из свойства fio
+                const fioValue = fioDataMatch ? fioDataMatch.fio : "";
+                fioValue &&
+                  // Студента не существет, создаем нового
+                  fetchCreateStudent(fioValue, phone, token);
+              })
+              .finally(() => {
+                const subjectDataMatch = dataMatch.find(
+                  (obj) => obj.id === 0
+                )?.subject;
+                const goalDataMatch = dataMatch.find(
+                  (obj) => obj.id === 1
+                )?.goal;
+                const classDataMatch = dataMatch.find(
+                  (obj) => obj.id === 2
+                )?.class;
+                const studentTypeDataMatch = dataMatch.find(
+                  (obj) => obj.id === 3
+                )?.studentType;
+                const studentCourseDataMatch = dataMatch.find(
+                  (obj) => obj.id === 4
+                )?.studentCourse;
+                const deadlineDataMatch = dataMatch.find(
+                  (obj) => obj.id === 5
+                )?.deadline;
+                const studentLevelDataMatch = dataMatch.find(
+                  (obj) => obj.id === 6
+                )?.studentLevel;
+                const studentYearsDataMatch = dataMatch.find(
+                  (obj) => obj.id === 7
+                )?.studentYears;
+                const tutorGenderDataMatch = dataMatch.find(
+                  (obj) => obj.id === 8
+                )?.tutorGender;
+                const studentUniversityDataMatch = dataMatch.find(
+                  (obj) => obj.id === 9
+                )?.studentUniversity;
+                const internationalExamDataMatch = dataMatch.find(
+                  (obj) => obj.id === 10
+                )?.internationalExam;
+                const studyMethodsDataMatch = dataMatch.find(
+                  (obj) => obj.id === 11
+                )?.studyMethods;
+                const studyProgrammsDataMatch = dataMatch.find(
+                  (obj) => obj.id === 12
+                )?.studyProgramms;
+                const timetableDataMatch = dataMatch.find(
+                  (obj) => obj.id === 13
+                )?.timetable;
+                const studyPlaceDataMatch = dataMatch.find(
+                  (obj) => obj.id === 14
+                )?.studyPlace;
+                const studentAdressDataMatch = dataMatch.find(
+                  (obj) => obj.id === 15
+                )?.studentAdress;
+                const tutorPlaceDataMatch = dataMatch.find(
+                  (obj) => obj.id === 16
+                )?.tutorPlace;
+                const tutorTypeDataMatch = dataMatch.find(
+                  (obj) => obj.id === 17
+                )?.tutorType;
+                const infoDataMatch = dataMatch.find(
+                  (obj) => obj.id === 18
+                )?.info;
+
+                // Создание заказа
+                fetchCreateOrder(
+                  token,
+                  subjectDataMatch,
+                  goalDataMatch,
+                  classDataMatch,
+                  studentTypeDataMatch,
+                  studentYearsDataMatch,
+                  studentCourseDataMatch,
+                  studentUniversityDataMatch,
+                  internationalExamDataMatch,
+                  studyMethodsDataMatch,
+                  studyProgrammsDataMatch,
+                  deadlineDataMatch,
+                  studentLevelDataMatch,
+                  tutorGenderDataMatch,
+                  timetableDataMatch,
+                  studyPlaceDataMatch,
+                  studentAdressDataMatch,
+                  tutorPlaceDataMatchDEV,
+                  tutorTypeDataMatch,
+                  infoDataMatch
+                )
+                  .catch((error) => {
+                    console.error("Ошибка при создании заказа:", error);
+                  })
+                  .finally(() => {
+                    // Вызываем функцию перехода на следующий шаг
+                    handleNextStep(nextPageProperty);
+                  });
+              });
+
+            //console.log("Valid code");
+          } else {
+            setErrorInput(true);
+            //console.log("Invalid code");
+          }
+        });
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
   // Обновляем inputValue когда меняется содержимое отдельных инпутов
   useEffect(() => {
     const inputValue = codes.join("");
     if (inputValue.length === 4) {
-        if (inputValue !== confirmCode) {
-          setErrorInput(true);
-          console.log("Invalid code");
-        } else {
-          setErrorInput(false);
-          console.log("Valid code");
-        }
-      }
-  }, [codes, confirmCode]);
-  
+      getToken(inputValue);
+    }
+  }, [codes]);
+
   // Функция добавления значения в инпут
   const handleChange = (value: string, index: number) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
       const newCodes = [...codes];
       newCodes[index] = value;
       setCodes(newCodes);
-      
+
       if (value && index < 3) {
         setActiveIndex(index + 1);
       }
@@ -107,7 +269,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     index: number
   ) => {
     if (e.key === "Backspace") {
-        
       // Если текущий инпут пустой и не является первым инпутом, то
       // переходим на предыдущий инпут и очищаем его содержимое
       if (index > 0 && !codes[index]) {
@@ -139,12 +300,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     inputRefs.current[activeIndex]?.focus();
   }, [activeIndex]);
 
-
-  // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
-  // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
-
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
   const containsClassProperty = dataMatch.some((obj) =>
     obj.hasOwnProperty(typeForm)
@@ -152,36 +307,10 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
-    (link: string, inputValue: string) => {
+    (link: string) => {
       // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
-
-      // Создаем новый объект, который нужно положить в массив с данными формы
-      const newData = {
-        id: id,
-        [typeForm]: inputValue,
-      };
-
-      // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
-      if (containsClassProperty) {
-        // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-        const indexOfArray = dataMatch.findIndex((obj) =>
-          obj.hasOwnProperty(typeForm)
-        );
-        // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
-        const filterDataMatch = dataMatch.filter(
-          (obj, index) => index < indexOfArray
-        );
-        // Добавляем новый объект в копию старого массива, уже отфильтрованного
-        const dataToSave = [...filterDataMatch, newData];
-        // Кладем новый массив в LS
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
-      } else {
-        // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-        const dataToSave = [...dataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
-      }
       // Для красоты делаем переход через 0,4 секунды после клика
       setTimeout(() => route.push(link), 400);
     },
@@ -200,7 +329,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const [isDisabled, setIsDisabled] = useState(false);
 
   // Находим объект массива с введенным телефоном
-  const phoneDataMatch = dataMatch.find((obj) => obj.id === 19);
+  const phoneDataMatch = dataMatch.find((obj) => obj.id === 20);
   // Вытаскиваем значение данного объека из свойства phone
   const phoneValue = phoneDataMatch ? phoneDataMatch.phone : "";
 
@@ -217,8 +346,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
-
-  
 
   return (
     <>
@@ -257,7 +384,10 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onKeyPress={(e) => handleKeyPress(e, index)}
-                className={clsx(styles.inputCodeConfirm, errorInput ? styles.errorInput : "")}
+                className={clsx(
+                  styles.inputCodeConfirm,
+                  errorInput ? styles.errorInput : ""
+                )}
                 disabled={index !== activeIndex}
               />
             ))}
@@ -267,9 +397,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPageProperty, inputValue)}
+            onClick={() => handleNextStep(nextPageProperty)}
             className={styles.continueButton}
-            disabled={codes.join("").length < 4 || errorInput}
+            disabled={codes.join("").length < 4 || !isSuccess}
           >
             Продолжить
           </button>
