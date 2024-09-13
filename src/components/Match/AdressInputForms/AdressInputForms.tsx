@@ -112,13 +112,9 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       setIsInput(false);
 
       const fiasLevelNum = Number(fiasLevel);
-      console.log(fiasLevelNum);
 
       if (fiasLevelNum < 8) {
         setErrorInputText("Уточните адрес до дома");
-        console.log(errorInputText);
-        console.log("click");
-
         return;
       }
 
@@ -175,7 +171,6 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
-
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
     setInputValue(valueProperty);

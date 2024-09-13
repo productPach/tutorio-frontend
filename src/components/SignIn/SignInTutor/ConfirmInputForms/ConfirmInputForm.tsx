@@ -1,16 +1,12 @@
 "use client";
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "../SignInTutor.module.css";
 import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
+import { fetchGetToken } from "@/api/server/userApi";
 
 interface ComponentRenderProps {
   id: number;
@@ -47,14 +43,13 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const confirmCodeLS = localStorage.getItem("confirm-code");
   const confirmCode: string = confirmCodeLS && JSON.parse(confirmCodeLS);
   //console.log(confirmCode);
-  
+
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
 
   //console.log(errorInput);
-
 
   // Состояние для содержимого инпутов
   const [codes, setCodes] = useState(["", "", "", ""]);
@@ -68,32 +63,49 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     null,
   ]);
 
+  // Авторизация пользователя
+  const getToken = async (secretCode: string) => {
+    try {
+      const jsonPhone = localStorage.getItem("origin-phone");
+      const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+      if (phone) {
+        const data = await fetchGetToken({ phone, secretCode });
+        console.log(phone);
+        console.log(data.token);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Обновляем inputValue когда меняется содержимое отдельных инпутов
   useEffect(() => {
     const inputValue = codes.join("");
     if (inputValue.length === 4) {
-        if (inputValue !== confirmCode) {
-          setErrorInput(true);
-          console.log("Invalid code");
-        } else {
-          setErrorInput(false);
+      if (inputValue !== confirmCode) {
+        setErrorInput(true);
+        console.log("Invalid code");
+      } else {
+        setErrorInput(false);
+        getToken(inputValue).then(() => {
           console.log("Valid code");
           // Обновляем состояния для красивого эффекта перехода
           setIsDisabled(true);
           setIsVisible(false);
           // Для красоты делаем переход через 0,4 секунды после клика
           setTimeout(() => route.push(nextPage), 400);
-        }
+        });
       }
+    }
   }, [codes, confirmCode]);
-  
+
   // Функция добавления значения в инпут
   const handleChange = (value: string, index: number) => {
     if (/^\d*$/.test(value) && value.length <= 1) {
       const newCodes = [...codes];
       newCodes[index] = value;
       setCodes(newCodes);
-      
+
       if (value && index < 3) {
         setActiveIndex(index + 1);
       }
@@ -108,7 +120,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     index: number
   ) => {
     if (e.key === "Backspace") {
-        
       // Если текущий инпут пустой и не является первым инпутом, то
       // переходим на предыдущий инпут и очищаем его содержимое
       if (index > 0 && !codes[index]) {
@@ -139,7 +150,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     inputRefs.current[activeIndex]?.focus();
   }, [activeIndex]);
-
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataUserLS = localStorage.getItem("current-user");
@@ -254,7 +264,10 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onKeyPress={(e) => handleKeyPress(e, index)}
-                className={clsx(styles.inputCodeConfirm, errorInput ? styles.errorInput : "")}
+                className={clsx(
+                  styles.inputCodeConfirm,
+                  errorInput ? styles.errorInput : ""
+                )}
                 disabled={index !== activeIndex}
               />
             ))}

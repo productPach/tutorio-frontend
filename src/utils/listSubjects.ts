@@ -3989,16 +3989,6 @@ export const data: Subject[] = [
     id_p: "342",
   },
   {
-    id: "346",
-    title: "Зондовый массаж",
-    for_request: "зондовому массажу",
-    for_chpu: "zondovyj-massazh",
-    id_cat: "22",
-    general: false,
-    nextPage: "/match/goal/path",
-    id_p: "343",
-  },
-  {
     id: "347",
     title: "Коррекционная педагогика",
     for_request: "коррекционной педагогике",
@@ -7807,5 +7797,15 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "759",
+  },
+  {
+    id: "729",
+    title: "Зондовый массаж",
+    for_request: "зондовому массажу",
+    for_chpu: "zondovyj-massazh",
+    id_cat: "22",
+    general: false,
+    nextPage: "/match/goal/path",
+    id_p: "343",
   },
 ];

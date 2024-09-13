@@ -83,42 +83,49 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ({
       !checkboxSet.has("У репетитора") &&
       !checkboxSet.has("У меня дома")
     ) {
-      return "/match/tutor-type/price";
+      return "/match/tutorType/price";
     }
     if (
       checkboxSet.has("У репетитора") &&
       !checkboxSet.has("Дистанционно") &&
       !checkboxSet.has("У меня дома")
     ) {
-      return "/match/tutor-place/trip";
+      return "/match/tutorPlace/trip";
     }
     if (
       checkboxSet.has("У меня дома") &&
       !checkboxSet.has("Дистанционно") &&
       !checkboxSet.has("У репетитора")
     ) {
-      return "/match/student-place/adress-1";
+      return "/match/studentAdress/adress-1";
     }
     if (
       checkboxSet.has("Дистанционно") &&
       checkboxSet.has("У репетитора") &&
       !checkboxSet.has("У меня дома")
     ) {
-      return "/match/tutor-place/trip";
+      return "/match/tutorPlace/trip";
     }
     if (
       checkboxSet.has("Дистанционно") &&
       checkboxSet.has("У меня дома") &&
       !checkboxSet.has("У репетитора")
     ) {
-      return "/match/student-place/adress-1";
+      return "/match/studentAdress/adress-1";
+    }
+    if (
+      !checkboxSet.has("Дистанционно") &&
+      checkboxSet.has("У меня дома") &&
+      checkboxSet.has("У репетитора")
+    ) {
+      return "/match/studentAdress/adress-2";
     }
     if (
       checkboxSet.has("Дистанционно") &&
       checkboxSet.has("У меня дома") &&
       checkboxSet.has("У репетитора")
     ) {
-      return "/match/student-place/adress-2";
+      return "/match/studentAdress/adress-2";
     }
     return undefined;
   };
@@ -167,7 +174,7 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ({
     setIsDisabled(true);
     setIsVisible(false);
 
-    const link: string = determineLink(checkbox) ?? "/match/tutor-type/price";
+    const link: string = determineLink(checkbox) ?? "/match/tutorType/price";
 
     // Для красоты делаем переход через 0,4 секунды после клика
     setTimeout(() => route.push(link), 400);
