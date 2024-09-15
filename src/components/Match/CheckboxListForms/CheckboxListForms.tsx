@@ -20,7 +20,7 @@ interface ComponentRenderProps {
 }
 
 // Определяем тип для объекта в массиве
-type DataItem = {
+type Order = {
   id: number;
   subject?: string;
   goal?: string;
@@ -44,9 +44,7 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ({
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS
-    ? JSON.parse(getDataMatchLS)
-    : [];
+  const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
   // Получаем объект в массиве, в котором содержится свойство с typeForm текущей формы
   const containsClassProperty = dataMatch.find((obj) =>
     obj.hasOwnProperty(typeForm)

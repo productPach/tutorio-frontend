@@ -91,7 +91,9 @@
 
 .inputPhoneNumber::placeholder {
   color: #c1c1c1;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .inputPhoneNumber:focus::placeholder {
@@ -316,6 +318,7 @@
 }
 
 .continueButton {
+  position: absolute;
   width: 240px;
   height: 56px;
   border: none;
@@ -422,4 +425,13 @@
 .sendAgainActive {
   text-decoration: underline;
   cursor: pointer;
+}
+.spinner {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 18px;
+  right: 26px;
 }

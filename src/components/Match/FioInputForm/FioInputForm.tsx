@@ -21,7 +21,7 @@ interface ComponentRenderProps {
 }
 
 // Определяем тип для объекта в массиве
-type DataItem = {
+type Order = {
   id: number;
   subject?: string;
   goal?: string;
@@ -57,7 +57,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataUserLS = localStorage.getItem("currentMatch");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
+  const dataMatch: Order[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
 
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
   const containsClassProperty = dataMatch.some((obj) =>

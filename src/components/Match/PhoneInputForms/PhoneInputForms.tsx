@@ -10,6 +10,7 @@ import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import { sendSms } from "@/utils/sensSms/sendSms";
 import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerator";
 import { performActionBasedOnUserExistence } from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 interface Answer {
   id: number;
@@ -25,7 +26,7 @@ interface ComponentRenderProps {
   answerArray: Answer[];
 }
 
-type DataItem = {
+type Order = {
   id: number;
   subject?: string;
   goal?: string;
@@ -51,6 +52,10 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   // Добавляем в состояние неформатированный номер телефона
   const [to, setTo] = useState("");
+  // Состояние для ошибки сети
+  const [errorNet, setErrorNet] = useState(false);
+  // Состояние для лоадера
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialTimeLS = localStorage.getItem("confirm-time"); // Начальное количество минут
   const initialTime = initialTimeLS
@@ -107,45 +112,55 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   }, [minutes, seconds, index]);
 
   // Отправляем SMS
-  const onClickSms = () => {
-    // Генерируем проверочный код
-    const confirmCode = securePinGenerator();
-    // Проверяем есть ли пользователь: если есть, обновляем секретный код, если нет - регистрируем
-    performActionBasedOnUserExistence(to, confirmCode);
-    // Временно добавляем код в LocalStorage
-    localStorage.setItem("confirm-code", JSON.stringify(confirmCode));
-    sendSms(to, confirmCode);
-    handleNextStep(nextPageProperty, inputValue, to);
-    if (index === 0) {
-      setMinutes(0);
-      setSeconds(59);
-      setIndex(1);
+  const onClickSms = async () => {
+    try {
+      setIsLoading(true); // Включаем лоадер
+      setErrorNet(false); // Очищаем предыдущие ошибки
+
+      // Генерируем проверочный код
+      const confirmCode = securePinGenerator();
+      // Проверяем есть ли пользователь: если есть, обновляем секретный код, если нет - регистрируем
+      await performActionBasedOnUserExistence(to, confirmCode);
+      // Временно добавляем код в LocalStorage
+      localStorage.setItem("confirm-code", JSON.stringify(confirmCode));
+      sendSms(to, confirmCode);
+
+      if (index === 0) {
+        setMinutes(0);
+        setSeconds(59);
+        setIndex(1);
+      }
+      if (index === 1) {
+        setMinutes(1);
+        setSeconds(59);
+        setIndex(2);
+      }
+      if (index === 2) {
+        setMinutes(4);
+        setSeconds(59);
+        setIndex(3);
+      }
+      if (index >= 3) {
+        setMinutes(14);
+        setSeconds(59);
+        setIndex(4);
+      }
+      if (index >= 4) {
+        setMinutes(29);
+        setSeconds(59);
+      }
+      const confirmTime = {
+        minutes,
+        seconds,
+        index,
+      };
+      localStorage.setItem("confirm-time", JSON.stringify(confirmTime));
+    } catch (error) {
+      setErrorNet(true); // Показываем ошибку
+      console.error("Произошла ошибка, попробуйте позже: ", error);
+    } finally {
+      handleNextStep(nextPageProperty, inputValue, to);
     }
-    if (index === 1) {
-      setMinutes(1);
-      setSeconds(59);
-      setIndex(2);
-    }
-    if (index === 2) {
-      setMinutes(4);
-      setSeconds(59);
-      setIndex(3);
-    }
-    if (index >= 3) {
-      setMinutes(14);
-      setSeconds(59);
-      setIndex(4);
-    }
-    if (index >= 4) {
-      setMinutes(29);
-      setSeconds(59);
-    }
-    const confirmTime = {
-      minutes,
-      seconds,
-      index,
-    };
-    localStorage.setItem("confirm-time", JSON.stringify(confirmTime));
   };
 
   // Функция для обновления состояния reCaptcha
@@ -165,9 +180,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
 
   // Достаем массив с данными заявки
   const getDataMatchLS = localStorage.getItem("currentMatch");
-  const dataMatch: DataItem[] = getDataMatchLS
-    ? JSON.parse(getDataMatchLS)
-    : [];
+  const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
   // Достаем оригинальный телефон
   const getOriginPhone = localStorage.getItem("origin-phone");
   const originPhone: string = getOriginPhone && JSON.parse(getOriginPhone);
@@ -200,7 +213,10 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
         localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       }
 
-      setTimeout(() => route.push(link), 400);
+      setTimeout(() => {
+        route.push(link);
+        setIsLoading(false); // Выключаем лоадер
+      }, 400);
     },
     [route, typeForm]
   );
@@ -294,9 +310,16 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             type="button"
             onClick={onClickSms}
             className={styles.continueButton}
-            disabled={inputValue.length < 15 || errorInput || !verified}
+            disabled={
+              inputValue.length < 15 || errorInput || !verified || isLoading
+            }
           >
             Продолжить
+            {isLoading && (
+              <div className={styles.spinner}>
+                <Spinner />
+              </div>
+            )}
           </button>
         </div>
       </div>

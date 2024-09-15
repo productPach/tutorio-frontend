@@ -25,7 +25,7 @@ interface ComponentRenderProps {
   nextPage: string;
 }
 
-type DataItem = {
+type Order = {
   id: number;
   subject?: string;
   goal?: string;
@@ -168,7 +168,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
 
   // Достаем массив с данными заявки
   const getDataUserLS = localStorage.getItem("current-user");
-  const dataUser: DataItem[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
+  const dataUser: Order[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
   // Достаем оригинальный телефон
   const getOriginPhone = localStorage.getItem("origin-phone");
   const originPhone: string = getOriginPhone && JSON.parse(getOriginPhone);

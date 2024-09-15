@@ -12,6 +12,11 @@ import { PhoneInputForms } from "@/components/Match/PhoneInputForms/PhoneInputFo
 import { ConfirmInputForm } from "@/components/Match/ConfirmInputForms/ConfirmInputForm";
 import { FioInputForms } from "@/components/Match/FioInputForm/FioInputForm";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store/store";
+import { getTokenFromCookie } from "@/utils/cookies/cookies";
+import { setToken } from "@/store/features/authSlice";
+import { setStudent } from "@/store/features/studentSlice";
+import { getStudentFromLocalStorage } from "@/utils/localStorage/localStorage";
 
 interface Answer {
   id: number;
@@ -33,6 +38,22 @@ interface ComponentsList {
 
 const MatchPage: React.FC = () => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Получаем токен из куки
+    // Если токен в куки есть, тогда добавляем токен в Redux
+    const token = getTokenFromCookie();
+    if (token) {
+      dispatch(setToken(token));
+    }
+
+    const student = getStudentFromLocalStorage();
+    if (student) {
+      dispatch(setStudent(student));
+    }
+  }, [dispatch]);
+
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
   // Если в LS нет объекта с ключом currentMatch, делаем редирект на главную
