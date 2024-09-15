@@ -21,7 +21,7 @@ interface ComponentRenderProps {
 }
 
 // Определяем тип для объекта в массиве
-type DataItem = {
+type Order = {
   id: number;
   subject?: string;
   goal?: string;
@@ -56,7 +56,7 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+  const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
   const containsClassProperty = dataMatch.some((obj) =>
@@ -128,7 +128,7 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
   const nextPageProperty = answerArray[0].nextPage;
 
   useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       // Проверяем, содержит ли inputValue только цифры
       const isValidInput = /^\d+$/.test(inputValue);
       if (e.key === "Enter") {

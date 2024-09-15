@@ -25,7 +25,7 @@ interface ComponentProps {
 }
 
 // Определяем тип для объекта в массиве
-type DataItem = {
+type Order = {
   id: number;
   subject?: string;
   goal?: string;
@@ -87,7 +87,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataUserLS = localStorage.getItem("current-user");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataUser: DataItem[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
+  const dataUser: Order[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
 
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
   const containsClassProperty = dataUser.some((obj) =>

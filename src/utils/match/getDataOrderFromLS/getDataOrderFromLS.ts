@@ -1,9 +1,9 @@
-import { DataItem } from "@/types/types";
+import { Order } from "@/types/types";
 
 // Вытаскиваем актуальный массив c данными формы из LocalStorage
 export const getDataMatchLS = localStorage.getItem("currentMatch");
 // Конвертируем массив c данными формы из JSON в JS объект
-const dataMatch: DataItem[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
 export const subjectDataMatch = dataMatch.find((obj) => obj.id === 0)?.subject;
 export const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;

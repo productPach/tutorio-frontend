@@ -12,8 +12,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
-import { fetchGetToken } from "@/api/server/userApi";
-import { setCookie } from "@/utils/cookies/cookies";
 import {
   fetchCreateStudent,
   fetchCurrentStudent,
@@ -40,6 +38,11 @@ import {
   tutorTypeDataMatch,
   infoDataMatch,
 } from "@/utils/match/getDataOrderFromLS/getDataOrderFromLS";
+import { Order } from "@/types/types";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getToken } from "@/store/features/authSlice";
+import { Spinner } from "@/components/Spinner/Spinner";
+import { getCurrentStudent } from "@/store/features/studentSlice";
 
 interface Answer {
   id: number;
@@ -55,25 +58,6 @@ interface ComponentRenderProps {
   answerArray: Answer[];
 }
 
-// Определяем тип для объекта в массиве
-type DataItem = {
-  id: number;
-  subject?: string;
-  goal?: string;
-  class?: string;
-  deadline?: string;
-  studentLevel?: string;
-  tutorGender?: string;
-  timetable?: string;
-  studyPlace?: string[];
-  studentPlace?: string;
-  tutorPlace?: string; // заменить на массив
-  tutorType?: string;
-  info?: string;
-  fio?: string;
-  [key: string]: any;
-};
-
 export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   id,
   question,
@@ -81,6 +65,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   answerArray,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+  // Получаем значение loadingAuth из Redux
+  const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -106,134 +93,121 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
   // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: DataItem[] = getDataMatchLS
-    ? JSON.parse(getDataMatchLS)
-    : [];
+  const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
   // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
   const tutorPlaceDataMatchDEV = ["0", "1", "2"];
 
   // Авторизация пользователя
-  const getToken = async (secretCode: string) => {
+  const handleGetToken = async (secretCode: string) => {
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
       if (phone) {
-        await fetchGetToken({ phone, secretCode }).then((data) => {
-          if (data.token) {
-            const token = data.token;
-            //console.log(phone);
-            //console.log(data.token);
-            setErrorInput(false);
-            setIsSuccess(true);
-            setCookie("user", token, 30, {});
+        const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+        setErrorInput(false);
+        if (token) {
+          setIsSuccess(true);
+          await dispatch(getCurrentStudent(token))
+            .catch(() => {
+              const fioDataMatch = dataMatch.find((obj) => obj.id === 19);
+              // Вытаскиваем значение данного объека из свойства fio
+              const fioValue = fioDataMatch ? fioDataMatch.fio : "";
+              fioValue &&
+                // Студента не существет, создаем нового
+                fetchCreateStudent(fioValue, phone, token);
+            })
+            .finally(() => {
+              const subjectDataMatch = dataMatch.find(
+                (obj) => obj.id === 0
+              )?.subject;
+              const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;
+              const classDataMatch = dataMatch.find(
+                (obj) => obj.id === 2
+              )?.class;
+              const studentTypeDataMatch = dataMatch.find(
+                (obj) => obj.id === 3
+              )?.studentType;
+              const studentCourseDataMatch = dataMatch.find(
+                (obj) => obj.id === 4
+              )?.studentCourse;
+              const deadlineDataMatch = dataMatch.find(
+                (obj) => obj.id === 5
+              )?.deadline;
+              const studentLevelDataMatch = dataMatch.find(
+                (obj) => obj.id === 6
+              )?.studentLevel;
+              const studentYearsDataMatch = dataMatch.find(
+                (obj) => obj.id === 7
+              )?.studentYears;
+              const tutorGenderDataMatch = dataMatch.find(
+                (obj) => obj.id === 8
+              )?.tutorGender;
+              const studentUniversityDataMatch = dataMatch.find(
+                (obj) => obj.id === 9
+              )?.studentUniversity;
+              const internationalExamDataMatch = dataMatch.find(
+                (obj) => obj.id === 10
+              )?.internationalExam;
+              const studyMethodsDataMatch = dataMatch.find(
+                (obj) => obj.id === 11
+              )?.studyMethods;
+              const studyProgrammsDataMatch = dataMatch.find(
+                (obj) => obj.id === 12
+              )?.studyProgramms;
+              const timetableDataMatch = dataMatch.find(
+                (obj) => obj.id === 13
+              )?.timetable;
+              const studyPlaceDataMatch = dataMatch.find(
+                (obj) => obj.id === 14
+              )?.studyPlace;
+              const studentAdressDataMatch = dataMatch.find(
+                (obj) => obj.id === 15
+              )?.studentAdress;
+              const tutorPlaceDataMatch = dataMatch.find(
+                (obj) => obj.id === 16
+              )?.tutorPlace;
+              const tutorTypeDataMatch = dataMatch.find(
+                (obj) => obj.id === 17
+              )?.tutorType;
+              const infoDataMatch = dataMatch.find(
+                (obj) => obj.id === 18
+              )?.info;
 
-            fetchCurrentStudent(token)
-              .catch(() => {
-                const fioDataMatch = dataMatch.find((obj) => obj.id === 19);
-                // Вытаскиваем значение данного объека из свойства fio
-                const fioValue = fioDataMatch ? fioDataMatch.fio : "";
-                fioValue &&
-                  // Студента не существет, создаем нового
-                  fetchCreateStudent(fioValue, phone, token);
-              })
-              .finally(() => {
-                const subjectDataMatch = dataMatch.find(
-                  (obj) => obj.id === 0
-                )?.subject;
-                const goalDataMatch = dataMatch.find(
-                  (obj) => obj.id === 1
-                )?.goal;
-                const classDataMatch = dataMatch.find(
-                  (obj) => obj.id === 2
-                )?.class;
-                const studentTypeDataMatch = dataMatch.find(
-                  (obj) => obj.id === 3
-                )?.studentType;
-                const studentCourseDataMatch = dataMatch.find(
-                  (obj) => obj.id === 4
-                )?.studentCourse;
-                const deadlineDataMatch = dataMatch.find(
-                  (obj) => obj.id === 5
-                )?.deadline;
-                const studentLevelDataMatch = dataMatch.find(
-                  (obj) => obj.id === 6
-                )?.studentLevel;
-                const studentYearsDataMatch = dataMatch.find(
-                  (obj) => obj.id === 7
-                )?.studentYears;
-                const tutorGenderDataMatch = dataMatch.find(
-                  (obj) => obj.id === 8
-                )?.tutorGender;
-                const studentUniversityDataMatch = dataMatch.find(
-                  (obj) => obj.id === 9
-                )?.studentUniversity;
-                const internationalExamDataMatch = dataMatch.find(
-                  (obj) => obj.id === 10
-                )?.internationalExam;
-                const studyMethodsDataMatch = dataMatch.find(
-                  (obj) => obj.id === 11
-                )?.studyMethods;
-                const studyProgrammsDataMatch = dataMatch.find(
-                  (obj) => obj.id === 12
-                )?.studyProgramms;
-                const timetableDataMatch = dataMatch.find(
-                  (obj) => obj.id === 13
-                )?.timetable;
-                const studyPlaceDataMatch = dataMatch.find(
-                  (obj) => obj.id === 14
-                )?.studyPlace;
-                const studentAdressDataMatch = dataMatch.find(
-                  (obj) => obj.id === 15
-                )?.studentAdress;
-                const tutorPlaceDataMatch = dataMatch.find(
-                  (obj) => obj.id === 16
-                )?.tutorPlace;
-                const tutorTypeDataMatch = dataMatch.find(
-                  (obj) => obj.id === 17
-                )?.tutorType;
-                const infoDataMatch = dataMatch.find(
-                  (obj) => obj.id === 18
-                )?.info;
-
-                // Создание заказа
-                fetchCreateOrder(
-                  token,
-                  subjectDataMatch,
-                  goalDataMatch,
-                  classDataMatch,
-                  studentTypeDataMatch,
-                  studentYearsDataMatch,
-                  studentCourseDataMatch,
-                  studentUniversityDataMatch,
-                  internationalExamDataMatch,
-                  studyMethodsDataMatch,
-                  studyProgrammsDataMatch,
-                  deadlineDataMatch,
-                  studentLevelDataMatch,
-                  tutorGenderDataMatch,
-                  timetableDataMatch,
-                  studyPlaceDataMatch,
-                  studentAdressDataMatch,
-                  tutorPlaceDataMatchDEV,
-                  tutorTypeDataMatch,
-                  infoDataMatch
-                )
-                  .catch((error) => {
-                    console.error("Ошибка при создании заказа:", error);
-                  })
-                  .finally(() => {
-                    // Вызываем функцию перехода на следующий шаг
-                    handleNextStep(nextPageProperty);
-                  });
-              });
-
-            //console.log("Valid code");
-          } else {
-            setErrorInput(true);
-            //console.log("Invalid code");
-          }
-        });
+              // Создание заказа
+              fetchCreateOrder(
+                token,
+                subjectDataMatch,
+                goalDataMatch,
+                classDataMatch,
+                studentTypeDataMatch,
+                studentYearsDataMatch,
+                studentCourseDataMatch,
+                studentUniversityDataMatch,
+                internationalExamDataMatch,
+                studyMethodsDataMatch,
+                studyProgrammsDataMatch,
+                deadlineDataMatch,
+                studentLevelDataMatch,
+                tutorGenderDataMatch,
+                timetableDataMatch,
+                studyPlaceDataMatch,
+                studentAdressDataMatch,
+                tutorPlaceDataMatchDEV,
+                tutorTypeDataMatch,
+                infoDataMatch
+              )
+                .catch((error) => {
+                  console.error("Ошибка при создании заказа:", error);
+                })
+                .finally(() => {
+                  // Вызываем функцию перехода на следующий шаг
+                  handleNextStep(nextPageProperty);
+                });
+            });
+        } else {
+          setErrorInput(true);
+        }
       }
     } catch (error) {
       console.warn(error);
@@ -244,7 +218,8 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     const inputValue = codes.join("");
     if (inputValue.length === 4) {
-      getToken(inputValue);
+      setIsSuccess(false);
+      handleGetToken(inputValue);
     }
   }, [codes]);
 
@@ -399,9 +374,14 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
             type="button"
             onClick={() => handleNextStep(nextPageProperty)}
             className={styles.continueButton}
-            disabled={codes.join("").length < 4 || !isSuccess}
+            disabled={codes.join("").length < 4 || !isSuccess || loadingAuth}
           >
             Продолжить
+            {loadingAuth && (
+              <div className={styles.spinner}>
+                <Spinner />
+              </div>
+            )}
           </button>
         </div>
       </div>

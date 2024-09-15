@@ -3,11 +3,12 @@ import Cookies from "js-cookie";
 // Установка cookie
 export const setCookie = (
   name: string,
-  value: string,
+  value: string | object,
   days: number,
   options = {}
 ) => {
-  Cookies.set(name, value, {
+  const stringValue = typeof value === "string" ? value : JSON.stringify(value); // Преобразуем объект в строку, если нужно
+  Cookies.set(name, stringValue, {
     expires: days,
     path: "/", // путь куки на корень
     secure: true, // кука будет передана только по HTTPS
@@ -25,4 +26,10 @@ export const getCookie = (name: string): string | undefined => {
 // Удаление cookie
 export const removeCookie = (name: string, options = {}) => {
   Cookies.remove(name, options);
+};
+
+// Функция загрузки токена из куки
+export const getTokenFromCookie = () => {
+  const token = getCookie("user");
+  return token;
 };
