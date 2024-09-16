@@ -1,43 +1,12 @@
 "use client";
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "../Match.module.css";
 import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
-import {
-  fetchCreateStudent,
-  fetchCurrentStudent,
-} from "@/api/server/studentApi";
 import { fetchCreateOrder } from "@/api/server/orderApi";
-import {
-  subjectDataMatch,
-  goalDataMatch,
-  classDataMatch,
-  studentTypeDataMatch,
-  studentYearsDataMatch,
-  studentCourseDataMatch,
-  studentUniversityDataMatch,
-  internationalExamDataMatch,
-  studyMethodsDataMatch,
-  studyProgrammsDataMatch,
-  deadlineDataMatch,
-  studentLevelDataMatch,
-  tutorGenderDataMatch,
-  timetableDataMatch,
-  studyPlaceDataMatch,
-  studentAdressDataMatch,
-  tutorPlaceDataMatch,
-  tutorTypeDataMatch,
-  infoDataMatch,
-} from "@/utils/match/getDataOrderFromLS/getDataOrderFromLS";
 import { Order } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getToken } from "@/store/features/authSlice";
