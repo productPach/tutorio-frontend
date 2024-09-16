@@ -67,12 +67,6 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
 
   // Функция для валидации значения поля
   const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    // if (/^\d*$/.test(e.target.value)) {
-    //     setErrorInput(true);
-    // } else {
-    //     setErrorInput(false);
-    // }
-
     setInputValue(e.target.value);
   };
 
@@ -86,40 +80,46 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
     obj.hasOwnProperty(typeForm)
   );
 
+  // Функция добавления нового объекта в LS
+  const setValueFormInLS = (inputValue: string) => {
+    // Создаем новый объект, который нужно положить в массив с данными формы
+    const newData = {
+      id: id,
+      [typeForm]: inputValue,
+    };
+
+    // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
+    if (containsClassProperty) {
+      // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
+      const indexOfArray = dataMatch.findIndex((obj) =>
+        obj.hasOwnProperty(typeForm)
+      );
+      // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
+      const filterDataMatch = dataMatch.filter(
+        (obj, index) => index < indexOfArray
+      );
+      // Добавляем новый объект в копию старого массива, уже отфильтрованного
+      const dataToSave = [...filterDataMatch, newData];
+      // Кладем новый массив в LS
+      inputValue &&
+        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+    } else {
+      // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
+      const dataToSave = [...dataMatch, newData];
+      inputValue &&
+        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+    }
+    return inputValue;
+  };
+
   // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
     (link: string, inputValue: string) => {
       // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
+      setValueFormInLS(inputValue);
 
-      // Создаем новый объект, который нужно положить в массив с данными формы
-      const newData = {
-        id: id,
-        [typeForm]: inputValue,
-      };
-
-      // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
-      if (containsClassProperty) {
-        // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-        const indexOfArray = dataMatch.findIndex((obj) =>
-          obj.hasOwnProperty(typeForm)
-        );
-        // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
-        const filterDataMatch = dataMatch.filter(
-          (obj, index) => index < indexOfArray
-        );
-        // Добавляем новый объект в копию старого массива, уже отфильтрованного
-        const dataToSave = [...filterDataMatch, newData];
-        // Кладем новый массив в LS
-        inputValue &&
-          localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
-      } else {
-        // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-        const dataToSave = [...dataMatch, newData];
-        inputValue &&
-          localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
-      }
       // Для красоты делаем переход через 0,4 секунды после клика
       setTimeout(() => route.push(link), 400);
     },
@@ -152,10 +152,11 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
 
   const nextPageProperty = answerArray[0].nextPage;
 
-  const handleNextStepIfTokenTrue = (token: string) => {
-    // НЕПРАВИЛЬНАЯ ЛОГИКА
-    // НУЖНО СОЗДАВАТЬ СТУДЕНТА ЕСЛИ ЕГО НЕТ В РЕДАКСЕ И LS (НА ТОТ СЛУЧАЙ, ЕСЛИ АВТОРИЗОВАН РЕПЕТИТОР)
-
+  // Функция перехода на следующий шаг, если есть токен
+  const handleNextStepIfTokenTrue = async (
+    token: string,
+    inputValue: string
+  ) => {
     const createOrder = () => {
       const subjectDataMatch = dataMatch.find((obj) => obj.id === 0)?.subject;
       const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;
@@ -203,7 +204,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
       const tutorTypeDataMatch = dataMatch.find(
         (obj) => obj.id === 17
       )?.tutorType;
-      const infoDataMatch = dataMatch.find((obj) => obj.id === 18)?.info;
+      const infoDataMatch = inputValue;
 
       // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
       const tutorPlaceDataMatchDEV = ["0", "1", "2"];
@@ -247,6 +248,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
         dispatch(
           createStudent({ name: tutor.name, phone: tutor.phone, token })
         );
+        //createOrder();
       } else {
         // ДОБАВИТЬ СОЗДАНИЕ ЗАКАЗА, ЕСЛИ ЕСТЬ СОТРУДНИК
         setTimeout(() => route.push("/r"), 400);
@@ -316,7 +318,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
               type="button"
               onClick={() =>
                 token && isAuth
-                  ? handleNextStepIfTokenTrue(token)
+                  ? handleNextStepIfTokenTrue(token, inputValue)
                   : handleNextStep(nextPageProperty, inputValue)
               }
               className={clsx(
