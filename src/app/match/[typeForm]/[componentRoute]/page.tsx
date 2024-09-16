@@ -17,6 +17,7 @@ import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { setToken } from "@/store/features/authSlice";
 import { setStudent } from "@/store/features/studentSlice";
 import { getStudentFromLocalStorage } from "@/utils/localStorage/localStorage";
+import { LocationMultiDropdownForm } from "@/components/Match/LocationMultiDropdownForm/LocationMultiDropdownForm";
 
 interface Answer {
   id: number;
@@ -84,7 +85,7 @@ const MatchPage: React.FC = () => {
     timetable: TextForms,
     studyPlace: CheckboxListForms,
     studentAdress: AdressInputForms,
-    tutorPlace: TextForms,
+    tutorPlace: LocationMultiDropdownForm,
     tutorType: RadioListForms,
     info: TextForms,
     fio: FioInputForms,
