@@ -1,4 +1,4 @@
-import { fetchCurrentStudent } from "@/api/server/studentApi";
+import { fetchCreateStudent, fetchCurrentStudent } from "@/api/server/studentApi";
 import { Student } from "@/types/types";
 import { setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -12,7 +12,21 @@ export const getCurrentStudent = createAsyncThunk<Student, string>(
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку
       console.error(error);
-      return undefined; // Или выбросить ошибку, если это необходимо
+      throw error;
+    }
+  }
+);
+
+export const createStudent = createAsyncThunk<Student, { name: string; phone: string; token: string }>(
+  'student/create',
+  async ({name, phone, token}) => {
+    try {
+      const response = await fetchCreateStudent(name, phone, token);
+      return response;
+    } catch (error) {
+      // Здесь можно вернуть undefined или обработать ошибку
+      console.error(error);
+      throw error;
     }
   }
 );
@@ -54,6 +68,11 @@ const studentSlice = createSlice({
     .addCase(getCurrentStudent.rejected,
       (state) => {
         state.loading = false;
+      })
+    .addCase(createStudent.fulfilled,
+      (state, action: PayloadAction<Student>) => {
+        state.student = action.payload;
+        setLocalStorage("student", state.student);
       })
   }
 });
