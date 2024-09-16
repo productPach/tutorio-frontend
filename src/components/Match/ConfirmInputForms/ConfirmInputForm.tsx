@@ -42,7 +42,10 @@ import { Order } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getToken } from "@/store/features/authSlice";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { getCurrentStudent } from "@/store/features/studentSlice";
+import {
+  createStudent,
+  getCurrentStudent,
+} from "@/store/features/studentSlice";
 
 interface Answer {
   id: number;
@@ -109,13 +112,16 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         if (token) {
           setIsSuccess(true);
           await dispatch(getCurrentStudent(token))
+            .unwrap()
             .catch(() => {
               const fioDataMatch = dataMatch.find((obj) => obj.id === 19);
               // Вытаскиваем значение данного объека из свойства fio
               const fioValue = fioDataMatch ? fioDataMatch.fio : "";
               fioValue &&
                 // Студента не существет, создаем нового
-                fetchCreateStudent(fioValue, phone, token);
+                dispatch(
+                  createStudent({ name: fioValue, phone: phone, token })
+                );
             })
             .finally(() => {
               const subjectDataMatch = dataMatch.find(

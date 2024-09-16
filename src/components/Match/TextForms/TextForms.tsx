@@ -5,13 +5,14 @@ import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   fetchCreateStudent,
   fetchCurrentStudent,
 } from "@/api/server/studentApi";
 import { error } from "console";
 import { fetchCreateOrder } from "@/api/server/orderApi";
+import { createStudent } from "@/store/features/studentSlice";
 
 interface Answer {
   id: number;
@@ -45,10 +46,17 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
   answerArray,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
   // Получаем токен из Redux
   const token = useAppSelector((state) => state.auth.token);
   // Получаем студента из Redux
   const student = useAppSelector((state) => state.student.student);
+  // Получаем репетитора из Redux (пока хардкодим)
+  const tutor = {
+    name: "Павел Федотов",
+    phone: "9269811041",
+  };
+  //const tutor = useAppSelector((state) => state.tutor.tutor);
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -144,97 +152,108 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
 
   const nextPageProperty = answerArray[0].nextPage;
 
-  const createOrder = (token: string) => {
+  const handleNextStepIfTokenTrue = (token: string) => {
     // НЕПРАВИЛЬНАЯ ЛОГИКА
     // НУЖНО СОЗДАВАТЬ СТУДЕНТА ЕСЛИ ЕГО НЕТ В РЕДАКСЕ И LS (НА ТОТ СЛУЧАЙ, ЕСЛИ АВТОРИЗОВАН РЕПЕТИТОР)
-    student &&
-      fetchCreateStudent(student.name, student.phone, token).then(() => {
-        const subjectDataMatch = dataMatch.find((obj) => obj.id === 0)?.subject;
-        const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;
-        const classDataMatch = dataMatch.find((obj) => obj.id === 2)?.class;
-        const studentTypeDataMatch = dataMatch.find(
-          (obj) => obj.id === 3
-        )?.studentType;
-        const studentCourseDataMatch = dataMatch.find(
-          (obj) => obj.id === 4
-        )?.studentCourse;
-        const deadlineDataMatch = dataMatch.find(
-          (obj) => obj.id === 5
-        )?.deadline;
-        const studentLevelDataMatch = dataMatch.find(
-          (obj) => obj.id === 6
-        )?.studentLevel;
-        const studentYearsDataMatch = dataMatch.find(
-          (obj) => obj.id === 7
-        )?.studentYears;
-        const tutorGenderDataMatch = dataMatch.find(
-          (obj) => obj.id === 8
-        )?.tutorGender;
-        const studentUniversityDataMatch = dataMatch.find(
-          (obj) => obj.id === 9
-        )?.studentUniversity;
-        const internationalExamDataMatch = dataMatch.find(
-          (obj) => obj.id === 10
-        )?.internationalExam;
-        const studyMethodsDataMatch = dataMatch.find(
-          (obj) => obj.id === 11
-        )?.studyMethods;
-        const studyProgrammsDataMatch = dataMatch.find(
-          (obj) => obj.id === 12
-        )?.studyProgramms;
-        const timetableDataMatch = dataMatch.find(
-          (obj) => obj.id === 13
-        )?.timetable;
-        const studyPlaceDataMatch = dataMatch.find(
-          (obj) => obj.id === 14
-        )?.studyPlace;
-        const studentAdressDataMatch = dataMatch.find(
-          (obj) => obj.id === 15
-        )?.studentAdress;
-        const tutorPlaceDataMatch = dataMatch.find(
-          (obj) => obj.id === 16
-        )?.tutorPlace;
-        const tutorTypeDataMatch = dataMatch.find(
-          (obj) => obj.id === 17
-        )?.tutorType;
-        const infoDataMatch = dataMatch.find((obj) => obj.id === 18)?.info;
 
-        // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
-        const tutorPlaceDataMatchDEV = ["0", "1", "2"];
+    const createOrder = () => {
+      const subjectDataMatch = dataMatch.find((obj) => obj.id === 0)?.subject;
+      const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;
+      const classDataMatch = dataMatch.find((obj) => obj.id === 2)?.class;
+      const studentTypeDataMatch = dataMatch.find(
+        (obj) => obj.id === 3
+      )?.studentType;
+      const studentCourseDataMatch = dataMatch.find(
+        (obj) => obj.id === 4
+      )?.studentCourse;
+      const deadlineDataMatch = dataMatch.find((obj) => obj.id === 5)?.deadline;
+      const studentLevelDataMatch = dataMatch.find(
+        (obj) => obj.id === 6
+      )?.studentLevel;
+      const studentYearsDataMatch = dataMatch.find(
+        (obj) => obj.id === 7
+      )?.studentYears;
+      const tutorGenderDataMatch = dataMatch.find(
+        (obj) => obj.id === 8
+      )?.tutorGender;
+      const studentUniversityDataMatch = dataMatch.find(
+        (obj) => obj.id === 9
+      )?.studentUniversity;
+      const internationalExamDataMatch = dataMatch.find(
+        (obj) => obj.id === 10
+      )?.internationalExam;
+      const studyMethodsDataMatch = dataMatch.find(
+        (obj) => obj.id === 11
+      )?.studyMethods;
+      const studyProgrammsDataMatch = dataMatch.find(
+        (obj) => obj.id === 12
+      )?.studyProgramms;
+      const timetableDataMatch = dataMatch.find(
+        (obj) => obj.id === 13
+      )?.timetable;
+      const studyPlaceDataMatch = dataMatch.find(
+        (obj) => obj.id === 14
+      )?.studyPlace;
+      const studentAdressDataMatch = dataMatch.find(
+        (obj) => obj.id === 15
+      )?.studentAdress;
+      const tutorPlaceDataMatch = dataMatch.find(
+        (obj) => obj.id === 16
+      )?.tutorPlace;
+      const tutorTypeDataMatch = dataMatch.find(
+        (obj) => obj.id === 17
+      )?.tutorType;
+      const infoDataMatch = dataMatch.find((obj) => obj.id === 18)?.info;
 
-        // Создание заказа
-        fetchCreateOrder(
-          token,
-          subjectDataMatch,
-          goalDataMatch,
-          classDataMatch,
-          studentTypeDataMatch,
-          studentYearsDataMatch,
-          studentCourseDataMatch,
-          studentUniversityDataMatch,
-          internationalExamDataMatch,
-          studyMethodsDataMatch,
-          studyProgrammsDataMatch,
-          deadlineDataMatch,
-          studentLevelDataMatch,
-          tutorGenderDataMatch,
-          timetableDataMatch,
-          studyPlaceDataMatch,
-          studentAdressDataMatch,
-          tutorPlaceDataMatchDEV,
-          tutorTypeDataMatch,
-          infoDataMatch
-        )
-          .then(() => {
-            // Обновляем состояния для красивого эффекта перехода
-            setIsDisabled(true);
-            setIsVisible(false);
-            setTimeout(() => route.push("/student/order"), 400);
-          })
-          .catch((error) => {
-            console.error("Ошибка при создании заказа:", error);
-          });
-      });
+      // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
+      const tutorPlaceDataMatchDEV = ["0", "1", "2"];
+
+      // Создание заказа
+      fetchCreateOrder(
+        token,
+        subjectDataMatch,
+        goalDataMatch,
+        classDataMatch,
+        studentTypeDataMatch,
+        studentYearsDataMatch,
+        studentCourseDataMatch,
+        studentUniversityDataMatch,
+        internationalExamDataMatch,
+        studyMethodsDataMatch,
+        studyProgrammsDataMatch,
+        deadlineDataMatch,
+        studentLevelDataMatch,
+        tutorGenderDataMatch,
+        timetableDataMatch,
+        studyPlaceDataMatch,
+        studentAdressDataMatch,
+        tutorPlaceDataMatchDEV,
+        tutorTypeDataMatch,
+        infoDataMatch
+      )
+        .then(() => {
+          // Обновляем состояния для красивого эффекта перехода
+          setIsDisabled(true);
+          setIsVisible(false);
+          setTimeout(() => route.push("/student/order"), 400);
+        })
+        .catch((error) => {
+          console.error("Ошибка при создании заказа:", error);
+        });
+    };
+
+    if (!student) {
+      if (tutor) {
+        dispatch(
+          createStudent({ name: tutor.name, phone: tutor.phone, token })
+        );
+      } else {
+        // ДОБАВИТЬ СОЗДАНИЕ ЗАКАЗА, ЕСЛИ ЕСТЬ СОТРУДНИК
+        setTimeout(() => route.push("/r"), 400);
+      }
+    } else {
+      createOrder();
+    }
   };
 
   useEffect(() => {
@@ -297,7 +316,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
               type="button"
               onClick={() =>
                 token && isAuth
-                  ? createOrder(token)
+                  ? handleNextStepIfTokenTrue(token)
                   : handleNextStep(nextPageProperty, inputValue)
               }
               className={clsx(
