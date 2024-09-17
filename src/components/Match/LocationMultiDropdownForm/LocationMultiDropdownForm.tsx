@@ -11,8 +11,8 @@ import animation from "../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
-import { getAdressDadata } from "@/api/addresses/addresses";
-import { Order } from "@/types/types";
+import { getLocation } from "@/api/addresses/addresses";
+import { District, Metro, Order } from "@/types/types";
 
 interface Answer {
   id: number;
@@ -28,7 +28,6 @@ interface ComponentRenderProps {
   answerArray: Answer[];
 }
 
-// Определяем тип для массива адресов из ДаДаты
 type DataAdress = {
   value: string;
   data: {
@@ -48,11 +47,11 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
 
-  // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
-  const [selectedValues, setSelectedValues] = useState<DataAdress[]>([]); // Для выбранных адресов
-  const [adressList, setAdressList] = useState<DataAdress[]>([]); // Для выпадающего списка
-  // Состояние для ошибки текстового поля
+  const [selectedValues, setSelectedValues] = useState<(District | Metro)[]>(
+    []
+  );
+  const [adressList, setAdressList] = useState<(District | Metro)[]>([]);
   const [errorInput, setErrorInput] = useState(false);
   const [errorInputText, setErrorInputText] = useState("");
   const [isInput, setIsInput] = useState(false);
@@ -66,17 +65,29 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   );
 
   let initialCheckboxValue: DataAdress[] = [];
-  containsClassProperty?.[typeForm].length
-    ? (initialCheckboxValue = containsClassProperty?.dataAdress)
+  containsClassProperty?.[typeForm]?.length
+    ? (initialCheckboxValue = containsClassProperty.dataAdress)
     : (initialCheckboxValue = []);
 
-  const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsInput(true);
+  const handleInputValue = async (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+    setIsInput(true); // Добавляем, чтобы отображать подсказки, если есть ввод
 
-    getAdressDadata(e.target.value).then((data) => {
-      setAdressList(data.suggestions); // Здесь можно использовать разные типы данных (метро, районы, города)
-    });
+    try {
+      const data = await getLocation(e.target.value, "Москва", selectedValues);
+      setAdressList(data);
+    } catch (error) {
+      console.error("Ошибка при получении данных:", error);
+    }
+  };
+
+  const handleSelect = (item: District | Metro) => {
+    setSelectedValues((prevValues) => [...prevValues, item]);
+    setInputValue(""); // Очищаем поле после выбора
+  };
+
+  const handleRemoveItem = (index: number) => {
+    setSelectedValues((prevValues) => prevValues.filter((_, i) => i !== index));
   };
 
   const handleNextStep = useCallback(
@@ -88,7 +99,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
       const newData = {
         id: id,
-        [typeForm]: selectedValues.map((el) => el.value).join(", "), // Сохранить список выбранных значений
+        [typeForm]: selectedValues.map((el) => el.title).join(", "),
         dataAdress: selectedValues,
       };
 
@@ -113,7 +124,6 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   };
 
   const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -154,9 +164,9 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
     if (e.key === "Enter" && adressList.length > 0) {
       const selectedAdress = adressList[resultAdressIndex];
-      setSelectedValues((prevValues) => [...prevValues, selectedAdress]); // Добавляем выбранное значение
+      setSelectedValues((prevValues) => [...prevValues, selectedAdress]);
       setInputValue(""); // Очищаем поле ввода
-      setIsInput(false); // Скрываем выпадающий список
+      setIsInput(false); // Закрываем выпадающий список
     }
   };
 
@@ -207,29 +217,24 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
           {adressList.length > 0 && inputValue.length > 1 && isInput && (
             <div className={styles.resultContainerTutorSearch}>
               <ul>
-                {adressList.map((item, index) => {
-                  return (
-                    <li
-                      key={item.data.fias_id}
-                      onClick={() => {
-                        setSelectedValues((prevValues) => [
-                          ...prevValues,
-                          item,
-                        ]);
-                        setInputValue(""); // Очищаем поле после выбора
-                        setIsInput(false); // Закрываем выпадающий список
-                      }}
-                      className={`${styles.resultTutorSearch} ${
-                        index === resultAdressIndex ? styles.highlight : ""
-                      }`}
-                      ref={(el) => {
-                        itemRefs.current[index] = el;
-                      }}
-                    >
-                      {item.value}
-                    </li>
-                  );
-                })}
+                {adressList.map((item, index) => (
+                  <li
+                    key={item.id}
+                    onClick={() => {
+                      setSelectedValues((prevValues) => [...prevValues, item]);
+                      setInputValue(""); // Очищаем поле после выбора
+                      setIsInput(false); // Закрываем выпадающий список
+                    }}
+                    className={`${styles.resultTutorSearch} ${
+                      index === resultAdressIndex ? styles.highlight : ""
+                    }`}
+                    ref={(el) => {
+                      itemRefs.current[index] = el;
+                    }}
+                  >
+                    {item.title} {/* Отображаем title для районов и метро */}
+                  </li>
+                ))}
               </ul>
             </div>
           )}
@@ -237,7 +242,13 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
           <div className={styles.selectedValues}>
             {selectedValues.map((item, index) => (
               <div key={index} className={styles.selectedItem}>
-                {item.value}
+                {item.title} {/* Отображаем title выбранных элементов */}
+                <button
+                  className={styles.removeButton}
+                  onClick={() => handleRemoveItem(index)}
+                >
+                  ✕
+                </button>
               </div>
             ))}
           </div>

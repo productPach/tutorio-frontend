@@ -11,7 +11,7 @@ export type User = {
   student: Student;
   tutor: Tutor;
   employee: Employee;
-}
+};
 
 export type Student = {
   id: string;
@@ -24,7 +24,7 @@ export type Student = {
   email: string;
   location: string;
   orders: Order[];
-}
+};
 
 export type Tutor = {
   id: string;
@@ -85,6 +85,19 @@ export type Order = {
   [key: string]: any;
 };
 
-export type Response = {
+export type Response = {};
 
-}
+export type District = {
+  id: string;
+  city: string;
+  title: string;
+  metro: Metro[];
+};
+
+export type Metro = {
+  id: string;
+  title: string;
+  color: string;
+  lineName: string;
+  lineNumber: string;
+};
