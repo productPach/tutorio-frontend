@@ -12,11 +12,13 @@ interface ModalProps {
   isOpenModal: boolean;
   setIsOpenModal: (isOpen: boolean) => void;
   titleModal: string;
+  contentModal: React.ReactNode;
 }
 export const Modal: React.FC<ModalProps> = ({
   isOpenModal,
   setIsOpenModal,
   titleModal,
+  contentModal,
 }) => {
   return (
     <>
@@ -51,7 +53,7 @@ export const Modal: React.FC<ModalProps> = ({
             >
               <DialogPanel className={styles.popup}>
                 <DialogTitle className={styles.title}>{titleModal}</DialogTitle>
-                <div>Контент модального окна</div>
+                {contentModal}
                 <button
                   className={styles.closeButton}
                   onClick={() => setIsOpenModal(false)}

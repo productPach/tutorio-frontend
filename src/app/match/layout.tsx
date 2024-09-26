@@ -4,7 +4,7 @@ import styles from "./layout.module.css";
 import clsx from "clsx";
 import Head from "next/head";
 import Link from "next/link";
-import { SelectCity } from "@/components/SelectCity/SelectCity";
+import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       </Head>
       <header>
         <div className={clsx(styles.header, styles.center)}>
-          <SelectCity
+          <SelectCityModal
             isOpenModal={isOpenModal}
             setIsOpenModal={setIsOpenModal}
           />

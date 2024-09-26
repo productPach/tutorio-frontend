@@ -1,39 +1,45 @@
-import styles from "../SelectCity/SelectCity.module.css";
-import Image from "next/image";
-import { Modal } from "../Modal/Modal";
+import { locations } from "@/utils/locations/locations";
+import styles from "../SelectCity/SelectCityModal.module.css";
+import React from "react";
 
-interface SelectCityProps {
-  isOpenModal: boolean;
-  setIsOpenModal: (isOpen: boolean) => void;
-}
-
-export const SelectCity: React.FC<SelectCityProps> = ({
-  isOpenModal,
-  setIsOpenModal,
-}) => {
+export const SelectCity = () => {
   return (
     <>
-      <div
-        onClick={() => {
-          setIsOpenModal(true);
-        }}
-        className={styles.header__geo}
-      >
-        <Image
-          src="/img/icon/location.svg"
-          width={15}
-          height={18}
-          alt="Выбор города"
-          className={styles.header__geoImage}
-        />
-        Москва
+      <div className={styles.firstSection__tutorSearch2}>
+        <div className={styles.searchContainer}>
+          <input
+            id="subjectInput"
+            type="text"
+            placeholder="Введите название предмета"
+            autoComplete="off"
+            //   value={inputSearchTutor}
+            //   onChange={(e) => handleSearchTutor(e.target.value)}
+            //   className={errorSubject ? styles.errorInput : undefined}
+          />
+        </div>
       </div>
 
-      <Modal
-        isOpenModal={isOpenModal}
-        setIsOpenModal={setIsOpenModal}
-        titleModal={"Выберите город"}
-      ></Modal>
+      <div className={styles.wrapCity}>
+        {locations.map((item) => (
+          <React.Fragment key={item.id}>
+            <div className={styles.answer}>
+              <input
+                //   checked={answer.title === valueProperty && true}
+                readOnly
+                type="radio"
+                className={styles.radioInput}
+                id={`radio-${item.id}`}
+                name={"city"}
+              />
+              <label className={styles.radioLabel} htmlFor={`radio-${item.id}`}>
+                <span className={styles.radio}></span>
+                <p className={styles.answerTitle}>{item.title}</p>
+              </label>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+      <div className={styles.opacity}></div>
     </>
   );
 };
