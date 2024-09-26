@@ -20,6 +20,13 @@ export const districts: District[] = [
         lineName: "Сокольническая линия",
         lineNumber: "1",
       },
+      {
+        id: "103",
+        title: "Баррикадная",
+        color: "#ff6347",
+        lineName: "Сокольническая линия",
+        lineNumber: "1",
+      },
     ],
   },
   {
@@ -28,7 +35,7 @@ export const districts: District[] = [
     title: "Южный район",
     metro: [
       {
-        id: "103",
+        id: "104",
         title: "Автозаводская",
         color: "#32cd32",
         lineName: "Замоскворецкая линия",
@@ -42,7 +49,7 @@ export const districts: District[] = [
     title: "Северный район",
     metro: [
       {
-        id: "104",
+        id: "105",
         title: "Московская",
         color: "#32cd32",
         lineName: "Ленинградская линия",
@@ -56,7 +63,7 @@ export const districts: District[] = [
     title: "Исакиевский район",
     metro: [
       {
-        id: "105",
+        id: "106",
         title: "Лиговский проспект",
         color: "#32cd32",
         lineName: "Ленинградская линия",
