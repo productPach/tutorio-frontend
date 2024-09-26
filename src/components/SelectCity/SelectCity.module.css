@@ -1,0 +1,8 @@
+.header__geo {
+  cursor: pointer;
+}
+
+.header__geoImage {
+  margin-bottom: -3px;
+  margin-right: 5px;
+}
