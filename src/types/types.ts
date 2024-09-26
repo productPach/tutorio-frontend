@@ -87,11 +87,31 @@ export type Order = {
 
 export type Response = {};
 
+// export type District = {
+//   id: string;
+//   city: string;
+//   title: string;
+//   metro: Metro[];
+// };
+
+// export type Metro = {
+//   id: string;
+//   title: string;
+//   color: string;
+//   lineName: string;
+//   lineNumber: string;
+// };
+
+export type City = {
+  id: string;
+  title: string;
+  districts: District[];
+};
+
 export type District = {
   id: string;
-  city: string;
   title: string;
-  metro: Metro[];
+  metros: Metro[];
 };
 
 export type Metro = {

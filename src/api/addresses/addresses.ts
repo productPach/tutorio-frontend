@@ -1,5 +1,5 @@
 import { District, Metro } from "@/types/types";
-import { districts } from "@/utils/locations/locations";
+import { locations } from "@/utils/locations/locations";
 
 const token = "59e590bc5ae2c3975912f9ace2aedfe5f36014c4";
 
@@ -35,27 +35,29 @@ export const getLocation = async (
   const normalizedQuery = query.toLowerCase();
   const normalizedCity = city.toLowerCase();
 
-  // Фильтруем районы, которые соответствуют запросу и указанному городу
-  const filteredDistricts = districts.filter(
-    (district) =>
-      district.city.toLowerCase() === normalizedCity && // Фильтрация по городу
-      (district.title.toLowerCase().includes(normalizedQuery) ||
-        district.city.toLowerCase().includes(normalizedQuery))
+  // Находим город по названию
+  const cityData = locations.find(
+    (location) => location.title.toLowerCase() === normalizedCity
   );
 
-  // Собираем станции метро, которые соответствуют запросу и городу района
-  const filteredMetros: Metro[] = districts
-    .filter((district) => district.city.toLowerCase() === normalizedCity) // Фильтрация по городу района
-    .flatMap((district) =>
-      district.metro.map((metro) => ({
-        ...metro,
-        districtCity: district.city, // Добавляем город района к объекту станции метро
-      }))
-    )
+  // Если город не найден, возвращаем пустой массив
+  if (!cityData) {
+    return [];
+  }
+
+  // Фильтруем районы, которые соответствуют запросу
+  const filteredDistricts: District[] = cityData.districts.filter((district) =>
+    district.title.toLowerCase().includes(normalizedQuery)
+  );
+
+  // Собираем станции метро, которые соответствуют запросу
+  const filteredMetros: Metro[] = cityData.districts
+    .flatMap((district) => district.metros)
     .filter(
-      (metro) =>
-        metro.title.toLowerCase().includes(normalizedQuery) ||
-        metro.lineName.toLowerCase().includes(normalizedQuery)
+      (metro) => metro.title.toLowerCase().includes(normalizedQuery)
+      // Поиск по линиям метро
+      //||
+      //metro.lineName.toLowerCase().includes(normalizedQuery)
     );
 
   // Объединяем результаты и фильтруем выбранные значения

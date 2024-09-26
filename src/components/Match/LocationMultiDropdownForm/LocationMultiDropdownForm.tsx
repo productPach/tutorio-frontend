@@ -74,7 +74,11 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     setIsInput(true); // Добавляем, чтобы отображать подсказки, если есть ввод
 
     try {
-      const data = await getLocation(e.target.value, "Москва", selectedValues);
+      const data = await getLocation(
+        e.target.value,
+        "Санкт-Петербург",
+        selectedValues
+      );
       setAdressList(data);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);

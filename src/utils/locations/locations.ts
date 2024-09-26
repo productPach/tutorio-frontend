@@ -1,78 +1,173 @@
-import { District } from "@/types/types";
+import { City, District } from "@/types/types";
 
-export const districts: District[] = [
+export const locations: City[] = [
   {
     id: "1",
-    city: "Москва",
-    title: "Центральный район",
-    metro: [
+    title: "Москва",
+    districts: [
       {
-        id: "101",
-        title: "Комсомольская",
-        color: "#ff6347",
-        lineName: "Сокольническая линия",
-        lineNumber: "1",
+        id: "1",
+        title: "Центральный",
+        metros: [
+          {
+            id: "1",
+            title: "Баррикадная",
+            color: "brown",
+            lineName: "Таганско-Краснопресненская линия",
+            lineNumber: "7",
+          },
+          {
+            id: "2",
+            title: "Краснопресненская",
+            color: "red",
+            lineName: "Кольцевая линия",
+            lineNumber: "5",
+          },
+        ],
       },
       {
-        id: "102",
-        title: "Красные ворота",
-        color: "#ff6347",
-        lineName: "Сокольническая линия",
-        lineNumber: "1",
-      },
-      {
-        id: "103",
-        title: "Баррикадная",
-        color: "#ff6347",
-        lineName: "Сокольническая линия",
-        lineNumber: "1",
+        id: "2",
+        title: "Юго-Западный",
+        metros: [
+          {
+            id: "6",
+            title: "Юго-Западная",
+            color: "green",
+            lineName: "Линия",
+            lineNumber: "6",
+          },
+          {
+            id: "7",
+            title: "Фрунзенская",
+            color: "green",
+            lineName: "Линия",
+            lineNumber: "6",
+          },
+        ],
       },
     ],
   },
   {
     id: "2",
-    city: "Москва",
-    title: "Южный район",
-    metro: [
+    title: "Санкт-Петербург",
+    districts: [
       {
-        id: "104",
-        title: "Автозаводская",
-        color: "#32cd32",
-        lineName: "Замоскворецкая линия",
-        lineNumber: "2",
+        id: "1",
+        title: "Питерский",
+        metros: [
+          {
+            id: "10",
+            title: "Литический проспект",
+            color: "brown",
+            lineName: "Таганско-Краснопресненская линия",
+            lineNumber: "7",
+          },
+          {
+            id: "20",
+            title: "Ворошиловская",
+            color: "red",
+            lineName: "Кольцевая линия",
+            lineNumber: "5",
+          },
+        ],
+      },
+      {
+        id: "2",
+        title: "Западный",
+        metros: [
+          {
+            id: "6",
+            title: "Студенческая",
+            color: "green",
+            lineName: "Линия 6",
+            lineNumber: "6",
+          },
+          {
+            id: "7",
+            title: "Балтийская",
+            color: "green",
+            lineName: "Линия 6",
+            lineNumber: "6",
+          },
+        ],
       },
     ],
   },
-  {
-    id: "3",
-    city: "Санкт-Петербург",
-    title: "Северный район",
-    metro: [
-      {
-        id: "105",
-        title: "Московская",
-        color: "#32cd32",
-        lineName: "Ленинградская линия",
-        lineNumber: "2",
-      },
-    ],
-  },
-  {
-    id: "4",
-    city: "Санкт-Петербург",
-    title: "Исакиевский район",
-    metro: [
-      {
-        id: "106",
-        title: "Лиговский проспект",
-        color: "#32cd32",
-        lineName: "Ленинградская линия",
-        lineNumber: "2",
-      },
-    ],
-  },
-  // Другие районы...
 ];
+
+// export const districts: District[] = [
+//   {
+//     id: "1",
+//     city: "Москва",
+//     title: "Центральный район",
+//     metro: [
+//       {
+//         id: "101",
+//         title: "Комсомольская",
+//         color: "#ff6347",
+//         lineName: "Сокольническая линия",
+//         lineNumber: "1",
+//       },
+//       {
+//         id: "102",
+//         title: "Красные ворота",
+//         color: "#ff6347",
+//         lineName: "Сокольническая линия",
+//         lineNumber: "1",
+//       },
+//       {
+//         id: "103",
+//         title: "Баррикадная",
+//         color: "#ff6347",
+//         lineName: "Сокольническая линия",
+//         lineNumber: "1",
+//       },
+//     ],
+//   },
+//   {
+//     id: "2",
+//     city: "Москва",
+//     title: "Южный район",
+//     metro: [
+//       {
+//         id: "104",
+//         title: "Автозаводская",
+//         color: "#32cd32",
+//         lineName: "Замоскворецкая линия",
+//         lineNumber: "2",
+//       },
+//     ],
+//   },
+//   {
+//     id: "3",
+//     city: "Санкт-Петербург",
+//     title: "Северный район",
+//     metro: [
+//       {
+//         id: "105",
+//         title: "Московская",
+//         color: "#32cd32",
+//         lineName: "Ленинградская линия",
+//         lineNumber: "2",
+//       },
+//     ],
+//   },
+//   {
+//     id: "4",
+//     city: "Санкт-Петербург",
+//     title: "Исакиевский район",
+//     metro: [
+//       {
+//         id: "106",
+//         title: "Лиговский проспект",
+//         color: "#32cd32",
+//         lineName: "Ленинградская линия",
+//         lineNumber: "2",
+//       },
+//     ],
+//   },
+//   // Другие районы...
+// ];
 
 // Третьяковская
 // Медведково
