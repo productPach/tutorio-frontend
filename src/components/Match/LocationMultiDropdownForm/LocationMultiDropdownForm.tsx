@@ -107,7 +107,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
-    setSelectedValues(valueProperty);
+    valueProperty && setSelectedValues(valueProperty);
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;

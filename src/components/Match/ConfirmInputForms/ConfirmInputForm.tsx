@@ -68,7 +68,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
   // ХАРДКОДИМ studentTrip (ПЕРЕДЕЛАТЬ НА МАССИВ)
-  const studentTripDataMatchDEV = ["0", "1", "2"];
+  //const studentTripDataMatchDEV = ["0", "1", "2"];
 
   // Авторизация пользователя
   const handleGetToken = async (secretCode: string) => {
@@ -139,9 +139,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
               const studentAdressDataMatch = dataMatch.find(
                 (obj) => obj.id === 15
               )?.studentAdress;
-              const studentTripDataMatch = dataMatch.find(
-                (obj) => obj.id === 16
-              )?.studentTrip;
+              const studentTripDataMatchLS =
+                dataMatch.find((obj) => obj.id === 16)?.studentTrip || [];
+              const studentTripDataMatch = Array.isArray(studentTripDataMatchLS)
+                ? studentTripDataMatchLS.map((item: { id: string }) => item.id)
+                : [];
               const tutorTypeDataMatch = dataMatch.find(
                 (obj) => obj.id === 17
               )?.tutorType;
@@ -168,7 +170,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 timetableDataMatch,
                 studyPlaceDataMatch,
                 studentAdressDataMatch,
-                studentTripDataMatchDEV,
+                studentTripDataMatch,
                 tutorTypeDataMatch,
                 infoDataMatch
               )

@@ -4129,16 +4129,6 @@ export const data: Subject[] = [
     id_p: "357",
   },
   {
-    id: "361",
-    title: "ФНР (фонематическое недоразвитие речи)",
-    for_request: "ФНР (фонематическое недоразвитие речи)",
-    for_chpu: "fnr-fonematicheskoe-nedorazvitie-rechi",
-    id_cat: "22",
-    general: false,
-    nextPage: "/match/goal/path",
-    id_p: "358",
-  },
-  {
     id: "362",
     title: "ФФН (фонетико-фонематическое недоразвитие)",
     for_request: "ФФН (фонетико-фонематическое недоразвитие)",
@@ -7807,5 +7797,15 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "343",
+  },
+  {
+    id: "730",
+    title: "ФНР (фонематическое недоразвитие речи)",
+    for_request: "ФНР (фонематическое недоразвитие речи)",
+    for_chpu: "fnr-fonematicheskoe-nedorazvitie-rechi",
+    id_cat: "22",
+    general: false,
+    nextPage: "/match/goal/path",
+    id_p: "358",
   },
 ];
