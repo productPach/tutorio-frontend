@@ -198,16 +198,16 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
       const studentAdressDataMatch = dataMatch.find(
         (obj) => obj.id === 15
       )?.studentAdress;
-      const tutorPlaceDataMatch = dataMatch.find(
+      const studentTripDataMatch = dataMatch.find(
         (obj) => obj.id === 16
-      )?.tutorPlace;
+      )?.studentTrip;
       const tutorTypeDataMatch = dataMatch.find(
         (obj) => obj.id === 17
       )?.tutorType;
       const infoDataMatch = inputValue;
 
-      // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
-      const tutorPlaceDataMatchDEV = ["0", "1", "2"];
+      // ХАРДКОДИМ studentTrip (ПЕРЕДЕЛАТЬ НА МАССИВ)
+      const studentTripDataMatchDEV = ["0", "1", "2"];
 
       // Создание заказа
       fetchCreateOrder(
@@ -228,7 +228,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
         timetableDataMatch,
         studyPlaceDataMatch,
         studentAdressDataMatch,
-        tutorPlaceDataMatchDEV,
+        studentTripDataMatchDEV,
         tutorTypeDataMatch,
         infoDataMatch
       )

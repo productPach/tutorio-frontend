@@ -13,6 +13,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { getLocation } from "@/api/addresses/addresses";
 import { District, Metro, Order } from "@/types/types";
+import { locations } from "@/utils/locations/locations";
 
 interface Answer {
   id: number;
@@ -47,6 +48,8 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
 
+  // Создаем флаг для отслеживания первоначальной загрузки
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [selectedValues, setSelectedValues] = useState<(District | Metro)[]>(
     []
@@ -60,15 +63,8 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
   const getDataMatchLS = localStorage.getItem("currentMatch");
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
-  const containsClassProperty = dataMatch.find((obj) =>
-    obj.hasOwnProperty(typeForm)
-  );
 
-  let initialCheckboxValue: DataAdress[] = [];
-  containsClassProperty?.[typeForm]?.length
-    ? (initialCheckboxValue = containsClassProperty.dataAdress)
-    : (initialCheckboxValue = []);
-
+  // Добавление локации
   const handleInputValue = async (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setIsInput(true); // Добавляем, чтобы отображать подсказки, если есть ввод
@@ -85,39 +81,13 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     }
   };
 
-  const handleSelect = (item: District | Metro) => {
-    setSelectedValues((prevValues) => [...prevValues, item]);
-    setInputValue(""); // Очищаем поле после выбора
-  };
-
+  // Удаление локации
   const handleRemoveItem = (index: number) => {
     setSelectedValues((prevValues) => prevValues.filter((_, i) => i !== index));
   };
 
   const handleNextStep = useCallback(
     (link: string) => {
-      if (selectedValues.length === 0) {
-        setErrorInputText("Пожалуйста, выберите хотя бы один адрес");
-        return;
-      }
-
-      const newData = {
-        id: id,
-        [typeForm]: selectedValues.map((el) => el.title).join(", "),
-        dataAdress: selectedValues,
-      };
-
-      if (containsClassProperty) {
-        const indexOfArray = dataMatch.findIndex((obj) =>
-          obj.hasOwnProperty(typeForm)
-        );
-        dataMatch.splice(indexOfArray, 1, newData);
-        localStorage.setItem("currentMatch", JSON.stringify(dataMatch));
-      } else {
-        const dataToSave = [...dataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
-      }
-
       setTimeout(() => route.push(link), 400);
     },
     [route, typeForm, selectedValues]
@@ -133,10 +103,11 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     setIsVisible(true);
   }, []);
 
+  // При перезагрузке страницы высстанавилваемданные из LS
   useEffect(() => {
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
-    setInputValue(valueProperty);
+    setSelectedValues(valueProperty);
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
@@ -182,6 +153,39 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
       input?.removeEventListener("keydown", handleKeyDown);
     };
   }, [adressList, resultAdressIndex]);
+
+  // Каждый раз, когда обновляется состояние selectedValues редактируем массив в LS
+  useEffect(() => {
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
+      return;
+    }
+
+    // Проверяем, существует ли уже объект для текущей формы (typeForm) в localStorage
+    let existingData = dataMatch.find((item) => item.id === id);
+
+    if (existingData) {
+      // Если объект существует, обновляем массив значений
+      existingData[typeForm] = selectedValues.map((item) => ({
+        id: item.id,
+        title: item.title, // Добавляем title
+      }));
+    } else {
+      // Если объект не существует, создаем новый объект
+      existingData = {
+        id: id,
+        [typeForm]: selectedValues.map((item) => ({
+          id: item.id,
+          title: item.title, // Добавляем title
+        })),
+      };
+    }
+
+    // Обновляем данные в localStorage
+    const updatedDataMatch = dataMatch.filter((item) => item.id !== id); // Удаляем старую запись с тем же id
+    const dataToSave = [...updatedDataMatch, existingData]; // Добавляем обновленную запись
+    localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+  }, [selectedValues]);
 
   return (
     <>

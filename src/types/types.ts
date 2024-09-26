@@ -78,7 +78,7 @@ export type Order = {
   timetable?: string;
   studyPlace?: string[];
   studentPlace?: string;
-  tutorPlace?: string; // заменить на массив
+  studentTrip?: string; // заменить на массив
   tutorType?: string;
   info?: string;
   fio?: string;

@@ -47,9 +47,9 @@ export const studyPlaceDataMatch = dataMatch.find(
 export const studentAdressDataMatch = dataMatch.find(
   (obj) => obj.id === 15
 )?.studentAdress;
-export const tutorPlaceDataMatch = dataMatch.find(
+export const studentTripDataMatch = dataMatch.find(
   (obj) => obj.id === 16
-)?.tutorPlace;
+)?.studentTrip;
 export const tutorTypeDataMatch = dataMatch.find(
   (obj) => obj.id === 17
 )?.tutorType;

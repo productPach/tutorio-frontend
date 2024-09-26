@@ -67,8 +67,8 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   // Конвертируем массив c данными формы из JSON в JS объект
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
-  // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
-  const tutorPlaceDataMatchDEV = ["0", "1", "2"];
+  // ХАРДКОДИМ studentTrip (ПЕРЕДЕЛАТЬ НА МАССИВ)
+  const studentTripDataMatchDEV = ["0", "1", "2"];
 
   // Авторизация пользователя
   const handleGetToken = async (secretCode: string) => {
@@ -139,9 +139,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
               const studentAdressDataMatch = dataMatch.find(
                 (obj) => obj.id === 15
               )?.studentAdress;
-              const tutorPlaceDataMatch = dataMatch.find(
+              const studentTripDataMatch = dataMatch.find(
                 (obj) => obj.id === 16
-              )?.tutorPlace;
+              )?.studentTrip;
               const tutorTypeDataMatch = dataMatch.find(
                 (obj) => obj.id === 17
               )?.tutorType;
@@ -168,7 +168,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 timetableDataMatch,
                 studyPlaceDataMatch,
                 studentAdressDataMatch,
-                tutorPlaceDataMatchDEV,
+                studentTripDataMatchDEV,
                 tutorTypeDataMatch,
                 infoDataMatch
               )

@@ -1,4 +1,4 @@
-import { City, District } from "@/types/types";
+import { City } from "@/types/types";
 
 export const locations: City[] = [
   {

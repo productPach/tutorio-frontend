@@ -88,7 +88,7 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ({
       !checkboxSet.has("Дистанционно") &&
       !checkboxSet.has("У меня дома")
     ) {
-      return "/match/tutorPlace/trip";
+      return "/match/studentTrip/trip";
     }
     if (
       checkboxSet.has("У меня дома") &&
@@ -102,7 +102,7 @@ export const CheckboxListForms: React.FC<ComponentRenderProps> = ({
       checkboxSet.has("У репетитора") &&
       !checkboxSet.has("У меня дома")
     ) {
-      return "/match/tutorPlace/trip";
+      return "/match/studentTrip/trip";
     }
     if (
       checkboxSet.has("Дистанционно") &&
