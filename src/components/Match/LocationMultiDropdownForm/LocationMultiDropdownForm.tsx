@@ -88,12 +88,14 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     setIsInput(true); // Добавляем, чтобы отображать подсказки, если есть ввод
 
     try {
-      const data = await getLocation(
-        e.target.value,
-        regionUser.city,
-        selectedValues
-      );
-      setAdressList(data);
+      if (regionUser) {
+        const data = await getLocation(
+          e.target.value,
+          regionUser.city,
+          selectedValues
+        );
+        setAdressList(data);
+      }
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
     }
@@ -238,7 +240,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
               }}
               style={{ textDecoration: "underline", cursor: "pointer" }}
             >
-              {regionUser.city} и {regionUser.area}
+              {regionUser && regionUser.city} и {regionUser && regionUser.area}
             </span>
           </div>
           <input

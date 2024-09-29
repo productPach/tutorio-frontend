@@ -5,11 +5,62 @@ import { Modal } from "../Modal/Modal";
 import { SelectCity } from "./SelectCity";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { UserRegion } from "@/types/types";
+import { setRegionUser } from "@/store/features/matchSlice";
+import {
+  getAreaByCoordinates,
+  getGeolocation,
+} from "@/utils/locations/getGeolocation";
+import { locations } from "@/utils/locations/locations";
 
 export const SelectCityModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение regionUser из Redux
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUserFromStore: UserRegion | null = useAppSelector(
+    (state) => state.match.regionUser
+  );
+  let regionUser: UserRegion | null = regionUserFromStore;
+
+  // Проверка на наличие данных о регионе
+  if (!regionUser) {
+    const regionUserLS = localStorage.getItem("region-user");
+    if (regionUserLS) {
+      try {
+        const parsedRegionUser = JSON.parse(regionUserLS) as UserRegion;
+        regionUser = parsedRegionUser;
+      } catch (e) {
+        console.error("Ошибка парсинга JSON:", e);
+      }
+    }
+  }
+
+  // Если данные о регионе все еще отсутствуют, получаем геолокацию
+  if (!regionUser) {
+    getGeolocation()
+      .then(async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        // Получаем область по координатам
+        const locationData = await getAreaByCoordinates(latitude, longitude);
+
+        // Проверяем, есть ли область в объекте locations
+        const foundCity = locations.find(
+          (city) => city.area === locationData.area
+        );
+
+        if (foundCity) {
+          const userRegion = { city: foundCity.title, area: foundCity.area };
+          localStorage.setItem("region-user", JSON.stringify(userRegion));
+          dispatch(setRegionUser(userRegion));
+        } else {
+          console.error("Область не найдена в объекте locations");
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка при получении геолокации:", error);
+      });
+  }
+
   return (
     <>
       <div
@@ -25,7 +76,7 @@ export const SelectCityModal = () => {
           alt="Выбор местоположения"
           className={styles.header__geoImage}
         />
-        {regionUser.city}
+        {regionUser && regionUser.city}
       </div>
 
       <Modal
