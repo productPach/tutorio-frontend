@@ -1,0 +1,78 @@
+import { locations } from "@/utils/locations/locations";
+import styles from "../SelectCity/SelectCityModal.module.css";
+import React, { useState } from "react";
+import { useAppDispatch } from "@/store/store";
+import { setModalSelectCity } from "@/store/features/modalSlice";
+import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
+
+export const SelectCity = () => {
+  const dispatch = useAppDispatch();
+  const [inputSearch, setInputSearch] = useState("");
+
+  const handleSearch = (value: string) => {
+    setInputSearch(value);
+  };
+
+  const handleSelectCity = (city: string, area: string) => {
+    localStorage.setItem("region-user", JSON.stringify({ city, area }));
+    dispatch(setModalSelectCity(false));
+    dispatch(setRegionUser({ city, area }));
+    dispatch(setSelectedValues([]));
+  };
+
+  const locationList =
+    inputSearch.length > 1
+      ? locations.filter(
+          (item) =>
+            item.title.toLowerCase().includes(inputSearch.toLowerCase()) ||
+            item.area.toLowerCase().includes(inputSearch.toLowerCase())
+        )
+      : locations;
+  return (
+    <>
+      <div className={styles.firstSection__tutorSearch2}>
+        <div className={styles.searchContainer}>
+          <input
+            id="subjectInput"
+            type="text"
+            placeholder="Введите название города или региона"
+            autoComplete="off"
+            value={inputSearch}
+            onChange={(e) => handleSearch(e.target.value)}
+            //   className={errorSubject ? styles.errorInput : undefined}
+          />
+        </div>
+      </div>
+
+      <div className={styles.wrapCity}>
+        {locationList.map((item) => (
+          <React.Fragment key={item.id}>
+            <div
+              onClick={() => handleSelectCity(item.title, item.area)}
+              className={styles.answer}
+            >
+              <input
+                //   checked={answer.title === valueProperty && true}
+                readOnly
+                type="radio"
+                className={styles.radioInput}
+                id={`radiocity-${item.id}`}
+                name={"city"}
+              />
+              <label
+                className={styles.radioLabel}
+                htmlFor={`radiocity-${item.id}`}
+              >
+                <span className={styles.radio}></span>
+                <p className={styles.answerTitle}>
+                  {item.title}
+                  <span className={styles.areaCity}> и {item.area}</span>
+                </p>
+              </label>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </>
+  );
+};

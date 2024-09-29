@@ -19,7 +19,7 @@ export const fetchCreateOrder = async (
   timetableDataMatch?: string,
   studyPlaceDataMatch?: string[],
   studentAdressDataMatch?: string,
-  tutorPlaceDataMatchDEV?: string[],
+  studentTripDataMatch?: string[],
   tutorTypeDataMatch?: string,
   infoDataMatch?: string
 ) => {
@@ -46,7 +46,7 @@ export const fetchCreateOrder = async (
       studentSchedule: timetableDataMatch,
       studentPlace: studyPlaceDataMatch,
       studentAdress: studentAdressDataMatch,
-      studentTrip: tutorPlaceDataMatchDEV,
+      studentTrip: studentTripDataMatch,
       tutorType: tutorTypeDataMatch,
       studentWishes: infoDataMatch,
     }),

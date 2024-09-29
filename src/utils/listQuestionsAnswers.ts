@@ -1782,7 +1782,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Начните вводить адрес проживания",
-            nextPage: "/match/tutorPlace/trip",
+            nextPage: "/match/studentTrip/trip",
           },
         ],
       },
@@ -1790,10 +1790,10 @@ export const listQuestionsAnswers = [
   },
   {
     id: 16,
-    typeForm: "tutorPlace",
+    typeForm: "studentTrip",
     question: "Куда сможете приехать?",
     description:
-      "Укажите районы, округа или станции метро, до которых вам удобно\nдобираться на занятия с репетитором",
+      "Укажите областные города, районы или станции метро, до которых вам удобно добираться на занятия с репетитором",
     page: [
       {
         id: 1,

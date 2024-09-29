@@ -6,11 +6,6 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import {
-  fetchCreateStudent,
-  fetchCurrentStudent,
-} from "@/api/server/studentApi";
-import { error } from "console";
 import { fetchCreateOrder } from "@/api/server/orderApi";
 import { createStudent } from "@/store/features/studentSlice";
 
@@ -198,16 +193,15 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
       const studentAdressDataMatch = dataMatch.find(
         (obj) => obj.id === 15
       )?.studentAdress;
-      const tutorPlaceDataMatch = dataMatch.find(
-        (obj) => obj.id === 16
-      )?.tutorPlace;
+      const studentTripDataMatchLS =
+        dataMatch.find((obj) => obj.id === 16)?.studentTrip || [];
+      const studentTripDataMatch = Array.isArray(studentTripDataMatchLS)
+        ? studentTripDataMatchLS.map((item: { id: string }) => item.id)
+        : [];
       const tutorTypeDataMatch = dataMatch.find(
         (obj) => obj.id === 17
       )?.tutorType;
       const infoDataMatch = inputValue;
-
-      // ХАРДКОДИМ tutorPlace (ПЕРЕДЕЛАТЬ НА МАССИВ)
-      const tutorPlaceDataMatchDEV = ["0", "1", "2"];
 
       // Создание заказа
       fetchCreateOrder(
@@ -228,7 +222,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
         timetableDataMatch,
         studyPlaceDataMatch,
         studentAdressDataMatch,
-        tutorPlaceDataMatchDEV,
+        studentTripDataMatch,
         tutorTypeDataMatch,
         infoDataMatch
       )

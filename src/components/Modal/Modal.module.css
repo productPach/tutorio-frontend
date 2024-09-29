@@ -1,0 +1,89 @@
+.bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  transition: opacity 300ms ease-out;
+}
+
+.popupWrapper {
+  position: fixed;
+  top: 136px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.popup {
+  width: 470px;
+  max-height: 500px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 32px;
+  transition:
+    transform 300ms ease-out,
+    opacity 300ms ease-out;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Анимации для модального окна и фона */
+.enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.enterTo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.leave {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* .leaveTo {
+    opacity: 0;
+    transform: scale(0.95);
+  } */
+
+.enterFrom {
+  opacity: 0;
+  transform: scale(1);
+}
+
+.leaveFrom {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.leaveTo {
+  opacity: 0;
+}
+
+.closeButton {
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: red;
+  font-weight: bold;
+  font-size: larger;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}

@@ -11,7 +11,12 @@ export type User = {
   student: Student;
   tutor: Tutor;
   employee: Employee;
-}
+};
+
+export type UserRegion = {
+  city: string;
+  area: string;
+};
 
 export type Student = {
   id: string;
@@ -24,7 +29,7 @@ export type Student = {
   email: string;
   location: string;
   orders: Order[];
-}
+};
 
 export type Tutor = {
   id: string;
@@ -78,13 +83,47 @@ export type Order = {
   timetable?: string;
   studyPlace?: string[];
   studentPlace?: string;
-  tutorPlace?: string; // заменить на массив
+  studentTrip?: string; // заменить на массив
   tutorType?: string;
   info?: string;
   fio?: string;
   [key: string]: any;
 };
 
-export type Response = {
+export type Response = {};
 
-}
+// export type District = {
+//   id: string;
+//   city: string;
+//   title: string;
+//   metro: Metro[];
+// };
+
+// export type Metro = {
+//   id: string;
+//   title: string;
+//   color: string;
+//   lineName: string;
+//   lineNumber: string;
+// };
+
+export type City = {
+  id: string;
+  title: string;
+  area: string;
+  districts: District[];
+};
+
+export type District = {
+  id: string;
+  title: string;
+  metros: Metro[];
+};
+
+export type Metro = {
+  id: string;
+  title: string;
+  color: string;
+  lineName: string;
+  lineNumber: string;
+};
