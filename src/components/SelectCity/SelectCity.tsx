@@ -1,13 +1,18 @@
+"use client";
 import { locations } from "@/utils/locations/locations";
 import styles from "../SelectCity/SelectCityModal.module.css";
-import React, { useState } from "react";
-import { useAppDispatch } from "@/store/store";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
+import { UserRegion } from "@/types/types";
 
 export const SelectCity = () => {
   const dispatch = useAppDispatch();
   const [inputSearch, setInputSearch] = useState("");
+  const regionUser: UserRegion | null = useAppSelector(
+    (state) => state.match.regionUser
+  );
 
   const handleSearch = (value: string) => {
     setInputSearch(value);
@@ -28,6 +33,7 @@ export const SelectCity = () => {
             item.area.toLowerCase().includes(inputSearch.toLowerCase())
         )
       : locations;
+
   return (
     <>
       <div className={styles.firstSection__tutorSearch2}>
@@ -52,7 +58,7 @@ export const SelectCity = () => {
               className={styles.answer}
             >
               <input
-                //   checked={answer.title === valueProperty && true}
+                checked={item.title === regionUser?.city && true}
                 readOnly
                 type="radio"
                 className={styles.radioInput}

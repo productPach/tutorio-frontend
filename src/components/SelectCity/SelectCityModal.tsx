@@ -28,6 +28,7 @@ export const SelectCityModal = () => {
       try {
         const parsedRegionUser = JSON.parse(regionUserLS) as UserRegion;
         regionUser = parsedRegionUser;
+        dispatch(setRegionUser(regionUser));
       } catch (e) {
         console.error("Ошибка парсинга JSON:", e);
       }
