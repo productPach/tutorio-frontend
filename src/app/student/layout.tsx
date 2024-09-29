@@ -10,6 +10,7 @@ import { setLogout, setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -59,16 +60,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </Head>
           <header>
             <div className={clsx(styles.header, styles.center)}>
-              <div className={styles.header__geo}>
-                <Image
-                  src="/img/icon/location.svg"
-                  width={15}
-                  height={18}
-                  alt="Выбор города"
-                  className={styles.header__geoImage}
-                />
-                Москва
-              </div>
+              <SelectCityModal />
               <Link href="/">
                 <div className={styles.header__logo}>
                   tutorio
