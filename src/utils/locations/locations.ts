@@ -4,20 +4,21 @@ export const locations: City[] = [
   {
     id: "1",
     title: "Москва",
+    area: "Московская область",
     districts: [
       {
         id: "1",
         title: "Центральный",
         metros: [
           {
-            id: "1",
+            id: "14235",
             title: "Баррикадная",
             color: "brown",
             lineName: "Таганско-Краснопресненская линия",
             lineNumber: "7",
           },
           {
-            id: "2",
+            id: "232342",
             title: "Краснопресненская",
             color: "red",
             lineName: "Кольцевая линия",
@@ -50,9 +51,10 @@ export const locations: City[] = [
   {
     id: "2",
     title: "Санкт-Петербург",
+    area: "Ленинградская область",
     districts: [
       {
-        id: "1",
+        id: "1325345",
         title: "Питерский",
         metros: [
           {
@@ -72,18 +74,18 @@ export const locations: City[] = [
         ],
       },
       {
-        id: "2",
+        id: "221343145",
         title: "Западный",
         metros: [
           {
-            id: "6",
+            id: "6432543",
             title: "Студенческая",
             color: "green",
             lineName: "Линия 6",
             lineNumber: "6",
           },
           {
-            id: "7",
+            id: "70",
             title: "Балтийская",
             color: "green",
             lineName: "Линия 6",
@@ -96,61 +98,73 @@ export const locations: City[] = [
   {
     id: "3",
     title: "Волгоград",
+    area: "Волгоградская область",
     districts: [],
   },
   {
     id: "4",
     title: "Самара",
+    area: "Самарская область",
     districts: [],
   },
   {
     id: "5",
     title: "Пенза",
+    area: "Пензенская область",
     districts: [],
   },
   {
     id: "6",
     title: "Владивосток",
+    area: "Приморский край",
     districts: [],
   },
   {
     id: "7",
-    title: "Ростов",
+    title: "Ростов-на-Дону",
+    area: "Ростовская область",
     districts: [],
   },
   {
     id: "8",
     title: "Луганск",
+    area: "Луганская область",
     districts: [],
   },
   {
     id: "9",
     title: "Донецк",
+    area: "Донецкая область",
     districts: [],
   },
   {
     id: "10",
     title: "Мариуполь",
+    area: "Донецкая область",
     districts: [],
   },
   {
     id: "11",
     title: "Саратов",
+    area: "Саратовская область",
     districts: [],
   },
   {
     id: "12",
     title: "Вологда",
+    area: "Вологодская область",
     districts: [],
   },
   {
     id: "13",
     title: "Рыбинск",
+    area: "Ярославская область",
     districts: [],
   },
   {
     id: "14",
     title: "Салехард",
+    area: "Ямало-Ненецкий АО",
     districts: [],
   },
 ];

@@ -13,6 +13,11 @@ export type User = {
   employee: Employee;
 };
 
+export type UserRegion = {
+  city: string;
+  area: string;
+};
+
 export type Student = {
   id: string;
   userId: string;
@@ -105,6 +110,7 @@ export type Response = {};
 export type City = {
   id: string;
   title: string;
+  area: string;
   districts: District[];
 };
 

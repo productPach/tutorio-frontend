@@ -1,22 +1,20 @@
+"use client";
 import styles from "../SelectCity/SelectCityModal.module.css";
 import Image from "next/image";
 import { Modal } from "../Modal/Modal";
 import { SelectCity } from "./SelectCity";
+import { setModalSelectCity } from "@/store/features/modalSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
-interface SelectCityProps {
-  isOpenModal: boolean;
-  setIsOpenModal: (isOpen: boolean) => void;
-}
-
-export const SelectCityModal: React.FC<SelectCityProps> = ({
-  isOpenModal,
-  setIsOpenModal,
-}) => {
+export const SelectCityModal = () => {
+  const dispatch = useAppDispatch();
+  // Получаем значение regionUser из Redux
+  const regionUser = useAppSelector((state) => state.match.regionUser);
   return (
     <>
       <div
         onClick={() => {
-          setIsOpenModal(true);
+          dispatch(setModalSelectCity(true));
         }}
         className={styles.header__geo}
       >
@@ -24,16 +22,14 @@ export const SelectCityModal: React.FC<SelectCityProps> = ({
           src="/img/icon/location.svg"
           width={15}
           height={18}
-          alt="Выбор города"
+          alt="Выбор местоположения"
           className={styles.header__geoImage}
         />
-        Москва
+        {regionUser.city}
       </div>
 
       <Modal
-        isOpenModal={isOpenModal}
-        setIsOpenModal={setIsOpenModal}
-        titleModal={"Выберите город"}
+        titleModal={"Укажите местоположение"}
         contentModal={<SelectCity />}
       ></Modal>
     </>

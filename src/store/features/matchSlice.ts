@@ -1,22 +1,31 @@
+import { District, Metro, UserRegion } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type MatchStateType =  {
-  indexMatchPage: number;
-}
+type MatchStateType = {
+  selectedValues: (District | Metro)[]; // переделать
+  regionUser: UserRegion;
+};
 
 const initialState: MatchStateType = {
-    indexMatchPage: 0,
+  selectedValues: [],
+  regionUser: {
+    city: "",
+    area: "",
+  },
 };
 
 const matchSlice = createSlice({
-  name: "auth",
+  name: "match",
   initialState,
   reducers: {
-    setIndexMatchPageState: (state, action: PayloadAction<number>) => {
-      state.indexMatchPage = action.payload + 1;
+    setSelectedValues: (state, action: PayloadAction<(District | Metro)[]>) => {
+      state.selectedValues = action.payload;
+    },
+    setRegionUser: (state, action: PayloadAction<UserRegion>) => {
+      state.regionUser = action.payload;
     },
   },
 });
 
-export const { setIndexMatchPageState } = matchSlice.actions;
+export const { setSelectedValues, setRegionUser } = matchSlice.actions;
 export const matchReducer = matchSlice.reducer;

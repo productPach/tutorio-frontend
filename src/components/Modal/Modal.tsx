@@ -7,27 +7,27 @@ import {
 } from "@headlessui/react";
 import { Fragment } from "react";
 import styles from "../Modal/Modal.module.css";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setModalSelectCity } from "@/store/features/modalSlice";
 
 interface ModalProps {
-  isOpenModal: boolean;
-  setIsOpenModal: (isOpen: boolean) => void;
   titleModal: string;
   contentModal: React.ReactNode;
 }
-export const Modal: React.FC<ModalProps> = ({
-  isOpenModal,
-  setIsOpenModal,
-  titleModal,
-  contentModal,
-}) => {
+export const Modal: React.FC<ModalProps> = ({ titleModal, contentModal }) => {
+  const dispatch = useAppDispatch();
+  // Получаем значение isModalSelectCity из Redux
+  const isModalSelectCity = useAppSelector(
+    (state) => state.modal.isModalSelectCity
+  );
   return (
     <>
       {/* Модальное окно с анимацией */}
-      <Transition show={isOpenModal} as={Fragment}>
+      <Transition show={isModalSelectCity} as={Fragment}>
         <Dialog
           as="div"
           className={styles.dialogOverlay}
-          onClose={() => setIsOpenModal(false)}
+          onClose={() => dispatch(setModalSelectCity(false))}
         >
           <Transition.Child
             as={Fragment}
@@ -56,7 +56,7 @@ export const Modal: React.FC<ModalProps> = ({
                 {contentModal}
                 <button
                   className={styles.closeButton}
-                  onClick={() => setIsOpenModal(false)}
+                  onClick={() => dispatch(setModalSelectCity(false))}
                 >
                   ✕
                 </button>

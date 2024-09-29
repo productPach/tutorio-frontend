@@ -11,7 +11,6 @@ type LayoutComponent = {
 };
 
 const Layout: React.FC<LayoutComponent> = ({ children }) => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
   return (
     <>
       <Head>
@@ -23,10 +22,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       </Head>
       <header>
         <div className={clsx(styles.header, styles.center)}>
-          <SelectCityModal
-            isOpenModal={isOpenModal}
-            setIsOpenModal={setIsOpenModal}
-          />
+          <SelectCityModal />
           <Link href="/">
             <div className={styles.header__logo}>
               tutorio

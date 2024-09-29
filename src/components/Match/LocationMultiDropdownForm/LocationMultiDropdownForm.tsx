@@ -14,6 +14,9 @@ import Image from "next/image";
 import { getLocation } from "@/api/addresses/addresses";
 import { District, Metro, Order } from "@/types/types";
 import { locations } from "@/utils/locations/locations";
+import { setModalSelectCity } from "@/store/features/modalSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
 
 interface Answer {
   id: number;
@@ -43,17 +46,23 @@ type DataAdress = {
 export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   id,
   question,
+  description,
   typeForm,
   answerArray,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+  // Получаем значение regionUser из Redux
+  const regionUser = useAppSelector((state) => state.match.regionUser);
+  // Получаем значение selectedValues из Redux
+  const selectedValues = useAppSelector((state) => state.match.selectedValues);
 
   // Создаем флаг для отслеживания первоначальной загрузки
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [inputValue, setInputValue] = useState("");
-  const [selectedValues, setSelectedValues] = useState<(District | Metro)[]>(
-    []
-  );
+  // const [selectedValues, setSelectedValues] = useState<(District | Metro)[]>(
+  //   []
+  // );
   const [adressList, setAdressList] = useState<(District | Metro)[]>([]);
   const [errorInput, setErrorInput] = useState(false);
   const [errorInputText, setErrorInputText] = useState("");
@@ -64,6 +73,15 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   const getDataMatchLS = localStorage.getItem("currentMatch");
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
+  useEffect(() => {
+    const regionUserJson = localStorage.getItem("region-user");
+    const regionUser = regionUserJson ? JSON.parse(regionUserJson) : "";
+
+    if (regionUser) {
+      dispatch(setRegionUser(regionUser));
+    }
+  }, [dispatch]);
+
   // Добавление локации
   const handleInputValue = async (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -72,7 +90,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     try {
       const data = await getLocation(
         e.target.value,
-        "Санкт-Петербург",
+        regionUser.city,
         selectedValues
       );
       setAdressList(data);
@@ -83,17 +101,21 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
   // Удаление локации
   const handleRemoveItem = (index: number) => {
-    setSelectedValues((prevValues) => prevValues.filter((_, i) => i !== index));
+    const updatedValues = selectedValues.filter((_, i) => i !== index);
+    dispatch(setSelectedValues(updatedValues)); // Передаём обновлённый массив
   };
 
   const handleNextStep = useCallback(
     (link: string) => {
+      setIsVisible(false);
       setTimeout(() => route.push(link), 400);
     },
     [route, typeForm, selectedValues]
   );
 
   const handlePrevStep = () => {
+    setIsVisible(false);
+    // Для красоты делаем переход через 0,4 секунды после клика
     setTimeout(() => route.back(), 400);
   };
 
@@ -107,7 +129,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   useEffect(() => {
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
-    valueProperty && setSelectedValues(valueProperty);
+    valueProperty && dispatch(setSelectedValues(valueProperty));
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
@@ -139,7 +161,8 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
     if (e.key === "Enter" && adressList.length > 0) {
       const selectedAdress = adressList[resultAdressIndex];
-      setSelectedValues((prevValues) => [...prevValues, selectedAdress]);
+      const updatedValues = [...selectedValues, selectedAdress]; // Добавляем новый элемент к текущему состоянию
+      dispatch(setSelectedValues(updatedValues)); // Передаём обновлённый массив в Redux
       setInputValue(""); // Очищаем поле ввода
       setIsInput(false); // Закрываем выпадающий список
     }
@@ -206,6 +229,18 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
             Назад
           </div>
           <div className={styles.title}>{question}</div>
+          <div className={styles.description}>{description}</div>
+          <div className={styles.description}>
+            Регион:{" "}
+            <span
+              onClick={() => {
+                dispatch(setModalSelectCity(true));
+              }}
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+            >
+              {regionUser.city} и {regionUser.area}
+            </span>
+          </div>
           <input
             id="stydentAdress"
             type="text"
@@ -229,7 +264,10 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
                   <li
                     key={item.id}
                     onClick={() => {
-                      setSelectedValues((prevValues) => [...prevValues, item]);
+                      // Обновляем состояние, добавляя новый элемент
+                      const updatedValues = [...selectedValues, item];
+                      // Передаем обновленный массив в Redux
+                      dispatch(setSelectedValues(updatedValues));
                       setInputValue(""); // Очищаем поле после выбора
                       setIsInput(false); // Закрываем выпадающий список
                     }}

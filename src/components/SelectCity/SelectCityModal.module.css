@@ -136,8 +136,7 @@
   grid-column: span 12;
 }
 
-.opacity {
-  position: sticky;
-  box-shadow: 0 0 30px 30px #f1f2f4;
-  z-index: 99;
+.areaCity {
+  font-size: 14px;
+  color: #666;
 }
