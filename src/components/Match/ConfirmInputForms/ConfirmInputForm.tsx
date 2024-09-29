@@ -40,6 +40,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const dispatch = useAppDispatch();
   // Получаем значение loadingAuth из Redux
   const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
+  // Получаем значение regionUser из Redux
+  const regionUser = useAppSelector((state) => state.match.regionUser);
+
+  let region: string;
+  regionUser && (region = regionUser?.city);
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -66,9 +71,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const getDataMatchLS = localStorage.getItem("currentMatch");
   // Конвертируем массив c данными формы из JSON в JS объект
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
-
-  // ХАРДКОДИМ studentTrip (ПЕРЕДЕЛАТЬ НА МАССИВ)
-  //const studentTripDataMatchDEV = ["0", "1", "2"];
 
   // Авторизация пользователя
   const handleGetToken = async (secretCode: string) => {
@@ -168,7 +170,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 studentLevelDataMatch,
                 tutorGenderDataMatch,
                 timetableDataMatch,
-                //region,
+                region,
                 studyPlaceDataMatch,
                 studentAdressDataMatch,
                 studentTripDataMatch,

@@ -52,6 +52,11 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
     phone: "9269811041",
   };
   //const tutor = useAppSelector((state) => state.tutor.tutor);
+  // Получаем значение regionUser из Redux
+  const regionUser = useAppSelector((state) => state.match.regionUser);
+
+  let region: string;
+  regionUser && (region = regionUser?.city);
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -220,6 +225,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
         studentLevelDataMatch,
         tutorGenderDataMatch,
         timetableDataMatch,
+        region,
         studyPlaceDataMatch,
         studentAdressDataMatch,
         studentTripDataMatch,
