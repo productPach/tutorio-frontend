@@ -168,6 +168,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 studentLevelDataMatch,
                 tutorGenderDataMatch,
                 timetableDataMatch,
+                //region,
                 studyPlaceDataMatch,
                 studentAdressDataMatch,
                 studentTripDataMatch,

@@ -3,15 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type MatchStateType = {
   selectedValues: (District | Metro)[]; // переделать
-  regionUser: UserRegion;
+  regionUser: UserRegion | null;
 };
 
 const initialState: MatchStateType = {
   selectedValues: [],
-  regionUser: {
-    city: "",
-    area: "",
-  },
+  regionUser: null,
 };
 
 const matchSlice = createSlice({
