@@ -91,7 +91,12 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
               fioValue &&
                 // Студента не существет, создаем нового
                 dispatch(
-                  createStudent({ name: fioValue, phone: phone, token })
+                  createStudent({
+                    name: fioValue,
+                    phone: phone,
+                    region: region,
+                    token,
+                  })
                 );
             })
             .finally(() => {
@@ -200,6 +205,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     if (inputValue.length === 4) {
       setIsSuccess(false);
       handleGetToken(inputValue);
+      console.log(region);
     }
   }, [codes]);
 

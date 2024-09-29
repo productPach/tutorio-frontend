@@ -246,7 +246,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
     if (!student) {
       if (tutor) {
         dispatch(
-          createStudent({ name: tutor.name, phone: tutor.phone, token })
+          createStudent({ name: tutor.name, phone: tutor.phone, region, token })
         );
         //createOrder();
       } else {

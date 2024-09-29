@@ -4,6 +4,7 @@ import { baseUrl } from "./configApi";
 export const fetchCreateStudent = async (
   name: string,
   phone: string,
+  region: string,
   token: string
 ) => {
   const response = await fetch(`${baseUrl}students`, {
@@ -15,6 +16,7 @@ export const fetchCreateStudent = async (
     body: JSON.stringify({
       name: name,
       phone: phone,
+      region: region,
     }),
   });
 
