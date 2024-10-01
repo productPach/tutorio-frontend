@@ -1,6 +1,7 @@
 "use client";
 import { ConfirmInputForm } from "@/components/SignIn/SignInTutor/ConfirmInputForms/ConfirmInputForm";
 import { FioInputForms } from "@/components/SignIn/SignInTutor/FioInputForm/FioInputForm";
+//import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationForms";
 import { PhoneInputForms } from "@/components/SignIn/SignInTutor/PhoneInputForms/PhoneInputForms";
 import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/SubjectsForms";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
@@ -29,9 +30,9 @@ const SignInTutorPage: React.FC = () => {
     phone: PhoneInputForms,
     confirmation: ConfirmInputForm,
     fio: FioInputForms,
-    subjects: SubjectsForms
-    // "geo": ;
-    // "locations": ;
+    subjects: SubjectsForms,
+    // "price": ;
+    //locations: LocationForms,
     // "photo": ;
     // "email": ;
   };
