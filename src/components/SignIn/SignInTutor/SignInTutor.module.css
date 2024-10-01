@@ -13,6 +13,13 @@
   padding: 32px;
 }
 
+.wrapAdress {
+  background-color: white;
+  border-radius: 10px;
+  padding: 32px;
+  border: 3px solid #f1f2f4;
+}
+
 .wrapButton {
   position: sticky;
   bottom: 0;
@@ -22,6 +29,12 @@
   padding: 20px 0;
   box-shadow: 0 0 30px 30px #f1f2f4;
   z-index: 99;
+}
+
+.wrapButtonStandart {
+  display: flex;
+  flex-direction: row;
+  background-color: #f1f2f4; /* добавлено */
 }
 
 /* Новый стиль для белого фона */
@@ -187,6 +200,17 @@
   cursor: pointer;
 }
 
+.answerLocation {
+  display: flex;
+  border-radius: 10px;
+  height: 56px;
+  box-sizing: border-box;
+  background-color: rgb(241, 242, 244);
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
 .radioLabel {
   display: flex;
   padding: 16px 18px 16px 18px;
@@ -294,6 +318,7 @@
 
 .checkboxLabelLocation {
   width: 100%;
+  padding: 0 18px;
   display: flex;
   cursor: pointer;
   flex-direction: row;

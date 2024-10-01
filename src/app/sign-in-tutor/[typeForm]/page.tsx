@@ -20,7 +20,6 @@ interface ComponentRenderProps {
   description: string;
   placeholder: string;
   nextPage: string;
-  answerArray: Answer[];
 }
 
 interface ComponentsList {
@@ -71,7 +70,6 @@ const SignInTutorPage: React.FC = () => {
           description={description}
           placeholder={placeholder}
           nextPage={nextPage}
-          answerArray={answerArray}
         />
       ) : null}
     </>
