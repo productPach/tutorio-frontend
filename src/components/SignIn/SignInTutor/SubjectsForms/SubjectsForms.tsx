@@ -56,6 +56,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
 
   const handleSubjectCheckedChange = useCallback(
     (subjectId: string, isChecked: boolean) => {
+      if (!subjectId) return; // Добавляем проверку, чтобы игнорировать пустые значения
       setListSubjectChecked((prev) => {
         if (isChecked) {
           return prev.includes(subjectId) ? prev : [...prev, subjectId];
@@ -76,8 +77,6 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
 
   const handleScrollToSubject = useCallback(
     (subjectId: string, category: string) => {
-      console.log(subjectId);
-      console.log(category);
       setClickedCategory(category);
       setClickedSubject(subjectId);
     },

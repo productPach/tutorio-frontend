@@ -51,6 +51,7 @@ export const fetchCreateOrder = async (
       studentTrip: studentTripDataMatch,
       tutorType: tutorTypeDataMatch,
       studentWishes: infoDataMatch,
+      status: "Pending",
     }),
   });
 

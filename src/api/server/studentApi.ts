@@ -17,6 +17,7 @@ export const fetchCreateStudent = async (
       name: name,
       phone: phone,
       region: region,
+      status: "Pending",
     }),
   });
 
