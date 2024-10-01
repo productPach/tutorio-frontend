@@ -29,23 +29,37 @@ export const listQuestionsForTutorSignIn = [
         question: "По каким предметам нужны ученики?",
         description: "Будем показывать вам заказы по выбранным предметам",
         placeholder: "Начните вводить предмет",
-        nextPage: "/sign-in-tutor/geo",
-    },
-    {
-        id: 5,
-        typeForm: "geo",
-        question: "Подтверждение номера телефона",
-        description: "Отправили код на номер",
-        placeholder: "",
         nextPage: "/sign-in-tutor/locations",
     },
+    // {
+    //     id: 5,
+    //     typeForm: "geo",
+    //     question: "Подтверждение номера телефона",
+    //     description: "Отправили код на номер",
+    //     placeholder: "",
+    //     nextPage: "/sign-in-tutor/locations",
+    // },
     {
         id: 6,
         typeForm: "locations",
-        question: "Подтверждение номера телефона",
-        description: "Отправили код на номер",
+        question: "Где удобно заниматься?",
+        description: "Будем показывать вам заказы учеников в зависимости от выбранных способов занятий и локаций",
         placeholder: "",
         nextPage: "/sign-in-tutor/photo",
+        answers: [
+            {
+                id: 1,
+                title: "Дистанционно",
+            },
+            {
+                id: 2,
+                title: "Занимаюсь с учениками у себя",
+            },
+            {
+                title: "Готов выезжать к ученикам",
+                id: 3,
+            },
+        ],
     },
     {
         id: 7,
