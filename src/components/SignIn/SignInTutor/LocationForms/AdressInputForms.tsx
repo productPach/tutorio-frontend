@@ -59,7 +59,7 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
+  const getDataMatchLS = localStorage.getItem("current-user");
   // Конвертируем массив c данными формы из JSON в JS объект
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
@@ -71,8 +71,9 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
   // Создаем переменную для начального значения состояния
   let initialCheckboxValue: DataAdress[];
   // Если длинна массива в объекте больше 0, то кладем это значение в initialCheckboxValue, чтобы передать в состояние при инициализации
-  containsClassProperty?.[typeForm].length
-    ? (initialCheckboxValue = containsClassProperty?.dataAdress)
+  containsClassProperty?.tutorHomeAdress?.dataAdress
+    ? (initialCheckboxValue =
+        containsClassProperty?.tutorHomeAdress?.dataAdress)
     : (initialCheckboxValue = []);
 
   // Состояние для массива адресов
@@ -109,57 +110,34 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
 
       // Сбрасываем ошибку если уровень подходит
       setErrorInputText("");
-      // Обновляем состояния для красивого эффекта перехода
-      setIsDisabled(true);
-      setIsVisible(false);
 
-      // Создаем новый объект, который нужно положить в массив с данными формы
-      const newData = {
-        id: id,
-        [typeForm]: inputValue,
-        dataAdress: adressList,
-      };
+      // Обновляем объект в localStorage
+      const updatedDataMatch = dataMatch.map((item) => {
+        if (item.id === 5) {
+          return {
+            ...item,
+            tutorHomeAdress: {
+              adress: inputValue,
+              dataAdress: adressList,
+            },
+          };
+        }
+        return item;
+      });
 
-      // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
-      if (containsClassProperty) {
-        // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-        const indexOfArray = dataMatch.findIndex((obj) =>
-          obj.hasOwnProperty(typeForm)
-        );
-
-        // Вариант, когда не нужно удалять все ранее записанные свойства при изменении checkbox
-        dataMatch.splice(indexOfArray, 1, newData);
-        // Кладем новый массив в LS
-        localStorage.setItem("currentMatch", JSON.stringify(dataMatch));
-      } else {
-        // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-        const dataToSave = [...dataMatch, newData];
-        localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
-      }
+      // Сохраняем обновленные данные обратно в localStorage
+      localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
     },
     [route, typeForm, adressList, errorInputText]
   );
-
-  // Функция для возврата на предыдущий шаг
-  const handlePrevStep = () => {
-    setIsDisabled(true);
-    setIsVisible(false);
-    // Для красоты делаем переход через 0,4 секунды после клика
-    setTimeout(() => route.back(), 400);
-  };
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []); // Анимация будет стартовать после монтирования компонента
 
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const valueProperty = currentDataMatch?.tutorHomeAdress?.adress
+      ? currentDataMatch.tutorHomeAdress?.adress
+      : "";
     setInputValue(valueProperty);
   }, [typeForm]);
 
@@ -196,6 +174,10 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       }
 
       if (e.key === "Enter" && adressList.length > 0) {
+        handleNextStep(
+          adressList[resultAdressIndex].value,
+          adressList[resultAdressIndex].data.fias_level
+        );
       }
 
       if (e.key === "Enter" && adressList.length === 0) {
@@ -215,6 +197,8 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       input?.removeEventListener("keydown", handleKeyDown);
     };
   }, [adressList, resultAdressIndex]);
+
+  console.log(inputValue);
 
   return (
     <>
