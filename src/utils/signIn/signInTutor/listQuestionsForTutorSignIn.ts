@@ -40,7 +40,7 @@ export const listQuestionsForTutorSignIn = [
     //     nextPage: "/sign-in-tutor/locations",
     // },
     {
-        id: 6,
+        id: 5,
         typeForm: "locations",
         question: "Где удобно заниматься?",
         description: "Будем показывать вам заказы учеников в зависимости от выбранных способов занятий и локаций",
