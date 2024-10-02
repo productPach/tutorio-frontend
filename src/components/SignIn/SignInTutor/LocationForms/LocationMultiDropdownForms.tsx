@@ -6,8 +6,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import styles from "../Match.module.css";
-import animation from "../../../app/match/layout.module.css";
+import styles from "../../../Match/Match.module.css";
+import animation from "../../../../app/match/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
@@ -17,18 +17,10 @@ import { setModalSelectCity } from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
 
-interface Answer {
-  id: number;
-  title: string;
-  nextPage: string;
-}
-
 interface ComponentRenderProps {
   id: number;
   question: string;
-  description: string;
   typeForm: string;
-  answerArray: Answer[];
 }
 
 type DataAdress = {
@@ -42,12 +34,10 @@ type DataAdress = {
   };
 };
 
-export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
+export const LocationMultiDropdownForms: React.FC<ComponentRenderProps> = ({
   id,
   question,
-  description,
   typeForm,
-  answerArray,
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
@@ -69,9 +59,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   const [resultAdressIndex, setResultAdressIndex] = useState(0);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-  console.log(selectedValues);
-
-  const getDataMatchLS = localStorage.getItem("currentMatch");
+  const getDataMatchLS = localStorage.getItem("current-user");
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
   useEffect(() => {
@@ -134,8 +122,6 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
     valueProperty && dispatch(setSelectedValues(valueProperty));
   }, [typeForm]);
-
-  const nextPageProperty = answerArray[0].nextPage;
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "ArrowDown") {
@@ -210,7 +196,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
     // Обновляем данные в localStorage
     const updatedDataMatch = dataMatch.filter((item) => item.id !== id); // Удаляем старую запись с тем же id
     const dataToSave = [...updatedDataMatch, existingData]; // Добавляем обновленную запись
-    localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
+    localStorage.setItem("current-user", JSON.stringify(dataToSave));
   }, [selectedValues]);
 
   return (
@@ -220,34 +206,19 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
           isVisible ? animation.visible : animation.hidden
         }`}
       >
-        <div className={styles.wrap}>
-          <div onClick={handlePrevStep} className={styles.wrapIcon}>
-            <Image
-              width={20}
-              height={20}
-              alt="Назад"
-              src="/img/icon/CaretLeft.svg"
-              className={styles.iconBack}
-            />
-            Назад
-          </div>
-          <div className={styles.title}>{question}</div>
-          <div className={styles.description}>{description}</div>
+        <div className={styles.wrapAdress}>
           <div className={styles.description}>
-            Регион:{" "}
-            <span
-              onClick={() => {
-                dispatch(setModalSelectCity(true));
-              }}
-              style={{ textDecoration: "underline", cursor: "pointer" }}
-            >
-              {regionUser && regionUser.city} и {regionUser && regionUser.area}
-            </span>
+            {
+              "Укажите областные города и посёлки, до которых вам удобно добираться на занятия с учеником"
+            }
           </div>
+
           <input
             id="stydentAdress"
             type="text"
-            placeholder={answerArray[0].title}
+            placeholder={
+              "Начните вводить название областного города или посёлка"
+            }
             autoComplete="off"
             value={inputValue}
             onChange={handleInputValue}
@@ -301,17 +272,6 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
               </div>
             ))}
           </div>
-        </div>
-
-        <div className={styles.wrapButton}>
-          <button
-            type="button"
-            onClick={() => handleNextStep(nextPageProperty)}
-            className={styles.continueButton}
-            disabled={selectedValues.length === 0}
-          >
-            Продолжить
-          </button>
         </div>
       </div>
     </>

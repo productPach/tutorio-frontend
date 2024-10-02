@@ -1,12 +1,17 @@
 "use client";
 import { ConfirmInputForm } from "@/components/SignIn/SignInTutor/ConfirmInputForms/ConfirmInputForm";
 import { FioInputForms } from "@/components/SignIn/SignInTutor/FioInputForm/FioInputForm";
-//import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationForms";
+import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationForms";
 import { PhoneInputForms } from "@/components/SignIn/SignInTutor/PhoneInputForms/PhoneInputForms";
 import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/SubjectsForms";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
 import { useParams } from "next/navigation";
 import React from "react";
+
+interface Answer {
+  id: number;
+  title: string;
+}
 
 interface ComponentRenderProps {
   id: number;
@@ -32,7 +37,7 @@ const SignInTutorPage: React.FC = () => {
     fio: FioInputForms,
     subjects: SubjectsForms,
     // "price": ;
-    //locations: LocationForms,
+    locations: LocationForms,
     // "photo": ;
     // "email": ;
   };
@@ -53,6 +58,7 @@ const SignInTutorPage: React.FC = () => {
   const placeholder = questionObject?.placeholder || "";
   // Путь на следующий шаг
   const nextPage = questionObject?.nextPage || "";
+  const answerArray = questionObject?.answers || [];
 
   return (
     <>
