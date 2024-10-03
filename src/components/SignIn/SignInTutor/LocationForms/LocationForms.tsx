@@ -6,8 +6,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AdressInputForms } from "./AdressInputForms";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { LocationMultiDropdownForms } from "./LocationMultiDropdownForms";
+
 import { setModalSelectCity } from "@/store/features/modalSlice";
+import { getLocationForCity } from "@/api/addresses/addresses";
+import { LocationAreaMultiDropdownForms } from "./LocationAreaMultiDropdownForms";
+import { LocationCityMultiDropdownForms } from "./LocationCityMultiDropdownForms";
 
 interface ComponentRenderProps {
   id: number;
@@ -18,13 +21,16 @@ interface ComponentRenderProps {
   nextPage: string;
 }
 
-// Определяем тип для объекта в массиве
 type Order = {
   id: number;
   subject?: string;
   goal?: string;
   class?: string;
   deadline?: string;
+  tutorHomeAdress?: {
+    adress: string;
+    dataAdress: string;
+  };
   [key: string]: any;
 };
 
@@ -38,136 +44,223 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
-  // Получаем значение regionUser из Redux
   const regionUser = useAppSelector((state) => state.match.regionUser);
-
-  // Создаем флаг для отслеживания первоначальной загрузки
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Вытаскиваем актуальный массив c данными формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("current-user");
-  // Конвертируем массив c данными формы из JSON в JS объект
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
-  // Получаем объект в массиве, в котором содержится свойство с typeForm текущей формы
   const containsClassProperty = dataMatch.find((obj) =>
     obj.hasOwnProperty(typeForm)
   );
-  // Создаем переменную для начального значения состояния
-  let initialCheckboxValue: string[];
-  // Если длинна массива в объекте больше 0, то кладем это значение в initialCheckboxValue, чтобы передать в состояние при инициализации
-  containsClassProperty?.[typeForm].length
-    ? (initialCheckboxValue = containsClassProperty?.[typeForm])
-    : (initialCheckboxValue = []);
 
-  // Создаем переменную для начального значения состояния
-  let initialCheckboxTripValue: string[];
-  containsClassProperty?.[typeForm].length
-    ? (initialCheckboxTripValue = containsClassProperty?.[typeForm])
-    : (initialCheckboxTripValue = []);
+  let initialCheckboxValue: string[] = containsClassProperty?.[typeForm] || [];
+  let initialCheckboxTripValue: string[] =
+    containsClassProperty?.locationsTrip || [];
 
-  // Создаем состояние для чекбоксов
   const [checkbox, setCheckbox] = useState<string[]>(initialCheckboxValue);
-  // Создаем состояние для чекбоксов
   const [checkboxTrip, setCheckboxTrip] = useState<string[]>(
     initialCheckboxTripValue
   );
+  const [formState, setFormState] = useState<Order | null>(
+    containsClassProperty || null
+  );
+  // Состояние для отслеживания выбранной радиокнопки
+  const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
 
-  // Функция для обработки клика по чекбоксу
   const handleCheckboxClick = (title: string) => {
     setCheckbox((prev) => {
-      // Проверяем, выбран ли уже этот ответ
-      if (prev.includes(title)) {
-        // Если выбран, убираем его из списка
-        return prev.filter((item) => item !== title);
+      const updatedCheckboxes = prev.includes(title)
+        ? prev.filter((item) => item !== title)
+        : [...prev, title];
+
+      setFormState((prevState) => {
+        if (!prevState) return prevState;
+
+        return {
+          ...prevState,
+          [typeForm]: updatedCheckboxes,
+        };
+      });
+
+      // Обновляем Local Storage с новыми значениями locations
+      const indexOfArray = dataMatch.findIndex((obj) => obj.id === id);
+      const updatedDataMatch = [...dataMatch];
+
+      if (indexOfArray !== -1) {
+        // Обновляем существующий объект в массиве
+        updatedDataMatch[indexOfArray] = {
+          ...updatedDataMatch[indexOfArray],
+          [typeForm]: updatedCheckboxes,
+        };
       } else {
-        // Если не выбран, добавляем в список
-        return [...prev, title];
+        // Если объект не существует, добавляем новый
+        updatedDataMatch.push({
+          id: id,
+          [typeForm]: updatedCheckboxes,
+          tutorHomeAdress: formState?.tutorHomeAdress,
+          locationsTrip: formState?.locationsTrip || [], // Сохраняем текущие locationsTrip
+          locationsTripArea: formState?.locationsTripArea || [], // Сохраняем текущие locationsTripArea
+          locationsTripCity: formState?.locationsTripCity || [], // Сохраняем текущие locationsTripCity
+        });
       }
+
+      localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
+
+      return updatedCheckboxes;
     });
   };
 
-  // Функция для обработки клика по чекбоксу
   const handleCheckboxTripClick = (title: string) => {
     setCheckboxTrip((prev) => {
-      // Проверяем, выбран ли уже этот ответ
-      if (prev.includes(title)) {
-        // Если выбран, убираем его из списка
-        return prev.filter((item) => item !== title);
+      const updatedCheckboxes = prev.includes(title)
+        ? prev.filter((item) => item !== title)
+        : [...prev, title];
+
+      setFormState((prevState) => {
+        if (!prevState) return prevState;
+
+        return {
+          ...prevState,
+          locationsTrip: updatedCheckboxes,
+        };
+      });
+
+      // Находим индекс существующего объекта в массиве
+      const indexOfArray = dataMatch.findIndex((obj) => obj.id === id);
+      const updatedDataMatch = [...dataMatch];
+
+      if (indexOfArray !== -1) {
+        // Обновляем существующий объект в массиве
+        updatedDataMatch[indexOfArray] = {
+          ...updatedDataMatch[indexOfArray],
+          locationsTrip: updatedCheckboxes,
+        };
       } else {
-        // Если не выбран, добавляем в список
-        return [...prev, title];
+        // Если объект не существует, добавляем новый
+        updatedDataMatch.push({
+          id: id,
+          locationsTrip: updatedCheckboxes,
+          [typeForm]: formState?.[typeForm] || [],
+          tutorHomeAdress: formState?.tutorHomeAdress,
+          locationsTripArea: formState?.locationsTripArea || [], // Сохраняем текущие locationsTripArea
+          locationsTripCity: formState?.locationsTripCity || [], // Сохраняем текущие locationsTripCity
+        });
       }
+
+      // Сохраняем обновленные данные в Local Storage
+      localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
+
+      return updatedCheckboxes;
     });
   };
 
-  // Каждый раз, когда обновляется состояние checkbox редактируем массив ответов в LS
+  // Обработчик для радио-кнопки
+  // Функция для обработки клика по радиокнопке
+  const handleRadioClick = async (numRadio: string) => {
+    setSelectedRadio(numRadio); // Устанавливаем выбранную радиокнопку
+
+    // Сохраняем выбранную радиокнопку в Local Storage
+    localStorage.setItem("_cr-tripData", numRadio);
+
+    let locationsTripCity: { id: string; title: string }[] = [];
+
+    if (numRadio === "1" && regionUser) {
+      locationsTripCity = await getLocationForCity(regionUser.city); // Получаем данные для города
+    } else if (numRadio === "2") {
+      locationsTripCity = []; // Очищаем данные
+    }
+
+    // Обновляем состояние формы
+    setFormState((prevState) => {
+      if (!prevState) return prevState;
+
+      return {
+        ...prevState,
+        locationsTripCity, // Обновляем данные локаций
+      };
+    });
+
+    // Обновляем данные в локальном хранилище
+    const indexOfArray = dataMatch.findIndex((obj) => obj.id === id);
+    const updatedDataMatch = [...dataMatch];
+
+    if (indexOfArray !== -1) {
+      updatedDataMatch[indexOfArray] = {
+        ...updatedDataMatch[indexOfArray],
+        locationsTripCity,
+      };
+    } else {
+      updatedDataMatch.push({
+        id: id,
+        locationsTripCity,
+        [typeForm]: formState?.[typeForm] || [],
+      });
+    }
+
+    // Сохраняем обновленные данные в Local Storage
+    localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
+  };
+
+  // Восстанавливаем состояние радиокнопки при загрузке страницы
+  useEffect(() => {
+    const savedRadio = localStorage.getItem("_cr-tripData");
+    if (savedRadio) {
+      setSelectedRadio(savedRadio);
+    }
+  }, []);
+
   useEffect(() => {
     if (isInitialLoad) {
       setIsInitialLoad(false);
       return;
     }
-    // Создаем новый объект, который нужно положить в массив с данными формы
+
+    // Создаем новую копию данных
+    const updatedDataMatch = [...dataMatch];
+
     const newData = {
       id: id,
       [typeForm]: checkbox,
+      tutorHomeAdress: formState?.tutorHomeAdress,
     };
 
-    // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
-    if (containsClassProperty) {
-      // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-      const indexOfArray = dataMatch.findIndex((obj) =>
-        obj.hasOwnProperty(typeForm)
-      );
-      // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
-      const filterDataMatch = dataMatch.filter(
-        (obj, index) => index < indexOfArray
-      );
-      // Добавляем новый объект в копию старого массива, уже отфильтрованного
-      const dataToSave = [...filterDataMatch, newData];
-      // Кладем новый массив в LS
-      localStorage.setItem("current-user", JSON.stringify(dataToSave));
+    const indexOfArray = dataMatch.findIndex((obj) => obj.id === id);
 
-      // Вариант, когда не нужно удалять все ранее записанные свойства при изменении checkbox
-      // dataMatch.splice(indexOfArray, 1, newData);
-      // // Кладем новый массив в LS
-      // localStorage.setItem("current-user", JSON.stringify(dataMatch));
+    if (indexOfArray !== -1) {
+      // Обновляем существующий объект в массиве
+      updatedDataMatch[indexOfArray] = {
+        ...updatedDataMatch[indexOfArray],
+        [typeForm]: checkbox,
+      };
     } else {
-      // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-      const dataToSave = [...dataMatch, newData];
-      localStorage.setItem("current-user", JSON.stringify(dataToSave));
+      // Если объект не существует, добавляем новый
+      updatedDataMatch.push(newData);
     }
-  }, [checkbox]);
 
-  // Функция для перехода на следующий шаг
+    // Сохраняем обновленные данные в Local Storage
+    localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
+  }, [checkbox, formState]);
+
   const handleNextStep = () => {
-    // Обновляем состояния для красивого эффекта перехода
     setIsDisabled(true);
     setIsVisible(false);
-
-    // Для красоты делаем переход через 0,4 секунды после клика
     setTimeout(() => route.push(nextPage), 400);
   };
 
-  // Функция для возврата на предыдущий шаг
   const handlePrevStep = () => {
     setIsDisabled(true);
     setIsVisible(false);
-    // Для красоты делаем переход через 0,4 секунды после клика
     setTimeout(() => route.back(), 400);
   };
 
-  // Состояния для красоты
   const [isVisible, setIsVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
-  // Это нужно для того, чтобы сохранилась красота, даже если клиент воспользуется кнопкой "Назад" в браузе
   useEffect(() => {
     setIsVisible(true);
-  }, []); // Анимация будет стартовать после монтирования компонента
+  }, []);
 
-  // Находим объект массива по ID вопроса (формы)
   const currentDataMatch = dataMatch.find((obj) => obj.id === id);
-  // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
   const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : null;
 
   return (
@@ -237,6 +330,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
                   id={id}
                   question={question}
                   typeForm={typeForm}
+                  setFormState={setFormState}
                 />
               )}
             </React.Fragment>
@@ -280,10 +374,10 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
                     </span>
                   </div>
                   <div className={styles.containerAnswers}>
-                    <React.Fragment key={"1"}>
+                    <React.Fragment key={"10"}>
                       <div className={styles.answerLocation}>
                         <input
-                          value={checkbox}
+                          value={checkboxTrip}
                           onChange={() => handleCheckboxTripClick("1")}
                           checked={checkboxTrip.includes("1")}
                           type="checkbox"
@@ -308,12 +402,13 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
                               <React.Fragment key={"1"}>
                                 <div className={styles.answerContainer}>
                                   <input
-                                    // checked={answer.title === valueProperty && true}
+                                    checked={selectedRadio === "1"}
                                     readOnly
                                     type="radio"
                                     className={styles.radioInput}
                                     id={`radio-1`}
                                     name="goal"
+                                    onChange={() => handleRadioClick("1")}
                                   />
                                   <label
                                     className={styles.radioLabel}
@@ -329,12 +424,13 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
                               <React.Fragment key={"2"}>
                                 <div className={styles.answerContainer}>
                                   <input
-                                    //   checked={answer.title === valueProperty && true}
+                                    checked={selectedRadio === "2"}
                                     readOnly
                                     type="radio"
                                     className={styles.radioInput}
                                     id={`radio-2`}
                                     name="goal"
+                                    onChange={() => handleRadioClick("2")}
                                   />
                                   <label
                                     className={styles.radioLabel}
@@ -346,16 +442,23 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
                                     </p>
                                   </label>
                                 </div>
+                                {selectedRadio === "2" && (
+                                  <LocationCityMultiDropdownForms
+                                    id={id}
+                                    question={question}
+                                    typeForm={typeForm}
+                                  />
+                                )}
                               </React.Fragment>
                             </div>
                           </div>
                         </>
                       )}
                     </React.Fragment>
-                    <React.Fragment key={"2"}>
+                    <React.Fragment key={"20"}>
                       <div className={styles.answerLocation}>
                         <input
-                          value={checkbox}
+                          value={checkboxTrip}
                           onChange={() => handleCheckboxTripClick("2")}
                           checked={checkboxTrip.includes("2")}
                           type="checkbox"
@@ -374,7 +477,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
                         </label>
                       </div>
                       {checkboxTrip.includes("2") && (
-                        <LocationMultiDropdownForms
+                        <LocationAreaMultiDropdownForms
                           id={id}
                           question={question}
                           typeForm={typeForm}

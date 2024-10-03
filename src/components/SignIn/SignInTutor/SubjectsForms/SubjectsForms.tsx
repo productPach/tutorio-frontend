@@ -158,8 +158,6 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
     setListSubjectChecked(valueProperty);
   }, [typeForm]);
 
-  console.log(listSubjectChecked);
-
   return (
     <>
       <div

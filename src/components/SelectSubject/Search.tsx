@@ -37,24 +37,10 @@ export const Search: React.FC<ComponentProps> = ({ handleScrollToSubject }) => {
   const handleSubject = useCallback(
     (id: string, subject: string, category: string) => {
       setIsLoading(true);
-      // Очищаем предыдущие данные заявок из LS, если они есть
-      localStorage.removeItem("currentMatch");
-      // Очищаем предыдущие данные по таймеру
-      localStorage.removeItem("confirm-time");
-      // Очищаем предыдущие данные телефона
-      localStorage.removeItem("origin-phone");
+
       setInputSearchTutor(subject);
       // Очищаем результаты, чтобы скрыть подсказки
       setResultSearchTutor([]);
-      // Создаем новый объект для добавления в LS
-      const dataToSave = [
-        {
-          id: 0,
-          subject: subject,
-        },
-      ];
-      // Добавляем объект в LS
-      localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       // Делаем задержку, чтобы был красивый переход
       setTimeout(() => {
         linkApplicationSubject(id, category);

@@ -112,6 +112,7 @@ export type City = {
   title: string;
   area: string;
   districts: District[];
+  regionalCities: RegionalCity[]
 };
 
 export type District = {
@@ -127,3 +128,8 @@ export type Metro = {
   lineName: string;
   lineNumber: string;
 };
+
+export type RegionalCity = {
+  id: string;
+  title: string;
+}

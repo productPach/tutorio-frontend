@@ -1,8 +1,8 @@
-import { District, Metro, UserRegion } from "@/types/types";
+import { District, Metro, RegionalCity, UserRegion } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type MatchStateType = {
-  selectedValues: (District | Metro)[]; // переделать
+  selectedValues: (District | Metro | RegionalCity)[]; // переделать
   regionUser: UserRegion | null;
 };
 
@@ -15,7 +15,7 @@ const matchSlice = createSlice({
   name: "match",
   initialState,
   reducers: {
-    setSelectedValues: (state, action: PayloadAction<(District | Metro)[]>) => {
+    setSelectedValues: (state, action: PayloadAction<(District | Metro | RegionalCity)[]>) => {
       state.selectedValues = action.payload;
     },
     setRegionUser: (state, action: PayloadAction<UserRegion>) => {
