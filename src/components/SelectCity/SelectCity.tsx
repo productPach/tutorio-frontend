@@ -6,6 +6,10 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
 import { UserRegion } from "@/types/types";
+import {
+  setSelectedValuesArea,
+  setSelectedValuesCity,
+} from "@/store/features/tutorSlice";
 
 export const SelectCity = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +27,20 @@ export const SelectCity = () => {
     dispatch(setModalSelectCity(false));
     dispatch(setRegionUser({ city, area }));
     dispatch(setSelectedValues([]));
+    dispatch(setSelectedValuesCity([]));
+    dispatch(setSelectedValuesArea([]));
+
+    // Удаляем данные о городе из Local Storage, если выбран другой регион
+    const storedData = JSON.parse(localStorage.getItem("current-user") || "[]");
+    if (Array.isArray(storedData)) {
+      const updatedData = storedData.map((obj) => {
+        if (obj.locationsTripCity) {
+          obj.locationsTripCity = []; // Очищаем поле с городом
+        }
+        return obj;
+      });
+      localStorage.setItem("current-user", JSON.stringify(updatedData));
+    }
   };
 
   const locationList =

@@ -9,6 +9,7 @@ import {
 import { matchReducer } from "./features/matchSlice";
 import { studentReducer } from "./features/studentSlice";
 import { modalReducer } from "./features/modalSlice";
+import { tutorReducer } from "./features/tutorSlice";
 
 // Функция makeStore создает и возвращает хранилище Redux с помощью функции configureStore.
 export const makeStore = () => {
@@ -16,6 +17,7 @@ export const makeStore = () => {
     // Мы передаем объект, в котором свойство reducer содержит корневой редьюсер, объединяющий все редьюсеры нашего приложения.
     reducer: combineReducers({
       auth: authReducer,
+      tutor: tutorReducer,
       student: studentReducer,
       match: matchReducer,
       modal: modalReducer,

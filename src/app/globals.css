@@ -37,3 +37,7 @@ main {
   padding-left: calc(50% - 600px);
   padding-right: calc(50% - 600px);
 }
+
+input {
+  font-family: "Source Sans 3", sans-serif;
+}

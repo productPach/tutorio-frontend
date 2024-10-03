@@ -47,6 +47,20 @@ export const locations: City[] = [
         ],
       },
     ],
+    regionalCities: [
+      {
+        id: "1031452",
+        title: "пос. Володарского",
+      },
+      {
+        id: "10314522334",
+        title: "г. Видное",
+      },
+      {
+        id: "103145221214",
+        title: "г. Дзержинский",
+      },
+    ]
   },
   {
     id: "2",
@@ -94,78 +108,100 @@ export const locations: City[] = [
         ],
       },
     ],
+    regionalCities: [
+      {
+        id: "103341452",
+        title: "г. Лосиный",
+      },
+      {
+        id: "10314531222334",
+        title: "г. Кронштадт",
+      },
+    ]
   },
   {
     id: "3",
     title: "Волгоград",
     area: "Волгоградская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "4",
     title: "Самара",
     area: "Самарская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "5",
     title: "Пенза",
     area: "Пензенская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "6",
     title: "Владивосток",
     area: "Приморский край",
     districts: [],
+    regionalCities: []
   },
   {
     id: "7",
     title: "Ростов-на-Дону",
     area: "Ростовская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "8",
     title: "Луганск",
     area: "Луганская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "9",
     title: "Донецк",
     area: "Донецкая область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "10",
     title: "Мариуполь",
     area: "Донецкая область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "11",
     title: "Саратов",
     area: "Саратовская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "12",
     title: "Вологда",
     area: "Вологодская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "13",
     title: "Рыбинск",
     area: "Ярославская область",
     districts: [],
+    regionalCities: []
   },
   {
     id: "14",
     title: "Салехард",
     area: "Ямало-Ненецкий АО",
     districts: [],
+    regionalCities: []
   },
 ];
 

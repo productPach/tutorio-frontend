@@ -15,6 +15,7 @@ interface ComponentRenderProps {
   id: number;
   question: string;
   typeForm: string;
+  setFormState: React.Dispatch<React.SetStateAction<any>>; // передаем функцию для обновления состояния
 }
 
 // Определяем тип для объекта в массиве
@@ -24,6 +25,10 @@ type Order = {
   goal?: string;
   class?: string;
   deadline?: string;
+  tutorHomeAdress?: {
+    adress: string;
+    dataAdress: DataAdress[];
+  };
   [key: string]: any;
 };
 
@@ -40,6 +45,7 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
   id,
   question,
   typeForm,
+  setFormState, // получаем функцию setFormState из родительского компонента
 }) => {
   const route = useRouter();
 
@@ -69,33 +75,42 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
   );
 
   // Создаем переменную для начального значения состояния
-  let initialCheckboxValue: DataAdress[];
+  let initialCheckboxValue: DataAdress[] = [];
   // Если длинна массива в объекте больше 0, то кладем это значение в initialCheckboxValue, чтобы передать в состояние при инициализации
-  containsClassProperty?.tutorHomeAdress?.dataAdress
-    ? (initialCheckboxValue =
-        containsClassProperty?.tutorHomeAdress?.dataAdress)
-    : (initialCheckboxValue = []);
+  if (containsClassProperty?.tutorHomeAdress?.dataAdress) {
+    initialCheckboxValue = containsClassProperty.tutorHomeAdress.dataAdress;
+  }
 
   // Состояние для массива адресов
   const [adressList, setAdressList] =
     useState<DataAdress[]>(initialCheckboxValue);
 
+  // Флаг для проверки, было ли изменено значение inputValue
+  const [isInputValueChanged, setIsInputValueChanged] = useState(false);
+
   // Функция для валидации значения поля
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
     setIsInput(true);
+    const value = e.target.value;
 
-    if (/^\d*$/.test(e.target.value)) {
+    // Если поле состоит только из цифр, вызываем ошибку
+    if (/^\d*$/.test(value)) {
       setErrorInput(true);
     } else {
       setErrorInput(false);
     }
-    setInputValue(e.target.value);
-    getAdressDadata(e.target.value).then((data) => {
+
+    // Обновляем состояние поля ввода
+    setInputValue(value);
+    setIsInputValueChanged(true); // Устанавливаем флаг, что значение изменено
+
+    // Проверяем введенное значение через API ДаДата
+    getAdressDadata(value).then((data) => {
       setAdressList(data.suggestions);
     });
   };
 
-  // Функция для перехода на следующий шаг
+  // Функция для обновления состояния формы
   const handleNextStep = useCallback(
     (inputValue: string, fiasLevel: string) => {
       setInputValue(inputValue);
@@ -111,9 +126,18 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       // Сбрасываем ошибку если уровень подходит
       setErrorInputText("");
 
+      // Обновляем состояние через setFormState из родительского компонента
+      setFormState((prevState: Order) => ({
+        ...prevState,
+        tutorHomeAdress: {
+          adress: inputValue,
+          dataAdress: adressList,
+        },
+      }));
+
       // Обновляем объект в localStorage
       const updatedDataMatch = dataMatch.map((item) => {
-        if (item.id === 5) {
+        if (item.id === id) {
           return {
             ...item,
             tutorHomeAdress: {
@@ -128,18 +152,19 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       // Сохраняем обновленные данные обратно в localStorage
       localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
     },
-    [route, typeForm, adressList, errorInputText]
+    [adressList, dataMatch, id, setFormState]
   );
 
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
     const currentDataMatch = dataMatch.find((obj) => obj.id === id);
-    // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch?.tutorHomeAdress?.adress
-      ? currentDataMatch.tutorHomeAdress?.adress
-      : "";
-    setInputValue(valueProperty);
-  }, [typeForm]);
+
+    // Устанавливаем значение только если inputValue пустое и не изменено
+    if (inputValue === "" && !isInputValueChanged) {
+      const valueProperty = currentDataMatch?.tutorHomeAdress?.adress ?? "";
+      setInputValue(valueProperty);
+    }
+  }, [id, dataMatch, inputValue, isInputValueChanged]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -196,9 +221,7 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
     return () => {
       input?.removeEventListener("keydown", handleKeyDown);
     };
-  }, [adressList, resultAdressIndex]);
-
-  console.log(inputValue);
+  }, [adressList, resultAdressIndex, handleNextStep]);
 
   return (
     <>
@@ -241,7 +264,6 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
                   return (
                     <React.Fragment key={item.data.fias_id}>
                       <li
-                        key={item.data.fias_id}
                         onClick={() =>
                           handleNextStep(item.value, item.data.fias_level)
                         }
