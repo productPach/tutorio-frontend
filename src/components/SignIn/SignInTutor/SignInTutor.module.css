@@ -34,7 +34,14 @@
 .wrapButtonStandart {
   display: flex;
   flex-direction: row;
-  background-color: #f1f2f4; /* добавлено */
+  background-color: #f1f2f4;
+}
+
+.wrapButtonPhoto {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  margin-top: 18px;
 }
 
 /* Новый стиль для белого фона */
@@ -530,4 +537,68 @@
 
 .description {
   margin: 0 0 18px 0;
+}
+
+.dropzone {
+  width: 100%;
+  height: 200px;
+  border: 1px dashed #ccc;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+  border-radius: 10px;
+  color: #777777;
+}
+
+.dropzone.active {
+  border-color: #0070f3; /* Цвет границы при активном перетаскивании */
+}
+
+.photoPreviewContainer {
+  margin-top: 10px; /* Отступ сверху для области предпросмотра */
+  border-radius: 10px;
+}
+
+.photoPreview {
+  border-radius: 5px; /* Скругляем углы изображений */
+  object-fit: cover; /* Обеспечиваем правильное соотношение сторон */
+}
+.imagePreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.imagePreviewPhoto {
+  border-radius: 10px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.buttonBlack {
+  width: 240px;
+  height: 56px;
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: #2a2a2a;
+  color: white;
+}
+
+.buttonTextClose {
+  border: none;
+  font-size: 16px;
+  font-family: "Source Sans 3", sans-serif;
+  cursor: pointer;
+  background-color: white;
 }

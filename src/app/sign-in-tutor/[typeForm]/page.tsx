@@ -3,6 +3,7 @@ import { ConfirmInputForm } from "@/components/SignIn/SignInTutor/ConfirmInputFo
 import { FioInputForms } from "@/components/SignIn/SignInTutor/FioInputForm/FioInputForm";
 import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationForms";
 import { PhoneInputForms } from "@/components/SignIn/SignInTutor/PhoneInputForms/PhoneInputForms";
+import { PhotoForm } from "@/components/SignIn/SignInTutor/PhotoForm/PhotoForm";
 import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/SubjectsForms";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
 import { useParams } from "next/navigation";
@@ -38,7 +39,7 @@ const SignInTutorPage: React.FC = () => {
     subjects: SubjectsForms,
     // "price": ;
     locations: LocationForms,
-    // "photo": ;
+    photo: PhotoForm,
     // "email": ;
   };
 
