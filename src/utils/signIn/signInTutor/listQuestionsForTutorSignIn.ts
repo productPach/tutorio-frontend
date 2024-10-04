@@ -64,8 +64,8 @@ export const listQuestionsForTutorSignIn = [
     {
         id: 7,
         typeForm: "photo",
-        question: "Подтверждение номера телефона",
-        description: "Отправили код на номер",
+        question: "Фотография профиля",
+        description: "Анкеты с фото ученики выбирают в 3 раза чаще",
         placeholder: "",
         nextPage: "/sign-in-tutor/email",
     },
