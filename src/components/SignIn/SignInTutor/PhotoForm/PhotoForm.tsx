@@ -90,34 +90,6 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
 
       const croppedImage = await getCroppedImg(preview!, croppedAreaPixels);
 
-      // Ваш код для загрузки или обработки croppedImage...
-
-      const getDataUserLS = localStorage.getItem("current-user");
-      const dataUser: Order[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
-
-      const newData = {
-        id: id,
-        [typeForm]: file.name,
-      };
-
-      const containsClassProperty = dataUser.some((obj) =>
-        obj.hasOwnProperty(typeForm)
-      );
-
-      if (containsClassProperty) {
-        const indexOfArray = dataUser.findIndex((obj) =>
-          obj.hasOwnProperty(typeForm)
-        );
-        const filterDataUser = dataUser.filter(
-          (obj, index) => index < indexOfArray
-        );
-        const dataToSave = [...filterDataUser, newData];
-        localStorage.setItem("current-user", JSON.stringify(dataToSave));
-      } else {
-        const dataToSave = [...dataUser, newData];
-        localStorage.setItem("current-user", JSON.stringify(dataToSave));
-      }
-
       setTimeout(() => route.push(link), 400);
     },
     [file, route, typeForm, croppedAreaPixels, preview]
