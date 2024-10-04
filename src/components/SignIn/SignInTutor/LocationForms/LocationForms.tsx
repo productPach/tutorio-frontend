@@ -66,6 +66,14 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   );
   // Состояние для отслеживания выбранной радиокнопки
   const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
+  // Получаем значение selectedValuesCity из Redux
+  const selectedValuesCity = useAppSelector(
+    (state) => state.tutor.selectedValuesCity
+  );
+  // Получаем значение selectedValuesArea из Redux
+  const selectedValuesArea = useAppSelector(
+    (state) => state.tutor.selectedValuesArea
+  );
 
   const handleCheckboxClick = (title: string) => {
     setCheckbox((prev) => {
@@ -262,6 +270,73 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
 
   const currentDataMatch = dataMatch.find((obj) => obj.id === id);
   const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : null;
+
+  const [isValid, setIsValid] = useState(false);
+
+  // Функция для валидации условий активации кнопки
+  const isFormValid = () => {
+    // Условие 1: Если выбран только чекбокс "Дистанционно"
+    if (
+      checkbox.includes("1") &&
+      !checkbox.includes("2") &&
+      !checkbox.includes("3")
+    ) {
+      return true;
+    }
+
+    // Условие 2: Если выбран чекбокс "Занимаюсь с учениками у себя", и адрес добавлен
+    if (
+      checkbox.includes("2") &&
+      formState?.tutorHomeAdress?.adress &&
+      !checkbox.includes("3")
+    ) {
+      return true;
+    }
+
+    // Условие 3: Если выбран чекбокс "Готов выезжать к ученикам"
+    // и выбран чекбокс "checkboxTrip-1" и выбрана радиокнопка
+    // if (
+    //   checkbox.includes("3") &&
+    //   checkboxTrip.includes("1") &&
+    //   selectedRadio === "1" &&
+    //   ((checkbox.includes("2") && formState?.tutorHomeAdress?.adress) ||
+    //     !checkbox.includes("2"))
+    // ) {
+    //   return true;
+    // }
+
+    // Условие 4: Если выбран чекбокс "Готов выезжать к ученикам"
+    // и выбран чекбокс "checkboxTrip-2" (без дополнительных условий)
+    if (
+      checkbox?.includes("3") &&
+      checkboxTrip?.includes("1") &&
+      ((selectedRadio === "2" && selectedValuesCity.length > 0) ||
+        selectedRadio === "1") &&
+      (!checkboxTrip?.includes("2") ||
+        (checkboxTrip?.includes("2") && selectedValuesArea.length > 0)) &&
+      (!checkbox?.includes("2") ||
+        (checkbox.includes("2") && formState?.tutorHomeAdress?.adress))
+    ) {
+      return true;
+    }
+
+    // Условие 5: Если выбран чекбокс "Готов выезжать к ученикам", но не выбран ни один из чекбоксов поездки
+    if (
+      checkbox.includes("3") &&
+      (!checkboxTrip?.includes("1") ||
+        (checkboxTrip?.includes("1") &&
+          ((selectedRadio === "2" && selectedValuesCity.length > 0) ||
+            selectedRadio === "1"))) &&
+      checkboxTrip.includes("2") &&
+      selectedValuesArea.length > 0 &&
+      !checkbox?.includes("2")
+    ) {
+      return true;
+    }
+
+    // Если ни одно из условий не выполняется, форма не валидна
+    return false;
+  };
 
   return (
     <>
@@ -493,7 +568,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButtonStandart}>
           <button
             type="button"
-            disabled={checkbox.length ? false : true}
+            disabled={!isFormValid()}
             onClick={() => handleNextStep()}
             className={styles.continueButton}
           >
