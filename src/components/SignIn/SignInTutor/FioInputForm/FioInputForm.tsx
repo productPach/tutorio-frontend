@@ -5,6 +5,8 @@ import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { updateTutor } from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
   id: number;
@@ -34,6 +36,11 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
   nextPage,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+  // Получаем значение tutor из Redux
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const status = "Rega: Subjects";
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -59,6 +66,17 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
   const containsClassProperty = dataUser.some((obj) =>
     obj.hasOwnProperty(typeForm)
   );
+
+  // Обновление данных репетитора
+  const updateDataTutor = (name: string) => {
+    const id = tutor?.id;
+    if (token && id) {
+      dispatch(updateTutor({ id, token, status, name })).unwrap;
+      handleNextStep(nextPage, name);
+    } else {
+      console.log("Нет токена");
+    }
+  };
 
   // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
@@ -128,7 +146,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
         // Проверяем, содержит ли inputValue только допустимые символы
         if (/^[a-zA-Zа-яА-Я' `]+$/.test(inputValue)) {
           setErrorInput(false);
-          handleNextStep(nextPage, inputValue);
+          updateDataTutor(inputValue);
         } else {
           setErrorInput(true);
         }
@@ -141,7 +159,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
     return () => {
       input?.removeEventListener("keydown", handleKeyDown);
     };
-  }, [inputValue, handleNextStep, nextPage]);
+  }, [inputValue, nextPage]);
 
   return (
     <>
@@ -184,7 +202,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPage, inputValue)}
+            onClick={() => updateDataTutor(inputValue)}
             className={styles.continueButton}
             disabled={inputValue.length < 3 || errorInput}
           >

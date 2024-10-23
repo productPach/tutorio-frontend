@@ -5,9 +5,14 @@ import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/Loc
 import { PhoneInputForms } from "@/components/SignIn/SignInTutor/PhoneInputForms/PhoneInputForms";
 import { PhotoForm } from "@/components/SignIn/SignInTutor/PhotoForm/PhotoForm";
 import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/SubjectsForms";
+import { setToken } from "@/store/features/authSlice";
+import { setTutor } from "@/store/features/tutorSlice";
+import { useAppDispatch } from "@/store/store";
+import { getTokenFromCookie } from "@/utils/cookies/cookies";
+import { getTutorFromLocalStorage } from "@/utils/localStorage/localStorage";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface Answer {
   id: number;
@@ -28,6 +33,21 @@ interface ComponentsList {
 }
 
 const SignInTutorPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Получаем токен из куки
+    // Если токен в куки есть, тогда добавляем токен в Redux
+    const token = getTokenFromCookie();
+    if (token) {
+      dispatch(setToken(token));
+    }
+
+    const tutor = getTutorFromLocalStorage();
+    if (tutor) {
+      dispatch(setTutor(tutor));
+    }
+  }, [dispatch]);
   const { typeForm } = useParams<{
     typeForm: string;
   }>();

@@ -7,6 +7,9 @@ import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
 import { fetchGetToken } from "@/api/server/userApi";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getToken } from "@/store/features/authSlice";
+import { createTutor, getCurrentTutor } from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
   id: number;
@@ -36,6 +39,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   nextPage,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+  // Получаем значение loadingAuth из Redux
+  const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
+  // Получаем значение regionUser из Redux
+  const regionUser = useAppSelector((state) => state.match.regionUser);
 
   // ПЕРЕДЕЛАТЬ!!!
   // Нужно вытаскивать код подтверждения в БД
@@ -46,6 +54,8 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
+  // Состояние текстового поля с логическим выражением
+  const [isSuccess, setIsSuccess] = useState(false);
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
 
@@ -64,17 +74,64 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   ]);
 
   // Авторизация пользователя
-  const getToken = async (secretCode: string) => {
+  // const getToken = async (secretCode: string) => {
+  //   try {
+  //     const jsonPhone = localStorage.getItem("origin-phone");
+  //     const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+  //     if (phone) {
+  //       const data = await fetchGetToken({ phone, secretCode });
+  //       console.log(phone);
+  //       console.log(data.token);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleGetToken = async (secretCode: string) => {
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
       if (phone) {
-        const data = await fetchGetToken({ phone, secretCode });
-        console.log(phone);
-        console.log(data.token);
+        const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+        setErrorInput(false);
+        if (token) {
+          setIsSuccess(true);
+          await dispatch(getCurrentTutor(token))
+            .unwrap()
+            .catch(async () => {
+              // Репетитора не существет, создаем нового
+              await dispatch(
+                createTutor({
+                  phone: phone,
+                  token,
+                })
+              );
+            })
+            .finally(async () => {
+              // Повторно получаем статус репетитора после создания
+              const updatedTutor = await dispatch(
+                getCurrentTutor(token)
+              ).unwrap();
+              if (updatedTutor?.status === "Rega: Fullname") {
+                handleNextStep("fio");
+              }
+              if (updatedTutor?.status === "Rega: Subjects") {
+                handleNextStep("subjects");
+              }
+              if (updatedTutor?.status === "Rega: Locations") {
+                handleNextStep("locations");
+              }
+              if (updatedTutor?.status === "Rega: Photo") {
+                handleNextStep("photo");
+              }
+            });
+        } else {
+          setErrorInput(true);
+        }
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   };
 
@@ -87,14 +144,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         console.log("Invalid code");
       } else {
         setErrorInput(false);
-        getToken(inputValue).then(() => {
-          console.log("Valid code");
-          // Обновляем состояния для красивого эффекта перехода
-          setIsDisabled(true);
-          setIsVisible(false);
-          // Для красоты делаем переход через 0,4 секунды после клика
-          setTimeout(() => route.push(nextPage), 400);
-        });
+        handleGetToken(inputValue);
       }
     }
   }, [codes, confirmCode]);
@@ -163,36 +213,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
-    (link: string, inputValue: string) => {
+    (link: string) => {
       // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
 
-      // Создаем новый объект, который нужно положить в массив с данными формы
-      const newData = {
-        id: id,
-        [typeForm]: inputValue,
-      };
-
-      // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
-      if (containsClassProperty) {
-        // Определяем индекс элмента массива (объекта, который появлися в массиве в результате ответа на данную форму)
-        const indexOfArray = dataUser.findIndex((obj) =>
-          obj.hasOwnProperty(typeForm)
-        );
-        // Фильтруем массив, чтобы в нем остались элементы с индексами меньше текущего (удаляем все последующие ответы)
-        const filterDataUser = dataUser.filter(
-          (obj, index) => index < indexOfArray
-        );
-        // Добавляем новый объект в копию старого массива, уже отфильтрованного
-        const dataToSave = [...filterDataUser, newData];
-        // Кладем новый массив в LS
-        localStorage.setItem("current-user", JSON.stringify(dataToSave));
-      } else {
-        // Если typeForm текущей формы не содержится в массиве, тогда просто добавляем новый объект в массив и кладем в LS
-        const dataToSave = [...dataUser, newData];
-        localStorage.setItem("current-user", JSON.stringify(dataToSave));
-      }
       // Для красоты делаем переход через 0,4 секунды после клика
       setTimeout(() => route.push(link), 400);
     },
@@ -277,9 +302,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPage, inputValue)}
+            onClick={() => handleNextStep(nextPage)}
             className={styles.continueButton}
-            disabled={codes.join("").length < 4 || errorInput}
+            disabled={codes.join("").length < 4 || !isSuccess || loadingAuth}
           >
             Продолжить
           </button>
