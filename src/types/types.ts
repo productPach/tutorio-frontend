@@ -28,6 +28,7 @@ export type Student = {
   phone: string;
   email: string;
   location: string;
+  status: string;
   orders: Order[];
 };
 
@@ -46,6 +47,7 @@ export type Tutor = {
   tutorPlace: string[];
   tutorAdress: string;
   tutorTrip: string[];
+  status: string;
   response: Response[];
 };
 
@@ -58,6 +60,7 @@ export type Employee = {
   name: string;
   email: string;
   location: string;
+  status: string;
 };
 
 export type Subject = {
@@ -88,6 +91,7 @@ export type Order = {
   info?: string;
   fio?: string;
   [key: string]: any;
+  status: string;
 };
 
 export type Response = {};

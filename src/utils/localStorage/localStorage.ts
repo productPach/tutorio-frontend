@@ -26,4 +26,17 @@ export const setLocalStorage = (key: string, value: string | object) => {
       return student;
     }
   };
+
+  // Функция загрузки репетитора из Local Storage
+  export const getTutorFromLocalStorage = () => {
+    const tutor = getLocalStorage("tutor");
+    try {
+      // Если это JSON-строка, парсим её
+      return tutor ? JSON.parse(tutor) : null;
+    } catch (error) {
+      // Если произошла ошибка при парсинге, возвращаем строку как есть
+      console.warn("Ошибка при парсинге JSON:", error);
+      return tutor;
+    }
+  };
   
