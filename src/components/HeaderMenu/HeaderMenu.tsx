@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import styles from "./HeaderMenu.module.css";
 import { useAppSelector } from "@/store/store";
+import Image from "next/image";
 
 export const HeaderMenu = () => {
   const route = useRouter();
@@ -23,6 +24,12 @@ export const HeaderMenu = () => {
       {tutor ? (
         <>
           <span onClick={() => clickToSignIn("/tutor/orders")}>
+            <Image
+              src="/img/icon/profil.svg"
+              width={17}
+              height={17}
+              alt="Профиль"
+            />
             {tutor.name}
           </span>
         </>

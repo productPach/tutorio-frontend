@@ -8,6 +8,7 @@ import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/Sub
 import { setToken } from "@/store/features/authSlice";
 import { setTutor } from "@/store/features/tutorSlice";
 import { useAppDispatch } from "@/store/store";
+import { Tutor } from "@/types/types";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { getTutorFromLocalStorage } from "@/utils/localStorage/localStorage";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
@@ -45,11 +46,13 @@ const SignInTutorPage: React.FC = () => {
       dispatch(setToken(token));
     }
 
-    const tutor = getTutorFromLocalStorage();
+    const tutor: Tutor = getTutorFromLocalStorage();
     if (tutor) {
       dispatch(setTutor(tutor));
-      // Редиректим сразу в кабинет
-      setTimeout(() => route.push("/tutor/orders"));
+      if (tutor.status === "Pending" || tutor.status === "Active") {
+        // Редиректим сразу в кабинет
+        setTimeout(() => route.push("/tutor/orders"));
+      }
     }
   }, [dispatch]);
 

@@ -122,8 +122,17 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
               if (updatedTutor?.status === "Rega: Locations") {
                 handleNextStep("locations");
               }
+              if (updatedTutor?.status === "Rega: Email") {
+                handleNextStep("email");
+              }
               if (updatedTutor?.status === "Rega: Photo") {
                 handleNextStep("photo");
+              }
+              if (
+                updatedTutor?.status === "Pending" ||
+                updatedTutor?.status === "Active"
+              ) {
+                handleNextStep("tutor/orders");
               }
             });
         } else {
