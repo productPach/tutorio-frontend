@@ -8,10 +8,12 @@ import { SubjectsForms } from "@/components/SignIn/SignInTutor/SubjectsForms/Sub
 import { setToken } from "@/store/features/authSlice";
 import { setTutor } from "@/store/features/tutorSlice";
 import { useAppDispatch } from "@/store/store";
+import { Tutor } from "@/types/types";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { getTutorFromLocalStorage } from "@/utils/localStorage/localStorage";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 interface Answer {
@@ -34,6 +36,7 @@ interface ComponentsList {
 
 const SignInTutorPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const route = useRouter();
 
   useEffect(() => {
     // Получаем токен из куки
@@ -43,11 +46,16 @@ const SignInTutorPage: React.FC = () => {
       dispatch(setToken(token));
     }
 
-    const tutor = getTutorFromLocalStorage();
+    const tutor: Tutor = getTutorFromLocalStorage();
     if (tutor) {
       dispatch(setTutor(tutor));
+      if (tutor.status === "Pending" || tutor.status === "Active") {
+        // Редиректим сразу в кабинет
+        setTimeout(() => route.push("/tutor/orders"));
+      }
     }
   }, [dispatch]);
+
   const { typeForm } = useParams<{
     typeForm: string;
   }>();

@@ -1,0 +1,20 @@
+.header__menu {
+  display: flex;
+  -moz-column-gap: 38px;
+  column-gap: 38px;
+  align-items: center;
+}
+.header__menu span {
+  text-decoration: none;
+  color: #333333;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.header__menu span:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+.header__menu img {
+  margin-bottom: -3px;
+  margin-right: 5px;
+}

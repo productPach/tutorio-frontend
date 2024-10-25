@@ -1,6 +1,6 @@
 import { fetchCreateTutor, fetchCurrentTutor, fetchUpdateTutor } from "@/api/server/tutorApi";
 import { District, Metro, RegionalCity, Tutor } from "@/types/types";
-import { setLocalStorage } from "@/utils/localStorage/localStorage";
+import { getTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const getCurrentTutor = createAsyncThunk<Tutor, string>(
@@ -52,8 +52,11 @@ type TutorStateType = {
   selectedValuesArea: RegionalCity[];
 };
 
+// Получаем данные репетитора из localStorage, если они есть
+const initialTutor = getTutorFromLocalStorage();
+
 const initialState: TutorStateType = {
-  tutor: null,
+  tutor: initialTutor,
   loading: false,
   selectedValuesCity: [],
   selectedValuesArea: [],
