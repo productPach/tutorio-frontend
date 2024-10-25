@@ -46,6 +46,7 @@ const authSlice = createSlice({
       state.loadingAuth = false;
       removeCookie("user");
       removeLocalStorage("student");
+      removeLocalStorage("tutor");
     }
   },
   extraReducers(builder) {

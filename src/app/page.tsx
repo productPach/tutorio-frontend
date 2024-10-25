@@ -5,17 +5,9 @@ import clsx from "clsx";
 import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 import { useRouter } from "next/navigation";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
+import { HeaderMenu } from "@/components/HeaderMenu/HeaderMenu";
 
 export default function Home() {
-  const route = useRouter();
-
-  // Функция клика по ссылкам Репетиторам, Ученикам
-  const clickToSignIn = (link: string) => {
-    // Очищаем предыдущие данные заявок из LS, если они есть
-    localStorage.removeItem("currentMatch");
-    route.push(link);
-  };
-
   return (
     <>
       <header>
@@ -29,14 +21,7 @@ export default function Home() {
             </div>
           </a>
           <SelectCityModal />
-          <div className={styles.header__menu}>
-            <span onClick={() => clickToSignIn("/sign-in-tutor/phone")}>
-              Репетиторам
-            </span>
-            <span onClick={() => clickToSignIn("/sign-in-tutor")}>
-              Ученикам
-            </span>
-          </div>
+          <HeaderMenu />
         </div>
       </header>
       <main>

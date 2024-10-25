@@ -12,6 +12,7 @@ import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { getTutorFromLocalStorage } from "@/utils/localStorage/localStorage";
 import { listQuestionsForTutorSignIn } from "@/utils/signIn/signInTutor/listQuestionsForTutorSignIn";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 interface Answer {
@@ -34,6 +35,7 @@ interface ComponentsList {
 
 const SignInTutorPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const route = useRouter();
 
   useEffect(() => {
     // Получаем токен из куки
@@ -46,8 +48,11 @@ const SignInTutorPage: React.FC = () => {
     const tutor = getTutorFromLocalStorage();
     if (tutor) {
       dispatch(setTutor(tutor));
+      // Редиректим сразу в кабинет
+      setTimeout(() => route.push("/tutor/orders"));
     }
   }, [dispatch]);
+
   const { typeForm } = useParams<{
     typeForm: string;
   }>();

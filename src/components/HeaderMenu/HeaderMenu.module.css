@@ -1,0 +1,25 @@
+.header__menu {
+  display: flex;
+  -moz-column-gap: 38px;
+  column-gap: 38px;
+  align-items: center;
+}
+.header__menu span {
+  text-decoration: none;
+  color: #333333;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.header__menu span:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+.header__menu img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  -o-object-fit: cover;
+  object-fit: cover;
+  margin-top: 5px;
+  border: 1px solid #e9e9e9;
+}
