@@ -33,13 +33,26 @@ export const createTutor = createAsyncThunk<
 
 export const updateTutor = createAsyncThunk<
   Tutor,
-  { id: string, token: string, status: string, name?: string, email?: string, subject?: string[], region?: string, tutorPlace?: string[], tutorAdress?: string, tutorTrip?: string[] }
->("tutor/update", async ({ id, token, status, name, email, subject, region, tutorPlace, tutorAdress, tutorTrip }) => {
+  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[] }
+>("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
-    const response = await fetchUpdateTutor(id, token, status, name, email ?? "", subject ?? [], region ?? "", tutorPlace ?? [], tutorAdress ?? "", tutorTrip ?? [] );
+    // Базовый объект с обязательными полями
+    const dataToUpdate = {
+      id,
+      token,
+      status,
+      ...(optionalFields.name !== undefined && { name: optionalFields.name }),
+      ...(optionalFields.email !== undefined && { email: optionalFields.email }),
+      ...(optionalFields.subject !== undefined && { subject: optionalFields.subject }),
+      ...(optionalFields.region !== undefined && { region: optionalFields.region }),
+      ...(optionalFields.tutorPlace !== undefined && { tutorPlace: optionalFields.tutorPlace }),
+      ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
+      ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
+    };
+
+    const response = await fetchUpdateTutor(dataToUpdate);
     return response;
   } catch (error) {
-    // Здесь можно вернуть undefined или обработать ошибку
     console.error(error);
     throw error;
   }

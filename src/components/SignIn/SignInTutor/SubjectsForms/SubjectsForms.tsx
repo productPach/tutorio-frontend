@@ -14,6 +14,8 @@ import Image from "next/image";
 import { data } from "@/utils/listSubjects";
 import { SubjectItem } from "./SubjectItem";
 import { Search } from "@/components/SelectSubject/Search";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { updateTutor } from "@/store/features/tutorSlice";
 
 interface ComponentProps {
   id: number;
@@ -43,6 +45,11 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   nextPage,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+  // Получаем значение tutor из Redux
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const status = "Rega: Locations";
 
   const [listSubjectChecked, setListSubjectChecked] = useState<string[]>([]);
   // Состояние для выбранной категории
@@ -53,6 +60,18 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   const [inputValue, setInputValue] = useState("");
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
+
+  // Обновление данных репетитора
+  const updateDataTutor = () => {
+    const id = tutor?.id;
+    if (token && id) {
+      const subject = listSubjectChecked;
+      dispatch(updateTutor({ id, token, status, subject })).unwrap;
+      handleNextStep(nextPage);
+    } else {
+      console.log("Нет токена");
+    }
+  };
 
   const handleSubjectCheckedChange = useCallback(
     (subjectId: string, isChecked: boolean) => {
@@ -95,7 +114,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
 
   // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
-    (link: string, inputValue: string) => {
+    (link: string) => {
       // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
@@ -208,7 +227,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPage, inputValue)}
+            onClick={() => updateDataTutor()}
             className={styles.continueButton}
             disabled={listSubjectChecked.length < 1}
           >

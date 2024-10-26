@@ -37,25 +37,29 @@ export const fetchCurrentTutor = async (token: string) => {
   };
 
 // Изменение репетитора
-export const fetchUpdateTutor = async (id: string, token: string, status: string, name?: string, email?: string, subject?: string[], region?: string, tutorPlace?: string[], tutorAdress?: string, tutorTrip?: string[]) => {
+export const fetchUpdateTutor = async (data: {
+    id: string;
+    token: string;
+    status: string;
+    name?: string;
+    email?: string;
+    subject?: string[];
+    region?: string;
+    tutorPlace?: string[];
+    tutorAdress?: string;
+    tutorTrip?: string[];
+  }) => {
+    const { id, token, ...fields } = data;
+  
     const response = await fetch(`${baseUrl}tutors/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },   
-        body: JSON.stringify({
-            name: name,
-            email: email,
-            subject: subject,
-            region: region,
-            tutorPlace: tutorPlace,
-            tutorAdress: tutorAdress,
-            tutorTrip: tutorTrip,
-            status: status,
-        })
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(fields), // Сериализуем только поля для обновления
     });
-
-    const data = await response.json();
-    return data;
-}
+  
+    const responseData = await response.json();
+    return responseData;
+  };

@@ -11,6 +11,8 @@ import { setModalSelectCity } from "@/store/features/modalSlice";
 import { getLocationForCity } from "@/api/addresses/addresses";
 import { LocationAreaMultiDropdownForms } from "./LocationAreaMultiDropdownForms";
 import { LocationCityMultiDropdownForms } from "./LocationCityMultiDropdownForms";
+import { District, Metro } from "@/types/types";
+import { updateTutor } from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
   id: number;
@@ -44,6 +46,10 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
+  // Получаем значение tutor из Redux
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const status = "Rega: Photo";
   const regionUser = useAppSelector((state) => state.match.regionUser);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -57,6 +63,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   let initialCheckboxTripValue: string[] =
     containsClassProperty?.locationsTrip || [];
 
+  // Выбранные основные чекбоксы (tutorPlace)
   const [checkbox, setCheckbox] = useState<string[]>(initialCheckboxValue);
   const [checkboxTrip, setCheckboxTrip] = useState<string[]>(
     initialCheckboxTripValue
@@ -67,13 +74,34 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   // Состояние для отслеживания выбранной радиокнопки
   const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
   // Получаем значение selectedValuesCity из Redux
-  const selectedValuesCity = useAppSelector(
+  const selectedValuesCity: (District | Metro)[] = useAppSelector(
     (state) => state.tutor.selectedValuesCity
   );
   // Получаем значение selectedValuesArea из Redux
   const selectedValuesArea = useAppSelector(
     (state) => state.tutor.selectedValuesArea
   );
+
+  const tutorPlace = checkbox;
+  const tutorAdress = formState?.tutorHomeAdress?.adress;
+  // Вытаскиваем из объектов только id, чтобы записать в БД + объединяем их в один массив (tutorTrip)
+  const tutorTrip = [
+    ...selectedValuesCity.map((item) => item.id),
+    ...selectedValuesArea.map((item) => item.id),
+  ];
+
+  // Обновление данных репетитора
+  const updateDataTutor = () => {
+    const id = tutor?.id;
+    if (token && id) {
+      dispatch(
+        updateTutor({ id, token, status, tutorPlace, tutorAdress, tutorTrip })
+      ).unwrap;
+      handleNextStep();
+    } else {
+      console.log("Нет токена");
+    }
+  };
 
   const handleCheckboxClick = (title: string) => {
     setCheckbox((prev) => {
@@ -569,7 +597,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
           <button
             type="button"
             disabled={!isFormValid()}
-            onClick={() => handleNextStep()}
+            onClick={() => updateDataTutor()}
             className={styles.continueButton}
           >
             Продолжить
