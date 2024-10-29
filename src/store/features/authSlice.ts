@@ -1,5 +1,5 @@
 import { fetchGetToken } from "@/api/server/userApi";
-import { SignInFormType, User } from "@/types/types";
+import { SignInFormType, User, UserRegion } from "@/types/types";
 import { removeCookie, setCookie } from "@/utils/cookies/cookies";
 import { removeLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -23,6 +23,7 @@ type AuthStateType =  {
   token: null | string;
   isLoggedIn: boolean;
   loadingAuth: boolean;
+  regionUser: UserRegion | null;
 }
 
 const initialState: AuthStateType = {
@@ -30,6 +31,7 @@ const initialState: AuthStateType = {
   token: null,
   isLoggedIn: false,
   loadingAuth: false,
+  regionUser: null,
 };
 
 const authSlice = createSlice({
@@ -38,6 +40,9 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
+    },
+    setRegionUser: (state, action: PayloadAction<UserRegion>) => {
+      state.regionUser = action.payload;
     },
     setLogout: (state) => {
       state.user = null;
@@ -75,5 +80,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { setToken, setLogout } = authSlice.actions;
+export const { setToken, setRegionUser, setLogout } = authSlice.actions;
 export const authReducer = authSlice.reducer;

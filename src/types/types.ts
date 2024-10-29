@@ -137,3 +137,22 @@ export type RegionalCity = {
   id: string;
   title: string;
 }
+
+export interface UpdateTutorAvatarResponse {
+  id: string;
+  avatarUrl: string;
+}
+
+export interface CroppedAreaPixels {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface UpdateTutorAvatarPayload {
+  id: string;
+  file: File;
+  token: string;
+  croppedAreaPixels: CroppedAreaPixels; // Новое свойство
+}

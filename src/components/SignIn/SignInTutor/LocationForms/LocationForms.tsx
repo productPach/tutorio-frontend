@@ -12,7 +12,10 @@ import { getLocationForCity } from "@/api/addresses/addresses";
 import { LocationAreaMultiDropdownForms } from "./LocationAreaMultiDropdownForms";
 import { LocationCityMultiDropdownForms } from "./LocationCityMultiDropdownForms";
 import { District, Metro } from "@/types/types";
-import { updateTutor } from "@/store/features/tutorSlice";
+import {
+  setSelectedValuesCity,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
   id: number;
@@ -49,8 +52,8 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const status = "Rega: Photo";
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const status = "Rega: Email";
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const getDataMatchLS = localStorage.getItem("current-user");
@@ -82,6 +85,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
     (state) => state.tutor.selectedValuesArea
   );
 
+  const region = regionUser?.city;
   const tutorPlace = checkbox;
   const tutorAdress = formState?.tutorHomeAdress?.adress;
   // Вытаскиваем из объектов только id, чтобы записать в БД + объединяем их в один массив (tutorTrip)
@@ -90,12 +94,22 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
     ...selectedValuesArea.map((item) => item.id),
   ];
 
+  console.log(selectedValuesCity);
+
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
     if (token && id) {
       dispatch(
-        updateTutor({ id, token, status, tutorPlace, tutorAdress, tutorTrip })
+        updateTutor({
+          id,
+          token,
+          status,
+          region,
+          tutorPlace,
+          tutorAdress,
+          tutorTrip,
+        })
       ).unwrap;
       handleNextStep();
     } else {
@@ -198,13 +212,15 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
     // Сохраняем выбранную радиокнопку в Local Storage
     localStorage.setItem("_cr-tripData", numRadio);
 
-    let locationsTripCity: { id: string; title: string }[] = [];
+    let locationsTripCity: (District | Metro)[] = [];
 
     if (numRadio === "1" && regionUser) {
       locationsTripCity = await getLocationForCity(regionUser.city); // Получаем данные для города
     } else if (numRadio === "2") {
       locationsTripCity = []; // Очищаем данные
     }
+
+    dispatch(setSelectedValuesCity(locationsTripCity));
 
     // Обновляем состояние формы
     setFormState((prevState) => {

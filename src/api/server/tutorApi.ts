@@ -63,3 +63,23 @@ export const fetchUpdateTutor = async (data: {
     const responseData = await response.json();
     return responseData;
   };
+
+  export const updateTutorAvatarApi = async (id: string, file: File, token: string) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+  
+    const response = await fetch(`${baseUrl}tutors/${id}/avatar`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+  
+    if (!response.ok) {
+      throw new Error('Ошибка при обновлении аватара');
+    }
+  
+    return response.json();
+  };
+  

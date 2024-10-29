@@ -12,6 +12,8 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/images/getCroppedImg";
+import { updateTutorAvatar } from "@/store/features/tutorSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 interface ComponentRenderProps {
   id: number;
@@ -21,15 +23,6 @@ interface ComponentRenderProps {
   placeholder: string;
   nextPage: string;
 }
-
-type Order = {
-  id: number;
-  subject?: string;
-  goal?: string;
-  class?: string;
-  deadline?: string;
-  [key: string]: any;
-};
 
 interface CroppedAreaPixels {
   x: number;
@@ -47,6 +40,9 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
   nextPage,
 }) => {
   const route = useRouter();
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState("");
@@ -84,31 +80,107 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
     },
   });
 
+  const updateDataTutor = async (
+    croppedImageBase64: File,
+    croppedAreaPixels: CroppedAreaPixels
+  ) => {
+    const id = tutor?.id;
+    if (token && id) {
+      try {
+        await dispatch(
+          updateTutorAvatar({
+            id,
+            file: croppedImageBase64,
+            token,
+            croppedAreaPixels, // передаем croppedAreaPixels
+          })
+        ).unwrap();
+
+        // После успешного обновления аватара перенаправляем пользователя
+        route.push("/tutor/orders");
+      } catch (error) {
+        console.error("Ошибка при обновлении аватара:", error);
+      }
+    } else {
+      console.log("Нет токена или файла");
+    }
+  };
+
+  const getImageDimensions = async (
+    src: string
+  ): Promise<{ width: number; height: number }> => {
+    return new Promise((resolve) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height });
+      };
+    });
+  };
+
   const handleNextStep = useCallback(
     async (link: string) => {
-      if (!file || !croppedAreaPixels) return;
+      if (!file || !croppedAreaPixels || !preview) return;
 
-      const croppedImage = await getCroppedImg(preview!, croppedAreaPixels);
+      const croppedFile = base64ToFile(preview, "cropped_avatar.png"); // Преобразуем Base64 в File
 
-      setTimeout(() => route.push(link), 400);
+      await updateDataTutor(croppedFile, croppedAreaPixels); // Передаем файл в функцию
     },
-    [file, route, typeForm, croppedAreaPixels, preview]
+    [croppedAreaPixels, file, preview]
   );
 
-  // Функция для возврата на предыдущий шаг
+  const base64ToFile = (base64: string, filename: string): File => {
+    const arr = base64.split(",");
+    const mimeMatch = arr[0].match(/:(.*?);/); // Сохраняем результат match
+
+    if (!mimeMatch) {
+      throw new Error("Не удалось извлечь MIME-тип из Base64"); // Обработка ошибки
+    }
+
+    const mime = mimeMatch[1]; // Получаем MIME-тип
+    const bstr = atob(arr[1]); // Декодируем Base64
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  };
+
+  const handleSaveCrop = async () => {
+    if (croppedAreaPixels && preview) {
+      // Получаем размеры изображения
+      const { width: canvasWidth, height: canvasHeight } =
+        await getImageDimensions(preview);
+
+      console.log("Исходные размеры:", canvasWidth, canvasHeight);
+      console.log("Размеры обрезки:", croppedAreaPixels);
+
+      // Используем canvasWidth и canvasHeight для передачи в getCroppedImg
+      const croppedImageBase64 = await getCroppedImg(
+        preview,
+        croppedAreaPixels,
+        canvasHeight,
+        canvasWidth
+      );
+
+      console.log("Полученное обрезанное изображение:", croppedImageBase64);
+      setPreview(croppedImageBase64); // Показываем превью
+      setIsCropping(false);
+    }
+  };
+
   const handlePrevStep = () => {
-    setIsDisabled(true);
-    setIsVisible(false);
-    // Для красоты делаем переход через 0,4 секунды после клика
-    setTimeout(() => route.back(), 400);
+    route.back();
   };
 
   const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
-  }, []); // Анимация будет стартовать после монтирования компонента
+  }, []);
 
   const handleDeletePhoto = () => {
     setFile(null);
@@ -122,22 +194,6 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
     croppedAreaPixels: CroppedAreaPixels
   ) => {
     setCroppedAreaPixels(croppedAreaPixels);
-  };
-
-  // Функция для сохранения обрезанного изображения
-  const handleSaveCrop = async () => {
-    if (croppedAreaPixels) {
-      const croppedImage: string = await getCroppedImg(
-        preview!,
-        croppedAreaPixels
-      ); // Указываем тип явно
-      if (typeof croppedImage === "string") {
-        setPreview(croppedImage); // Устанавливаем обрезанное изображение для отображения
-        setIsCropping(false); // Заканчиваем режим обрезки
-      } else {
-        console.error("Oбрезанное изображение не является строкой");
-      }
-    }
   };
 
   return (
@@ -189,7 +245,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}
                 style={{
-                  containerStyle: { borderRadius: "10px" }, // Это не обязательно, но для большей гибкости
+                  containerStyle: { borderRadius: "10px" },
                 }}
               />
             </div>
@@ -216,7 +272,6 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
           {uploadError && (
             <div className={styles.errorInputText}>{uploadError}</div>
           )}
-          {/* Кнопки "Сохранить" и "Удалить" под областью обрезки */}
           {isCropping && (
             <div className={styles.wrapButtonPhoto}>
               <button onClick={handleSaveCrop} className={styles.buttonBlack}>
@@ -237,7 +292,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
             type="button"
             onClick={() => handleNextStep(nextPage)}
             className={styles.continueButton}
-            disabled={!file || isCropping || !croppedAreaPixels} // Дизейблим кнопку, если нет файла или не обрезана фотография
+            disabled={!file || isCropping || !croppedAreaPixels}
           >
             Продолжить
           </button>
@@ -248,9 +303,9 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
         type="file"
         ref={inputRef}
         style={{ display: "none" }}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          if (e.target.files) {
-            onDrop(Array.from(e.target.files));
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          if (event.target.files) {
+            onDrop(Array.from(event.target.files));
           }
         }}
       />

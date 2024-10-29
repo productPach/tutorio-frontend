@@ -1,5 +1,6 @@
+import { baseUrl } from "@/api/server/configApi";
 import { fetchCreateTutor, fetchCurrentTutor, fetchUpdateTutor } from "@/api/server/tutorApi";
-import { District, Metro, RegionalCity, Tutor } from "@/types/types";
+import { District, Metro, RegionalCity, Tutor, UpdateTutorAvatarPayload, UpdateTutorAvatarResponse } from "@/types/types";
 import { getTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -57,6 +58,33 @@ export const updateTutor = createAsyncThunk<
     throw error;
   }
 });
+
+export const updateTutorAvatar = createAsyncThunk<
+  UpdateTutorAvatarResponse,
+  UpdateTutorAvatarPayload // Здесь используем обновленный интерфейс
+>(
+  'tutor/updateAvatar',
+  async ({ id, file, token, croppedAreaPixels }) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    // Здесь вы можете также использовать croppedAreaPixels, если это необходимо
+
+    const response = await fetch(`${baseUrl}tutors/${id}/avatar`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при обновлении аватара');
+    }
+
+    return response.json();
+  }
+);
+
 
 type TutorStateType = {
   tutor: null | Tutor;
@@ -122,7 +150,14 @@ const tutorSlice = createSlice({
           state.tutor = action.payload;
           setLocalStorage("tutor", state.tutor);
         }
-      );
+      ).addCase(
+        updateTutorAvatar.fulfilled, 
+        (state, action) => {
+        if (state.tutor && state.tutor.id === action.payload.id) {
+          state.tutor.avatarUrl = action.payload.avatarUrl;
+          setLocalStorage("tutor", state.tutor);
+        }
+      });;
   },
 });
 

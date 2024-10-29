@@ -4,8 +4,10 @@ import styles from "../SelectCity/SelectCityModal.module.css";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setModalSelectCity } from "@/store/features/modalSlice";
-import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
+import { setSelectedValues } from "@/store/features/matchSlice";
 import { UserRegion } from "@/types/types";
+import { setRegionUser } from "@/store/features/authSlice";
+
 import {
   setSelectedValuesArea,
   setSelectedValuesCity,
@@ -15,7 +17,7 @@ export const SelectCity = () => {
   const dispatch = useAppDispatch();
   const [inputSearch, setInputSearch] = useState("");
   const regionUser: UserRegion | null = useAppSelector(
-    (state) => state.match.regionUser
+    (state) => state.auth.regionUser
   );
 
   const handleSearch = (value: string) => {
