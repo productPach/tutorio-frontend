@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { getLocation } from "@/api/addresses/addresses";
 import { Order, RegionalCity } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setRegionUser } from "@/store/features/matchSlice";
+import { setRegionUser } from "@/store/features/authSlice";
 import { setSelectedValuesArea } from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
@@ -33,7 +33,7 @@ export const LocationAreaMultiDropdownForms: React.FC<ComponentRenderProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   // Получаем значение regionUser из Redux
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
   // Получаем значение selectedValues из Redux
   const selectedValues = useAppSelector(
     (state) => state.tutor.selectedValuesArea

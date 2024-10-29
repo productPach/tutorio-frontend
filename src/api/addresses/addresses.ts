@@ -80,10 +80,12 @@ export const getLocation = async (
   };
 };
 
+
+
 // Метод для получения всех локаций города
 export const getLocationForCity = async (
   city: string // параметр для фильтрации по городу
-): Promise<{ id: string; title: string }[]> => {
+): Promise<(District | Metro)[]> => {
   const normalizedCity = city.toLowerCase();
 
   // Находим город по названию
@@ -96,20 +98,26 @@ export const getLocationForCity = async (
     return [];
   }
 
-  // Собираем и преобразуем районы в формат { id, title }
-  const filteredDistricts: { id: string; title: string }[] = cityData.districts.map((district) => ({
+  // Собираем и преобразуем районы в формат District
+  const filteredDistricts: District[] = cityData.districts.map((district) => ({
     id: district.id,
-    title: district.title
+    title: district.title,
+    metros: district.metros
+    // Добавьте другие поля, если необходимо
   }));
 
-  // Собираем и преобразуем станции метро в формат { id, title }
-  const filteredMetros: { id: string; title: string }[] = cityData.districts
+  // Собираем и преобразуем станции метро в формат Metro
+  const filteredMetros: Metro[] = cityData.districts
     .flatMap((district) => district.metros)
     .map((metro) => ({
       id: metro.id,
-      title: metro.title
+      title: metro.title,
+      color: metro.color, // Предполагаем, что эти поля есть
+      lineName: metro.lineName,
+      lineNumber: metro.lineNumber,
     }));
 
   // Возвращаем объединённый массив районов и метро
   return [...filteredDistricts, ...filteredMetros];
 };
+

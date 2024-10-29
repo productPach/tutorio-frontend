@@ -11,6 +11,11 @@ import { setModalSelectCity } from "@/store/features/modalSlice";
 import { getLocationForCity } from "@/api/addresses/addresses";
 import { LocationAreaMultiDropdownForms } from "./LocationAreaMultiDropdownForms";
 import { LocationCityMultiDropdownForms } from "./LocationCityMultiDropdownForms";
+import { District, Metro } from "@/types/types";
+import {
+  setSelectedValuesCity,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
   id: number;
@@ -44,7 +49,11 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  // Получаем значение tutor из Redux
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const status = "Rega: Email";
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const getDataMatchLS = localStorage.getItem("current-user");
@@ -57,6 +66,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   let initialCheckboxTripValue: string[] =
     containsClassProperty?.locationsTrip || [];
 
+  // Выбранные основные чекбоксы (tutorPlace)
   const [checkbox, setCheckbox] = useState<string[]>(initialCheckboxValue);
   const [checkboxTrip, setCheckboxTrip] = useState<string[]>(
     initialCheckboxTripValue
@@ -67,13 +77,45 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   // Состояние для отслеживания выбранной радиокнопки
   const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
   // Получаем значение selectedValuesCity из Redux
-  const selectedValuesCity = useAppSelector(
+  const selectedValuesCity: (District | Metro)[] = useAppSelector(
     (state) => state.tutor.selectedValuesCity
   );
   // Получаем значение selectedValuesArea из Redux
   const selectedValuesArea = useAppSelector(
     (state) => state.tutor.selectedValuesArea
   );
+
+  const region = regionUser?.city;
+  const tutorPlace = checkbox;
+  const tutorAdress = formState?.tutorHomeAdress?.adress;
+  // Вытаскиваем из объектов только id, чтобы записать в БД + объединяем их в один массив (tutorTrip)
+  const tutorTrip = [
+    ...selectedValuesCity.map((item) => item.id),
+    ...selectedValuesArea.map((item) => item.id),
+  ];
+
+  console.log(selectedValuesCity);
+
+  // Обновление данных репетитора
+  const updateDataTutor = () => {
+    const id = tutor?.id;
+    if (token && id) {
+      dispatch(
+        updateTutor({
+          id,
+          token,
+          status,
+          region,
+          tutorPlace,
+          tutorAdress,
+          tutorTrip,
+        })
+      ).unwrap;
+      handleNextStep();
+    } else {
+      console.log("Нет токена");
+    }
+  };
 
   const handleCheckboxClick = (title: string) => {
     setCheckbox((prev) => {
@@ -170,13 +212,15 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
     // Сохраняем выбранную радиокнопку в Local Storage
     localStorage.setItem("_cr-tripData", numRadio);
 
-    let locationsTripCity: { id: string; title: string }[] = [];
+    let locationsTripCity: (District | Metro)[] = [];
 
     if (numRadio === "1" && regionUser) {
       locationsTripCity = await getLocationForCity(regionUser.city); // Получаем данные для города
     } else if (numRadio === "2") {
       locationsTripCity = []; // Очищаем данные
     }
+
+    dispatch(setSelectedValuesCity(locationsTripCity));
 
     // Обновляем состояние формы
     setFormState((prevState) => {
@@ -569,7 +613,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
           <button
             type="button"
             disabled={!isFormValid()}
-            onClick={() => handleNextStep()}
+            onClick={() => updateDataTutor()}
             className={styles.continueButton}
           >
             Продолжить

@@ -41,7 +41,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   // Получаем значение loadingAuth из Redux
   const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
   // Получаем значение regionUser из Redux
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
 
   let region: string;
   regionUser && (region = regionUser?.city);

@@ -6,7 +6,7 @@ import { SelectCity } from "./SelectCity";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { UserRegion } from "@/types/types";
-import { setRegionUser } from "@/store/features/matchSlice";
+import { setRegionUser } from "@/store/features/authSlice";
 import {
   getAreaByCoordinates,
   getGeolocation,
@@ -17,7 +17,7 @@ export const SelectCityModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение regionUser из Redux
   const regionUserFromStore: UserRegion | null = useAppSelector(
-    (state) => state.match.regionUser
+    (state) => state.auth.regionUser
   );
   let regionUser: UserRegion | null = regionUserFromStore;
 

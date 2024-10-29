@@ -1,5 +1,6 @@
 "use client";
 import { ConfirmInputForm } from "@/components/SignIn/SignInTutor/ConfirmInputForms/ConfirmInputForm";
+import { EmailInputForms } from "@/components/SignIn/SignInTutor/EmailInputForm/EmailInputForm";
 import { FioInputForms } from "@/components/SignIn/SignInTutor/FioInputForm/FioInputForm";
 import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationForms";
 import { PhoneInputForms } from "@/components/SignIn/SignInTutor/PhoneInputForms/PhoneInputForms";
@@ -67,8 +68,8 @@ const SignInTutorPage: React.FC = () => {
     subjects: SubjectsForms,
     // "price": ;
     locations: LocationForms,
+    email: EmailInputForms,
     photo: PhotoForm,
-    // "email": ;
   };
 
   const ComponentRender = ComponentsList[typeForm];

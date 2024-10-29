@@ -12,7 +12,6 @@
 }
 .header__menu span:hover {
   color: #000000;
-  text-decoration: underline;
 }
 .header__menu img {
   margin-bottom: -3px;

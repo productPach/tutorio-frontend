@@ -45,7 +45,7 @@ export const listQuestionsForTutorSignIn = [
         question: "Где удобно заниматься?",
         description: "Будем показывать вам заказы учеников в зависимости от выбранных способов занятий и локаций",
         placeholder: "",
-        nextPage: "/sign-in-tutor/photo",
+        nextPage: "/sign-in-tutor/email",
         answers: [
             {
                 id: 1,
@@ -63,19 +63,20 @@ export const listQuestionsForTutorSignIn = [
     },
     {
         id: 7,
+        typeForm: "email",
+        question: "Введите e-mail",
+        description: "На указанную электронную почту будут приходить уведомления о новых заказах от учеников. \n\nЕсли в будущем вы захотите отключить уведомления, это можно будет сделать в настройках личного кабинета.",
+        placeholder: "name@email.ru",
+        nextPage: "/sign-in-tutor/photo",
+        
+    },
+    {
+        id: 8,
         typeForm: "photo",
         question: "Фотография профиля",
         description: "Анкеты с фото ученики выбирают в 3 раза чаще",
         placeholder: "",
-        nextPage: "/sign-in-tutor/email",
-    },
-    {
-        id: 8,
-        typeForm: "email",
-        question: "Подтверждение номера телефона",
-        description: "Отправили код на номер",
-        placeholder: "",
-        nextPage: "/backoffice",
+        nextPage: "/tutor/orders",
     },
   ];
   

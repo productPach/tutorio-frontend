@@ -1,5 +1,6 @@
+import { baseUrl } from "@/api/server/configApi";
 import { fetchCreateTutor, fetchCurrentTutor, fetchUpdateTutor } from "@/api/server/tutorApi";
-import { District, Metro, RegionalCity, Tutor } from "@/types/types";
+import { District, Metro, RegionalCity, Tutor, UpdateTutorAvatarPayload, UpdateTutorAvatarResponse } from "@/types/types";
 import { getTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -33,17 +34,57 @@ export const createTutor = createAsyncThunk<
 
 export const updateTutor = createAsyncThunk<
   Tutor,
-  { id: string, token: string, status: string, name?: string, email?: string, subject?: string[], region?: string, tutorPlace?: string[], tutorAdress?: string, tutorTrip?: string[] }
->("tutor/update", async ({ id, token, status, name, email, subject, region, tutorPlace, tutorAdress, tutorTrip }) => {
+  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[] }
+>("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
-    const response = await fetchUpdateTutor(id, token, status, name, email ?? "", subject ?? [], region ?? "", tutorPlace ?? [], tutorAdress ?? "", tutorTrip ?? [] );
+    // Базовый объект с обязательными полями
+    const dataToUpdate = {
+      id,
+      token,
+      status,
+      ...(optionalFields.name !== undefined && { name: optionalFields.name }),
+      ...(optionalFields.email !== undefined && { email: optionalFields.email }),
+      ...(optionalFields.subject !== undefined && { subject: optionalFields.subject }),
+      ...(optionalFields.region !== undefined && { region: optionalFields.region }),
+      ...(optionalFields.tutorPlace !== undefined && { tutorPlace: optionalFields.tutorPlace }),
+      ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
+      ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
+    };
+
+    const response = await fetchUpdateTutor(dataToUpdate);
     return response;
   } catch (error) {
-    // Здесь можно вернуть undefined или обработать ошибку
     console.error(error);
     throw error;
   }
 });
+
+export const updateTutorAvatar = createAsyncThunk<
+  UpdateTutorAvatarResponse,
+  UpdateTutorAvatarPayload // Здесь используем обновленный интерфейс
+>(
+  'tutor/updateAvatar',
+  async ({ id, file, token, croppedAreaPixels }) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    // Здесь вы можете также использовать croppedAreaPixels, если это необходимо
+
+    const response = await fetch(`${baseUrl}tutors/${id}/avatar`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка при обновлении аватара');
+    }
+
+    return response.json();
+  }
+);
+
 
 type TutorStateType = {
   tutor: null | Tutor;
@@ -109,7 +150,14 @@ const tutorSlice = createSlice({
           state.tutor = action.payload;
           setLocalStorage("tutor", state.tutor);
         }
-      );
+      ).addCase(
+        updateTutorAvatar.fulfilled, 
+        (state, action) => {
+        if (state.tutor && state.tutor.id === action.payload.id) {
+          state.tutor.avatarUrl = action.payload.avatarUrl;
+          setLocalStorage("tutor", state.tutor);
+        }
+      });;
   },
 });
 

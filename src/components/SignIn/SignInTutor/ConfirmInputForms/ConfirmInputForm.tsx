@@ -43,7 +43,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   // Получаем значение loadingAuth из Redux
   const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
   // Получаем значение regionUser из Redux
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
 
   // ПЕРЕДЕЛАТЬ!!!
   // Нужно вытаскивать код подтверждения в БД
@@ -74,20 +74,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   ]);
 
   // Авторизация пользователя
-  // const getToken = async (secretCode: string) => {
-  //   try {
-  //     const jsonPhone = localStorage.getItem("origin-phone");
-  //     const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
-  //     if (phone) {
-  //       const data = await fetchGetToken({ phone, secretCode });
-  //       console.log(phone);
-  //       console.log(data.token);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const handleGetToken = async (secretCode: string) => {
     try {
       const jsonPhone = localStorage.getItem("origin-phone");

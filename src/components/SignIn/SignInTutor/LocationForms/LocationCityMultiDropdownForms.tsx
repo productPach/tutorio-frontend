@@ -6,25 +6,14 @@ import clsx from "clsx";
 import { getLocation } from "@/api/addresses/addresses";
 import { District, Metro, Order } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setRegionUser } from "@/store/features/matchSlice";
 import { setSelectedValuesCity } from "@/store/features/tutorSlice";
+import { setRegionUser } from "@/store/features/authSlice";
 
 interface ComponentRenderProps {
   id: number;
   question: string;
   typeForm: string;
 }
-
-type DataAdress = {
-  value: string;
-  data: {
-    fias_id: number;
-    fias_level: string;
-    city?: string;
-    metro?: string;
-    district?: string;
-  };
-};
 
 export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
   id,
@@ -33,7 +22,7 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   // Получаем значение regionUser из Redux
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
   // Получаем значение selectedValuesCity из Redux
   const selectedValuesCity = useAppSelector(
     (state) => state.tutor.selectedValuesCity

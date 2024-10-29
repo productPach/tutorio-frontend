@@ -15,7 +15,8 @@ import { getLocation } from "@/api/addresses/addresses";
 import { District, Metro, Order, RegionalCity } from "@/types/types";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setRegionUser, setSelectedValues } from "@/store/features/matchSlice";
+import { setSelectedValues } from "@/store/features/matchSlice";
+import { setRegionUser } from "@/store/features/authSlice";
 
 interface Answer {
   id: number;
@@ -40,7 +41,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
   const selectedValues = useAppSelector((state) => state.match.selectedValues);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [inputValue, setInputValue] = useState("");

@@ -53,7 +53,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
   };
   //const tutor = useAppSelector((state) => state.tutor.tutor);
   // Получаем значение regionUser из Redux
-  const regionUser = useAppSelector((state) => state.match.regionUser);
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
 
   let region: string;
   regionUser && (region = regionUser?.city);
