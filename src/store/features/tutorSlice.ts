@@ -110,6 +110,9 @@ const tutorSlice = createSlice({
     setTutor: (state, action: PayloadAction<Tutor>) => {
       state.tutor = action.payload;
     },
+    setTutorLogout: (state) => {
+      state.tutor = null;
+    },
     setSelectedValuesCity: (state, action: PayloadAction<(District | Metro)[]>) => {
       state.selectedValuesCity = action.payload;
     },
@@ -161,5 +164,5 @@ const tutorSlice = createSlice({
   },
 });
 
-export const { setTutor, setSelectedValuesCity, setSelectedValuesArea } = tutorSlice.actions;
+export const { setTutor, setTutorLogout, setSelectedValuesCity, setSelectedValuesArea } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;

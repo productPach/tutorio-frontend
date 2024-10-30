@@ -118,7 +118,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 updatedTutor?.status === "Pending" ||
                 updatedTutor?.status === "Active"
               ) {
-                handleNextStep("tutor/orders");
+                handleNextStep("../tutor/orders");
               }
             });
         } else {

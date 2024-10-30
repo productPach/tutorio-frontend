@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
+import { setTutorLogout } from "@/store/features/tutorSlice";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -20,10 +21,12 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const [isLoadedPage, setIsLoadedPage] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const tutor = useAppSelector((state) => state.tutor.tutor);
 
   // Функция выхода
   const logout = () => {
     dispatch(setLogout());
+    dispatch(setTutorLogout());
     router.push("/");
   };
 
@@ -72,8 +75,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             </div>
           </header>
           <button onClick={logout}>Выйти</button>
-          <main>{children}</main>
-
+          {tutor && <main>{children}</main>}
           <footer className={clsx(styles.center)}>
             <p></p>
             {/* Добавьте здесь другие элементы подвала */}
