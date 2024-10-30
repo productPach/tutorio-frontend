@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-//import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/store/ReduxProvider";
-
-//const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Tutorio — место, где встречаются ученики и репетиторы",
@@ -28,9 +25,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <ReduxProvider>
-        <body>{children}</body>
-      </ReduxProvider>
+      <body>
+        <ReduxProvider>{children}</ReduxProvider>
+      </body>
     </html>
   );
 }

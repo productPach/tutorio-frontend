@@ -199,14 +199,14 @@ const TutorOrders: React.FC = () => {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M13.5 12C13.5 13.6569 12.1569 15 10.5 15C8.84315 15 7.5 13.6569 7.5 12C7.5 10.3431 8.84315 9 10.5 9C12.1569 9 13.5 10.3431 13.5 12ZM12.5 12C12.5 13.1046 11.6046 14 10.5 14C9.39543 14 8.5 13.1046 8.5 12C8.5 10.8954 9.39543 10 10.5 10C11.6046 10 12.5 10.8954 12.5 12Z"
                     fill="#2A2A2A"
                   />
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M17 17V15L19.2764 16.1382C19.6088 16.3044 20 16.0627 20 15.691V8.30902C20 7.93733 19.6088 7.69558 19.2764 7.8618L17 9V7C17 5.89543 16.1046 5 15 5H6C4.89543 5 4 5.89543 4 7V17C4 18.1046 4.89543 19 6 19H15C16.1046 19 17 18.1046 17 17ZM15 6H6C5.44772 6 5 6.44772 5 7V17C5 17.5523 5.44772 18 6 18H15C15.5523 18 16 17.5523 16 17V7C16 6.44772 15.5523 6 15 6ZM19 14.882L17 13.882V10.118L19 9.11803V14.882Z"
                     fill="#2A2A2A"
                   />
@@ -263,8 +263,8 @@ const TutorOrders: React.FC = () => {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M16.5 11C17.6046 11 18.5 10.1046 18.5 9C18.5 7.89543 17.6046 7 16.5 7C15.3954 7 14.5 7.89543 14.5 9C14.5 10.1046 15.3954 11 16.5 11ZM16.5 10C17.0523 10 17.5 9.55228 17.5 9C17.5 8.44772 17.0523 8 16.5 8C15.9477 8 15.5 8.44772 15.5 9C15.5 9.55228 15.9477 10 16.5 10Z"
                     fill="#2A2A2A"
                   />
@@ -471,7 +471,137 @@ const TutorOrders: React.FC = () => {
                 </a> */}
         </div>
 
-        <div className="sidebar"></div>
+        <div className="sidebar">
+          <div className="sidebar__filter">
+            <div>
+              <p className="sidebar__title">Место занятий</p>
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-1"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-1">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Дистанционно</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-2"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-2">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">У репетитора</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-3"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-3">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">У ученика</p>
+              </label>
+            </div>
+
+            <div>
+              <p className="sidebar__title">Регион</p>
+              <div className="header__geo sidebar-geo">
+                {/* <img src="../media/icons/location.svg" width="15" alt="Выбор города"> */}
+                Москва
+              </div>
+            </div>
+
+            <div>
+              <p className="sidebar__title">Цель занятий</p>
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-4"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-4">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">
+                  Всероссийская проверочная работа (ВПР)
+                </p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-5"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-5">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">
+                  Подготовка к экзамену в&nbspвузе
+                </p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-6"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-6">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Подготовка к ЕГЭ</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-7"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-7">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Подготовка к школе</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-8"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-8">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Повышение успеваемости</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-9"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-9">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Подготовка к ОГЭ</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-10"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-10">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Для себя</p>
+              </label>
+
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                id="checkbox-11"
+              />
+              <label className="checkbox-label" htmlFor="checkbox-11">
+                <span className="checkbox"></span>
+                <p className="checkbox-label__text">Для работы</p>
+              </label>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   );
