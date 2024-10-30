@@ -1,17 +1,16 @@
 "use client";
-import Image from "next/image";
 import React, { ReactNode, useEffect, useState } from "react";
-import styles from "../student/layout.module.css";
+import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import Head from "next/head";
-import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setLogout, setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 import { setTutorLogout } from "@/store/features/tutorSlice";
+import Image from "next/image";
+import { baseUrlPath } from "@/api/server/configApi";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -63,23 +62,36 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </Head>
           <header>
             <div className={clsx(styles.header, styles.center)}>
-              <SelectCityModal />
-              <Link href="/">
+              <a href="#">
                 <div className={styles.header__logo}>
                   tutorio
                   <span className={styles.header__underLogo}>
-                    Cервис подбора репетиторов
+                    Онлайн-сервис подбора репетиторов
                   </span>
                 </div>
-              </Link>
+              </a>
+              <div className={styles.header__menu}>
+                {tutor && (
+                  <>
+                    <span>{tutor.name}</span>
+                    <Image
+                      src={`${baseUrlPath}${tutor?.avatarUrl}`}
+                      alt={`${tutor?.name}`}
+                      width={42}
+                      height={42}
+                      priority
+                    />
+                  </>
+                )}
+              </div>
             </div>
           </header>
-          <button onClick={logout}>Выйти</button>
           {tutor && <main>{children}</main>}
           <footer className={clsx(styles.center)}>
             <p></p>
             {/* Добавьте здесь другие элементы подвала */}
           </footer>
+          <button onClick={logout}>Выйти</button>
         </>
       )}
     </>

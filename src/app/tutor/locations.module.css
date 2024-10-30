@@ -1,0 +1,59 @@
+.crcl_mtr_wrap {
+  display: inline-block;
+}
+
+.crcl_mtr_container {
+  display: flex;
+  margin: 0 3px;
+  flex-direction: row;
+  column-gap: 0px;
+  flex-wrap: nowrap;
+}
+
+/* МОСКВА */
+
+.crcl_mtr {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.crcl_mtr_msk_1 {
+  background-color: #ce071e;
+}
+
+.crcl_mtr_msk_2 {
+  background-color: #3dae4c;
+}
+
+.crcl_mtr_msk_3 {
+  background-color: #0b62b2;
+}
+
+.crcl_mtr_msk_4 {
+  background-color: #17b3f0;
+}
+
+.crcl_mtr_msk_5 {
+  background-color: #753c28;
+}
+
+.crcl_mtr_msk_6 {
+  background-color: #e36719;
+}
+
+.crcl_mtr_msk_7 {
+  background-color: #7a308a;
+}
+
+.crcl_mtr_msk_8 {
+  background-color: #fdbb16;
+}
+
+.crcl_mtr_msk_9 {
+  background-color: #909192;
+}
+
+.crcl_mtr_msk_10 {
+  background-color: #a6ce36;
+}
