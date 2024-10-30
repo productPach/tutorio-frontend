@@ -373,7 +373,8 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
             selectedRadio === "1"))) &&
       checkboxTrip.includes("2") &&
       selectedValuesArea.length > 0 &&
-      !checkbox?.includes("2")
+      (!checkbox?.includes("2") ||
+        (checkbox.includes("2") && formState?.tutorHomeAdress?.adress))
     ) {
       return true;
     }

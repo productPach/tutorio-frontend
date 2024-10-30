@@ -12,7 +12,7 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/images/getCroppedImg";
-import { updateTutorAvatar } from "@/store/features/tutorSlice";
+import { updateTutor, updateTutorAvatar } from "@/store/features/tutorSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 interface ComponentRenderProps {
@@ -87,6 +87,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
     const id = tutor?.id;
     if (token && id) {
       try {
+        const status = "Pending";
         await dispatch(
           updateTutorAvatar({
             id,
@@ -95,6 +96,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
             croppedAreaPixels, // передаем croppedAreaPixels
           })
         ).unwrap();
+        dispatch(updateTutor({ id, token, status })).unwrap;
 
         // После успешного обновления аватара перенаправляем пользователя
         route.push("/tutor/orders");

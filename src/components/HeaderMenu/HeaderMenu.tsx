@@ -48,7 +48,7 @@ export const HeaderMenu = () => {
               height={17}
               alt="Профиль"
             />
-            {tutor.name}
+            {tutor.name ? tutor.name : "Личный кабинет"}
           </span>
         </>
       ) : (

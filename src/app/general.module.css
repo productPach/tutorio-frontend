@@ -1,0 +1,76 @@
+.undrln {
+  text-decoration: underline;
+}
+
+.undrlnHover:hover {
+  text-decoration: underline;
+}
+
+.padng18 {
+  padding: 18px;
+}
+
+.mrgnTp0 {
+  margin-top: 0px;
+}
+
+.mrgnTp5 {
+  margin-top: 5px;
+}
+
+.mrgnBt5 {
+  margin-bottom: 5px;
+}
+
+.mrgnLt5 {
+  margin-left: 5px;
+}
+
+.mrgnRt5 {
+  margin-right: 5px;
+}
+
+.mrgnTp10 {
+  margin-top: 10px;
+}
+
+.mrgnBt10 {
+  margin-bottom: 10px;
+}
+
+.mrgnLt10 {
+  margin-left: 10px;
+}
+
+.mrgnRt10 {
+  margin-right: 10px;
+}
+
+.mrgnTp20 {
+  margin-top: 20px;
+}
+
+.mrgnBt20 {
+  margin-bottom: 20px;
+}
+
+.mrgnLt20 {
+  margin-left: 20px;
+}
+
+.mrgnRt20 {
+  margin-right: 20px;
+}
+
+.crsrPntr {
+  cursor: pointer;
+}
+
+.dplBlck {
+  display: block;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
