@@ -10,7 +10,7 @@ import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { setTutorLogout } from "@/store/features/tutorSlice";
 import Image from "next/image";
-import { baseUrlPath } from "@/api/server/configApi";
+import { host, port } from "@/api/server/configApi";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -75,7 +75,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
                   <>
                     <span>{tutor.name}</span>
                     <Image
-                      src={`${baseUrlPath}${tutor?.avatarUrl}`}
+                      src={`${host}${port}${tutor?.avatarUrl}`}
                       alt={`${tutor?.name}`}
                       width={42}
                       height={42}

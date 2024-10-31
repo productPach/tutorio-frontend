@@ -58,3 +58,30 @@ export const fetchCreateOrder = async (
   const data = await response.json();
   return data;
 };
+
+// Получение списка заказов
+
+export const fetchGetAllOrders = async (token: string) => {
+  try {
+    const response = await fetch(`${baseUrl}orders`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Проверка, был ли запрос успешным
+    if (!response.ok) {
+      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    }
+
+    // Парсинг JSON
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error("Ошибка при получении списка заказов:", error);
+    throw error; // Чтобы обработать ошибку в вызывающем коде, если необходимо
+  }
+}
