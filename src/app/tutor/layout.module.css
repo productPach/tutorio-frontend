@@ -88,9 +88,6 @@
 .container__spinner {
   width: 100%;
   position: relative;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
 }
 .spinner {
   width: 18px;

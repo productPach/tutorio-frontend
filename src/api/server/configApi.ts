@@ -1,2 +1,3 @@
-export const baseUrl = "http://158.160.17.236:3000/api/";
-export const baseUrlPath = "http://158.160.17.236:3000";
+export const host = "http://158.160.29.133:";
+export const port = "3000";
+export const baseUrl = `${host}${port}/api/`;

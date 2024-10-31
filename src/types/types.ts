@@ -77,19 +77,27 @@ export type Subject = {
 // Определяем тип для объекта заказа в массиве
 export type Order = {
   id: number;
+  createdAt: Date;
   subject?: string;
   goal?: string;
-  class?: string;
+  studentClass?: string;
+  studentType?: string;
+  studentYears?: string;
+  studentCourse?: string;
+  studentUniversity?: string;
+  studentExam?: string;
+  studyMethod?: string;
+  studyProgramm?: string;
   deadline?: string;
   studentLevel?: string;
   tutorGender?: string;
-  timetable?: string;
-  studyPlace?: string[];
-  studentPlace?: string;
-  studentTrip?: string; // заменить на массив
+  studentSchedule?: string;
+  region?: string;
+  studentPlace?: string[];
+  studentAdress?: string;
+  studentTrip?: string[]; // заменить на массив
   tutorType?: string;
-  info?: string;
-  fio?: string;
+  studentWishes?: string;
   [key: string]: any;
   status: string;
 };
