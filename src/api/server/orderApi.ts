@@ -59,7 +59,7 @@ export const fetchCreateOrder = async (
   return data;
 };
 
-// Получение списка заказов
+// Получение списка всех заказов
 
 export const fetchGetAllOrders = async (token: string) => {
   try {

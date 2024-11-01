@@ -1,5 +1,6 @@
 .crcl_mtr_wrap {
   display: inline-block;
+  min-width: 3px;
 }
 
 .crcl_mtr_container {
