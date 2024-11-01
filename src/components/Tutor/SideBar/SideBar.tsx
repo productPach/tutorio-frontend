@@ -3,9 +3,24 @@ import Image from "next/image";
 import styles from "../../../app/tutor/layout.module.css";
 import inputStyles from "../../../app/tutor/input.module.css";
 import clsx from "clsx";
-import React from "react";
+import React, { useState } from "react";
+import { setOrderFilters } from "@/store/features/orderSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
 
 const SideBar = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilters((prev) => {
+      const newFilters = prev.includes(filter)
+        ? prev.filter((f) => f !== filter) // Убираем фильтр, если он уже выбран
+        : [...prev, filter]; // Добавляем фильтр
+      dispatch(setOrderFilters(newFilters)); // Обновляем состояние фильтров в Redux
+      return newFilters;
+    });
+  };
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebar_filter}>
@@ -15,6 +30,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-1"
+            checked={selectedFilters.includes("Дистанционно")}
+            onChange={() => handleFilterChange("Дистанционно")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-1">
             <span className={inputStyles.checkbox}></span>
@@ -25,6 +42,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-2"
+            checked={selectedFilters.includes("У репетитора")}
+            onChange={() => handleFilterChange("У репетитора")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-2">
             <span className={inputStyles.checkbox}></span>
@@ -35,6 +54,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-3"
+            checked={selectedFilters.includes("У меня дома")}
+            onChange={() => handleFilterChange("У меня дома")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-3">
             <span className={inputStyles.checkbox}></span>

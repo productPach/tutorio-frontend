@@ -4,6 +4,7 @@ import styles from "./HeaderMenu.module.css";
 import { useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { Tutor } from "@/types/types";
+import Link from "next/link";
 
 export const HeaderMenu = () => {
   const route = useRouter();
@@ -30,18 +31,11 @@ export const HeaderMenu = () => {
     nextPage = "tutor/orders";
   }
 
-  // Функция клика по ссылкам Репетиторам, Ученикам
-  const clickToSignIn = (link: string) => {
-    // Очищаем предыдущие данные заявок из LS, если они есть
-    localStorage.removeItem("currentMatch");
-    route.push(link);
-  };
-
   return (
     <div className={styles.header__menu}>
       {tutor ? (
         <>
-          <span onClick={() => clickToSignIn(nextPage)}>
+          <Link href={nextPage} prefetch>
             <Image
               src="/img/icon/profil.svg"
               width={17}
@@ -49,14 +43,17 @@ export const HeaderMenu = () => {
               alt="Профиль"
             />
             {tutor.name ? tutor.name : "Личный кабинет"}
-          </span>
+          </Link>
         </>
       ) : (
         <>
-          <span onClick={() => clickToSignIn("/sign-in-tutor/phone")}>
+          <Link href={"/sign-in-tutor/phone"} prefetch>
             Репетиторам
-          </span>
-          <span onClick={() => clickToSignIn("/sign-in-tutor")}>Ученикам</span>
+          </Link>
+
+          <Link href={"/sign-in-tutor"} prefetch>
+            Ученикам
+          </Link>
         </>
       )}
     </div>
