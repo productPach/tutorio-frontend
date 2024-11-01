@@ -25,22 +25,33 @@ type OrdersStateType =  {
     orders: [] | Order[];
     loading: boolean;
     error: null | string;
-    filters: string[];
+    filters: {
+      selectedPlaceFilters: string[];
+      selectedGoalFilters: string[];
+    };
 }
 
 const initialState: OrdersStateType = {
     orders: [],
     loading: false,
     error: null as string | null,
-    filters: []
+    filters: {
+      selectedPlaceFilters: [],
+      selectedGoalFilters: [],
+    },
 };
 
 const ordersSlice = createSlice({
   name: "orders",
   initialState,
   reducers: {
-    setOrderFilters: (state, action: PayloadAction<string[]>) => {
-      state.filters = action.payload; // Обновляем состояние фильтров
+    setOrderFilters(state, action: PayloadAction<{ placeFilters: string[]; goalFilters: string[] }>) {
+      state.filters.selectedPlaceFilters = action.payload.placeFilters;
+      state.filters.selectedGoalFilters = action.payload.goalFilters;
+    },
+    clearFilters(state) {
+      state.filters.selectedPlaceFilters = [];
+      state.filters.selectedGoalFilters = [];
     },
   },
   extraReducers: (builder) => {
@@ -51,14 +62,14 @@ const ordersSlice = createSlice({
       })
       .addCase(getAllOrders.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders = action.payload; // Записываем полученные заказы
+        state.orders = action.payload;
       })
       .addCase(getAllOrders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string; // Обработка ошибки
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { setOrderFilters } = ordersSlice.actions;
+export const { setOrderFilters, clearFilters } = ordersSlice.actions;
 export const ordersReducer = ordersSlice.reducer;

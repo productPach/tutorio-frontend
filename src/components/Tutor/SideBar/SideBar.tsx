@@ -10,17 +10,37 @@ import { AppDispatch } from "@/store/store";
 
 const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedPlaceFilters, setSelectedPlaceFilters] = useState<string[]>(
+    []
+  );
+  const [selectedGoalFilters, setSelectedGoalFilters] = useState<string[]>([]);
 
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilters((prev) => {
-      const newFilters = prev.includes(filter)
-        ? prev.filter((f) => f !== filter) // Убираем фильтр, если он уже выбран
-        : [...prev, filter]; // Добавляем фильтр
-      dispatch(setOrderFilters(newFilters)); // Обновляем состояние фильтров в Redux
-      return newFilters;
-    });
+  const handleFilterChange = (filter: string, type: "place" | "goal") => {
+    if (type === "place") {
+      const updatedPlaceFilters = selectedPlaceFilters.includes(filter)
+        ? selectedPlaceFilters.filter((f) => f !== filter) // Убираем фильтр
+        : [...selectedPlaceFilters, filter]; // Добавляем фильтр
+      setSelectedPlaceFilters(updatedPlaceFilters);
+      dispatch(
+        setOrderFilters({
+          placeFilters: updatedPlaceFilters,
+          goalFilters: selectedGoalFilters,
+        })
+      );
+    } else if (type === "goal") {
+      const updatedGoalFilters = selectedGoalFilters.includes(filter)
+        ? selectedGoalFilters.filter((f) => f !== filter) // Убираем фильтр
+        : [...selectedGoalFilters, filter]; // Добавляем фильтр
+      setSelectedGoalFilters(updatedGoalFilters);
+      dispatch(
+        setOrderFilters({
+          placeFilters: selectedPlaceFilters,
+          goalFilters: updatedGoalFilters,
+        })
+      );
+    }
   };
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebar_filter}>
@@ -30,8 +50,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-1"
-            checked={selectedFilters.includes("Дистанционно")}
-            onChange={() => handleFilterChange("Дистанционно")}
+            checked={selectedPlaceFilters.includes("Дистанционно")}
+            onChange={() => handleFilterChange("Дистанционно", "place")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-1">
             <span className={inputStyles.checkbox}></span>
@@ -42,8 +62,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-2"
-            checked={selectedFilters.includes("У репетитора")}
-            onChange={() => handleFilterChange("У репетитора")}
+            checked={selectedPlaceFilters.includes("У репетитора")}
+            onChange={() => handleFilterChange("У репетитора", "place")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-2">
             <span className={inputStyles.checkbox}></span>
@@ -54,8 +74,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-3"
-            checked={selectedFilters.includes("У меня дома")}
-            onChange={() => handleFilterChange("У меня дома")}
+            checked={selectedPlaceFilters.includes("У меня дома")}
+            onChange={() => handleFilterChange("У меня дома", "place")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-3">
             <span className={inputStyles.checkbox}></span>
@@ -83,6 +103,15 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-4"
+            checked={selectedGoalFilters.includes(
+              "Всероссийская проверочная работа (ВПР)"
+            )}
+            onChange={() =>
+              handleFilterChange(
+                "Всероссийская проверочная работа (ВПР)",
+                "goal"
+              )
+            }
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-4">
             <span className={inputStyles.checkbox}></span>
@@ -95,11 +124,17 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-5"
+            checked={selectedGoalFilters.includes(
+              "Подготовка к экзамену в вузе"
+            )}
+            onChange={() =>
+              handleFilterChange("Подготовка к экзамену в вузе", "goal")
+            }
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-5">
             <span className={inputStyles.checkbox}></span>
             <p className={inputStyles.checkbox_label_text}>
-              Подготовка к экзамену в&nbspвузе
+              Подготовка к экзамену в вузе
             </p>
           </label>
 
@@ -107,6 +142,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-6"
+            checked={selectedGoalFilters.includes("Подготовка к ЕГЭ")}
+            onChange={() => handleFilterChange("Подготовка к ЕГЭ", "goal")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-6">
             <span className={inputStyles.checkbox}></span>
@@ -117,6 +154,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-7"
+            checked={selectedGoalFilters.includes("Подготовка к школе")}
+            onChange={() => handleFilterChange("Подготовка к школе", "goal")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-7">
             <span className={inputStyles.checkbox}></span>
@@ -129,6 +168,10 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-8"
+            checked={selectedGoalFilters.includes("Повышение успеваемости")}
+            onChange={() =>
+              handleFilterChange("Повышение успеваемости", "goal")
+            }
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-8">
             <span className={inputStyles.checkbox}></span>
@@ -141,6 +184,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-9"
+            checked={selectedGoalFilters.includes("Подготовка к ОГЭ")}
+            onChange={() => handleFilterChange("Подготовка к ОГЭ", "goal")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-9">
             <span className={inputStyles.checkbox}></span>
@@ -151,6 +196,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-10"
+            checked={selectedGoalFilters.includes("Для себя")}
+            onChange={() => handleFilterChange("Для себя", "goal")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-10">
             <span className={inputStyles.checkbox}></span>
@@ -161,6 +208,8 @@ const SideBar = () => {
             type="checkbox"
             className={inputStyles.checkbox_input}
             id="checkbox-11"
+            checked={selectedGoalFilters.includes("Для работы")}
+            onChange={() => handleFilterChange("Для работы", "goal")}
           />
           <label className={inputStyles.checkbox_label} htmlFor="checkbox-11">
             <span className={inputStyles.checkbox}></span>
