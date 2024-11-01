@@ -17,39 +17,62 @@ import { formatTimeAgo } from "@/utils/date/date";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
-  // Получаем токен из Redux
   const token = useAppSelector((state) => state.auth.token);
   const { orders, loading, error, filters } = useSelector(
     (state: RootState) => state.orders
   );
-
-  // Состояние для хранения отфильтрованных заказов
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
 
+  const { selectedPlaceFilters, selectedGoalFilters } = filters;
+
   useEffect(() => {
-    token && dispatch(getAllOrders(token));
+    if (token) {
+      dispatch(getAllOrders(token));
+    }
   }, [dispatch, token]);
 
-  // Используем useEffect для фильтрации, когда orders меняется
   useEffect(() => {
-    const filteredOrders = orders
-      .filter((order) => order.status === "Active")
-      .filter(
+    let filteredOrders = orders.filter((order) => order.status === "Active");
+
+    console.log("Initial active orders:", filteredOrders);
+    console.log("Selected goal filters:", selectedGoalFilters);
+    console.log("Selected place filters:", selectedPlaceFilters);
+
+    // Применяем оба фильтра, если они заданы
+    if (selectedGoalFilters.length > 0 && selectedPlaceFilters.length > 0) {
+      filteredOrders = filteredOrders.filter(
         (order) =>
-          filters.length === 0 ||
-          (order.studentPlace &&
-            order.studentPlace.some((place) => filters.includes(place)))
-      ) // Если нет выбранных фильтров, оставляем все заказы
-      .sort((a, b) => {
-        const dateA = new Date(a.createdAt).getTime();
-        const dateB = new Date(b.createdAt).getTime();
-        return dateB - dateA; // Сортировка по убыванию
-      });
+          selectedGoalFilters.includes(order.goal) &&
+          order.studentPlace &&
+          order.studentPlace.some((place) =>
+            selectedPlaceFilters.includes(place)
+          )
+      );
+    } else if (selectedGoalFilters.length > 0) {
+      // Применяем только фильтр цели
+      filteredOrders = filteredOrders.filter((order) =>
+        selectedGoalFilters.includes(order.goal)
+      );
+    } else if (selectedPlaceFilters.length > 0) {
+      // Применяем только фильтр места
+      filteredOrders = filteredOrders.filter(
+        (order) =>
+          order.studentPlace &&
+          order.studentPlace.some((place) =>
+            selectedPlaceFilters.includes(place)
+          )
+      );
+    }
 
-    setActiveOrders(filteredOrders);
-  }, [orders, filters]);
+    console.log("Filtered orders after applying filters:", filteredOrders);
 
-  console.log(activeOrders);
+    setActiveOrders(
+      filteredOrders.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    );
+  }, [orders, selectedPlaceFilters, selectedGoalFilters]);
 
   if (loading)
     return (
