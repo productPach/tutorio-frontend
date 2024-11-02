@@ -18,6 +18,7 @@ import { formatTimeAgo } from "@/utils/date/date";
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   const { orders, loading, error, filters } = useSelector(
     (state: RootState) => state.orders
   );
@@ -32,16 +33,19 @@ const Orders = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
-    let filteredOrders = orders.filter((order) => order.status === "Active");
-
-    console.log("Initial active orders:", filteredOrders);
-    console.log("Selected goal filters:", selectedGoalFilters);
-    console.log("Selected place filters:", selectedPlaceFilters);
+    let filteredOrders = orders
+      .filter((order) => order.status === "Active")
+      .filter(
+        (order) =>
+          tutor?.subject &&
+          tutor.subject.some((subject) => order.subject?.includes(subject))
+      );
 
     // Применяем оба фильтра, если они заданы
     if (selectedGoalFilters.length > 0 && selectedPlaceFilters.length > 0) {
       filteredOrders = filteredOrders.filter(
         (order) =>
+          order.goal &&
           selectedGoalFilters.includes(order.goal) &&
           order.studentPlace &&
           order.studentPlace.some((place) =>
@@ -50,8 +54,8 @@ const Orders = () => {
       );
     } else if (selectedGoalFilters.length > 0) {
       // Применяем только фильтр цели
-      filteredOrders = filteredOrders.filter((order) =>
-        selectedGoalFilters.includes(order.goal)
+      filteredOrders = filteredOrders.filter(
+        (order) => order.goal && selectedGoalFilters.includes(order.goal)
       );
     } else if (selectedPlaceFilters.length > 0) {
       // Применяем только фильтр места
@@ -63,8 +67,6 @@ const Orders = () => {
           )
       );
     }
-
-    console.log("Filtered orders after applying filters:", filteredOrders);
 
     setActiveOrders(
       filteredOrders.sort(
