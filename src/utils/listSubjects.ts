@@ -2,231 +2,6 @@
 
 import { Subject } from "@/types/types";
 
-// export const data2 = [
-//   {
-//     id: 0,
-//     title: "Алгебра",
-//     nextPage: "/match/goal/school-subjects-2",
-//     general: false,
-//     idCategory: 0,
-//   },
-//   {
-//     id: 1,
-//     title: "Английский язык",
-//     nextPage: "/match/goal/english",
-//   },
-//   {
-//     id: 2,
-//     title: "Арабский язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 3,
-//     title: "Астрономия",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 4,
-//     title: "Биология",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 5,
-//     title: "География",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 6,
-//     title: "Геометрия",
-//     nextPage: "/match/goal/school-subjects-2",
-//   },
-//   {
-//     id: 7,
-//     title: "Естествознание",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 8,
-//     title: "Изобразительное искусство",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 9,
-//     title: "Информатика",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 10,
-//     title: "История",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 11,
-//     title: "Испанский язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 12,
-//     title: "Итальянский язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 13,
-//     title: "Китайский язык",
-//     nextPage: "/match/goal/chinese",
-//   },
-//   {
-//     id: 14,
-//     title: "Краеведение",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 15,
-//     title: "Корейский язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 16,
-//     title: "Латынь",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 17,
-//     title: "Литература",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 18,
-//     title: "Математика",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 19,
-//     title: "МХК",
-//     nextPage: "/match/goal/school-subjects-no-ege",
-//   },
-//   {
-//     id: 20,
-//     title: "Музыка",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 21,
-//     title: "Начальная военная подготовка",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 22,
-//     title: "Немецкий язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 23,
-//     title: "Обществознание",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 24,
-//     title: "Португальский язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 25,
-//     title: "Проектирование",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 26,
-//     title: "Рисование",
-//     nextPage: "/match/goal/artistic-subjects",
-//   },
-//   {
-//     id: 27,
-//     title: "Риторика",
-//     nextPage: "/match/goal/artistic-subjects",
-//   },
-//   {
-//     id: 28,
-//     title: "Русский язык",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 29,
-//     title: "Статистика",
-//     nextPage: "/match/goal/school-subjects-2",
-//   },
-//   {
-//     id: 30,
-//     title: "Технология",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 31,
-//     title: "Физика",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 32,
-//     title: "Философия",
-//     nextPage: "/match/goal/school-subjects-2",
-//   },
-//   {
-//     id: 33,
-//     title: "Французский язык",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 34,
-//     title: "Химия",
-//     nextPage: "/match/goal/school-subjects",
-//   },
-//   {
-//     id: 35,
-//     title: "Хинди",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 36,
-//     title: "Черчение",
-//     nextPage: "/match/goal/school-subjects-2",
-//   },
-//   {
-//     id: 37,
-//     title: "Экология",
-//     nextPage: "/match/goal/school-subjects-no-ege",
-//   },
-//   {
-//     id: 38,
-//     title: "Экономика",
-//     nextPage: "/match/goal/school-subjects-no-ege",
-//   },
-//   {
-//     id: 39,
-//     title: "Японский язык",
-//     nextPage: "/match/goal/japanese",
-//   },
-//   {
-//     id: 40,
-//     title: "Английский для детей",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 41,
-//     title: "Английский для взрослых",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 42,
-//     title: "ЕГЭ по английскому",
-//     nextPage: "/match",
-//   },
-//   {
-//     id: 43,
-//     title: "ЕГЭ по математике",
-//     nextPage: "/match",
-//   },
-// ];
-
 export const data: Subject[] = [
   {
     id: "1",
@@ -237,6 +12,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "1",
+    goal_id: "2",
   },
   {
     id: "2",
@@ -247,6 +23,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/english",
     id_p: "5",
+    goal_id: "2",
   },
   {
     id: "3",
@@ -257,6 +34,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "41",
+    goal_id: "2",
   },
   {
     id: "4",
@@ -267,6 +45,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "43",
+    goal_id: "1",
   },
   {
     id: "5",
@@ -277,6 +56,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "72",
+    goal_id: "2",
   },
   {
     id: "6",
@@ -287,6 +67,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "202",
+    goal_id: "2",
   },
   {
     id: "7",
@@ -297,6 +78,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "77",
+    goal_id: "2",
   },
   {
     id: "8",
@@ -307,6 +89,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "88",
+    goal_id: "2",
   },
   {
     id: "9",
@@ -317,6 +100,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "113",
+    goal_id: "1",
   },
   {
     id: "10",
@@ -327,6 +111,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "426",
+    goal_id: "2",
   },
   {
     id: "11",
@@ -337,6 +122,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "204",
+    goal_id: "2",
   },
   {
     id: "12",
@@ -347,6 +133,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "205",
+    goal_id: "2",
   },
   {
     id: "13",
@@ -357,6 +144,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "208",
+    goal_id: "2",
   },
   {
     id: "14",
@@ -367,6 +155,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "209",
+    goal_id: "2",
   },
   {
     id: "15",
@@ -377,6 +166,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "235",
+    goal_id: "1",
   },
   {
     id: "16",
@@ -387,6 +177,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "282",
+    goal_id: "2",
   },
   {
     id: "17",
@@ -397,6 +188,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "289",
+    goal_id: "1",
   },
   {
     id: "18",
@@ -407,6 +199,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "302",
+    goal_id: "2",
   },
   {
     id: "19",
@@ -417,6 +210,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/chinese",
     id_p: "309",
+    goal_id: "2",
   },
   {
     id: "20",
@@ -427,6 +221,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "274",
+    goal_id: "2",
   },
   {
     id: "21",
@@ -437,6 +232,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "316",
+    goal_id: "2",
   },
   {
     id: "22",
@@ -447,6 +243,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "318",
+    goal_id: "2",
   },
   {
     id: "23",
@@ -457,6 +254,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "319",
+    goal_id: "1",
   },
   {
     id: "24",
@@ -467,6 +265,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "328",
+    goal_id: "2",
   },
   {
     id: "25",
@@ -477,6 +276,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "329",
+    goal_id: "2",
   },
   {
     id: "26",
@@ -487,6 +287,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "727",
+    goal_id: "2",
   },
   {
     id: "27",
@@ -497,6 +298,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "366",
+    goal_id: "1",
   },
   {
     id: "28",
@@ -507,6 +309,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "104",
+    goal_id: "2",
   },
   {
     id: "29",
@@ -517,6 +320,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "398",
+    goal_id: "2",
   },
   {
     id: "30",
@@ -527,6 +331,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "729",
+    goal_id: "2",
   },
   {
     id: "31",
@@ -537,6 +342,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "409",
+    goal_id: "2",
   },
   {
     id: "32",
@@ -547,6 +353,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "472",
+    goal_id: "2",
   },
   {
     id: "33",
@@ -557,6 +364,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "187",
+    goal_id: "2",
   },
   {
     id: "34",
@@ -567,6 +375,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "490",
+    goal_id: "2",
   },
   {
     id: "35",
@@ -577,6 +386,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "218",
+    goal_id: "2",
   },
   {
     id: "36",
@@ -587,6 +397,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "505",
+    goal_id: "2",
   },
   {
     id: "37",
@@ -597,6 +408,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "506",
+    goal_id: "1",
   },
   {
     id: "38",
@@ -607,6 +419,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "612",
+    goal_id: "2",
   },
   {
     id: "39",
@@ -617,6 +430,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "517",
+    goal_id: "2",
   },
   {
     id: "40",
@@ -627,6 +441,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "220",
+    goal_id: "2",
   },
   {
     id: "41",
@@ -637,6 +452,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "532",
+    goal_id: "2",
   },
   {
     id: "42",
@@ -647,6 +463,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "534",
+    goal_id: "2",
   },
   {
     id: "43",
@@ -657,6 +474,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "552",
+    goal_id: "2",
   },
   {
     id: "44",
@@ -667,6 +485,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "588",
+    goal_id: "2",
   },
   {
     id: "45",
@@ -677,6 +496,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/artistic-subjects",
     id_p: "164",
+    goal_id: "3",
   },
   {
     id: "46",
@@ -687,6 +507,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/artistic-subjects",
     id_p: "605",
+    goal_id: "2",
   },
   {
     id: "47",
@@ -697,6 +518,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "603",
+    goal_id: "2",
   },
   {
     id: "48",
@@ -707,6 +529,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "614",
+    goal_id: "1",
   },
   {
     id: "49",
@@ -717,6 +540,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "223",
+    goal_id: "2",
   },
   {
     id: "50",
@@ -727,6 +551,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "459",
+    goal_id: "2",
   },
   {
     id: "51",
@@ -737,6 +562,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "460",
+    goal_id: "2",
   },
   {
     id: "52",
@@ -747,6 +573,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "192",
+    goal_id: "2",
   },
   {
     id: "53",
@@ -757,6 +584,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/school-subjects-2",
     id_p: "106",
+    goal_id: "2",
   },
   {
     id: "54",
@@ -767,6 +595,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "650",
+    goal_id: "2",
   },
   {
     id: "55",
@@ -777,6 +606,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "108",
+    goal_id: "2",
   },
   {
     id: "56",
@@ -787,6 +617,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "229",
+    goal_id: "2",
   },
   {
     id: "57",
@@ -797,6 +628,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "625",
+    goal_id: "1",
   },
   {
     id: "58",
@@ -807,6 +639,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects-2",
     id_p: "664",
+    goal_id: "2",
   },
   {
     id: "59",
@@ -817,6 +650,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "230",
+    goal_id: "2",
   },
   {
     id: "60",
@@ -827,6 +661,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "467",
+    goal_id: "2",
   },
   {
     id: "61",
@@ -837,6 +672,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "468",
+    goal_id: "2",
   },
   {
     id: "62",
@@ -847,6 +683,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "672",
+    goal_id: "2",
   },
   {
     id: "63",
@@ -857,6 +694,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects",
     id_p: "685",
+    goal_id: "1",
   },
   {
     id: "64",
@@ -867,6 +705,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "713",
+    goal_id: "2",
   },
   {
     id: "65",
@@ -877,6 +716,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects-2",
     id_p: "714",
+    goal_id: "2",
   },
   {
     id: "66",
@@ -887,6 +727,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "232",
+    goal_id: "2",
   },
   {
     id: "67",
@@ -897,6 +738,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/path",
     id_p: "715",
+    goal_id: "2",
   },
   {
     id: "68",
@@ -907,6 +749,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "233",
+    goal_id: "2",
   },
   {
     id: "69",
@@ -917,6 +760,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "746",
+    goal_id: "2",
   },
   {
     id: "70",
@@ -927,6 +771,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/school-subjects-no-ege",
     id_p: "717",
+    goal_id: "2",
   },
   {
     id: "71",
@@ -937,6 +782,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "195",
+    goal_id: "2",
   },
   {
     id: "72",
@@ -947,6 +793,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/japanese",
     id_p: "752",
+    goal_id: "2",
   },
   {
     id: "73",
@@ -957,6 +804,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "2",
+    goal_id: "2",
   },
   {
     id: "74",
@@ -967,6 +815,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "3",
+    goal_id: "2",
   },
   {
     id: "75",
@@ -977,6 +826,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "4",
+    goal_id: "2",
   },
   {
     id: "76",
@@ -987,6 +837,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "6",
+    goal_id: "2",
   },
   {
     id: "77",
@@ -997,6 +848,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "7",
+    goal_id: "2",
   },
   {
     id: "78",
@@ -1007,6 +859,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "8",
+    goal_id: "2",
   },
   {
     id: "79",
@@ -1017,6 +870,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "9",
+    goal_id: "2",
   },
   {
     id: "80",
@@ -1027,6 +881,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "10",
+    goal_id: "2",
   },
   {
     id: "81",
@@ -1037,6 +892,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "11",
+    goal_id: "2",
   },
   {
     id: "82",
@@ -1047,6 +903,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "12",
+    goal_id: "2",
   },
   {
     id: "83",
@@ -1057,6 +914,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "13",
+    goal_id: "2",
   },
   {
     id: "84",
@@ -1067,6 +925,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "14",
+    goal_id: "2",
   },
   {
     id: "85",
@@ -1077,6 +936,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "15",
+    goal_id: "2",
   },
   {
     id: "86",
@@ -1087,6 +947,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "16",
+    goal_id: "2",
   },
   {
     id: "87",
@@ -1097,6 +958,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "17",
+    goal_id: "2",
   },
   {
     id: "88",
@@ -1107,6 +969,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "18",
+    goal_id: "2",
   },
   {
     id: "89",
@@ -1117,6 +980,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "19",
+    goal_id: "2",
   },
   {
     id: "90",
@@ -1127,6 +991,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "20",
+    goal_id: "2",
   },
   {
     id: "91",
@@ -1137,6 +1002,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "21",
+    goal_id: "2",
   },
   {
     id: "92",
@@ -1147,6 +1013,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "22",
+    goal_id: "2",
   },
   {
     id: "93",
@@ -1157,6 +1024,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "23",
+    goal_id: "2",
   },
   {
     id: "94",
@@ -1167,6 +1035,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "24",
+    goal_id: "2",
   },
   {
     id: "95",
@@ -1177,6 +1046,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "25",
+    goal_id: "2",
   },
   {
     id: "96",
@@ -1187,6 +1057,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "26",
+    goal_id: "2",
   },
   {
     id: "97",
@@ -1197,6 +1068,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "27",
+    goal_id: "2",
   },
   {
     id: "98",
@@ -1207,6 +1079,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "28",
+    goal_id: "2",
   },
   {
     id: "99",
@@ -1217,6 +1090,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "29",
+    goal_id: "2",
   },
   {
     id: "100",
@@ -1227,6 +1101,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "30",
+    goal_id: "2",
   },
   {
     id: "101",
@@ -1237,6 +1112,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "31",
+    goal_id: "2",
   },
   {
     id: "102",
@@ -1247,6 +1123,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "32",
+    goal_id: "2",
   },
   {
     id: "103",
@@ -1257,6 +1134,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "33",
+    goal_id: "2",
   },
   {
     id: "104",
@@ -1267,6 +1145,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "34",
+    goal_id: "2",
   },
   {
     id: "105",
@@ -1277,6 +1156,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "35",
+    goal_id: "2",
   },
   {
     id: "106",
@@ -1287,6 +1167,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "36",
+    goal_id: "2",
   },
   {
     id: "107",
@@ -1297,6 +1178,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "37",
+    goal_id: "2",
   },
   {
     id: "108",
@@ -1307,6 +1189,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "38",
+    goal_id: "2",
   },
   {
     id: "109",
@@ -1317,6 +1200,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "39",
+    goal_id: "2",
   },
   {
     id: "110",
@@ -1327,6 +1211,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "40",
+    goal_id: "2",
   },
   {
     id: "111",
@@ -1337,6 +1222,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "42",
+    goal_id: "2",
   },
   {
     id: "112",
@@ -1347,6 +1233,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "44",
+    goal_id: "2",
   },
   {
     id: "113",
@@ -1357,6 +1244,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "45",
+    goal_id: "2",
   },
   {
     id: "114",
@@ -1367,6 +1255,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "46",
+    goal_id: "2",
   },
   {
     id: "115",
@@ -1377,6 +1266,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "47",
+    goal_id: "2",
   },
   {
     id: "116",
@@ -1387,6 +1277,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "48",
+    goal_id: "2",
   },
   {
     id: "117",
@@ -1397,6 +1288,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "49",
+    goal_id: "2",
   },
   {
     id: "118",
@@ -1407,6 +1299,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "50",
+    goal_id: "2",
   },
   {
     id: "119",
@@ -1417,6 +1310,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "51",
+    goal_id: "2",
   },
   {
     id: "120",
@@ -1427,6 +1321,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "52",
+    goal_id: "2",
   },
   {
     id: "121",
@@ -1437,6 +1332,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "53",
+    goal_id: "2",
   },
   {
     id: "122",
@@ -1447,6 +1343,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "54",
+    goal_id: "2",
   },
   {
     id: "123",
@@ -1457,6 +1354,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "55",
+    goal_id: "2",
   },
   {
     id: "124",
@@ -1467,6 +1365,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "56",
+    goal_id: "2",
   },
   {
     id: "125",
@@ -1477,6 +1376,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "57",
+    goal_id: "2",
   },
   {
     id: "126",
@@ -1487,6 +1387,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "58",
+    goal_id: "2",
   },
   {
     id: "127",
@@ -1497,6 +1398,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "59",
+    goal_id: "2",
   },
   {
     id: "128",
@@ -1507,6 +1409,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "60",
+    goal_id: "2",
   },
   {
     id: "129",
@@ -1517,6 +1420,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "61",
+    goal_id: "2",
   },
   {
     id: "130",
@@ -1527,6 +1431,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "62",
+    goal_id: "2",
   },
   {
     id: "131",
@@ -1537,6 +1442,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "63",
+    goal_id: "2",
   },
   {
     id: "132",
@@ -1547,6 +1453,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "64",
+    goal_id: "2",
   },
   {
     id: "133",
@@ -1557,6 +1464,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "65",
+    goal_id: "2",
   },
   {
     id: "134",
@@ -1567,6 +1475,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "66",
+    goal_id: "2",
   },
   {
     id: "135",
@@ -1577,6 +1486,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "67",
+    goal_id: "2",
   },
   {
     id: "136",
@@ -1587,6 +1497,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "68",
+    goal_id: "2",
   },
   {
     id: "137",
@@ -1597,6 +1508,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "69",
+    goal_id: "2",
   },
   {
     id: "138",
@@ -1607,6 +1519,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "70",
+    goal_id: "2",
   },
   {
     id: "139",
@@ -1617,6 +1530,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/school-subjects-no-ege",
     id_p: "71",
+    goal_id: "2",
   },
   {
     id: "140",
@@ -1627,6 +1541,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "73",
+    goal_id: "2",
   },
   {
     id: "141",
@@ -1637,6 +1552,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "74",
+    goal_id: "2",
   },
   {
     id: "142",
@@ -1647,6 +1563,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "75",
+    goal_id: "2",
   },
   {
     id: "143",
@@ -1657,6 +1574,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "76",
+    goal_id: "2",
   },
   {
     id: "144",
@@ -1667,6 +1585,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "78",
+    goal_id: "2",
   },
   {
     id: "145",
@@ -1677,6 +1596,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "79",
+    goal_id: "2",
   },
   {
     id: "146",
@@ -1687,6 +1607,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "80",
+    goal_id: "2",
   },
   {
     id: "147",
@@ -1697,6 +1618,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "81",
+    goal_id: "2",
   },
   {
     id: "148",
@@ -1707,6 +1629,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "82",
+    goal_id: "2",
   },
   {
     id: "149",
@@ -1717,6 +1640,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "83",
+    goal_id: "2",
   },
   {
     id: "150",
@@ -1727,6 +1651,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "84",
+    goal_id: "2",
   },
   {
     id: "151",
@@ -1737,6 +1662,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "85",
+    goal_id: "2",
   },
   {
     id: "152",
@@ -1747,6 +1673,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "86",
+    goal_id: "2",
   },
   {
     id: "153",
@@ -1757,6 +1684,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "87",
+    goal_id: "2",
   },
   {
     id: "154",
@@ -1767,6 +1695,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "89",
+    goal_id: "2",
   },
   {
     id: "155",
@@ -1777,6 +1706,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "90",
+    goal_id: "2",
   },
   {
     id: "156",
@@ -1787,6 +1717,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "91",
+    goal_id: "2",
   },
   {
     id: "157",
@@ -1797,6 +1728,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "92",
+    goal_id: "2",
   },
   {
     id: "158",
@@ -1807,6 +1739,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "93",
+    goal_id: "2",
   },
   {
     id: "159",
@@ -1817,6 +1750,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "94",
+    goal_id: "2",
   },
   {
     id: "160",
@@ -1827,6 +1761,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "95",
+    goal_id: "2",
   },
   {
     id: "161",
@@ -1837,6 +1772,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "96",
+    goal_id: "2",
   },
   {
     id: "162",
@@ -1847,6 +1783,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "97",
+    goal_id: "2",
   },
   {
     id: "163",
@@ -1857,6 +1794,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "98",
+    goal_id: "2",
   },
   {
     id: "164",
@@ -1867,6 +1805,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "99",
+    goal_id: "2",
   },
   {
     id: "165",
@@ -1877,6 +1816,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "100",
+    goal_id: "2",
   },
   {
     id: "166",
@@ -1887,6 +1827,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "101",
+    goal_id: "2",
   },
   {
     id: "167",
@@ -6167,6 +6108,7 @@ export const data: Subject[] = [
     general: false,
     nextPage: "/match/goal/path",
     id_p: "578",
+    goal_id: "2",
   },
   {
     id: "567",

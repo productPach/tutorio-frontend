@@ -1,5 +1,6 @@
 import { fetchGetAllOrders } from "@/api/server/orderApi";
 import { Order } from "@/types/types";
+import { getFiltersOrdersForTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const getAllOrders = createAsyncThunk<
@@ -31,13 +32,16 @@ type OrdersStateType =  {
     };
 }
 
+// Получаем данные репетитора из localStorage, если они есть
+const initialFilters = getFiltersOrdersForTutorFromLocalStorage();
+
 const initialState: OrdersStateType = {
     orders: [],
     loading: false,
     error: null as string | null,
     filters: {
-      selectedPlaceFilters: [],
-      selectedGoalFilters: [],
+      selectedPlaceFilters: initialFilters.placeFilters?.length > 0 ? initialFilters.placeFilters : [],
+      selectedGoalFilters: initialFilters.goalFilters?.length > 0 ? initialFilters.goalFilters : [],
     },
 };
 
@@ -48,6 +52,8 @@ const ordersSlice = createSlice({
     setOrderFilters(state, action: PayloadAction<{ placeFilters: string[]; goalFilters: string[] }>) {
       state.filters.selectedPlaceFilters = action.payload.placeFilters;
       state.filters.selectedGoalFilters = action.payload.goalFilters;
+      setLocalStorage("place-filters-orders", state.filters.selectedPlaceFilters);
+      setLocalStorage("goal-filters-orders", state.filters.selectedGoalFilters);
     },
     clearFilters(state) {
       state.filters.selectedPlaceFilters = [];

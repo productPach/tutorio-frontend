@@ -72,6 +72,12 @@ export type Subject = {
   general: boolean;
   nextPage: string;
   id_p: string;
+  goal_id?: string;
+};
+
+export type GoalForSubject = {
+  id: string;
+  goals: string[];
 };
 
 // Определяем тип для объекта заказа в массиве
@@ -123,6 +129,7 @@ export type City = {
   id: string;
   title: string;
   area: string;
+  shortTitle: string;
   districts: District[];
   regionalCities: RegionalCity[]
 };

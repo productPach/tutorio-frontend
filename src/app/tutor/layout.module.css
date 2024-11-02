@@ -322,8 +322,8 @@
   width: fit-content;
 }
 
-.sidebar_geo {
-  padding: 16px 18px;
+.sidebar_container_geo {
+  padding: 11px 18px;
   border-radius: 10px;
   border: 1px solid #e9e9e9;
   cursor: pointer;
@@ -333,6 +333,64 @@
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none;
+}
+
+.sidebar_geo {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.sidebar_geo_select_region {
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s all;
+}
+
+.sidebar_geo_select_region.open {
+  padding: 20px 0 0 0;
+  max-height: 260px;
+}
+
+.sidebar_geo_select_region input {
+  width: -webkit-fill-available;
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid #e9e9e9;
+  font-family: "Source Sans 3", sans-serif;
+  color: #333333;
+  font-size: 16px;
+}
+
+.sidebar_geo_select_region input:focus {
+  outline: none;
+  border: 1px solid #fad949;
+}
+
+.listRegion {
+  padding: 15px 0;
+  overflow-y: scroll;
+  max-height: inherit;
+}
+
+/* Скрытие полосы прокрутки для WebKit-браузеров (Chrome, Safari) */
+.listRegion::-webkit-scrollbar {
+  display: none;
+}
+
+/* Скрытие полосы прокрутки для Firefox */
+.listRegion {
+  scrollbar-width: none; /* Скрыть полосу прокрутки */
+}
+
+/* Скрытие для Edge */
+.listRegion {
+  -ms-overflow-style: none; /* Скрыть полосу прокрутки */
+}
+
+.listRegion_region {
+  padding: 10px 0;
 }
 
 .hgh_100vh {
@@ -352,6 +410,6 @@
 }
 
 .header_geoImage {
-  margin-bottom: -3px;
+  margin-bottom: 2px;
   margin-right: 5px;
 }
