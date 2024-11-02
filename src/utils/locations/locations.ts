@@ -5,6 +5,7 @@ export const locations: City[] = [
     id: "1",
     title: "Москва",
     area: "Московская область",
+    shortTitle: "Москва и область",
     districts: [
       {
         id: "1",
@@ -66,6 +67,7 @@ export const locations: City[] = [
     id: "2",
     title: "Санкт-Петербург",
     area: "Ленинградская область",
+    shortTitle: "Санкт-Петербург и область",
     districts: [
       {
         id: "1325345",
@@ -123,6 +125,7 @@ export const locations: City[] = [
     id: "3",
     title: "Волгоград",
     area: "Волгоградская область",
+    shortTitle: "Волгоградская область",
     districts: [],
     regionalCities: []
   },
@@ -130,6 +133,7 @@ export const locations: City[] = [
     id: "4",
     title: "Самара",
     area: "Самарская область",
+    shortTitle: "Самарская область",
     districts: [],
     regionalCities: []
   },
@@ -137,6 +141,7 @@ export const locations: City[] = [
     id: "5",
     title: "Пенза",
     area: "Пензенская область",
+    shortTitle: "Пензенская область",
     districts: [],
     regionalCities: []
   },
@@ -144,6 +149,7 @@ export const locations: City[] = [
     id: "6",
     title: "Владивосток",
     area: "Приморский край",
+    shortTitle: "Приморский край",
     districts: [],
     regionalCities: []
   },
@@ -151,6 +157,7 @@ export const locations: City[] = [
     id: "7",
     title: "Ростов-на-Дону",
     area: "Ростовская область",
+    shortTitle: "Ростовская область",
     districts: [],
     regionalCities: []
   },
@@ -158,6 +165,7 @@ export const locations: City[] = [
     id: "8",
     title: "Луганск",
     area: "Луганская область",
+    shortTitle: "Луганская область",
     districts: [],
     regionalCities: []
   },
@@ -165,6 +173,7 @@ export const locations: City[] = [
     id: "9",
     title: "Донецк",
     area: "Донецкая область",
+    shortTitle: "Донецкая область",
     districts: [],
     regionalCities: []
   },
@@ -172,6 +181,7 @@ export const locations: City[] = [
     id: "10",
     title: "Мариуполь",
     area: "Донецкая область",
+    shortTitle: "Донецкая область",
     districts: [],
     regionalCities: []
   },
@@ -179,6 +189,7 @@ export const locations: City[] = [
     id: "11",
     title: "Саратов",
     area: "Саратовская область",
+    shortTitle: "Саратовская область",
     districts: [],
     regionalCities: []
   },
@@ -186,6 +197,7 @@ export const locations: City[] = [
     id: "12",
     title: "Вологда",
     area: "Вологодская область",
+    shortTitle: "Вологодская област",
     districts: [],
     regionalCities: []
   },
@@ -193,6 +205,7 @@ export const locations: City[] = [
     id: "13",
     title: "Рыбинск",
     area: "Ярославская область",
+    shortTitle: "Ярославская область",
     districts: [],
     regionalCities: []
   },
@@ -200,6 +213,7 @@ export const locations: City[] = [
     id: "14",
     title: "Салехард",
     area: "Ямало-Ненецкий АО",
+    shortTitle: "Ямало-Ненецкий АО",
     districts: [],
     regionalCities: []
   },

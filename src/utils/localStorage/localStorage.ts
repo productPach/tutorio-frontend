@@ -40,3 +40,14 @@ export const setLocalStorage = (key: string, value: string | object) => {
     }
   };
   
+    // Функция загрузки фильтров на странице всех заказов в личном кабинете репетитора из Local Storage
+    export const getFiltersOrdersForTutorFromLocalStorage = () => {
+      try {
+        const placeFilters = JSON.parse(getLocalStorage("place-filters-orders") || "[]");
+        const goalFilters = JSON.parse(getLocalStorage("goal-filters-orders") || "[]");
+        return { placeFilters, goalFilters };
+      } catch (error) {
+        console.warn("Ошибка при парсинге JSON:", error);
+        return { placeFilters: [], goalFilters: [] }; // Возвращаем пустые массивы в случае ошибки
+      }
+    };
