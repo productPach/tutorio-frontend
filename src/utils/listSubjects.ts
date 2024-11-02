@@ -2,7 +2,7 @@
 
 import { Subject } from "@/types/types";
 
-// export const data = [
+// export const data2 = [
 //   {
 //     id: 0,
 //     title: "Алгебра",
