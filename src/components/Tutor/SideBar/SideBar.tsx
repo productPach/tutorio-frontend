@@ -4,7 +4,7 @@ import styles from "../../../app/tutor/layout.module.css";
 import inputStyles from "../../../app/tutor/input.module.css";
 import clsx from "clsx";
 import React, { ChangeEvent, useState } from "react";
-import { setOrderFilters } from "@/store/features/orderSlice";
+import { getAllOrders, setOrderFilters } from "@/store/features/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { data } from "@/utils/listSubjects";
@@ -16,6 +16,7 @@ import { Tutor } from "@/types/types";
 
 const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor) as Tutor;
   const selectedPlaceFilters = useSelector(
     (state: RootState) => state.orders.filters.selectedPlaceFilters
@@ -123,6 +124,8 @@ const SideBar = () => {
         setInputRegionValue("");
         setRegionList(regionArr);
       }, 500);
+
+      token && dispatch(getAllOrders(token));
     }
   };
 
