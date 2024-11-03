@@ -353,6 +353,21 @@
   max-height: 260px;
 }
 
+.select_region_container {
+  transition:
+    opacity 0.3s ease,
+    max-height 0.3s ease;
+  opacity: 1;
+  max-height: 260px;
+}
+
+.select_region_container.close {
+  transition:
+    opacity 0.3s ease,
+    max-height 0.3s ease;
+  opacity: 0;
+}
+
 .sidebar_geo_select_region input {
   width: -webkit-fill-available;
   padding: 16px 18px;
