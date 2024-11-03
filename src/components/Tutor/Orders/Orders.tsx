@@ -39,6 +39,17 @@ const Orders = () => {
         (order) =>
           tutor?.subject &&
           tutor.subject.some((subject) => order.subject?.includes(subject))
+      )
+      .filter(
+        (order) =>
+          tutor?.region === order.region ||
+          (tutor?.region !== order.region &&
+            order.studentPlace?.includes("Дистанционно") &&
+            ((!filters.selectedPlaceFilters.includes("У репетитора") &&
+              !filters.selectedPlaceFilters.includes("У меня дома")) ||
+              ((filters.selectedPlaceFilters.includes("У репетитора") ||
+                filters.selectedPlaceFilters.includes("У меня дома")) &&
+                filters.selectedPlaceFilters.includes("Дистанционно"))))
       );
 
     // Применяем оба фильтра, если они заданы
