@@ -10,10 +10,13 @@ import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { data } from "@/utils/listSubjects";
 import { listGoalForSubjects } from "@/utils/subjects/goalForSubjects";
 import { locations } from "@/utils/locations/locations";
+import { setRegionUser } from "@/store/features/authSlice";
+import { setTutor } from "@/store/features/tutorSlice";
+import { Tutor } from "@/types/types";
 
 const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const tutor = useAppSelector((state) => state.tutor.tutor) as Tutor;
   const selectedPlaceFilters = useSelector(
     (state: RootState) => state.orders.filters.selectedPlaceFilters
   );
@@ -73,6 +76,8 @@ const SideBar = () => {
 
   // Стейт для меню с регионами
   const [regionMenu, setRegionMenu] = useState(false);
+  // Стейт для значения инпута поиска региона
+  const [inputRegionValue, setInputRegionValue] = useState<string>("");
 
   const handleRegionSelect = () => {
     setRegionMenu((state) => !state);
@@ -83,6 +88,7 @@ const SideBar = () => {
 
   const handleInputRegion = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase(); // Преобразуем значение ввода в нижний регистр для поиска
+    setInputRegionValue(searchValue);
 
     const filterRegionList = locations
       .filter(
@@ -93,6 +99,31 @@ const SideBar = () => {
       .map((region) => region.shortTitle);
 
     setRegionList(filterRegionList);
+  };
+
+  const changeRegion = (region: string) => {
+    const userRegionObj = locations.find((item) => item.shortTitle === region);
+    if (userRegionObj) {
+      setRegionMenu(false);
+      // Обновляем регион в объекте юзера
+      const userRegion = {
+        city: userRegionObj.title,
+        area: userRegionObj.area,
+      };
+      // Обновляем регион в объекте репетитора
+      const updateTutor = {
+        ...tutor,
+        region: userRegionObj.title,
+      };
+      dispatch(setRegionUser(userRegion));
+      dispatch(setTutor(updateTutor));
+      localStorage.setItem("region-user", JSON.stringify(userRegion));
+      localStorage.setItem("tutor", JSON.stringify(updateTutor));
+      setTimeout(() => {
+        setInputRegionValue("");
+        setRegionList(regionArr);
+      }, 500);
+    }
   };
 
   return (
@@ -151,7 +182,7 @@ const SideBar = () => {
                 height={18}
                 className={styles.header_geoImage}
               />
-              Москва
+              {tutor?.region}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -171,17 +202,24 @@ const SideBar = () => {
                 [styles.open]: regionMenu,
               })}
             >
-              <input
-                id="selectRegionInput"
-                type="text"
-                placeholder="Поиск региона"
-                autoComplete="off"
-                onChange={handleInputRegion}
-              />
+              <div className={styles.select_region_input_container}>
+                <input
+                  id="selectRegionInput"
+                  type="text"
+                  placeholder="Поиск региона"
+                  autoComplete="off"
+                  value={inputRegionValue}
+                  onChange={handleInputRegion}
+                />
+              </div>
 
               <div className={styles.listRegion}>
                 {regionList.map((region, index) => (
-                  <div className={styles.listRegion_region} key={index}>
+                  <div
+                    className={styles.listRegion_region}
+                    key={index}
+                    onClick={() => changeRegion(region)}
+                  >
                     {region}
                   </div>
                 ))}

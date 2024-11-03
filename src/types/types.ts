@@ -43,7 +43,7 @@ export type Tutor = {
   email: string;
   avatarUrl: string;
   subject: string[];
-  geo: string;
+  region: string;
   tutorPlace: string[];
   tutorAdress: string;
   tutorTrip: string[];
