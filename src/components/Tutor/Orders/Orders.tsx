@@ -168,6 +168,10 @@ const Orders = () => {
             ? order.studentAdress + " // "
             : null;
 
+          const studentHomeLoc = order.studentHomeLoc
+            ? order.studentHomeLoc
+            : null;
+
           const studentTrip = order.studentTrip ? order.studentTrip : null;
 
           let remoteLessons;
@@ -180,6 +184,12 @@ const Orders = () => {
           }
 
           // Сделать вывод ближайших локаций к адресу ученика
+          let firstLocationHome;
+          let countHome;
+          if (studentPlace?.includes("У меня дома") && studentHomeLoc) {
+            firstLocationHome = findTitleById(studentHomeLoc[0]);
+            countHome = studentHomeLoc.length - 1;
+          }
 
           // Вывод локаций, куда ученик готов выезжать
           let firstLocationTrip;
@@ -281,19 +291,41 @@ const Orders = () => {
                       />
                     </svg>
                     <span className={styles.order_block_flx_rw_flxstrt_text}>
-                      Занятия у ученика —
+                      Занятия у ученика
+                      {studentHomeLoc && studentHomeLoc?.length > 0 && <> — </>}
                       <div className={locationsStyles.crcl_mtr_wrap}>
-                        <div className={locationsStyles.crcl_mtr_container}>
-                          <div
+                        {firstLocationHome?.lineNumber && (
+                          <div className={locationsStyles.crcl_mtr_container}>
+                            <div
+                              className={clsx(
+                                styles.order_block,
+                                locationsStyles.crcl_mtr,
+                                locationsStyles[
+                                  `crcl_mtr_msk_${firstLocationHome?.lineNumber}`
+                                ]
+                              )}
+                            ></div>
+                            {/* <div
                             className={clsx(
                               styles.order_block,
                               locationsStyles.crcl_mtr,
                               locationsStyles.crcl_mtr_msk_7
                             )}
-                          ></div>
-                        </div>
+                          ></div> */}
+                          </div>
+                        )}
                       </div>
-                      Кузьминки
+                      {firstLocationHome?.title}
+                      <span
+                        className={clsx(
+                          styles.order_block_flx_rw_subtext,
+                          generalStyles.mrgnLt5
+                        )}
+                      >
+                        {studentHomeLoc &&
+                          studentHomeLoc?.length > 1 &&
+                          `и ещё ${countHome}`}
+                      </span>
                     </span>
                   </div>
                 )}
