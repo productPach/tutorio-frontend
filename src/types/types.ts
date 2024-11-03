@@ -101,6 +101,7 @@ export type Order = {
   region?: string;
   studentPlace?: string[];
   studentAdress?: string;
+  studentHomeLoc?: string[];
   studentTrip?: string[]; // заменить на массив
   tutorType?: string;
   studentWishes?: string;
