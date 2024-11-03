@@ -368,8 +368,13 @@
   border: 1px solid #fad949;
 }
 
+.select_region_input_container {
+  position: relative;
+  box-shadow: 0 0 11px 25px #fff;
+}
+
 .listRegion {
-  padding: 15px 0;
+  padding: 17px 0 0 0;
   overflow-y: scroll;
   max-height: inherit;
 }
