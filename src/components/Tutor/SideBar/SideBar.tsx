@@ -202,27 +202,37 @@ const SideBar = () => {
                 [styles.open]: regionMenu,
               })}
             >
-              <div className={styles.select_region_input_container}>
-                <input
-                  id="selectRegionInput"
-                  type="text"
-                  placeholder="Поиск региона"
-                  autoComplete="off"
-                  value={inputRegionValue}
-                  onChange={handleInputRegion}
-                />
-              </div>
+              <div
+                className={clsx(styles.select_region_container, {
+                  [styles.close]: !regionMenu,
+                })}
+              >
+                <div
+                  className={clsx(styles.select_region_input_container, {
+                    [styles.close]: !regionMenu,
+                  })}
+                >
+                  <input
+                    id="selectRegionInput"
+                    type="text"
+                    placeholder="Поиск региона"
+                    autoComplete="off"
+                    value={inputRegionValue}
+                    onChange={handleInputRegion}
+                  />
+                </div>
 
-              <div className={styles.listRegion}>
-                {regionList.map((region, index) => (
-                  <div
-                    className={styles.listRegion_region}
-                    key={index}
-                    onClick={() => changeRegion(region)}
-                  >
-                    {region}
-                  </div>
-                ))}
+                <div className={styles.listRegion}>
+                  {regionList.map((region, index) => (
+                    <div
+                      className={styles.listRegion_region}
+                      key={index}
+                      onClick={() => changeRegion(region)}
+                    >
+                      {region}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
