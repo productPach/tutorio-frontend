@@ -7,27 +7,43 @@ import {
 } from "@headlessui/react";
 import { Fragment } from "react";
 import styles from "../Modal/Modal.module.css";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setModalSelectCity } from "@/store/features/modalSlice";
+import { useAppDispatch } from "@/store/store";
+import {
+  setIsModalBalanceBoost,
+  setModalSelectCity,
+} from "@/store/features/modalSlice";
 
 interface ModalProps {
   titleModal: string;
   contentModal: React.ReactNode;
+  isModal: boolean;
+  modalId: string;
 }
-export const Modal: React.FC<ModalProps> = ({ titleModal, contentModal }) => {
+export const Modal: React.FC<ModalProps> = ({
+  titleModal,
+  contentModal,
+  isModal,
+  modalId,
+}) => {
   const dispatch = useAppDispatch();
-  // Получаем значение isModalSelectCity из Redux
-  const isModalSelectCity = useAppSelector(
-    (state) => state.modal.isModalSelectCity
-  );
+
+  const closeModal = () => {
+    if (modalId === "selectCity") {
+      dispatch(setModalSelectCity(false));
+    }
+    if (modalId === "balanceBoost") {
+      dispatch(setIsModalBalanceBoost(false));
+    }
+  };
+
   return (
     <>
       {/* Модальное окно с анимацией */}
-      <Transition show={isModalSelectCity} as={Fragment}>
+      <Transition show={isModal} as={Fragment}>
         <Dialog
           as="div"
           className={styles.dialogOverlay}
-          onClose={() => dispatch(setModalSelectCity(false))}
+          onClose={() => closeModal()}
         >
           <Transition.Child
             as={Fragment}
@@ -56,7 +72,7 @@ export const Modal: React.FC<ModalProps> = ({ titleModal, contentModal }) => {
                 {contentModal}
                 <button
                   className={styles.closeButton}
-                  onClick={() => dispatch(setModalSelectCity(false))}
+                  onClick={() => closeModal()}
                 >
                   ✕
                 </button>
