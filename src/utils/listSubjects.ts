@@ -23,7 +23,7 @@ export const data: Subject[] = [
     general: true,
     nextPage: "/match/goal/english",
     id_p: "5",
-    goal_id: "2",
+    goal_id: "7",
   },
   {
     id: "3",

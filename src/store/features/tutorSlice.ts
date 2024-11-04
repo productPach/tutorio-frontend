@@ -91,6 +91,7 @@ type TutorStateType = {
   loading: boolean;
   selectedValuesCity: (District | Metro)[];
   selectedValuesArea: RegionalCity[];
+  supportMenu: boolean;
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -101,6 +102,7 @@ const initialState: TutorStateType = {
   loading: false,
   selectedValuesCity: [],
   selectedValuesArea: [],
+  supportMenu: false
 };
 
 const tutorSlice = createSlice({
@@ -118,7 +120,10 @@ const tutorSlice = createSlice({
     },
     setSelectedValuesArea: (state, action: PayloadAction<RegionalCity[]>) => {
         state.selectedValuesArea = action.payload;
-      },
+    },
+    setSupportMenu: (state, action: PayloadAction<boolean>) => {
+      state.supportMenu = action.payload;
+  },
   },
   extraReducers(builder) {
     builder
@@ -164,5 +169,5 @@ const tutorSlice = createSlice({
   },
 });
 
-export const { setTutor, setTutorLogout, setSelectedValuesCity, setSelectedValuesArea } = tutorSlice.actions;
+export const { setTutor, setTutorLogout, setSelectedValuesCity, setSelectedValuesArea, setSupportMenu } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;

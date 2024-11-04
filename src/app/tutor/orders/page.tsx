@@ -16,10 +16,12 @@ const TutorOrders: React.FC = () => {
     localStorage.removeItem("_cr-tripData");
   }, []);
 
+  const page = "Orders";
+
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
-        <LeftBar />
+        <LeftBar page={page} />
         <div className={styles.content}>
           <OnboardScreen />
           <Orders />

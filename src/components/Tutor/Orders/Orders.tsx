@@ -225,7 +225,7 @@ const Orders = () => {
                 styles.crsr_pntr
               )}
             >
-              <Link href={"order/"}>
+              <Link href={`${order.id}`}>
                 <div className={styles.order_block_flx_rw_spbtw}>
                   <h3>{subject?.title}</h3>
                   <span className={styles.order_block_flx_rw_spbtw_price}>
