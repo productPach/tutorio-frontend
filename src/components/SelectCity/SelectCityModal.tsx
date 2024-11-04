@@ -62,6 +62,11 @@ export const SelectCityModal = () => {
       });
   }
 
+  // Получаем значение isModalSelectCity из Redux
+  const isModalSelectCity = useAppSelector(
+    (state) => state.modal.isModalSelectCity
+  );
+
   return (
     <>
       <div
@@ -83,6 +88,8 @@ export const SelectCityModal = () => {
       <Modal
         titleModal={"Укажите местоположение"}
         contentModal={<SelectCity />}
+        isModal={isModalSelectCity}
+        modalId={"selectCity"}
       ></Modal>
     </>
   );

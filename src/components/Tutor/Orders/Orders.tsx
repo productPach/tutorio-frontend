@@ -14,11 +14,20 @@ import { getYearWord } from "@/utils/words/getYearWord";
 import { findTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
+import { Modal } from "@/components/Modal/Modal";
+import { BalanceBoost } from "../Modal/BalanceBoost/BalanceBoost";
+import {
+  setIsModalBalanceBoost,
+  setValueModalBalanceBoost,
+} from "@/store/features/modalSlice";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const isModalBalanceBoost = useAppSelector(
+    (state) => state.modal.isModalBalanceBoost
+  );
   const { orders, loading, error, filters } = useSelector(
     (state: RootState) => state.orders
   );
@@ -415,9 +424,18 @@ const Orders = () => {
                     generalStyles.mrgnTp10
                   )}
                 >
-                  <button className={styles.buttonYlw} type="button">
+                  <button
+                    className={styles.buttonYlw}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(setIsModalBalanceBoost(true));
+                      dispatch(setValueModalBalanceBoost("340"));
+                    }}
+                    type="button"
+                  >
                     Откликнуться
                   </button>
+
                   <span className={styles.order_block_flx_rw_subtext}>
                     {formatTimeAgo(order.createdAt)}
                   </span>
@@ -442,6 +460,12 @@ const Orders = () => {
           </button> */}
         </div>
       )}
+      <Modal
+        titleModal={"Пополните баланс, чтобы откликнуться"}
+        contentModal={<BalanceBoost />}
+        isModal={isModalBalanceBoost}
+        modalId={"balanceBoost"}
+      ></Modal>
     </>
   );
 };

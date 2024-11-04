@@ -1,7 +1,7 @@
 "use client";
 import { locations } from "@/utils/locations/locations";
 import styles from "../SelectCity/SelectCityModal.module.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { setSelectedValues } from "@/store/features/matchSlice";
