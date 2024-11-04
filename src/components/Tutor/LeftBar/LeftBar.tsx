@@ -1,21 +1,28 @@
 "use client";
 import styles from "../../../app/tutor/layout.module.css";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { setLocalStorage } from "@/utils/localStorage/localStorage";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/store/store";
+import { setSupportMenu } from "@/store/features/tutorSlice";
 
-const LeftBar = () => {
+const LeftBar: React.FC<{ page: string }> = ({ page }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   // Стейт для меню с ссылками помощи
-  const [supportMenu, setSupportMenu] = useState(false);
-
+  const supportMenu = useAppSelector((state) => state.tutor.supportMenu);
   const handleSupportMenu = () => {
-    setSupportMenu((state) => !state);
+    dispatch(setSupportMenu(!supportMenu));
   };
+
   return (
     <div className={styles.leftbar}>
       <div className={styles.left_menu}>
         <ul>
-          <a href="orders.html">
+          <Link href={"orders"}>
             <li>
               <Image
                 src="../img/icon/tutor/orders.svg"
@@ -24,13 +31,15 @@ const LeftBar = () => {
                 height={32}
               />
               <span
-                className={clsx(styles.left_menu__list_text, styles.undrln)}
+                className={clsx(styles.left_menu__list_text, {
+                  [styles.undrln]: page === "Orders",
+                })}
               >
                 Заказы
               </span>
             </li>
-          </a>
-          <a href="response.html">
+          </Link>
+          <Link href={"responses"}>
             <li>
               <Image
                 src="../img/icon/tutor/response.svg"
@@ -38,11 +47,17 @@ const LeftBar = () => {
                 width={32}
                 height={32}
               />
-              <span className={clsx(styles.left_menu__list_text)}>Отклики</span>
+              <span
+                className={clsx(styles.left_menu__list_text, {
+                  [styles.undrln]: page === "Responses",
+                })}
+              >
+                Отклики
+              </span>
               <span className={styles.count_block}>9</span>
             </li>
-          </a>
-          <a href="profile.html">
+          </Link>
+          <Link href={"profile"}>
             <li>
               <Image
                 src="../img/icon/tutor/profile.svg"
@@ -50,10 +65,16 @@ const LeftBar = () => {
                 width={32}
                 height={32}
               />
-              <span className={clsx(styles.left_menu__list_text)}>Анкета</span>
+              <span
+                className={clsx(styles.left_menu__list_text, {
+                  [styles.undrln]: page === "Profile",
+                })}
+              >
+                Анкета
+              </span>
             </li>
-          </a>
-          <a href="wallet.html">
+          </Link>
+          <Link href={"wallet"}>
             <li>
               <Image
                 src="../img/icon/tutor/balance.svg"
@@ -61,10 +82,16 @@ const LeftBar = () => {
                 width={32}
                 height={32}
               />
-              <span className={clsx(styles.left_menu__list_text)}>Баланс</span>
+              <span
+                className={clsx(styles.left_menu__list_text, {
+                  [styles.undrln]: page === "Wallet",
+                })}
+              >
+                Баланс
+              </span>
             </li>
-          </a>
-          <a href="settings.html">
+          </Link>
+          <Link href={"settings"}>
             <li>
               <Image
                 src="../img/icon/tutor/settings.svg"
@@ -72,11 +99,15 @@ const LeftBar = () => {
                 width={32}
                 height={32}
               />
-              <span className={clsx(styles.left_menu__list_text)}>
+              <span
+                className={clsx(styles.left_menu__list_text, {
+                  [styles.undrln]: page === "Settings",
+                })}
+              >
                 Настройки
               </span>
             </li>
-          </a>
+          </Link>
           <li onClick={() => handleSupportMenu()}>
             <Image
               src="../img/icon/tutor/support.svg"
@@ -105,28 +136,40 @@ const LeftBar = () => {
               [styles.open]: supportMenu,
             })}
           >
-            <a href="wiki.html">
+            <Link href={"wiki"}>
               <li style={{ padding: "12px 0 12px 40px" }}>
-                <span className={clsx(styles.left_menu__list_text)}>
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: page === "Wiki",
+                  })}
+                >
                   База знаний
                 </span>
               </li>
-            </a>
-            <a href="ask-question.html">
+            </Link>
+            <Link href={"new-ticket"}>
               <li style={{ padding: "0 0 12px 40px" }}>
-                <span className={clsx(styles.left_menu__list_text)}>
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: page === "NewTicket",
+                  })}
+                >
                   Создать запрос
                 </span>
               </li>
-            </a>
-            <a href="questions.html">
+            </Link>
+            <Link href={"tickets"}>
               <li style={{ padding: "0 0 12px 40px" }}>
-                <span className={clsx(styles.left_menu__list_text)}>
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: page === "Tickets",
+                  })}
+                >
                   Мои запросы
                 </span>
                 <span className={styles.count_block}>3</span>
               </li>
-            </a>
+            </Link>
           </ul>
         </ul>
       </div>
