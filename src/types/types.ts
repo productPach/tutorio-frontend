@@ -84,6 +84,7 @@ export type GoalForSubject = {
 export type Order = {
   id: number;
   createdAt: Date;
+  studentId: string;
   subject?: string;
   goal?: string;
   studentClass?: string;
@@ -105,6 +106,7 @@ export type Order = {
   studentTrip?: string[]; // заменить на массив
   tutorType?: string;
   studentWishes?: string;
+  responseCost: string;
   [key: string]: any;
   status: string;
 };

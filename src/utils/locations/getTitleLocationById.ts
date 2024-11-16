@@ -6,7 +6,7 @@ interface TitleWithLine {
   }
 
 // Функция для поиска title по id
-export const findTitleById = (id: string): TitleWithLine | null => {
+export const findLocTitleById = (id: string): TitleWithLine | null => {
     for (const city of locations) {
         // Поиск по массиву метро в каждом районе
         for (const district of city.districts) {
@@ -27,21 +27,27 @@ export const findTitleById = (id: string): TitleWithLine | null => {
       return null;
     }
 
-  export const findTitlesByIds = (ids: string[]): (string | null)[] => {
-    return ids.map((id) => {
-      for (const city of locations) {
-        // Поиск по массиву метро в каждом районе
-        for (const district of city.districts) {
-          const metro = district.metros.find((metro) => metro.id === id);
-          if (metro) return metro.title;
+    export const findLocTitlesByIds = (ids: string[]): (TitleWithLine | string)[] => {
+      return ids.map((id) => {
+        for (const city of locations) {
+          // Поиск по массиву метро в каждом районе
+          for (const district of city.districts) {
+            const metro = district.metros.find((metro) => metro.id === id);
+            if (metro) {
+              // Возвращаем объект типа TitleWithLine, если это метро
+              return { title: metro.title, lineNumber: metro.lineNumber || undefined };
+            }
+          }
+    
+          // Поиск по массиву regionalCities
+          const regionalCity = city.regionalCities.find((city) => city.id === id);
+          if (regionalCity) {
+            // Возвращаем только title для регионального города
+            return regionalCity.title;
+          }
         }
-  
-        // Поиск по массиву regionalCities
-        const regionalCity = city.regionalCities.find((city) => city.id === id);
-        if (regionalCity) return regionalCity.title;
-      }
-  
-      // Если ничего не найдено, возвращаем null для текущего id
-      return null;
-    });
-  }
+    
+        // Если ничего не найдено, возвращаем строку, а не null
+        return ''; // или другой дефолтный вариант, который нужно вернуть, например, "Не найдено"
+      });
+    };

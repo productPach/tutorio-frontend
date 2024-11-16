@@ -38,7 +38,6 @@ export const Modal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (isModal) {
       const scrollY = window.scrollY;
-      document.body.style.position = "fixed"; // Фиксируем позицию body
       document.body.style.top = `-${scrollY}px`; // Сохраняем текущее положение
       return () => {
         const scrollY = document.body.style.top;

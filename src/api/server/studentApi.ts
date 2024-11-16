@@ -42,3 +42,21 @@ export const fetchCurrentStudent = async (token: string) => {
   const data = await response.json();
   return data;
 };
+
+// Получение ученика по ID
+export const fetchStudentById = async (token: string, id: string) => {
+  const response = await fetch(`${baseUrl}students/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Студент не существует");
+  }
+
+  const data = await response.json();
+  return data.student;
+};

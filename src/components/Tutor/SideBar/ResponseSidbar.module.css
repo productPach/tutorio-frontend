@@ -1,0 +1,23 @@
+.button button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin: 18px 0 0 0;
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: #fad949;
+  color: black;
+}
+
+.textButton {
+}
+
+.priceButton {
+  font-weight: 400;
+}
