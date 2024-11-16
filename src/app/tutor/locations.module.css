@@ -5,10 +5,17 @@
 
 .crcl_mtr_container {
   display: flex;
-  margin: 0 3px;
+  margin: 0 5px;
   flex-direction: row;
   column-gap: 0px;
   flex-wrap: nowrap;
+}
+
+.crcl_mtr_none {
+  width: 3px;
+  height: 3px;
+  border-radius: 4px;
+  border: 1px solid black;
 }
 
 /* МОСКВА */

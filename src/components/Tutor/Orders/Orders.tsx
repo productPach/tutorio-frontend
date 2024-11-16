@@ -11,7 +11,7 @@ import { getAllOrders } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
-import { findTitleById } from "@/utils/locations/getTitleLocationById";
+import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import { Modal } from "@/components/Modal/Modal";
@@ -47,7 +47,8 @@ const Orders = () => {
       .filter(
         (order) =>
           tutor?.subject &&
-          tutor.subject.some((subject) => order.subject?.includes(subject))
+          tutor.subject.length > 0 &&
+          tutor.subject.some((subject) => order.subject === subject)
       )
       .filter(
         (order) =>
@@ -196,7 +197,7 @@ const Orders = () => {
           let firstLocationHome;
           let countHome;
           if (studentPlace?.includes("У меня дома") && studentHomeLoc) {
-            firstLocationHome = findTitleById(studentHomeLoc[0]);
+            firstLocationHome = findLocTitleById(studentHomeLoc[0]);
             countHome = studentHomeLoc.length - 1;
           }
 
@@ -204,7 +205,7 @@ const Orders = () => {
           let firstLocationTrip;
           let countTrip;
           if (studentPlace?.includes("У репетитора") && studentTrip) {
-            firstLocationTrip = findTitleById(studentTrip[0]);
+            firstLocationTrip = findLocTitleById(studentTrip[0]);
             countTrip = studentTrip.length - 1;
           }
 
