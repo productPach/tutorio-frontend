@@ -9,6 +9,7 @@ import { getOrderById } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
+import { getYearWord } from "@/utils/words/getYearWord";
 
 export const Order = () => {
   const page = "Order";
@@ -70,17 +71,54 @@ export const Order = () => {
 
         {orderById?.studentClass && (
           <div className={styles.containerOrderInfo}>
-            <span className={styles.titleOrderInfo}>
-              В каком классе ученик?
-            </span>
+            <span className={styles.titleOrderInfo}>В каком классе ученик</span>
             <span>{orderById?.studentClass}</span>
           </div>
         )}
 
         {orderById?.studentYears && (
           <div className={styles.containerOrderInfo}>
-            <span className={styles.titleOrderInfo}>Сколько лет ученику?</span>
-            <span>{orderById?.studentYears}</span>
+            <span className={styles.titleOrderInfo}>Возраст ученика</span>
+            <span>
+              {orderById?.studentYears +
+                " " +
+                getYearWord(Number(orderById?.studentYears))}
+            </span>
+          </div>
+        )}
+
+        {orderById?.studentCourse && (
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleOrderInfo}>На каком курсе ученик</span>
+            <span>{orderById?.studentCourse}</span>
+          </div>
+        )}
+
+        {orderById?.studentUniversity && (
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleOrderInfo}>В каком вузе экзамен</span>
+            <span>{orderById?.studentUniversity}</span>
+          </div>
+        )}
+
+        {orderById?.studentExam && (
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleOrderInfo}>Экзамен</span>
+            <span>{orderById?.studentExam}</span>
+          </div>
+        )}
+
+        {orderById?.studyMethod && (
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleOrderInfo}>Методика подготовки</span>
+            <span>{orderById?.studyMethod}</span>
+          </div>
+        )}
+
+        {orderById?.studyProgramm && (
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleOrderInfo}>Программа обучения</span>
+            <span>{orderById?.studyProgramm}</span>
           </div>
         )}
       </div>

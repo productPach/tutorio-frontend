@@ -428,7 +428,7 @@ export const data: Subject[] = [
     for_chpu: "podgotovka-k-shkole",
     id_cat: "32",
     general: true,
-    nextPage: "/match/goal/path",
+    nextPage: "/match/goal/studyMethods",
     id_p: "517",
     goal_id: "2",
   },
