@@ -53,8 +53,7 @@ export const BalanceBoost = () => {
           ₽
         </span>
         <input
-          id="fioStudent"
-          type="text"
+          type="number"
           placeholder={"Укажите сумму пополнения"}
           autoComplete="off"
           value={inputValue}

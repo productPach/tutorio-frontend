@@ -5,7 +5,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import styles from "../Modal/Modal.module.css";
 import { useAppDispatch } from "@/store/store";
 import {
@@ -35,6 +35,18 @@ export const Modal: React.FC<ModalProps> = ({
       dispatch(setIsModalBalanceBoost(false));
     }
   };
+  useEffect(() => {
+    if (isModal) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed"; // Фиксируем позицию body
+      document.body.style.top = `-${scrollY}px`; // Сохраняем текущее положение
+      return () => {
+        const scrollY = document.body.style.top;
+        document.body.style.position = "";
+        window.scrollTo(0, parseInt(scrollY || "0") * -1); // Возвращаем прокрутку
+      };
+    }
+  }, [isModal]);
 
   return (
     <>

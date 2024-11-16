@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import Orders from "@/components/Tutor/Orders/Orders";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
-import OnboardScreen from "@/components/Tutor/OnboardScreen/OnboardScreen";
+import HowWorkWithOrders from "@/components/Tutor/OnboardScreen/HowWorkWithOrders";
 
 const TutorOrders: React.FC = () => {
   useEffect(() => {
@@ -23,7 +23,7 @@ const TutorOrders: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <OnboardScreen />
+          <HowWorkWithOrders />
           <Orders />
         </div>
         <SideBar />

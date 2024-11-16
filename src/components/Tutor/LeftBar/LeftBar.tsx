@@ -1,13 +1,13 @@
 "use client";
 import styles from "../../../app/tutor/layout.module.css";
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { setLocalStorage } from "@/utils/localStorage/localStorage";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/store/store";
 import { setSupportMenu } from "@/store/features/tutorSlice";
+import { useRouter } from "next/navigation";
 
 const LeftBar: React.FC<{ page: string }> = ({ page }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,8 +18,31 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
     dispatch(setSupportMenu(!supportMenu));
   };
 
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back(); // Возврат на предыдущую страницу
+  };
+
   return (
     <div className={styles.leftbar}>
+      {page === "Order" && (
+        <div onClick={handleBack} className={styles.left_menu}>
+          <ul>
+            <li>
+              <Image
+                src="../img/icon/tutor/go-back.svg"
+                alt="Заказы"
+                width={32}
+                height={32}
+              />
+              <span className={styles.left_menu__list_text}>
+                Вернуться назад
+              </span>
+            </li>
+          </ul>
+        </div>
+      )}
       <div className={styles.left_menu}>
         <ul>
           <Link href={"orders"}>
