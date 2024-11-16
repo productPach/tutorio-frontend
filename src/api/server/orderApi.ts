@@ -85,3 +85,30 @@ export const fetchGetAllOrders = async (token: string) => {
     throw error; // Чтобы обработать ошибку в вызывающем коде, если необходимо
   }
 }
+
+// Получение заказа по ID
+
+export const fetchGetOrderById = async (token: string, id: string) => {
+  try {
+    const response = await fetch(`${baseUrl}orders/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Проверка, был ли запрос успешным
+    if (!response.ok) {
+      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    }
+
+    // Парсинг JSON
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error("Ошибка при получении заказа:", error);
+    throw error; // Чтобы обработать ошибку в вызывающем коде, если необходимо
+  }
+}

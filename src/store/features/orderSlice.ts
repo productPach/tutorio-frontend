@@ -1,4 +1,4 @@
-import { fetchGetAllOrders } from "@/api/server/orderApi";
+import { fetchGetAllOrders, fetchGetOrderById } from "@/api/server/orderApi";
 import { Order } from "@/types/types";
 import { getFiltersOrdersForTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -22,6 +22,25 @@ export const getAllOrders = createAsyncThunk<
   }
 );
 
+export const getOrderById = createAsyncThunk<
+  Order, // Тип возвращаемых данных
+  { token: string; id: string },  // Тип ожидаемого аргумента - токен
+  { rejectValue: string } // Тип для ошибки
+>(
+  'order/getOrdersById',
+  async ({token, id}, { rejectWithValue }) => {
+    try {
+      // Запрос списка заказов
+      const order = await fetchGetOrderById(token, id);
+      return order; // Возвращаем массив заказов
+    } catch (error) {
+      // Обрабатываем ошибку и передаем ее сообщение через rejectWithValue
+      const errorMessage = error instanceof Error ? error.message : 'Ошибка при получении заказа';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 type OrdersStateType =  {
     orders: [] | Order[];
     loading: boolean;
@@ -30,6 +49,7 @@ type OrdersStateType =  {
       selectedPlaceFilters: string[];
       selectedGoalFilters: string[];
     };
+    orderById: null | Order;
 }
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -43,6 +63,7 @@ const initialState: OrdersStateType = {
       selectedPlaceFilters: initialFilters.placeFilters?.length > 0 ? initialFilters.placeFilters : [],
       selectedGoalFilters: initialFilters.goalFilters?.length > 0 ? initialFilters.goalFilters : [],
     },
+    orderById: null,
 };
 
 const ordersSlice = createSlice({
@@ -71,6 +92,18 @@ const ordersSlice = createSlice({
         state.orders = action.payload;
       })
       .addCase(getAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getOrderById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrderById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderById = action.payload;
+      })
+      .addCase(getOrderById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

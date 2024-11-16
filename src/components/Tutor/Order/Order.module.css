@@ -1,0 +1,17 @@
+.subjectName {
+  font-weight: 600;
+}
+
+.goal {
+}
+
+.containerOrderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.titleOrderInfo {
+  color: #555;
+}

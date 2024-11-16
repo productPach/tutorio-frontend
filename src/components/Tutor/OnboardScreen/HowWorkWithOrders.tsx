@@ -3,7 +3,7 @@ import styles from "../../../app/tutor/layout.module.css";
 import clsx from "clsx";
 import React from "react";
 
-const OnboardScreen = () => {
+const HowWorkWithOrders = () => {
   return (
     <div className={clsx(styles.content_block, styles.info_block)}>
       <h3>Как работать с заказами 📦</h3>
@@ -19,4 +19,4 @@ const OnboardScreen = () => {
   );
 };
 
-export default OnboardScreen;
+export default HowWorkWithOrders;
