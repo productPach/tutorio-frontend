@@ -41,9 +41,9 @@ export const ResponseSidbar = () => {
         >
           {orderById?.autoContactsOnResponse ? (
             /* Отклик на заказ с получением контактов */
-            <div className={generalStyles.sidebar_filter}>
+            <div className={generalStyles.sidebar_filterBlack}>
               <div>
-                <h3>Отклик на заказ</h3>
+                <h3>Контакты сразу после отклика 🔥</h3>
                 <span>
                   После отклика вы получите контакты ученика и сможете с ним
                   связаться <br />
