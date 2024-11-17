@@ -40,7 +40,6 @@ export const Order = () => {
         try {
           if (token) {
             const data = await fetchStudentById(token, orderById.studentId);
-            console.log("Полученные данные студента:", data);
             setStudent(data);
           }
         } catch (error) {
@@ -52,11 +51,7 @@ export const Order = () => {
     fetchStudent();
   }, [orderById, token]);
 
-  useEffect(() => {
-    if (student) {
-      console.log("Имя студента после установки в состояние:", student.name);
-    }
-  }, [student]);
+  //console.log(process.env.NODE_ENV);
 
   if (loading && !student?.name)
     return (
