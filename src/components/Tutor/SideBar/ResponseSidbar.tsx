@@ -1,7 +1,7 @@
 "use client";
 import generalStyles from "../../../app/tutor/layout.module.css";
 import styles from "./ResponseSidbar.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import {
@@ -16,6 +16,16 @@ export const ResponseSidbar = () => {
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
   );
+  const [isSafari, setIsSafari] = useState(false);
+
+  // Определяем, используется ли Safari
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes("safari") && !ua.includes("chrome")) {
+      setIsSafari(true);
+    }
+  }, []);
+
   const { orderById, loading } = useSelector(
     (state: RootState) => state.orders
   );
@@ -25,13 +35,15 @@ export const ResponseSidbar = () => {
       {!loading && (
         <div
           className={generalStyles.sidebarResponse}
-          style={{ top: `${scrollYForSidebarResponse}px` }}
+          style={
+            isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
+          }
         >
           {orderById?.autoContactsOnResponse ? (
             /* Отклик на заказ с получением контактов */
-            <div className={generalStyles.sidebar_filter}>
+            <div className={generalStyles.sidebar_filterBlack}>
               <div>
-                <h3>Отклик на заказ</h3>
+                <h3>Контакты сразу после отклика 🔥</h3>
                 <span>
                   После отклика вы получите контакты ученика и сможете с ним
                   связаться <br />

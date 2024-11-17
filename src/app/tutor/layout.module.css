@@ -112,6 +112,7 @@
   height: fit-content;
   position: sticky;
   top: 0;
+  z-index: 10;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
@@ -352,6 +353,28 @@
 }
 
 .sidebar_filter button {
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.sidebar_filterBlack {
+  border-radius: 10px;
+  padding: 2px 18px 18px 18px;
+  height: fit-content;
+  color: #dddddd;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(69, 72, 77, 1) 100%
+  );
+}
+
+.sidebar_filterBlack button {
   padding: 18px 20px;
   border: none;
   border-radius: 10px;

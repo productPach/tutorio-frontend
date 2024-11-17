@@ -1,7 +1,7 @@
 "use client";
 import styles from "../../../app/tutor/layout.module.css";
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
@@ -13,6 +13,16 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
   const dispatch = useDispatch<AppDispatch>();
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
+  const [isSafari, setIsSafari] = useState(false);
+
+  // Определяем, используется ли Safari
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes("safari") && !ua.includes("chrome")) {
+      setIsSafari(true);
+    }
+  }, []);
+
   // Стейт для меню с ссылками помощи
   const supportMenu = useAppSelector((state) => state.tutor.supportMenu);
   const handleSupportMenu = () => {
@@ -26,7 +36,10 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
   };
 
   return (
-    <div className={styles.leftbar} style={{ top: `${scrollYForLeftBar}px` }}>
+    <div
+      className={styles.leftbar}
+      style={isSafari ? undefined : { top: `${scrollYForLeftBar}px` }}
+    >
       {page === "Order" && (
         <div onClick={handleBack} className={styles.left_menu}>
           <ul>
