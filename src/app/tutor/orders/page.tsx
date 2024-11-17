@@ -1,7 +1,7 @@
 "use client";
 import styles from "../layout.module.css";
 import clsx from "clsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import Orders from "@/components/Tutor/Orders/Orders";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
@@ -11,6 +11,11 @@ import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost
 import { useAppSelector } from "@/store/store";
 
 const TutorOrders: React.FC = () => {
+  const page = "Orders";
+  const isModalBalanceBoost = useAppSelector(
+    (state) => state.modal.isModalBalanceBoost
+  );
+
   useEffect(() => {
     localStorage.removeItem("confirm-code");
     localStorage.removeItem("current-user");
@@ -19,16 +24,11 @@ const TutorOrders: React.FC = () => {
     localStorage.removeItem("_cr-tripData");
   }, []);
 
-  const page = "Orders";
-  const isModalBalanceBoost = useAppSelector(
-    (state) => state.modal.isModalBalanceBoost
-  );
-
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
-        <div className={styles.content}>
+        <div className={clsx(styles.content)}>
           <HowWorkWithOrders />
           <Orders />
         </div>

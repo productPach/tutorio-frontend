@@ -194,6 +194,17 @@
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none;
+  opacity: 0; /* Начальная прозрачность */
+  animation: fadeIn 0.6s forwards; /* Анимация появления */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .content_block h3 {
@@ -292,6 +303,17 @@
 .sidebar {
   grid-column: span 7;
   margin-bottom: 18px;
+  opacity: 0; /* Начальная прозрачность */
+  animation: fadeIn 0.5s forwards; /* Анимация появления */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .sidebarResponse {
@@ -309,6 +331,17 @@
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none;
+  opacity: 0; /* Начальная прозрачность */
+  animation: fadeIn 0.5s forwards; /* Анимация появления */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .sidebar_filter {
@@ -449,4 +482,37 @@
 .header_geoImage {
   margin-bottom: 2px;
   margin-right: 5px;
+}
+
+.visible {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.blockAutoContakts {
+  color: #dddddd;
+  border-radius: 10px;
+  font-size: 13px;
+  padding: 0px 9px;
+  max-width: 136px;
+  height: 54px;
+  display: flex;
+  column-gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(69, 72, 77, 1) 100%
+  );
+}
+
+.fireIcon {
+  position: relative;
+  top: -8px;
 }

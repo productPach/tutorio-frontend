@@ -106,6 +106,7 @@ export type Order = {
   studentTrip?: string[]; // заменить на массив
   tutorType?: string;
   studentWishes?: string;
+  autoContactsOnResponse: boolean,
   responseCost: string;
   [key: string]: any;
   status: string;
