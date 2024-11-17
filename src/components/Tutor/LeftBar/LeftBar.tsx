@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 
 const LeftBar: React.FC<{ page: string }> = ({ page }) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
+  const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
   // Стейт для меню с ссылками помощи
   const supportMenu = useAppSelector((state) => state.tutor.supportMenu);
   const handleSupportMenu = () => {
@@ -25,7 +26,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
   };
 
   return (
-    <div className={styles.leftbar}>
+    <div className={styles.leftbar} style={{ top: `${scrollYForLeftBar}px` }}>
       {page === "Order" && (
         <div onClick={handleBack} className={styles.left_menu}>
           <ul>
