@@ -29,8 +29,6 @@ export const BalanceBoost = () => {
     }
   }, [inputValue, valueBoost]);
 
-  console.log(errorInput);
-
   // Состояние для фиксации фокусирования на поле с вводом телефона
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => setIsFocused(true);

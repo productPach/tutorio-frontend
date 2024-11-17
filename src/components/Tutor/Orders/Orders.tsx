@@ -14,8 +14,6 @@ import { getYearWord } from "@/utils/words/getYearWord";
 import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
-import { Modal } from "@/components/Modal/Modal";
-import { BalanceBoost } from "../Modal/BalanceBoost/BalanceBoost";
 import {
   setIsModalBalanceBoost,
   setValueModalBalanceBoost,
@@ -25,9 +23,6 @@ const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const isModalBalanceBoost = useAppSelector(
-    (state) => state.modal.isModalBalanceBoost
-  );
   const { orders, loading, error, filters } = useSelector(
     (state: RootState) => state.orders
   );
@@ -430,7 +425,7 @@ const Orders = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       dispatch(setIsModalBalanceBoost(true));
-                      dispatch(setValueModalBalanceBoost("340"));
+                      dispatch(setValueModalBalanceBoost(order.responseCost));
                     }}
                     type="button"
                   >
@@ -461,12 +456,6 @@ const Orders = () => {
           </button> */}
         </div>
       )}
-      <Modal
-        titleModal={"Пополните баланс, чтобы откликнуться"}
-        contentModal={<BalanceBoost />}
-        isModal={isModalBalanceBoost}
-        modalId={"balanceBoost"}
-      ></Modal>
     </>
   );
 };

@@ -6,6 +6,9 @@ import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import Orders from "@/components/Tutor/Orders/Orders";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
 import HowWorkWithOrders from "@/components/Tutor/OnboardScreen/HowWorkWithOrders";
+import { Modal } from "@/components/Modal/Modal";
+import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
+import { useAppSelector } from "@/store/store";
 
 const TutorOrders: React.FC = () => {
   useEffect(() => {
@@ -17,6 +20,9 @@ const TutorOrders: React.FC = () => {
   }, []);
 
   const page = "Orders";
+  const isModalBalanceBoost = useAppSelector(
+    (state) => state.modal.isModalBalanceBoost
+  );
 
   return (
     <>
@@ -28,6 +34,12 @@ const TutorOrders: React.FC = () => {
         </div>
         <SideBar />
       </section>
+      <Modal
+        titleModal={"Пополните баланс, чтобы откликнуться"}
+        contentModal={<BalanceBoost />}
+        isModal={isModalBalanceBoost}
+        modalId={"balanceBoost"}
+      ></Modal>
     </>
   );
 };

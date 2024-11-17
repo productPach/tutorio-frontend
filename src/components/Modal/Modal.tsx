@@ -11,7 +11,9 @@ import { useAppDispatch } from "@/store/store";
 import {
   setIsModalBalanceBoost,
   setModalSelectCity,
+  setScrollY,
 } from "@/store/features/modalSlice";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   titleModal: string;
@@ -33,65 +35,67 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "balanceBoost") {
       dispatch(setIsModalBalanceBoost(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
   };
+
   useEffect(() => {
     if (isModal) {
-      const scrollY = window.scrollY;
-      document.body.style.top = `-${scrollY}px`; // Сохраняем текущее положение
-      return () => {
-        const scrollY = document.body.style.top;
-        document.body.style.position = "";
-        window.scrollTo(0, parseInt(scrollY || "0") * -1); // Возвращаем прокрутку
-      };
+      // Получаем текущую позицию скролла
+      dispatch(setScrollY(window.scrollY));
     }
   }, [isModal]);
 
-  return (
-    <>
-      {/* Модальное окно с анимацией */}
-      <Transition show={isModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className={styles.dialogOverlay}
-          onClose={() => closeModal()}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter={styles.enter}
-            enterFrom={styles.enterFrom}
-            enterTo={styles.enterTo}
-            leave={styles.leave}
-            leaveFrom={styles.leaveFrom}
-            leaveTo={styles.leaveTo}
-          >
-            <div className={styles.bg}></div>
-          </Transition.Child>
-
-          <div className={styles.popupWrapper}>
-            <TransitionChild
-              as={Fragment}
-              enter={styles.enter}
-              enterFrom={styles.enterFrom}
-              enterTo={styles.enterTo}
-              leave={styles.leave}
-              leaveFrom={styles.leaveFrom}
-              leaveTo={styles.leaveTo}
+  return isModal
+    ? createPortal(
+        <>
+          <Transition show={isModal} as={Fragment}>
+            <Dialog
+              as="div"
+              className={styles.dialogOverlay}
+              onClose={() => closeModal()}
             >
-              <DialogPanel className={styles.popup}>
-                <DialogTitle className={styles.title}>{titleModal}</DialogTitle>
-                {contentModal}
-                <button
-                  className={styles.closeButton}
-                  onClick={() => closeModal()}
+              <Transition.Child
+                as={Fragment}
+                enter={styles.enter}
+                enterFrom={styles.enterFrom}
+                enterTo={styles.enterTo}
+                leave={styles.leave}
+                leaveFrom={styles.leaveFrom}
+                leaveTo={styles.leaveTo}
+              >
+                <div className={styles.bg}></div>
+              </Transition.Child>
+
+              <div className={styles.popupWrapper}>
+                <TransitionChild
+                  as={Fragment}
+                  enter={styles.enter}
+                  enterFrom={styles.enterFrom}
+                  enterTo={styles.enterTo}
+                  leave={styles.leave}
+                  leaveFrom={styles.leaveFrom}
+                  leaveTo={styles.leaveTo}
                 >
-                  ✕
-                </button>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
-        </Dialog>
-      </Transition>
-    </>
-  );
+                  <DialogPanel className={styles.popup}>
+                    <DialogTitle className={styles.title}>
+                      {titleModal}
+                    </DialogTitle>
+                    {contentModal}
+                    <button
+                      className={styles.closeButton}
+                      onClick={() => closeModal()}
+                    >
+                      ✕
+                    </button>
+                  </DialogPanel>
+                </TransitionChild>
+              </div>
+            </Dialog>
+          </Transition>
+        </>,
+        document.body // Указываем container для портала
+      )
+    : null;
 };
