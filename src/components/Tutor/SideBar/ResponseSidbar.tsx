@@ -19,136 +19,143 @@ export const ResponseSidbar = () => {
   const { orderById, loading } = useSelector(
     (state: RootState) => state.orders
   );
+
   return (
     <>
-      <div
-        className={generalStyles.sidebarResponse}
-        style={{ top: `${scrollYForSidebarResponse}px` }}
-      >
-        {/* Отклик на заказ с получением контактов */}
-        {/* <div className={generalStyles.sidebar_filter}>
-          <div>
-            <h3>Отклик на заказ</h3>
-            <span>
-              После отклика вы получите контакты ученика и сможете с ним
-              связаться <br />
-              <br />
-              Больше комиссий не будет, но не каждый отклик приводит к заказу
-            </span>
-            <div className={styles.button}>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(setIsModalBalanceBoost(true));
-                  orderById?.responseCost &&
-                    dispatch(
-                      setValueModalBalanceBoost(orderById?.responseCost)
-                    );
-                }}
-                type="button"
-              >
-                <span className={styles.textButton}>Получить контакты</span>
-                <span className={styles.priceButton}>
-                  {loading ? (
-                    <div className={generalStyles.container__spinner}>
-                      <div className={generalStyles.spinner}>
-                        <SpinnerSingleOrange />
-                      </div>
-                    </div>
-                  ) : orderById?.responseCost ? (
-                    `${orderById?.responseCost} руб.`
-                  ) : (
-                    "Цена не доступна"
-                  )}
+      {!loading && (
+        <div
+          className={generalStyles.sidebarResponse}
+          style={{ top: `${scrollYForSidebarResponse}px` }}
+        >
+          {orderById?.autoContactsOnResponse ? (
+            /* Отклик на заказ с получением контактов */
+            <div className={generalStyles.sidebar_filter}>
+              <div>
+                <h3>Отклик на заказ</h3>
+                <span>
+                  После отклика вы получите контакты ученика и сможете с ним
+                  связаться <br />
+                  <br />
+                  Больше комиссий не будет, но не каждый отклик приводит к
+                  заказу
                 </span>
-              </button>
+                <div className={styles.button}>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(setIsModalBalanceBoost(true));
+                      orderById?.responseCost &&
+                        dispatch(
+                          setValueModalBalanceBoost(orderById?.responseCost)
+                        );
+                    }}
+                    type="button"
+                  >
+                    <span className={styles.textButton}>Получить контакты</span>
+                    <span className={styles.priceButton}>
+                      {loading ? (
+                        <div className={generalStyles.container__spinner}>
+                          <div className={generalStyles.spinner}>
+                            <SpinnerSingleOrange />
+                          </div>
+                        </div>
+                      ) : orderById?.responseCost ? (
+                        `${orderById?.responseCost} руб.`
+                      ) : (
+                        "Цена не доступна"
+                      )}
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div> */}
+          ) : (
+            /* Отклик на заказ без контактов */
+            <div className={generalStyles.sidebar_filter}>
+              <div>
+                <h3>Отклик на заказ</h3>
+                <span>
+                  После отклика ученик получает ваши контакты и может отправить
+                  вам свои <br />
+                  <br />
+                  Больше комиссий не будет, но не каждый отклик приводит к
+                  заказу
+                </span>
+                <div className={styles.button}>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(setIsModalBalanceBoost(true));
+                      orderById?.responseCost &&
+                        dispatch(
+                          setValueModalBalanceBoost(orderById?.responseCost)
+                        );
+                    }}
+                    type="button"
+                  >
+                    <span className={styles.textButton}>Откликнуться</span>
+                    <span className={styles.priceButton}>
+                      {loading ? (
+                        <div className={generalStyles.container__spinner}>
+                          <div className={generalStyles.spinner}>
+                            <SpinnerSingleOrange />
+                          </div>
+                        </div>
+                      ) : orderById?.responseCost ? (
+                        `${orderById?.responseCost} руб.`
+                      ) : (
+                        "Цена не доступна"
+                      )}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
-        {/* Отклик на заказ без контактов */}
-        <div className={generalStyles.sidebar_filter}>
-          <div>
-            <h3>Отклик на заказ</h3>
-            <span>
-              После отклика ученик получает ваши контакты и может отправить вам
-              свои <br />
-              <br />
-              Больше комиссий не будет, но не каждый отклик приводит к заказу
-            </span>
-            <div className={styles.button}>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(setIsModalBalanceBoost(true));
-                  orderById?.responseCost &&
-                    dispatch(
-                      setValueModalBalanceBoost(orderById?.responseCost)
-                    );
-                }}
-                type="button"
-              >
-                <span className={styles.textButton}>Откликнуться</span>
-                <span className={styles.priceButton}>
-                  {loading ? (
-                    <div className={generalStyles.container__spinner}>
-                      <div className={generalStyles.spinner}>
-                        <SpinnerSingleOrange />
-                      </div>
+          {/* Предложение заказа от ученика */}
+          {/* <div className={generalStyles.sidebar_filter}>
+        <div>
+          <h3>Ученик предложил вам заказ</h3>
+          <span>
+            Ваша анкета заинтересовала ученика
+            <br />
+            <br />
+            Примите заказ, чтобы обсудить детали занятий и обменяться
+            контактами
+          </span>
+          <div className={styles.button}>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(setIsModalBalanceBoost(true));
+                orderById?.responseCost &&
+                  dispatch(
+                    setValueModalBalanceBoost(orderById?.responseCost)
+                  );
+              }}
+              type="button"
+            >
+              <span className={styles.textButton}>Принять заказ</span>
+              <span className={styles.priceButton}>
+                {loading ? (
+                  <div className={generalStyles.container__spinner}>
+                    <div className={generalStyles.spinner}>
+                      <SpinnerSingleOrange />
                     </div>
-                  ) : orderById?.responseCost ? (
-                    `${orderById?.responseCost} руб.`
-                  ) : (
-                    "Цена не доступна"
-                  )}
-                </span>
-              </button>
-            </div>
+                  </div>
+                ) : orderById?.responseCost ? (
+                  `${orderById?.responseCost} руб.`
+                ) : (
+                  "Цена не доступна"
+                )}
+              </span>
+            </button>
           </div>
         </div>
-
-        {/* Предложение заказа от ученика */}
-        {/* <div className={generalStyles.sidebar_filter}>
-          <div>
-            <h3>Ученик предложил вам заказ</h3>
-            <span>
-              Ваша анкета заинтересовала ученика
-              <br />
-              <br />
-              Примите заказ, чтобы обсудить детали занятий и обменяться
-              контактами
-            </span>
-            <div className={styles.button}>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(setIsModalBalanceBoost(true));
-                  orderById?.responseCost &&
-                    dispatch(
-                      setValueModalBalanceBoost(orderById?.responseCost)
-                    );
-                }}
-                type="button"
-              >
-                <span className={styles.textButton}>Принять заказ</span>
-                <span className={styles.priceButton}>
-                  {loading ? (
-                    <div className={generalStyles.container__spinner}>
-                      <div className={generalStyles.spinner}>
-                        <SpinnerSingleOrange />
-                      </div>
-                    </div>
-                  ) : orderById?.responseCost ? (
-                    `${orderById?.responseCost} руб.`
-                  ) : (
-                    "Цена не доступна"
-                  )}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div> */}
-      </div>
+      </div> */}
+        </div>
+      )}
     </>
   );
 };
