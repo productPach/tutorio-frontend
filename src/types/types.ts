@@ -175,3 +175,16 @@ export interface UpdateTutorAvatarPayload {
   token: string;
   croppedAreaPixels: CroppedAreaPixels; // Новое свойство
 }
+
+export type WelcomeScreen = {
+  id: string;
+  title: string;
+  content: string;
+  link: string;
+  userType: string;
+  page: string;
+  group: string;
+  order: number;
+  isActive: boolean;
+  createAt: Date;
+}

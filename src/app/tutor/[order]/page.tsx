@@ -4,11 +4,11 @@ import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import { useParams } from "next/navigation";
 import { Order } from "@/components/Tutor/Order/Order";
-import HowConnetWithStudent from "@/components/Tutor/OnboardScreen/HowConnetWithStudent";
 import { ResponseSidbar } from "@/components/Tutor/SideBar/ResponseSidbar";
 import { Modal } from "@/components/Modal/Modal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { useAppSelector } from "@/store/store";
+import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
 
 const OrderPage: React.FC = () => {
   const page = "Order";
@@ -22,7 +22,7 @@ const OrderPage: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <HowConnetWithStudent />
+          <WelcomeScreen page={page} />
           <Order />
         </div>
         <ResponseSidbar />
