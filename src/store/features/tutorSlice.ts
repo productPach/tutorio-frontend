@@ -1,6 +1,7 @@
 import { baseUrl } from "@/api/server/configApi";
 import { fetchCreateTutor, fetchCurrentTutor, fetchUpdateTutor } from "@/api/server/tutorApi";
-import { District, Metro, RegionalCity, Tutor, UpdateTutorAvatarPayload, UpdateTutorAvatarResponse } from "@/types/types";
+import { fetchShowWelcomeScreen, fetchWelcomeScreens } from "@/api/server/userApi";
+import { District, Metro, RegionalCity, Tutor, UpdateTutorAvatarPayload, UpdateTutorAvatarResponse, WelcomeScreen } from "@/types/types";
 import { getTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -85,6 +86,38 @@ export const updateTutorAvatar = createAsyncThunk<
   }
 );
 
+// Получение велком-скринов для репетитора
+export const getWelcomeScreens = createAsyncThunk<
+WelcomeScreen[],
+  string
+>("tutor/welcomeScreen", async (token) => {
+  try {
+    const response = await fetchWelcomeScreens(token);
+    return response;
+  } catch (error) {
+    // Здесь можно вернуть undefined или обработать ошибку
+    console.error(error);
+    throw error;
+  }
+});
+
+// Просмотор велком-скрина
+export const showWelcomeScreen = createAsyncThunk<
+  { success: boolean; id: string }, // Возвращаемое значение
+  {token: string; id: string}    // Параметры функции
+>(
+  "tutor/showWelcomeScreen",
+  async ({ token, id }) => {
+    try {
+      const response = await fetchShowWelcomeScreen(token, id);
+      return { success: response.success, id }; // Возвращаем успешность и ID
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);
+
 
 type TutorStateType = {
   tutor: null | Tutor;
@@ -92,6 +125,8 @@ type TutorStateType = {
   selectedValuesCity: (District | Metro)[];
   selectedValuesArea: RegionalCity[];
   supportMenu: boolean;
+  welcomeScreens: null | WelcomeScreen[];
+  hiddenScreens: string[]; // Добавляем скрытые экраны
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -102,7 +137,9 @@ const initialState: TutorStateType = {
   loading: false,
   selectedValuesCity: [],
   selectedValuesArea: [],
-  supportMenu: false
+  supportMenu: false,
+  welcomeScreens: null,
+  hiddenScreens: [],
 };
 
 const tutorSlice = createSlice({
@@ -123,6 +160,12 @@ const tutorSlice = createSlice({
     },
     setSupportMenu: (state, action: PayloadAction<boolean>) => {
       state.supportMenu = action.payload;
+  },
+  addHiddenScreen(state, action: PayloadAction<string>) {
+    // Добавляем id скрытого экрана в массив
+    if (!state.hiddenScreens.includes(action.payload)) {
+      state.hiddenScreens.push(action.payload);
+    }
   },
   },
   extraReducers(builder) {
@@ -165,9 +208,19 @@ const tutorSlice = createSlice({
           state.tutor.avatarUrl = action.payload.avatarUrl;
           setLocalStorage("tutor", state.tutor);
         }
-      });;
+      }).addCase(getWelcomeScreens.fulfilled, (state, action: PayloadAction<WelcomeScreen[]>) => {
+        state.welcomeScreens = action.payload;
+      })
+      .addCase(showWelcomeScreen.fulfilled, (state, action) => {
+        if (action.payload.success && state.welcomeScreens) {
+          // Удаляем просмотренный велком-скрин по ID
+          const updatedHiddenScreens = [...state.hiddenScreens, action.payload.id];
+          state.hiddenScreens = updatedHiddenScreens;
+          localStorage.setItem("hiddenScreens", JSON.stringify(updatedHiddenScreens)); // Обновляем в localStorage
+        }
+      });
   },
 });
 
-export const { setTutor, setTutorLogout, setSelectedValuesCity, setSelectedValuesArea, setSupportMenu } = tutorSlice.actions;
+export const { setTutor, setTutorLogout, setSelectedValuesCity, setSelectedValuesArea, setSupportMenu, addHiddenScreen } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;

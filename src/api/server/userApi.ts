@@ -82,3 +82,30 @@ export const fetchCreateUser = async ({
   const data = await response.json();
   return data;
 };
+
+// Просмотор велком-скрина пользователем
+export const fetchShowWelcomeScreen = async (token: string, id: string) => {
+  const response = await fetch(`${baseUrl}show-welcome-screen/${id}`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+      },
+  });
+
+  const data = await response.json();
+  return data;
+}
+
+// Получение велком-скринов для пользователя
+export const fetchWelcomeScreens = async (token: string) => {
+  const response = await fetch(`${baseUrl}welcome-screens-user`, {
+      method: "GET",
+      headers: {
+          Authorization: `Bearer ${token}`,
+      },
+  });
+
+  const data = await response.json();
+  return data;
+};

@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import Orders from "@/components/Tutor/Orders/Orders";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
-import HowWorkWithOrders from "@/components/Tutor/OnboardScreen/HowWorkWithOrders";
 import { Modal } from "@/components/Modal/Modal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { useAppSelector } from "@/store/store";
+import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
 
 const TutorOrders: React.FC = () => {
   const page = "Orders";
@@ -29,7 +29,7 @@ const TutorOrders: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={clsx(styles.content)}>
-          <HowWorkWithOrders />
+          <WelcomeScreen page={page} />
           <Orders />
         </div>
         <SideBar />
