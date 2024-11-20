@@ -22,6 +22,7 @@ export const fetchCreateOrder = async (
   studentAdressDataMatch?: string,
   studentTripDataMatch?: string[],
   tutorTypeDataMatch?: string,
+  autoContacts?: boolean,
   infoDataMatch?: string
 ) => {
   const response = await fetch(`${baseUrl}orders`, {
@@ -50,6 +51,7 @@ export const fetchCreateOrder = async (
       studentAdress: studentAdressDataMatch,
       studentTrip: studentTripDataMatch,
       tutorType: tutorTypeDataMatch,
+      autoContactsOnResponse: autoContacts,
       studentWishes: infoDataMatch,
       status: "Pending",
     }),

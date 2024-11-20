@@ -1821,17 +1821,17 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Начинающий: до 1000 рублей",
-            nextPage: "/match/info/wishes",
+            nextPage: "/match/autoContacts/approve",
           },
           {
             id: 2,
             title: "Репетитор со средним опытом: до 1500 рублей",
-            nextPage: "/match/info/wishes",
+            nextPage: "/match/autoContacts/approve",
           },
           {
             id: 3,
             title: "Опытный репетитор: до 2500 рублей",
-            nextPage: "/match/info/wishes",
+            nextPage: "/match/autoContacts/approve",
           },
         ],
       },
@@ -1908,6 +1908,30 @@ export const listQuestionsAnswers = [
             id: 1,
             title: "Отправили код на номер",
             nextPage: "/student/order",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 22,
+    typeForm: "autoContacts",
+    question: "Показать контакты репетиторам?",
+    description: "Репетитор найдётся быстрее, если мы покажем ваши контакты специалистам, которые откликнутся на заказ\n\n Настройку можно изменить в любой момент",
+    page: [
+      {
+        id: 1,
+        type: "approve",
+        answers: [
+          {
+            id: 1,
+            title: "Да, показывать контакты",
+            nextPage: "/match/info/wishes",
+          },
+          {
+            id: 2,
+            title: "Нет, не показывать",
+            nextPage: "/match/info/wishes",
           },
         ],
       },

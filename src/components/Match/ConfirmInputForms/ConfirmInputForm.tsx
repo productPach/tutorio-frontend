@@ -154,6 +154,15 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
               const tutorTypeDataMatch = dataMatch.find(
                 (obj) => obj.id === 17
               )?.tutorType;
+              const autoContactsString = dataMatch.find(
+                (obj) => obj.id === 22
+              )?.autoContacts;
+              let autoContactsBoolean;
+              if (autoContactsString === "Да, показывать контакты") {
+                autoContactsBoolean = true;
+              } else {
+                autoContactsBoolean = false;
+              }
               const infoDataMatch = dataMatch.find(
                 (obj) => obj.id === 18
               )?.info;
@@ -180,6 +189,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 studentAdressDataMatch,
                 studentTripDataMatch,
                 tutorTypeDataMatch,
+                autoContactsBoolean,
                 infoDataMatch
               )
                 .catch((error) => {

@@ -87,6 +87,7 @@ const MatchPage: React.FC = () => {
     studentAdress: AdressInputForms,
     studentTrip: LocationMultiDropdownForm,
     tutorType: RadioListForms,
+    autoContacts: RadioListForms,
     info: TextForms,
     fio: FioInputForms,
     phone: PhoneInputForms,
