@@ -32,6 +32,7 @@ type Order = {
 export const RadioListForms: React.FC<ComponentRenderProps> = ({
   id,
   question,
+  description,
   typeForm,
   answerArray,
 }) => {
@@ -136,7 +137,10 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ({
             Назад
           </div>
           <div className={styles.title}>{question}</div>
-          {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
+          {typeForm === "autoContacts" && (
+            <div className={styles.description}>{description}</div>
+          )}
+
           <div className={styles.containerAnswers}>
             {answerArray.map((answer) => {
               return (

@@ -206,6 +206,15 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
       const tutorTypeDataMatch = dataMatch.find(
         (obj) => obj.id === 17
       )?.tutorType;
+      const autoContactsString = dataMatch.find(
+        (obj) => obj.id === 22
+      )?.autoContacts;
+      let autoContactsBoolean;
+      if (autoContactsString === "Да, показывать контакты") {
+        autoContactsBoolean = true;
+      } else {
+        autoContactsBoolean = false;
+      }
       const infoDataMatch = inputValue;
 
       // Создание заказа
@@ -230,6 +239,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
         studentAdressDataMatch,
         studentTripDataMatch,
         tutorTypeDataMatch,
+        autoContactsBoolean,
         infoDataMatch
       )
         .then(() => {
