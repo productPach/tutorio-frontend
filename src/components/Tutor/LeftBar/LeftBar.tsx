@@ -59,7 +59,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
       )}
       <div className={styles.left_menu}>
         <ul>
-          <Link href={"orders"}>
+          <Link href={"orders"} prefetch={true}>
             <li>
               <Image
                 src="../img/icon/tutor/orders.svg"
@@ -76,7 +76,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <Link href={"responses"}>
+          <Link href={"responses"} prefetch={true}>
             <li>
               <Image
                 src="../img/icon/tutor/response.svg"
@@ -94,7 +94,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               <span className={styles.count_block}>9</span>
             </li>
           </Link>
-          <Link href={"profile"}>
+          <Link href={"profile"} prefetch={true}>
             <li>
               <Image
                 src="../img/icon/tutor/profile.svg"
@@ -111,7 +111,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <Link href={"wallet"}>
+          <Link href={"wallet"} prefetch={true}>
             <li>
               <Image
                 src="../img/icon/tutor/balance.svg"
@@ -128,7 +128,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <Link href={"settings"}>
+          <Link href={"settings"} prefetch={true}>
             <li>
               <Image
                 src="../img/icon/tutor/settings.svg"
@@ -173,7 +173,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               [styles.open]: supportMenu,
             })}
           >
-            <Link href={"wiki"}>
+            <Link href={"wiki"} prefetch={true}>
               <li style={{ padding: "12px 0 12px 40px" }}>
                 <span
                   className={clsx(styles.left_menu__list_text, {
@@ -184,7 +184,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
                 </span>
               </li>
             </Link>
-            <Link href={"new-ticket"}>
+            <Link href={"new-ticket"} prefetch={true}>
               <li style={{ padding: "0 0 12px 40px" }}>
                 <span
                   className={clsx(styles.left_menu__list_text, {
@@ -195,7 +195,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
                 </span>
               </li>
             </Link>
-            <Link href={"tickets"}>
+            <Link href={"tickets"} prefetch={true}>
               <li style={{ padding: "0 0 12px 40px" }}>
                 <span
                   className={clsx(styles.left_menu__list_text, {
