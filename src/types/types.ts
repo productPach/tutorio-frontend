@@ -48,6 +48,7 @@ export type Tutor = {
   tutorAdress: string;
   tutorTrip: string[];
   profileInfo: string;
+  experience: string;
   status: string;
   response: Response[];
 };

@@ -35,7 +35,7 @@ export const createTutor = createAsyncThunk<
 
 export const updateTutor = createAsyncThunk<
   Tutor,
-  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[], profileInfo?: string; }
+  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[], profileInfo?: string; experience?: string }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
     // Базовый объект с обязательными полями
@@ -51,6 +51,7 @@ export const updateTutor = createAsyncThunk<
       ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
       ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
       ...(optionalFields.profileInfo !== undefined && { profileInfo: optionalFields.profileInfo }),
+      ...(optionalFields.experience !== undefined && { experience: optionalFields.experience }),
     };
 
     const response = await fetchUpdateTutor(dataToUpdate);
