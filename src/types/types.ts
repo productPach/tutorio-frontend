@@ -47,6 +47,7 @@ export type Tutor = {
   tutorPlace: string[];
   tutorAdress: string;
   tutorTrip: string[];
+  profileInfo: string;
   status: string;
   response: Response[];
 };
@@ -171,9 +172,9 @@ export interface CroppedAreaPixels {
 
 export interface UpdateTutorAvatarPayload {
   id: string;
-  file: File;
+  file: File | null;
   token: string;
-  croppedAreaPixels: CroppedAreaPixels; // Новое свойство
+  croppedAreaPixels: CroppedAreaPixels | null; // Новое свойство
 }
 
 export type WelcomeScreen = {

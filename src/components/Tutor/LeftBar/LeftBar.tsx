@@ -40,29 +40,30 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
       className={styles.leftbar}
       style={isSafari ? undefined : { top: `${scrollYForLeftBar}px` }}
     >
-      {page === "Order" && (
-        <div onClick={handleBack} className={styles.left_menu}>
-          <ul>
-            <li>
-              <Image
-                src="../img/icon/tutor/go-back.svg"
-                alt="Заказы"
-                width={32}
-                height={32}
-              />
-              <span className={styles.left_menu__list_text}>
-                Вернуться назад
-              </span>
-            </li>
-          </ul>
-        </div>
-      )}
+      {page === "Order" ||
+        (page === "Main" && (
+          <div onClick={handleBack} className={styles.left_menu}>
+            <ul>
+              <li>
+                <Image
+                  src="/../img/icon/tutor/go-back.svg"
+                  alt="Заказы"
+                  width={32}
+                  height={32}
+                />
+                <span className={styles.left_menu__list_text}>
+                  Вернуться назад
+                </span>
+              </li>
+            </ul>
+          </div>
+        ))}
       <div className={styles.left_menu}>
         <ul>
-          <Link href={"orders"} prefetch={true}>
+          <Link href={"/tutor/orders"} prefetch={true}>
             <li>
               <Image
-                src="../img/icon/tutor/orders.svg"
+                src="/../img/icon/tutor/orders.svg"
                 alt="Заказы"
                 width={32}
                 height={32}
@@ -76,10 +77,10 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <Link href={"responses"} prefetch={true}>
+          <Link href={"/tutor/responses"} prefetch={true}>
             <li>
               <Image
-                src="../img/icon/tutor/response.svg"
+                src="/../img/icon/tutor/response.svg"
                 alt="Отклики"
                 width={32}
                 height={32}
@@ -94,10 +95,10 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               <span className={styles.count_block}>9</span>
             </li>
           </Link>
-          <Link href={"profile"} prefetch={true}>
+          <Link href={"/tutor/profile"} prefetch={true}>
             <li>
               <Image
-                src="../img/icon/tutor/profile.svg"
+                src="/../img/icon/tutor/profile.svg"
                 alt="Анкета"
                 width={32}
                 height={32}
@@ -111,10 +112,10 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <Link href={"wallet"} prefetch={true}>
+          <Link href={"/tutor/wallet"} prefetch={true}>
             <li>
               <Image
-                src="../img/icon/tutor/balance.svg"
+                src="/../img/icon/tutor/balance.svg"
                 alt="Баланс"
                 width={32}
                 height={32}
@@ -128,10 +129,10 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <Link href={"settings"} prefetch={true}>
+          <Link href={"/tutor/settings"} prefetch={true}>
             <li>
               <Image
-                src="../img/icon/tutor/settings.svg"
+                src="/../img/icon/tutor/settings.svg"
                 alt="Настройки"
                 width={32}
                 height={32}
@@ -147,7 +148,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
           </Link>
           <li onClick={() => handleSupportMenu()}>
             <Image
-              src="../img/icon/tutor/support.svg"
+              src="/../img/icon/tutor/support.svg"
               alt="Помощь"
               width={32}
               height={32}
@@ -173,7 +174,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               [styles.open]: supportMenu,
             })}
           >
-            <Link href={"wiki"} prefetch={true}>
+            <Link href={"/tutor/wiki"} prefetch={true}>
               <li style={{ padding: "12px 0 12px 40px" }}>
                 <span
                   className={clsx(styles.left_menu__list_text, {
@@ -184,7 +185,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
                 </span>
               </li>
             </Link>
-            <Link href={"new-ticket"} prefetch={true}>
+            <Link href={"/tutor/new-ticket"} prefetch={true}>
               <li style={{ padding: "0 0 12px 40px" }}>
                 <span
                   className={clsx(styles.left_menu__list_text, {
@@ -195,7 +196,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
                 </span>
               </li>
             </Link>
-            <Link href={"tickets"} prefetch={true}>
+            <Link href={"/tutor/tickets"} prefetch={true}>
               <li style={{ padding: "0 0 12px 40px" }}>
                 <span
                   className={clsx(styles.left_menu__list_text, {

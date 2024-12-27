@@ -1,0 +1,11 @@
+.description {
+  margin: 0 0 18px 0;
+}
+
+.description ul {
+  list-style-type: circle;
+  padding-left: 20px;
+}
+.description ul li {
+  list-style-type: circle;
+}

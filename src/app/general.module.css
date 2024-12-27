@@ -74,3 +74,31 @@
   position: sticky;
   top: 0;
 }
+
+.dsplFlx {
+  display: flex;
+}
+
+.flxRow {
+  flex-direction: row;
+}
+
+.flxNwrp {
+  flex-wrap: nowrap;
+}
+
+.flxAiCntr {
+  align-items: center;
+}
+
+.flxJcSpcBtwn {
+  justify-content: space-between;
+}
+
+.dplFlxRwNwrAiCntrJcBtwn {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+}

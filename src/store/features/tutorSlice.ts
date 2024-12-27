@@ -35,7 +35,7 @@ export const createTutor = createAsyncThunk<
 
 export const updateTutor = createAsyncThunk<
   Tutor,
-  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[] }
+  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[], profileInfo?: string; }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
     // Базовый объект с обязательными полями
@@ -50,6 +50,7 @@ export const updateTutor = createAsyncThunk<
       ...(optionalFields.tutorPlace !== undefined && { tutorPlace: optionalFields.tutorPlace }),
       ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
       ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
+      ...(optionalFields.profileInfo !== undefined && { profileInfo: optionalFields.profileInfo }),
     };
 
     const response = await fetchUpdateTutor(dataToUpdate);
@@ -62,16 +63,32 @@ export const updateTutor = createAsyncThunk<
 
 export const updateTutorAvatar = createAsyncThunk<
   UpdateTutorAvatarResponse,
-  UpdateTutorAvatarPayload // Здесь используем обновленный интерфейс
+  UpdateTutorAvatarPayload // Используем обновленный интерфейс
 >(
-  'tutor/updateAvatar',
+  "tutor/updateAvatar",
   async ({ id, file, token, croppedAreaPixels }) => {
+    // Если файл отсутствует, выполняем удаление аватара
+    if (!file) {
+      const response = await fetch(`${baseUrl}tutors/${id}/avatar`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Ошибка при удалении аватара");
+      }
+
+      return response.json();
+    }
+
+    // Обновление аватара
     const formData = new FormData();
-    formData.append('avatar', file);
-    // Здесь вы можете также использовать croppedAreaPixels, если это необходимо
+    formData.append("avatar", file);
 
     const response = await fetch(`${baseUrl}tutors/${id}/avatar`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -79,7 +96,7 @@ export const updateTutorAvatar = createAsyncThunk<
     });
 
     if (!response.ok) {
-      throw new Error('Ошибка при обновлении аватара');
+      throw new Error("Ошибка при обновлении аватара");
     }
 
     return response.json();

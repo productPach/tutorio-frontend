@@ -75,7 +75,11 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
                   <>
                     <span>{tutor.name}</span>
                     <Image
-                      src={`${host}${port}${tutor?.avatarUrl}`}
+                      src={
+                        tutor?.avatarUrl
+                          ? `${host}${port}${tutor?.avatarUrl}`
+                          : `/img/tutor/avatarBasic.png`
+                      }
                       alt={`${tutor?.name}`}
                       width={42}
                       height={42}
