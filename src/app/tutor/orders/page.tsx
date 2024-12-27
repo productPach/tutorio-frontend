@@ -9,6 +9,7 @@ import { Modal } from "@/components/Modal/Modal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { useAppSelector } from "@/store/store";
 import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
+import { useRouter } from "next/navigation";
 
 const TutorOrders: React.FC = () => {
   const page = "Orders";
@@ -23,6 +24,16 @@ const TutorOrders: React.FC = () => {
     localStorage.removeItem("confirm-time");
     localStorage.removeItem("_cr-tripData");
   }, []);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch("/orders");
+    router.prefetch("/responses");
+    router.prefetch("/profile");
+    router.prefetch("/wallet");
+    router.prefetch("/settings");
+  }, [router]);
 
   return (
     <>

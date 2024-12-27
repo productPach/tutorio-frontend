@@ -1,23 +1,22 @@
 "use client";
-import styles from "../layout.module.css";
+import styles from "../../layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import SideBar from "@/components/Tutor/SideBar/SideBar";
-import { Profile } from "@/components/Tutor/Profile/Profile";
+import { Photo } from "@/components/Tutor/Profile/Photo/Photo";
 
-const ProfilePage: React.FC = () => {
-  const page = "Profile";
+const PhotoPage: React.FC = () => {
+  const page = "Main";
 
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <Profile />
+          <Photo />
         </div>
       </section>
     </>
   );
 };
 
-export default ProfilePage;
+export default PhotoPage;

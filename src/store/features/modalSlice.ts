@@ -5,6 +5,8 @@ type ModalStateType = {
   isModalBalanceBoost: boolean;
   valueModalBalanceBoost: string;
   scrollY: number;
+  isModalFio: boolean;
+  isModalProfileInfo: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -12,6 +14,8 @@ const initialState: ModalStateType = {
   isModalBalanceBoost: false,
   valueModalBalanceBoost: "",
   scrollY: 0,
+  isModalFio: false,
+  isModalProfileInfo: false,
 };
 
 const modalSlice = createSlice({
@@ -30,6 +34,12 @@ const modalSlice = createSlice({
     setScrollY: (state, action: PayloadAction<number>) => {
       state.scrollY = action.payload;
     },
+    setIsModalFio: (state, action: PayloadAction<boolean>) => {
+      state.isModalFio = action.payload;
+    },
+    setIsModalProfileInfo: (state, action: PayloadAction<boolean>) => {
+      state.isModalProfileInfo = action.payload;
+    },
   },
 });
 
@@ -38,5 +48,7 @@ export const {
   setIsModalBalanceBoost,
   setValueModalBalanceBoost,
   setScrollY,
+  setIsModalFio,
+  setIsModalProfileInfo,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

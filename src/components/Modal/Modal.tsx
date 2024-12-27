@@ -10,6 +10,8 @@ import styles from "../Modal/Modal.module.css";
 import { useAppDispatch } from "@/store/store";
 import {
   setIsModalBalanceBoost,
+  setIsModalFio,
+  setIsModalProfileInfo,
   setModalSelectCity,
   setScrollY,
 } from "@/store/features/modalSlice";
@@ -38,6 +40,12 @@ export const Modal: React.FC<ModalProps> = ({
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
+    if (modalId === "fio") {
+      dispatch(setIsModalFio(false));
+    }
+    if (modalId === "profileInfo") {
+      dispatch(setIsModalProfileInfo(false));
+    }
   };
 
   useEffect(() => {
@@ -56,7 +64,7 @@ export const Modal: React.FC<ModalProps> = ({
               className={styles.dialogOverlay}
               onClose={() => closeModal()}
             >
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter={styles.enter}
                 enterFrom={styles.enterFrom}
@@ -66,7 +74,7 @@ export const Modal: React.FC<ModalProps> = ({
                 leaveTo={styles.leaveTo}
               >
                 <div className={styles.bg}></div>
-              </Transition.Child>
+              </TransitionChild>
 
               <div className={styles.popupWrapper}>
                 <TransitionChild
