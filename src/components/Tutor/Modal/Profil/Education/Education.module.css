@@ -4,3 +4,8 @@
   flex-wrap: nowrap;
   justify-content: space-between;
 }
+.containerFlxRw {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}

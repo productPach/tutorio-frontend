@@ -7,6 +7,8 @@ import { deleteTutorEducation } from "@/store/features/tutorSlice";
 import { useDispatch } from "react-redux";
 import { useParams } from "next/navigation";
 import { EducationItem } from "@/components/Tutor/Profile/Education/EducationItem";
+import { Modal } from "@/components/Modal/Modal";
+import { EducationItemModal } from "@/components/Tutor/Modal/Profil/Education/EducationItemModal";
 
 const EducationPage: React.FC = () => {
   const page = "Main";
@@ -14,6 +16,11 @@ const EducationPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+
+  const isModalEducationItem = useAppSelector(
+    (state) => state.modal.isModalEducationItem
+  );
+
   const { education } = useParams();
   // Преобразуем educationId в строку, если это массив
   const id = Array.isArray(education) ? education[0] : education;
@@ -36,16 +43,24 @@ const EducationPage: React.FC = () => {
   }
 
   return (
-    <section className={clsx(styles.container, styles.center)}>
-      <LeftBar page={page} />
-      <div className={styles.content}>
-        <EducationItem educationId={id} educationIndex={educationIndex} />
+    <>
+      <section className={clsx(styles.container, styles.center)}>
+        <LeftBar page={page} />
+        <div className={styles.content}>
+          <EducationItem educationId={id} educationIndex={educationIndex} />
 
-        <span onClick={() => tutor && deleteEducation(tutor.id, id)}>
-          Удалить
-        </span>
-      </div>
-    </section>
+          <span onClick={() => tutor && deleteEducation(tutor.id, id)}>
+            Удалить
+          </span>
+        </div>
+      </section>
+      <Modal
+        titleModal={"Удалить образование?"}
+        contentModal={<EducationItemModal />}
+        isModal={isModalEducationItem}
+        modalId={"educationItem"}
+      ></Modal>
+    </>
   );
 };
 
