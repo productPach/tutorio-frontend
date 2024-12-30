@@ -26,3 +26,15 @@
 .img:hover {
   background-color: #eee;
 }
+.description {
+  margin-top: 10px;
+}
+.edicationListUl {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  padding: 0 0 0 20px;
+}
+.edicationListLi {
+  list-style: initial;
+}

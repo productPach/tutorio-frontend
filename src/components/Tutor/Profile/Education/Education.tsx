@@ -8,15 +8,17 @@ import { AppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import {
   setIsModalEducation,
-  setIsModalFio,
-  setIsModalProfileInfo,
+  setIsModalExperience,
 } from "@/store/features/modalSlice";
 import { getYearWord } from "@/utils/words/getYearWord";
+import Link from "next/link";
+import { deleteTutorEducation } from "@/store/features/tutorSlice";
 
 export const Education = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const educationLength = tutor?.educations?.length || 0;
+
   return (
     <>
       <div className={styles.content_block}>
@@ -30,7 +32,7 @@ export const Education = () => {
             <h2
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalEducation(true));
+                dispatch(setIsModalExperience(true));
               }}
               title="Изменить"
             >
@@ -44,68 +46,89 @@ export const Education = () => {
           <Image
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalEducation(true));
+              dispatch(setIsModalExperience(true));
             }}
             title="Изменить"
             className={componentStyle.img}
             src="/../img/icon/tutor/pencilSimple.svg"
-            alt="Изменить"
+            alt="Добавить стаж"
             width={21}
             height={21}
           />
         </div>
       </div>
 
-      {/* <div className={styles.content_block}>
+      <div className={styles.content_block}>
         <div className={clsx(generalStyle.dplFlxRwNwrAiCntrJcBtwn)}>
           <div className={componentStyle.container}>
             <h2
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalProfileInfo(true));
+                dispatch(setIsModalEducation(true));
               }}
             >
-              О себе
+              Образование
             </h2>
           </div>
           <Image
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalProfileInfo(true));
+              dispatch(setIsModalEducation(true));
             }}
             className={componentStyle.img}
-            src={
-              tutor?.profileInfo
-                ? "/../img/icon/tutor/pencilSimple.svg"
-                : "/../img/icon/tutor/plus.svg"
-            }
-            alt="Общая информация"
+            src={"/../img/icon/tutor/plus.svg"}
+            alt="Образование"
+            title="Добавить образование"
             width={21}
             height={21}
           />
         </div>
-        <div className={componentStyle.container}>
+        <div
+          className={clsx(componentStyle.container, componentStyle.description)}
+        >
           <span
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalProfileInfo(true));
+              dispatch(setIsModalEducation(true));
             }}
           >
-            {!tutor?.profileInfo &&
-              "Расскажите о вашем опыте, подходе к обучению и технике, которые вы используете. Поделитесь, что мотивирует вас в преподавании и чем вы можете помочь ученикам"}
+            {educationLength === 0 && (
+              <>
+                Укажите полное наименование учебного заведения и период
+                обучения. Это поможет ученикам создать представление о вашем
+                образовании.
+                <br></br>
+                <br></br>
+                При желании вы также можете приложить диплом или сертификат для
+                подтверждения ваших квалификаций. Если у вас есть дополнительные
+                курсы или тренинги, их также стоит упомянуть.
+              </>
+            )}
           </span>
         </div>
 
-        <p
+        <div
           onClick={(e) => {
             e.preventDefault();
-            dispatch(setIsModalProfileInfo(true));
           }}
           className={componentStyle.profileInfo}
         >
-          {tutor?.profileInfo && tutor?.profileInfo}
-        </p>
-      </div> */}
+          <ul className={componentStyle.edicationListUl}>
+            {educationLength > 0 &&
+              tutor?.educations.map((item) => {
+                return (
+                  <li key={item.id} className={componentStyle.edicationListLi}>
+                    <h3>
+                      <Link href={`educations/${item.id}`}>
+                        {item.educationInfo}
+                      </Link>
+                    </h3>
+                  </li>
+                );
+              })}
+          </ul>
+        </div>
+      </div>
     </>
   );
 };

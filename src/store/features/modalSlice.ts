@@ -7,6 +7,7 @@ type ModalStateType = {
   scrollY: number;
   isModalFio: boolean;
   isModalProfileInfo: boolean;
+  isModalExperience: boolean;
   isModalEducation: boolean;
 };
 
@@ -17,6 +18,7 @@ const initialState: ModalStateType = {
   scrollY: 0,
   isModalFio: false,
   isModalProfileInfo: false,
+  isModalExperience: false,
   isModalEducation: false,
 };
 
@@ -42,6 +44,9 @@ const modalSlice = createSlice({
     setIsModalProfileInfo: (state, action: PayloadAction<boolean>) => {
       state.isModalProfileInfo = action.payload;
     },
+    setIsModalExperience: (state, action: PayloadAction<boolean>) => {
+      state.isModalExperience = action.payload;
+    },
     setIsModalEducation: (state, action: PayloadAction<boolean>) => {
       state.isModalEducation = action.payload;
     },
@@ -55,6 +60,7 @@ export const {
   setScrollY,
   setIsModalFio,
   setIsModalProfileInfo,
+  setIsModalExperience,
   setIsModalEducation,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

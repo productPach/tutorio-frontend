@@ -49,9 +49,41 @@ export type Tutor = {
   tutorTrip: string[];
   profileInfo: string;
   experience: string;
+  educations: TutorEducation[];
   status: string;
   response: Response[];
 };
+
+export interface UpdateTutorAvatarResponse {
+  id: string;
+  avatarUrl: string;
+}
+
+export interface CroppedAreaPixels {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface UpdateTutorAvatarPayload {
+  id: string;
+  file: File | null;
+  token: string;
+  croppedAreaPixels: CroppedAreaPixels | null; // Новое свойство
+}
+
+export type TutorEducation = {
+  id: string;
+  tutorId: string;
+  educationInfo: string;   // Название вуза, факультет, специализация
+  educationStartYear: number;      // Год начала обучения
+  educationEndYear: number;     // Год окончания обучения (опционально, если еще учится)
+  educationDiplomUrl: string;  // УРЛ на фото диплома
+  isShowDiplom: boolean; // Показывать ли фото диплома ученикам
+  createdAt: string;
+  updatedAt: string;
+}
 
 export type Employee = {
   id: string;
@@ -157,25 +189,6 @@ export type Metro = {
 export type RegionalCity = {
   id: string;
   title: string;
-}
-
-export interface UpdateTutorAvatarResponse {
-  id: string;
-  avatarUrl: string;
-}
-
-export interface CroppedAreaPixels {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export interface UpdateTutorAvatarPayload {
-  id: string;
-  file: File | null;
-  token: string;
-  croppedAreaPixels: CroppedAreaPixels | null; // Новое свойство
 }
 
 export type WelcomeScreen = {

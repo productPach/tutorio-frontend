@@ -6,11 +6,15 @@ import { Education } from "@/components/Tutor/Profile/Education/Education";
 import { Modal } from "@/components/Modal/Modal";
 import { EducationModal } from "@/components/Tutor/Modal/Profil/Education/EducationModal";
 import { useAppSelector } from "@/store/store";
+import { ExperienceModal } from "@/components/Tutor/Modal/Profil/Education/ExperienceModal";
 
 const EducationPage: React.FC = () => {
   const page = "Main";
   const isModalEducation = useAppSelector(
     (state) => state.modal.isModalEducation
+  );
+  const isModalExperience = useAppSelector(
+    (state) => state.modal.isModalExperience
   );
 
   return (
@@ -23,7 +27,14 @@ const EducationPage: React.FC = () => {
       </section>
       <Modal
         titleModal={"Репетиторский стаж"}
-        contentModal={<EducationModal />}
+        contentModal={<ExperienceModal />}
+        isModal={isModalExperience}
+        modalId={"experience"}
+      ></Modal>
+
+      <Modal
+        titleModal={"Образование"}
+        contentModal={<EducationModal educationId={null} />}
         isModal={isModalEducation}
         modalId={"education"}
       ></Modal>
