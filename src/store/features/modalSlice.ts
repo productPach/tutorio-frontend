@@ -9,6 +9,7 @@ type ModalStateType = {
   isModalProfileInfo: boolean;
   isModalExperience: boolean;
   isModalEducation: boolean;
+  isModalEducationItem: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -20,6 +21,7 @@ const initialState: ModalStateType = {
   isModalProfileInfo: false,
   isModalExperience: false,
   isModalEducation: false,
+  isModalEducationItem: false,
 };
 
 const modalSlice = createSlice({
@@ -50,6 +52,9 @@ const modalSlice = createSlice({
     setIsModalEducation: (state, action: PayloadAction<boolean>) => {
       state.isModalEducation = action.payload;
     },
+    setIsModalEducationItem: (state, action: PayloadAction<boolean>) => {
+      state.isModalEducationItem = action.payload;
+    },
   },
 });
 
@@ -62,5 +67,6 @@ export const {
   setIsModalProfileInfo,
   setIsModalExperience,
   setIsModalEducation,
+  setIsModalEducationItem,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

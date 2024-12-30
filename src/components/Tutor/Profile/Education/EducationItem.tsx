@@ -9,6 +9,7 @@ import { AppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import {
   setIsModalEducation,
+  setIsModalEducationItem,
   setIsModalExperience,
 } from "@/store/features/modalSlice";
 import { getYearWord } from "@/utils/words/getYearWord";
@@ -67,7 +68,7 @@ export const EducationItem = ({
             <Image
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalExperience(true));
+                dispatch(setIsModalEducationItem(true));
               }}
               title="Удалить"
               className={componentStyle.img}
