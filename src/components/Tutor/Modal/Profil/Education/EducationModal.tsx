@@ -129,7 +129,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
         />
       </div>
       <div className={componentStyles.containerEducationYears}>
-        <div>
+        <div className={componentStyles.containerYear}>
           <div className={styles.description}>Год начала обучения</div>
           <div className={styles.inputContainer}>
             <input
@@ -149,7 +149,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
             />
           </div>
         </div>
-        <div>
+        <div className={componentStyles.containerYear}>
           <div className={styles.description}>Год окончания обучения</div>
           <div className={styles.inputContainer}>
             <input
@@ -169,6 +169,16 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
             />
           </div>
         </div>
+      </div>
+      <div className={styles.description}>
+        Диплом, сертификат и другие документы
+      </div>
+      <div className={componentStyles.containerFlxRw}>
+        <input className={componentStyles.file} type="file" />
+        <input className={componentStyles.file} type="file" />
+        <input className={componentStyles.file} type="file" />
+        <input className={componentStyles.file} type="file" />
+        <input className={componentStyles.file} type="file" />
       </div>
       <div className={styles.button}>
         <button onClick={create} type="button" disabled={isButtonDisabled}>

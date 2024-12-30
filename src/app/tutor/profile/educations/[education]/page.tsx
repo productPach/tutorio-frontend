@@ -23,15 +23,12 @@ const EducationPage: React.FC = () => {
 
   const { education } = useParams();
   // Преобразуем educationId в строку, если это массив
-  const id = Array.isArray(education) ? education[0] : education;
+  const educationId = Array.isArray(education) ? education[0] : education;
 
   const educationIndex = tutor?.educations.findIndex(
-    (education) => education.id === id
+    (education) => education.id === educationId
   );
 
-  const deleteEducation = (tutorId: string, educationId: string) => {
-    token && dispatch(deleteTutorEducation({ tutorId, educationId, token }));
-  };
   // Проверяем, найден ли индекс образования
   if (educationIndex === undefined || educationIndex === -1) {
     return (
@@ -47,11 +44,10 @@ const EducationPage: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <EducationItem educationId={id} educationIndex={educationIndex} />
-
-          <span onClick={() => tutor && deleteEducation(tutor.id, id)}>
-            Удалить
-          </span>
+          <EducationItem
+            educationId={educationId}
+            educationIndex={educationIndex}
+          />
         </div>
       </section>
       <Modal
