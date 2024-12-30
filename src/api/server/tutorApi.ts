@@ -65,6 +65,7 @@ export const fetchUpdateTutor = async (data: {
     return responseData;
   };
 
+  // Обновление аватара репетитора
   export const updateTutorAvatarApi = async (id: string, file: File, token: string) => {
     const formData = new FormData();
     formData.append('avatar', file);
@@ -84,3 +85,74 @@ export const fetchUpdateTutor = async (data: {
     return response.json();
   };
   
+  // ОБРАЗОВНИЕ РЕПЕТИТОРА
+
+  // Создание нового образование
+  export const fetchCreateTutorEducation = async (tutorId: string, educationInfo: string, educationStartYear: number, educationEndYear: number, educationDiplomUrl: string, isShowDiplom: boolean, token: string) => {
+    const response = await fetch(`${baseUrl}tutorsEducation/${tutorId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },   
+        body: JSON.stringify({
+            tutorId: tutorId,
+            educationInfo: educationInfo,
+            educationStartYear: educationStartYear,
+            educationEndYear: educationEndYear ? educationEndYear : null,
+            educationDiplomUrl: educationDiplomUrl ? educationDiplomUrl : null,
+            isShowDiplom: isShowDiplom,
+        })
+    });
+
+    const data = await response.json();
+    return data;
+  }
+
+  // Редактирование образования
+  export const fetchUpdateTutorEducation = async (data: {
+    tutorId: string;
+    educationId: string;
+    token: string;
+    educationInfo?: string;
+    educationStartYear?: number;
+    educationEndYear?: number;
+    isShowDiplom?: boolean;
+  }) => {
+    const { tutorId, educationId, token, ...fields } = data;
+    const response = await fetch(`${baseUrl}tutorsEducation/${tutorId}/${educationId}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },   
+        body: JSON.stringify(fields)
+    });
+
+    const responseData = await response.json();
+    return responseData;
+  }
+
+  // Удаление образования
+  // Функция для удаления места образования
+export const fetchDeleteTutorEducation = async (tutorId: string, educationId: string, token: string) => {
+  try {
+    const response = await fetch(`${baseUrl}tutorsEducation/${tutorId}/${educationId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Не удалось удалить место образования");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error deleting education:", error);
+    throw new Error("Произошла ошибка при удалении места образования");
+  }
+};

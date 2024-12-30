@@ -78,7 +78,9 @@ export const GeneralInfo = () => {
             height={21}
           />
         </div>
-        <div className={componentStyle.container}>
+        <div
+          className={clsx(componentStyle.container, componentStyle.description)}
+        >
           <span
             onClick={(e) => {
               e.preventDefault();

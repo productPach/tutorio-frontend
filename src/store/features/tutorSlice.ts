@@ -1,7 +1,7 @@
 import { baseUrl } from "@/api/server/configApi";
-import { fetchCreateTutor, fetchCurrentTutor, fetchUpdateTutor } from "@/api/server/tutorApi";
+import { fetchCreateTutor, fetchCreateTutorEducation, fetchCurrentTutor, fetchDeleteTutorEducation, fetchUpdateTutor, fetchUpdateTutorEducation } from "@/api/server/tutorApi";
 import { fetchShowWelcomeScreen, fetchWelcomeScreens } from "@/api/server/userApi";
-import { District, Metro, RegionalCity, Tutor, UpdateTutorAvatarPayload, UpdateTutorAvatarResponse, WelcomeScreen } from "@/types/types";
+import { District, Metro, RegionalCity, Tutor, TutorEducation, UpdateTutorAvatarPayload, UpdateTutorAvatarResponse, WelcomeScreen } from "@/types/types";
 import { getTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -35,7 +35,7 @@ export const createTutor = createAsyncThunk<
 
 export const updateTutor = createAsyncThunk<
   Tutor,
-  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[], profileInfo?: string; }
+  { id: string; token: string; status: string; name?: string; email?: string; subject?: string[]; region?: string; tutorPlace?: string[]; tutorAdress?: string; tutorTrip?: string[], profileInfo?: string; experience?: string }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
     // Базовый объект с обязательными полями
@@ -51,6 +51,7 @@ export const updateTutor = createAsyncThunk<
       ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
       ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
       ...(optionalFields.profileInfo !== undefined && { profileInfo: optionalFields.profileInfo }),
+      ...(optionalFields.experience !== undefined && { experience: optionalFields.experience }),
     };
 
     const response = await fetchUpdateTutor(dataToUpdate);
@@ -134,6 +135,62 @@ export const showWelcomeScreen = createAsyncThunk<
     }
   }
 );
+
+// Создание образования
+export const createTutorEducation = createAsyncThunk<
+  Tutor,
+  { tutorId: string, educationInfo: string, educationStartYear: number, educationEndYear: number, educationDiplomUrl: string, isShowDiplom: boolean, token: string }
+>("tutor/createEducation", async ({ tutorId, educationInfo, educationStartYear, educationEndYear, educationDiplomUrl, isShowDiplom, token }) => {
+  try {
+    const response = await fetchCreateTutorEducation(tutorId, educationInfo, educationStartYear, educationEndYear, educationDiplomUrl, isShowDiplom, token);
+    return response;
+  } catch (error) {
+    // Здесь можно вернуть undefined или обработать ошибку
+    console.error(error);
+    throw error;
+  }
+});
+
+// Редактирование образования
+export const updateTutorEducation = createAsyncThunk<
+  Tutor,
+  { tutorId: string, educationId: string, educationInfo: string, educationStartYear: number, educationEndYear: number, isShowDiplom: boolean, token: string }
+>("tutor/createEducation", async ({ tutorId, educationId, token, ...optionalFields }) => {
+  try {
+
+    const dataToUpdate = {
+      tutorId,
+      educationId,
+      token,
+      ...(optionalFields.educationInfo !== undefined && { educationInfo: optionalFields.educationInfo }),
+      ...(optionalFields.educationStartYear !== undefined && { educationStartYear: optionalFields.educationStartYear }),
+      ...(optionalFields.educationEndYear !== undefined && { educationEndYear: optionalFields.educationEndYear }),
+      ...(optionalFields.isShowDiplom !== undefined && { isShowDiplom: optionalFields.isShowDiplom }),
+    };
+
+    const response = await fetchUpdateTutorEducation(dataToUpdate);
+    return response;
+  } catch (error) {
+    // Здесь можно вернуть undefined или обработать ошибку
+    console.error(error);
+    throw error;
+  }
+});
+
+// Удаление образования
+export const deleteTutorEducation = createAsyncThunk<
+  Tutor,
+  { tutorId: string, educationId: string, token: string }
+>("tutor/deleteEducation", async ({ tutorId, educationId, token }) => {
+  try {
+    const response = await fetchDeleteTutorEducation(tutorId, educationId, token);
+    return response;
+  } catch (error) {
+    // Здесь можно вернуть undefined или обработать ошибку
+    console.error(error);
+    throw error;
+  }
+});
 
 
 type TutorStateType = {
@@ -235,7 +292,23 @@ const tutorSlice = createSlice({
           state.hiddenScreens = updatedHiddenScreens;
           localStorage.setItem("hiddenScreens", JSON.stringify(updatedHiddenScreens)); // Обновляем в localStorage
         }
-      });
+      }).addCase(
+        createTutorEducation.fulfilled,
+        (state, action: PayloadAction<Tutor>) => {
+          if (state.tutor) {
+            state.tutor.educations = action.payload.educations; // Присваиваем только поле tutorEducation
+            setLocalStorage("tutor", state.tutor); // Сохраняем весь объект tutor
+          }
+        }
+      ).addCase(
+        deleteTutorEducation.fulfilled,
+        (state, action: PayloadAction<Tutor>) => {
+          if (state.tutor) {
+            state.tutor.educations = action.payload.educations; // Присваиваем только поле tutorEducation
+            setLocalStorage("tutor", state.tutor); // Сохраняем весь объект tutor
+          }
+        }
+      );
   },
 });
 

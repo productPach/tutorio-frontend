@@ -32,7 +32,7 @@ export const Profile = () => {
           </div>
         </div>
       </Link>
-      <Link href={"profile/documents"} prefetch={true}>
+      {/* <Link href={"profile/documents"} prefetch={true}>
         <div className={styles.content_block}>
           <div className={styles.order_block_flx_rw_spbtw}>
             <h3>Документы, дипломы, сертификаты</h3>
@@ -44,7 +44,7 @@ export const Profile = () => {
             />
           </div>
         </div>
-      </Link>
+      </Link> */}
       <Link href={"profile/subjects"} prefetch={true}>
         <div className={styles.content_block}>
           <div className={styles.order_block_flx_rw_spbtw}>
@@ -71,7 +71,7 @@ export const Profile = () => {
           </div>
         </div>
       </Link>
-      <Link href={"profile/education"} prefetch={true}>
+      <Link href={"profile/educations"} prefetch={true}>
         <div className={styles.content_block}>
           <div className={styles.order_block_flx_rw_spbtw}>
             <h3>Образование и опыт</h3>
