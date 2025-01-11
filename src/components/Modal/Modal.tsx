@@ -12,6 +12,7 @@ import {
   setIsModalBalanceBoost,
   setIsModalEducation,
   setIsModalEducationItem,
+  setIsModalEducationItemDiplomas,
   setIsModalExperience,
   setIsModalFio,
   setIsModalProfileInfo,
@@ -57,6 +58,9 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "educationItem") {
       dispatch(setIsModalEducationItem(false));
+    }
+    if (modalId === "educationItemDiplomas") {
+      dispatch(setIsModalEducationItemDiplomas(false));
     }
   };
 

@@ -95,31 +95,45 @@ export const updateTutorAvatarApi = async (
 export const fetchCreateTutorEducation = async (
   tutorId: string,
   educationInfo: string,
-  educationStartYear: number,
-  educationEndYear: number,
-  educationDiplomUrl: string,
+  educationStartYear: string,
+  educationEndYear: string | null,
   isShowDiplom: boolean,
-  token: string
+  token: string,
+  diploma: (File | null)[]
 ) => {
+  const formData = new FormData();
+
+  formData.append("tutorId", tutorId);
+  formData.append("educationInfo", educationInfo);
+  formData.append("educationStartYear", educationStartYear);
+  if (educationEndYear !== null) {
+    formData.append("educationEndYear", educationEndYear);
+  }
+  formData.append("isShowDiplom", isShowDiplom ? "true" : "false");
+
+  // Добавляем файлы в formData
+  diploma.forEach((file, index) => {
+    if (file) {
+      formData.append(`diploma`, file);
+    }
+  });
+
   const response = await fetch(`${baseUrl}tutorsEducation/${tutorId}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      tutorId: tutorId,
-      educationInfo: educationInfo,
-      educationStartYear: educationStartYear,
-      educationEndYear: educationEndYear ? educationEndYear : null,
-      educationDiplomUrl: educationDiplomUrl ? educationDiplomUrl : null,
-      isShowDiplom: isShowDiplom,
-    }),
+    body: formData,
   });
+
+  if (!response.ok) {
+    throw new Error("Ошибка при создании образования");
+  }
 
   const data = await response.json();
   return data;
 };
+
 
 // Редактирование образования
 export const fetchUpdateTutorEducation = async (data: {

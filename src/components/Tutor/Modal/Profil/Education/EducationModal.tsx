@@ -66,12 +66,12 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
 
   const handleInputStartYear = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
-    setInputStartYear(value ? parseInt(value, 10) : null);
+    setInputStartYear(value);
   };
 
   const handleInputEndYear = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
-    setInputEndYear(value ? parseInt(value, 10) : null);
+    setInputEndYear(value);
   };
 
   const handleFocus = (inputName: keyof typeof focusedInputs | number) => {
@@ -113,13 +113,12 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
 
     const tutorId = tutor.id;
     const educationInfo = inputEducationInfo;
-    const educationStartYear = +inputStartYear;
-    const educationEndYear = +inputEndYear;
+    const educationStartYear = inputStartYear;
+    const educationEndYear = inputEndYear;
     const isShowDiplom = true;
 
     const nonEmptyFiles = selectedFiles.filter((file) => file !== null);
 
-    // Передаем все необходимые аргументы в функцию
     dispatch(
       createTutorEducation({
         tutorId,
@@ -128,7 +127,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
         educationEndYear,
         isShowDiplom,
         token,
-        files: nonEmptyFiles, // Передаем массив файлов
+        diploma: nonEmptyFiles, // Передаем файлы
       })
     ).unwrap();
     dispatch(setIsModalEducation(false));

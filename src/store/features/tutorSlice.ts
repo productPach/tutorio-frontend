@@ -187,11 +187,11 @@ export const createTutorEducation = createAsyncThunk<
   {
     tutorId: string;
     educationInfo: string;
-    educationStartYear: number;
-    educationEndYear: number;
-    educationDiplomUrl: string;
+    educationStartYear: string;
+    educationEndYear: string | null;
     isShowDiplom: boolean;
     token: string;
+    diploma: (File | null)[];
   }
 >(
   "tutor/createEducation",
@@ -200,9 +200,9 @@ export const createTutorEducation = createAsyncThunk<
     educationInfo,
     educationStartYear,
     educationEndYear,
-    educationDiplomUrl,
     isShowDiplom,
     token,
+    diploma,
   }) => {
     try {
       const response = await fetchCreateTutorEducation(
@@ -210,18 +210,18 @@ export const createTutorEducation = createAsyncThunk<
         educationInfo,
         educationStartYear,
         educationEndYear,
-        educationDiplomUrl,
         isShowDiplom,
-        token
+        token,
+        diploma
       );
       return response;
     } catch (error) {
-      // Здесь можно вернуть undefined или обработать ошибку
       console.error(error);
       throw error;
     }
   }
 );
+
 
 // Редактирование образования
 export const updateTutorEducation = createAsyncThunk<
@@ -294,6 +294,7 @@ type TutorStateType = {
   supportMenu: boolean;
   welcomeScreens: null | WelcomeScreen[];
   hiddenScreens: string[]; // Добавляем скрытые экраны
+  numberDiplomasView: number;
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -307,6 +308,7 @@ const initialState: TutorStateType = {
   supportMenu: false,
   welcomeScreens: null,
   hiddenScreens: [],
+  numberDiplomasView: 0,
 };
 
 const tutorSlice = createSlice({
@@ -336,6 +338,9 @@ const tutorSlice = createSlice({
       if (!state.hiddenScreens.includes(action.payload)) {
         state.hiddenScreens.push(action.payload);
       }
+    },
+    setNumberDiplomasView: (state, action: PayloadAction<number>) => {
+      state.numberDiplomasView = action.payload;
     },
   },
   extraReducers(builder) {
@@ -421,5 +426,6 @@ export const {
   setSelectedValuesArea,
   setSupportMenu,
   addHiddenScreen,
+  setNumberDiplomasView,
 } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;
