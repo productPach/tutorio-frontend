@@ -41,8 +41,23 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
     return null;
   });
 
+  const [selectedFiles, setSelectedFiles] = useState<(File | null)[]>([
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
+
   const [errorInput, setErrorInput] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+
+  // Состояния фокуса для каждого инпута
+  const [focusedInputs, setFocusedInputs] = useState({
+    educationInfo: false,
+    startYear: false,
+    endYear: false,
+    fileInputs: Array(5).fill(false),
+  });
 
   const handleInputEducationInfo = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ.\s]/g, ""); // Разрешены буквы, точки и пробелы
@@ -51,18 +66,47 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
 
   const handleInputStartYear = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
-    // Преобразуем строку в число (или оставляем null, если строка пуста)
     setInputStartYear(value ? parseInt(value, 10) : null);
   };
 
   const handleInputEndYear = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
-    // Преобразуем строку в число (или оставляем null, если строка пуста)
     setInputEndYear(value ? parseInt(value, 10) : null);
   };
 
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
+  const handleFocus = (inputName: keyof typeof focusedInputs | number) => {
+    if (typeof inputName === "number") {
+      setFocusedInputs((prev) => {
+        const newFileInputs = [...prev.fileInputs];
+        newFileInputs[inputName] = true;
+        return { ...prev, fileInputs: newFileInputs };
+      });
+    } else {
+      setFocusedInputs((prev) => ({ ...prev, [inputName]: true }));
+    }
+  };
+
+  const handleBlur = (inputName: keyof typeof focusedInputs | number) => {
+    if (typeof inputName === "number") {
+      setFocusedInputs((prev) => {
+        const newFileInputs = [...prev.fileInputs];
+        newFileInputs[inputName] = false;
+        return { ...prev, fileInputs: newFileInputs };
+      });
+    } else {
+      setFocusedInputs((prev) => ({ ...prev, [inputName]: false }));
+    }
+  };
+
+  const handleFileChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const file = e.target.files?.[0] || null;
+    const updatedFiles = [...selectedFiles];
+    updatedFiles[index] = file;
+    setSelectedFiles(updatedFiles);
+  };
 
   const create = () => {
     if (!token || !tutor?.id || !inputStartYear || !inputEndYear) return;
@@ -71,18 +115,20 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
     const educationInfo = inputEducationInfo;
     const educationStartYear = +inputStartYear;
     const educationEndYear = +inputEndYear;
-    const educationDiplomUrl = "/url";
     const isShowDiplom = true;
 
+    const nonEmptyFiles = selectedFiles.filter((file) => file !== null);
+
+    // Передаем все необходимые аргументы в функцию
     dispatch(
       createTutorEducation({
         tutorId,
         educationInfo,
         educationStartYear,
         educationEndYear,
-        educationDiplomUrl,
         isShowDiplom,
         token,
+        files: nonEmptyFiles, // Передаем массив файлов
       })
     ).unwrap();
     dispatch(setIsModalEducation(false));
@@ -94,7 +140,6 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
     }
   };
 
-  // Определяем, должна ли быть кнопка задизейблена
   const isButtonDisabled =
     !inputEducationInfo.trim() ||
     !inputStartYear ||
@@ -114,15 +159,16 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
       <div className={styles.inputContainer}>
         <input
           type="text"
-          placeholder={"Например, МГТУ им. Н.Э. Баумана"}
+          name="inputEducationInfo"
+          placeholder="Например, МГТУ им. Н.Э. Баумана"
           autoComplete="off"
           value={inputEducationInfo}
           onChange={handleInputEducationInfo}
           onKeyDown={handleKeyDown}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={() => handleFocus("educationInfo")}
+          onBlur={() => handleBlur("educationInfo")}
           className={clsx(styles.input, {
-            [styles.focused]: isFocused,
+            [styles.focused]: focusedInputs.educationInfo,
             [styles.errorInput]: errorInput,
           })}
           maxLength={255}
@@ -134,15 +180,16 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
           <div className={styles.inputContainer}>
             <input
               type="text"
-              placeholder={"Например, 2009"}
+              name="inputStartYear"
+              placeholder="Например, 2009"
               autoComplete="off"
               value={inputStartYear ?? ""}
               onChange={handleInputStartYear}
               onKeyDown={handleKeyDown}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
+              onFocus={() => handleFocus("startYear")}
+              onBlur={() => handleBlur("startYear")}
               className={clsx(styles.input, {
-                [styles.focused]: isFocused,
+                [styles.focused]: focusedInputs.startYear,
                 [styles.errorInput]: errorInput,
               })}
               maxLength={4}
@@ -154,15 +201,16 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
           <div className={styles.inputContainer}>
             <input
               type="text"
-              placeholder={"Например, 2015"}
+              name="inputEndYear"
+              placeholder="Например, 2015"
               autoComplete="off"
               value={inputEndYear ?? ""}
               onChange={handleInputEndYear}
               onKeyDown={handleKeyDown}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
+              onFocus={() => handleFocus("endYear")}
+              onBlur={() => handleBlur("endYear")}
               className={clsx(styles.input, {
-                [styles.focused]: isFocused,
+                [styles.focused]: focusedInputs.endYear,
                 [styles.errorInput]: errorInput,
               })}
               maxLength={4}
@@ -174,11 +222,32 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
         Диплом, сертификат и другие документы
       </div>
       <div className={componentStyles.containerFlxRw}>
-        <input className={componentStyles.file} type="file" />
-        <input className={componentStyles.file} type="file" />
-        <input className={componentStyles.file} type="file" />
-        <input className={componentStyles.file} type="file" />
-        <input className={componentStyles.file} type="file" />
+        {selectedFiles.map((file, index) => (
+          <div key={index} className={componentStyles.fileContainer}>
+            {file ? (
+              <img
+                src={URL.createObjectURL(file)}
+                alt="Выбранное изображение"
+                className={componentStyles.imagePreview}
+              />
+            ) : (
+              <label
+                className={clsx(componentStyles.file, {
+                  [styles.focused]: focusedInputs.fileInputs[index],
+                })}
+              >
+                <input
+                  type="file"
+                  onChange={(e) => handleFileChange(e, index)}
+                  onFocus={() => handleFocus(index)}
+                  onBlur={() => handleBlur(index)}
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
+              </label>
+            )}
+          </div>
+        ))}
       </div>
       <div className={styles.button}>
         <button onClick={create} type="button" disabled={isButtonDisabled}>
