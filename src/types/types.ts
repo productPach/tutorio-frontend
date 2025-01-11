@@ -77,9 +77,9 @@ export type TutorEducation = {
   id: string;
   tutorId: string;
   educationInfo: string;   // Название вуза, факультет, специализация
-  educationStartYear: number;      // Год начала обучения
-  educationEndYear: number;     // Год окончания обучения (опционально, если еще учится)
-  educationDiplomUrl: string;  // УРЛ на фото диплома
+  educationStartYear: string;      // Год начала обучения
+  educationEndYear: string;     // Год окончания обучения (опционально, если еще учится)
+  educationDiplomUrl: string[];  // УРЛ на фото диплома
   isShowDiplom: boolean; // Показывать ли фото диплома ученикам
   createdAt: string;
   updatedAt: string;

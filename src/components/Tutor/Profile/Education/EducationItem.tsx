@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import generalStyle from "../../../../app/general.module.css";
 import styles from "../../../../app/tutor/layout.module.css";
 import componentStyle from "../GeneralInfo/GeneralInfo.module.css";
 import componentEducationStyle from "./Education.module.css";
@@ -7,18 +7,22 @@ import componentEducationStyle from "./Education.module.css";
 import clsx from "clsx";
 import { AppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
+import Lightbox from "yet-another-react-lightbox"; // Импортируем Lightbox
+import "yet-another-react-lightbox/styles.css";
 import {
-  setIsModalEducation,
   setIsModalEducationItem,
   setIsModalExperience,
 } from "@/store/features/modalSlice";
-import { getYearWord } from "@/utils/words/getYearWord";
-import Link from "next/link";
-import { deleteTutorEducation } from "@/store/features/tutorSlice";
+import { host, port } from "@/api/server/configApi";
 
 interface EducationItemProps {
   educationId: string;
   educationIndex: number;
+}
+
+interface SlideImage {
+  src: string;
+  alt: string;
 }
 
 export const EducationItem = ({
@@ -27,7 +31,27 @@ export const EducationItem = ({
 }: EducationItemProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const educationLength = tutor?.educations?.length || 0;
+
+  // Стейт для управления состоянием галереи (открыта ли она)
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Обработчик клика по изображению для открытия Lightbox
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index); // Устанавливаем текущий индекс изображения
+    setOpenLightbox(true); // Открываем Lightbox
+  };
+
+  const handleClose = () => {
+    setOpenLightbox(false); // Закрываем Lightbox
+  };
+
+  // Подготовка изображений для Lightbox
+  const slides: SlideImage[] =
+    tutor?.educations[educationIndex]?.educationDiplomUrl.map((diplom) => ({
+      src: `${host}${port}${diplom}`, // Формируем URL для изображения
+      alt: "Документ об образовании", // Описание изображения
+    })) || [];
 
   return (
     <>
@@ -48,9 +72,33 @@ export const EducationItem = ({
                 {tutor?.educations[educationIndex]?.educationEndYear}
               </p>
             </div>
-            <div className={componentEducationStyle.educationItemContainerInfo}>
-              <span>Диплом, сертификаты и другие документы</span>
-            </div>
+
+            {tutor &&
+              tutor?.educations[educationIndex].educationDiplomUrl.length >
+                0 && (
+                <div
+                  className={componentEducationStyle.educationItemContainerInfo}
+                >
+                  <span>Диплом, сертификаты и другие документы</span>
+                  <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
+                    {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
+                      (diplom, index) => {
+                        return (
+                          <Image
+                            key={index}
+                            onClick={() => handleImageClick(index)} // Клик по изображению
+                            src={`${host}${port}${diplom}`}
+                            alt="Документ об образовании"
+                            width={100}
+                            height={100}
+                            className={componentEducationStyle.imageDiplomas}
+                          />
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+              )}
           </div>
           <div>
             <Image
@@ -80,6 +128,14 @@ export const EducationItem = ({
           </div>
         </div>
       </div>
+
+      {/* Lightbox компонент для отображения фотографий на весь экран */}
+      <Lightbox
+        open={openLightbox} // Управляем открытием галереи
+        close={handleClose} // Функция для закрытия галереи
+        slides={slides} // Передаем массив изображений
+        index={currentImageIndex} // Индекс текущего изображения
+      />
     </>
   );
 };

@@ -3,12 +3,12 @@ import styles from "../../../layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import { AppDispatch, useAppSelector } from "@/store/store";
-import { deleteTutorEducation } from "@/store/features/tutorSlice";
 import { useDispatch } from "react-redux";
 import { useParams } from "next/navigation";
 import { EducationItem } from "@/components/Tutor/Profile/Education/EducationItem";
 import { Modal } from "@/components/Modal/Modal";
 import { EducationItemModal } from "@/components/Tutor/Modal/Profil/Education/EducationItemModal";
+import { EducationItemDiplomasModal } from "@/components/Tutor/Modal/Profil/Education/EducationItemDiplomasModal";
 
 const EducationPage: React.FC = () => {
   const page = "Main";
@@ -21,17 +21,18 @@ const EducationPage: React.FC = () => {
     (state) => state.modal.isModalEducationItem
   );
 
-  const { education } = useParams();
-  // Преобразуем educationId в строку, если это массив
-  const id = Array.isArray(education) ? education[0] : education;
-
-  const educationIndex = tutor?.educations.findIndex(
-    (education) => education.id === id
+  const isModalEducationItemDiplomas = useAppSelector(
+    (state) => state.modal.isModalEducationItemDiplomas
   );
 
-  const deleteEducation = (tutorId: string, educationId: string) => {
-    token && dispatch(deleteTutorEducation({ tutorId, educationId, token }));
-  };
+  const { education } = useParams();
+  // Преобразуем educationId в строку, если это массив
+  const educationId = Array.isArray(education) ? education[0] : education;
+
+  const educationIndex = tutor?.educations.findIndex(
+    (education) => education.id === educationId
+  );
+
   // Проверяем, найден ли индекс образования
   if (educationIndex === undefined || educationIndex === -1) {
     return (
@@ -47,11 +48,10 @@ const EducationPage: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <EducationItem educationId={id} educationIndex={educationIndex} />
-
-          <span onClick={() => tutor && deleteEducation(tutor.id, id)}>
-            Удалить
-          </span>
+          <EducationItem
+            educationId={educationId}
+            educationIndex={educationIndex}
+          />
         </div>
       </section>
       <Modal
@@ -59,6 +59,12 @@ const EducationPage: React.FC = () => {
         contentModal={<EducationItemModal />}
         isModal={isModalEducationItem}
         modalId={"educationItem"}
+      ></Modal>
+      <Modal
+        titleModal={"Документы об образовании"}
+        contentModal={<EducationItemDiplomasModal />}
+        isModal={isModalEducationItemDiplomas}
+        modalId={"educationItemDiplomas"}
       ></Modal>
     </>
   );
