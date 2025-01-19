@@ -7,6 +7,7 @@ import componentStyles from "./Education.module.css";
 import { ChangeEvent, useState, useEffect } from "react";
 import { createTutorEducation } from "@/store/features/tutorSlice";
 import { setIsModalEducation } from "@/store/features/modalSlice";
+import { host, port } from "@/api/server/configApi";
 
 interface EducationModalProps {
   educationId: string | null;
@@ -150,6 +151,21 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
     setErrorInput(isButtonDisabled);
   }, [inputEducationInfo, inputStartYear, inputEndYear]);
 
+  const handleDeletePhoto = (index: number) => {
+    // Очищаем состояние selectedFiles, чтобы сбросить превью
+    const updatedFiles = [...selectedFiles];
+    updatedFiles[index] = null;
+    setSelectedFiles(updatedFiles); // Обновляем состояние
+
+    // Сбрасываем значение в инпуте
+    const inputElement = document.querySelectorAll('input[type="file"]')[
+      index
+    ] as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = ""; // Очищаем значение инпута
+    }
+  };
+
   return (
     <>
       <div className={styles.description}>
@@ -222,28 +238,38 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
       </div>
       <div className={componentStyles.containerFlxRw}>
         {selectedFiles.map((file, index) => (
-          <div key={index} className={componentStyles.fileContainer}>
-            {file ? (
-              <img
-                src={URL.createObjectURL(file)}
-                alt="Выбранное изображение"
-                className={componentStyles.imagePreview}
-              />
-            ) : (
-              <label
-                className={clsx(componentStyles.file, {
-                  [styles.focused]: focusedInputs.fileInputs[index],
-                })}
-              >
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(e, index)}
-                  onFocus={() => handleFocus(index)}
-                  onBlur={() => handleBlur(index)}
-                  accept="image/*"
-                  style={{ display: "none" }}
+          <div className={componentStyles.fileWrap} key={index}>
+            <div className={componentStyles.fileContainer}>
+              {file ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="Выбранное изображение"
+                  className={componentStyles.imagePreview}
                 />
-              </label>
+              ) : (
+                <label
+                  className={clsx(componentStyles.file, {
+                    [styles.focused]: focusedInputs.fileInputs[index],
+                  })}
+                >
+                  <input
+                    type="file"
+                    onChange={(e) => handleFileChange(e, index)}
+                    onFocus={() => handleFocus(index)}
+                    onBlur={() => handleBlur(index)}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                  />
+                </label>
+              )}
+            </div>
+            {file && (
+              <div
+                className={componentStyles.deleteFile}
+                onClick={() => handleDeletePhoto(index)} // Просто передаем индекс
+              >
+                ✕
+              </div>
             )}
           </div>
         ))}

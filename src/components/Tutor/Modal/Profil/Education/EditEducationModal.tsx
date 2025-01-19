@@ -155,22 +155,40 @@ export const EditEducationModal = ({ educationId }: EducationModalProps) => {
       });
   };
 
-  const handleDeletePhoto = async (fileName: string, index: number) => {
-    const fileUrl = fileName.split("/").pop() || "";
+  const handleDeletePhoto = async (file: string | File, index: number) => {
+    let fileUrl = ""; // Переменная для хранения URL файла, если это изображение с сервера
+
+    if (typeof file === "string") {
+      // Если это строка, то это изображение с сервера, извлекаем URL
+      fileUrl = file.split("/").pop() || ""; // Извлекаем имя файла из URL
+    } else if (file instanceof File) {
+      // Если это объект File, то можно работать с его именем (если нужно)
+      fileUrl = file.name; // Для файлов можно использовать имя файла
+    }
+
     const tutorId = tutor?.id;
 
-    if (tutorId && educationId && token) {
+    const updatedFiles = [...selectedFiles];
+
+    if (fileUrl && tutorId && educationId && token) {
       try {
-        const result = await dispatch(
-          deletePhotoTutorEducation({
-            tutorId,
-            educationId,
-            fileUrl,
-            token,
-          })
-        ).unwrap();
+        if (typeof file === "string") {
+          // Если это файл с сервера, удаляем его через API
+          await dispatch(
+            deletePhotoTutorEducation({
+              tutorId,
+              educationId,
+              fileUrl,
+              token,
+            })
+          ).unwrap();
+        }
+
+        // После успешного удаления с сервера или просто очистки, обновляем локальное состояние
+        updatedFiles[index] = null;
+        setSelectedFiles(updatedFiles);
       } catch (error) {
-        console.error("Ошибка при удалении:", error);
+        console.error("Ошибка при удалении файла:", error);
       }
     }
   };
@@ -307,12 +325,7 @@ export const EditEducationModal = ({ educationId }: EducationModalProps) => {
             {file && (
               <div
                 className={componentStyles.deleteFile}
-                onClick={() =>
-                  handleDeletePhoto(
-                    typeof file === "string" ? file : file.name,
-                    index
-                  )
-                } // Передаем индекс для правильной замены
+                onClick={() => handleDeletePhoto(file, index)}
               >
                 ✕
               </div>

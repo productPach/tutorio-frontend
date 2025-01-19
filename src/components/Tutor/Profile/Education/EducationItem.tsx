@@ -47,11 +47,16 @@ export const EducationItem = ({
   };
 
   // Подготовка изображений для Lightbox
-  const slides: SlideImage[] =
-    tutor?.educations[educationIndex]?.educationDiplomUrl.map((diplom) => ({
-      src: `${host}${port}${diplom}`, // Формируем URL для изображения
-      alt: "Документ об образовании", // Описание изображения
-    })) || [];
+  const slides: SlideImage[] = tutor?.educations[educationIndex]
+    ?.educationDiplomUrl
+    ? tutor.educations[educationIndex].educationDiplomUrl.map((diplom) => ({
+        src: `${host}${port}${diplom}`,
+        alt: "Документ об образовании",
+      }))
+    : [];
+
+  const education = tutor?.educations[educationIndex];
+  const diplomUrls = education?.educationDiplomUrl || [];
 
   return (
     <>
@@ -103,31 +108,28 @@ export const EducationItem = ({
         </div>
 
         <div className={clsx(componentEducationStyle.dplFlxRwNwrJcBtwn)}>
-          {tutor &&
-            tutor?.educations[educationIndex].educationDiplomUrl.length > 0 && (
-              <div
-                className={componentEducationStyle.educationItemContainerInfo}
-              >
-                <span>Диплом, сертификаты и другие документы</span>
-                <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
-                  {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
-                    (diplom, index) => {
-                      return (
-                        <Image
-                          key={index}
-                          onClick={() => handleImageClick(index)} // Клик по изображению
-                          src={`${host}${port}${diplom}`}
-                          alt="Документ об образовании"
-                          width={100}
-                          height={100}
-                          className={componentEducationStyle.imageDiplomas}
-                        />
-                      );
-                    }
-                  )}
-                </div>
+          {diplomUrls.length > 0 && (
+            <div className={componentEducationStyle.educationItemContainerInfo}>
+              <span>Диплом, сертификаты и другие документы</span>
+              <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
+                {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
+                  (diplom, index) => {
+                    return (
+                      <Image
+                        key={index}
+                        onClick={() => handleImageClick(index)} // Клик по изображению
+                        src={`${host}${port}${diplom}`}
+                        alt="Документ об образовании"
+                        width={100}
+                        height={100}
+                        className={componentEducationStyle.imageDiplomas}
+                      />
+                    );
+                  }
+                )}
               </div>
-            )}
+            </div>
+          )}
         </div>
       </div>
 
