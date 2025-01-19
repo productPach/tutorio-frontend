@@ -10,8 +10,8 @@ import Image from "next/image";
 import Lightbox from "yet-another-react-lightbox"; // Импортируем Lightbox
 import "yet-another-react-lightbox/styles.css";
 import {
+  setIsModalEditEducation,
   setIsModalEducationItem,
-  setIsModalExperience,
 } from "@/store/features/modalSlice";
 import { host, port } from "@/api/server/configApi";
 
@@ -72,39 +72,13 @@ export const EducationItem = ({
                 {tutor?.educations[educationIndex]?.educationEndYear}
               </p>
             </div>
-
-            {tutor &&
-              tutor?.educations[educationIndex].educationDiplomUrl.length >
-                0 && (
-                <div
-                  className={componentEducationStyle.educationItemContainerInfo}
-                >
-                  <span>Диплом, сертификаты и другие документы</span>
-                  <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
-                    {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
-                      (diplom, index) => {
-                        return (
-                          <Image
-                            key={index}
-                            onClick={() => handleImageClick(index)} // Клик по изображению
-                            src={`${host}${port}${diplom}`}
-                            alt="Документ об образовании"
-                            width={100}
-                            height={100}
-                            className={componentEducationStyle.imageDiplomas}
-                          />
-                        );
-                      }
-                    )}
-                  </div>
-                </div>
-              )}
           </div>
+
           <div>
             <Image
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalExperience(true));
+                dispatch(setIsModalEditEducation(true));
               }}
               title="Изменить"
               className={componentStyle.img}
@@ -126,6 +100,34 @@ export const EducationItem = ({
               height={21}
             />
           </div>
+        </div>
+
+        <div className={clsx(componentEducationStyle.dplFlxRwNwrJcBtwn)}>
+          {tutor &&
+            tutor?.educations[educationIndex].educationDiplomUrl.length > 0 && (
+              <div
+                className={componentEducationStyle.educationItemContainerInfo}
+              >
+                <span>Диплом, сертификаты и другие документы</span>
+                <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
+                  {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
+                    (diplom, index) => {
+                      return (
+                        <Image
+                          key={index}
+                          onClick={() => handleImageClick(index)} // Клик по изображению
+                          src={`${host}${port}${diplom}`}
+                          alt="Документ об образовании"
+                          width={100}
+                          height={100}
+                          className={componentEducationStyle.imageDiplomas}
+                        />
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            )}
         </div>
       </div>
 
