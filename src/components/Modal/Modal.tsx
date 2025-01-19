@@ -10,9 +10,9 @@ import styles from "../Modal/Modal.module.css";
 import { useAppDispatch } from "@/store/store";
 import {
   setIsModalBalanceBoost,
+  setIsModalEditEducation,
   setIsModalEducation,
   setIsModalEducationItem,
-  setIsModalEducationItemDiplomas,
   setIsModalExperience,
   setIsModalFio,
   setIsModalProfileInfo,
@@ -59,8 +59,8 @@ export const Modal: React.FC<ModalProps> = ({
     if (modalId === "educationItem") {
       dispatch(setIsModalEducationItem(false));
     }
-    if (modalId === "educationItemDiplomas") {
-      dispatch(setIsModalEducationItemDiplomas(false));
+    if (modalId === "editEducation") {
+      dispatch(setIsModalEditEducation(false));
     }
   };
 

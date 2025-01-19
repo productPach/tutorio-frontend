@@ -3,6 +3,7 @@ import {
   fetchCreateTutor,
   fetchCreateTutorEducation,
   fetchCurrentTutor,
+  fetchDeletePhotoTutorEducation,
   fetchDeleteTutorEducation,
   fetchUpdateTutor,
   fetchUpdateTutorEducation,
@@ -225,43 +226,36 @@ export const createTutorEducation = createAsyncThunk<
 
 // Редактирование образования
 export const updateTutorEducation = createAsyncThunk<
-  Tutor,
-  {
+  Tutor,  // Тип возвращаемого результата
+  {  // Параметры запроса
     tutorId: string;
     educationId: string;
     educationInfo: string;
-    educationStartYear: number;
-    educationEndYear: number;
+    educationStartYear: string;
+    educationEndYear: string | null;
     isShowDiplom: boolean;
     token: string;
+    diploma?: (File | null)[];  // Диплом (не обязательный)
   }
 >(
-  "tutor/createEducation",
-  async ({ tutorId, educationId, token, ...optionalFields }) => {
+  "tutor/updateEducation",  // Название действия
+  async ({ tutorId, educationId, token, educationInfo, educationStartYear, educationEndYear, isShowDiplom, diploma }) => {
     try {
-      const dataToUpdate = {
-        tutorId,
-        educationId,
-        token,
-        ...(optionalFields.educationInfo !== undefined && {
-          educationInfo: optionalFields.educationInfo,
-        }),
-        ...(optionalFields.educationStartYear !== undefined && {
-          educationStartYear: optionalFields.educationStartYear,
-        }),
-        ...(optionalFields.educationEndYear !== undefined && {
-          educationEndYear: optionalFields.educationEndYear,
-        }),
-        ...(optionalFields.isShowDiplom !== undefined && {
-          isShowDiplom: optionalFields.isShowDiplom,
-        }),
-      };
+      // Отправляем запрос на сервер с правильными параметрами
+      const updatedEducation = await fetchUpdateTutorEducation(
+        tutorId,             // tutorId
+        educationId,         // educationId
+        educationInfo,       // educationInfo
+        educationStartYear,  // educationStartYear
+        educationEndYear,    // educationEndYear
+        isShowDiplom,        // isShowDiplom
+        token,               // token
+        diploma || []        // Массив дипломов (может быть пустым)
+      );
 
-      const response = await fetchUpdateTutorEducation(dataToUpdate);
-      return response;
+      return updatedEducation; // Вернем обновленные данные
     } catch (error) {
-      // Здесь можно вернуть undefined или обработать ошибку
-      console.error(error);
+      console.error("Ошибка при обновлении образования", error);
       throw error;
     }
   }
@@ -286,6 +280,26 @@ export const deleteTutorEducation = createAsyncThunk<
   }
 });
 
+// Удаление фото образования
+export const deletePhotoTutorEducation = createAsyncThunk<
+  Tutor,
+  { tutorId: string; educationId: string; fileUrl: string; token: string }
+>("tutor/deletePhotoEducation", async ({ tutorId, educationId, fileUrl, token }) => {
+  try {
+    const response = await fetchDeletePhotoTutorEducation(
+      tutorId,
+      educationId,
+      fileUrl,
+      token
+    );
+    return response;
+  } catch (error) {
+    // Здесь можно вернуть undefined или обработать ошибку
+    console.error(error);
+    throw error;
+  }
+});
+
 type TutorStateType = {
   tutor: null | Tutor;
   loading: boolean;
@@ -294,7 +308,6 @@ type TutorStateType = {
   supportMenu: boolean;
   welcomeScreens: null | WelcomeScreen[];
   hiddenScreens: string[]; // Добавляем скрытые экраны
-  numberDiplomasView: number;
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -308,7 +321,6 @@ const initialState: TutorStateType = {
   supportMenu: false,
   welcomeScreens: null,
   hiddenScreens: [],
-  numberDiplomasView: 0,
 };
 
 const tutorSlice = createSlice({
@@ -338,9 +350,6 @@ const tutorSlice = createSlice({
       if (!state.hiddenScreens.includes(action.payload)) {
         state.hiddenScreens.push(action.payload);
       }
-    },
-    setNumberDiplomasView: (state, action: PayloadAction<number>) => {
-      state.numberDiplomasView = action.payload;
     },
   },
   extraReducers(builder) {
@@ -408,11 +417,30 @@ const tutorSlice = createSlice({
         }
       )
       .addCase(
+        updateTutorEducation.fulfilled,
+        (state, action: PayloadAction<Tutor>) => {
+          if (state.tutor) {
+            state.tutor = action.payload;
+            state.tutor.educations = action.payload.educations; // Присваиваем только поле tutorEducation
+            setLocalStorage("tutor", state.tutor); // Сохраняем весь объект tutor
+          }
+        }
+      )
+      .addCase(
         deleteTutorEducation.fulfilled,
         (state, action: PayloadAction<Tutor>) => {
           if (state.tutor) {
             state.tutor.educations = action.payload.educations; // Присваиваем только поле tutorEducation
             setLocalStorage("tutor", state.tutor); // Сохраняем весь объект tutor
+          }
+        }
+      )
+      .addCase(
+        deletePhotoTutorEducation.fulfilled,
+        (state, action: PayloadAction<Tutor>) => {
+          if (state.tutor) {
+            state.tutor.educations = action.payload.educations;
+            setLocalStorage("tutor", state.tutor); // Сохранение tutor в локальном хранилище
           }
         }
       );
@@ -426,6 +454,5 @@ export const {
   setSelectedValuesArea,
   setSupportMenu,
   addHiddenScreen,
-  setNumberDiplomasView,
 } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;

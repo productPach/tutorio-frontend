@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 import { EducationItem } from "@/components/Tutor/Profile/Education/EducationItem";
 import { Modal } from "@/components/Modal/Modal";
 import { EducationItemModal } from "@/components/Tutor/Modal/Profil/Education/EducationItemModal";
-import { EducationItemDiplomasModal } from "@/components/Tutor/Modal/Profil/Education/EducationItemDiplomasModal";
+import { EditEducationModal } from "@/components/Tutor/Modal/Profil/Education/EditEducationModal";
 
 const EducationPage: React.FC = () => {
   const page = "Main";
@@ -20,9 +20,8 @@ const EducationPage: React.FC = () => {
   const isModalEducationItem = useAppSelector(
     (state) => state.modal.isModalEducationItem
   );
-
-  const isModalEducationItemDiplomas = useAppSelector(
-    (state) => state.modal.isModalEducationItemDiplomas
+  const isModalEditEducation = useAppSelector(
+    (state) => state.modal.isModalEditEducation
   );
 
   const { education } = useParams();
@@ -61,10 +60,10 @@ const EducationPage: React.FC = () => {
         modalId={"educationItem"}
       ></Modal>
       <Modal
-        titleModal={"Документы об образовании"}
-        contentModal={<EducationItemDiplomasModal />}
-        isModal={isModalEducationItemDiplomas}
-        modalId={"educationItemDiplomas"}
+        titleModal={"Образование"}
+        contentModal={<EditEducationModal educationId={educationId} />}
+        isModal={isModalEditEducation}
+        modalId={"editEducation"}
       ></Modal>
     </>
   );
