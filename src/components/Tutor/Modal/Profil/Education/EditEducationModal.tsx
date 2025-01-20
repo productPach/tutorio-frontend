@@ -7,18 +7,18 @@ import {
   deletePhotoTutorEducation,
   updateTutorEducation,
 } from "@/store/features/tutorSlice";
-import {
-  setIsModalEditEducation,
-  setIsModalEducation,
-} from "@/store/features/modalSlice";
+import { setIsModalEditEducation } from "@/store/features/modalSlice";
 import { host, port } from "@/api/server/configApi";
-import { fetchDeletePhotoTutorEducation } from "@/api/server/tutorApi";
 
 interface EducationModalProps {
   educationId: string | null;
+  educationIndex: number;
 }
 
-export const EditEducationModal = ({ educationId }: EducationModalProps) => {
+export const EditEducationModal = ({
+  educationId,
+  educationIndex,
+}: EducationModalProps) => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
@@ -41,6 +41,15 @@ export const EditEducationModal = ({ educationId }: EducationModalProps) => {
     endYear: false,
     fileInputs: Array(5).fill(false),
   });
+
+  // Состояние для свитча
+  const [isChecked, setIsChecked] = useState(
+    tutor?.educations?.[educationIndex]?.isShowDiplom || false
+  );
+
+  const toggleSwitch = () => {
+    setIsChecked(!isChecked);
+  };
 
   // Загрузка данных для редактирования
   useEffect(() => {
@@ -129,7 +138,7 @@ export const EditEducationModal = ({ educationId }: EducationModalProps) => {
     const educationInfo = inputEducationInfo;
     const educationStartYear = inputStartYear;
     const educationEndYear = inputEndYear;
-    const isShowDiplom = true; // Это поле по умолчанию
+    const isShowDiplom = isChecked; // Это поле по умолчанию
 
     // Массив фотографий, состоящий из старых фотографий с сервера и новых, выбранных пользователем
     const nonEmptyFiles = selectedFiles.filter((file) => file instanceof File);
@@ -333,6 +342,24 @@ export const EditEducationModal = ({ educationId }: EducationModalProps) => {
           </div>
         ))}
       </div>
+
+      {selectedFiles.some((file) => file !== null) && (
+        <div className={componentStyles.containerEducationShow}>
+          <div className={styles.inputContainer}>
+            <label className={componentStyles.iosSwitch}>
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={toggleSwitch}
+              />
+              <span className={componentStyles.slider}></span>
+            </label>
+          </div>
+          <div className={styles.description2}>
+            Показывать документы всем пользователям
+          </div>
+        </div>
+      )}
 
       <div className={styles.button}>
         <button onClick={update} type="button" disabled={isButtonDisabled}>

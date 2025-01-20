@@ -106,30 +106,43 @@ export const EducationItem = ({
             />
           </div>
         </div>
-
-        <div className={clsx(componentEducationStyle.dplFlxRwNwrJcBtwn)}>
-          {diplomUrls.length > 0 && (
-            <div className={componentEducationStyle.educationItemContainerInfo}>
-              <span>Диплом, сертификаты и другие документы</span>
-              <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
-                {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
-                  (diplom, index) => {
-                    return (
-                      <Image
-                        key={index}
-                        onClick={() => handleImageClick(index)} // Клик по изображению
-                        src={`${host}${port}${diplom}`}
-                        alt="Документ об образовании"
-                        width={100}
-                        height={100}
-                        className={componentEducationStyle.imageDiplomas}
-                      />
-                    );
-                  }
-                )}
+        <div className={componentStyle.container}>
+          <div className={clsx(componentEducationStyle.dplFlxRwNwrJcBtwn)}>
+            {diplomUrls.length > 0 && (
+              <div
+                className={componentEducationStyle.educationItemContainerInfo}
+              >
+                <span>Диплом, сертификаты и другие документы</span>
+                <div className={componentEducationStyle.dplFlxRwNwrJcGp20}>
+                  {tutor?.educations[educationIndex]?.educationDiplomUrl.map(
+                    (diplom, index) => {
+                      return (
+                        <Image
+                          key={index}
+                          onClick={() => handleImageClick(index)} // Клик по изображению
+                          src={`${host}${port}${diplom}`}
+                          alt="Документ об образовании"
+                          width={100}
+                          height={100}
+                          className={componentEducationStyle.imageDiplomas}
+                        />
+                      );
+                    }
+                  )}
+                </div>
               </div>
+            )}
+          </div>
+          <div className={clsx(componentEducationStyle.dplFlxRwNwrJcBtwn)}>
+            <div className={componentEducationStyle.educationItemContainerInfo}>
+              <span>Документы об образовании доступны</span>
+              <p className={componentEducationStyle.educationItemContainerP}>
+                {tutor?.educations[educationIndex]?.isShowDiplom
+                  ? "Всем пользователям"
+                  : "Только администраторам"}
+              </p>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
