@@ -60,6 +60,13 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
     fileInputs: Array(5).fill(false),
   });
 
+  // Состояние для свитча
+  const [isChecked, setIsChecked] = useState(true);
+
+  const toggleSwitch = () => {
+    setIsChecked(!isChecked);
+  };
+
   const handleInputEducationInfo = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ.\s]/g, ""); // Разрешены буквы, точки и пробелы
     setInputEducationInfo(value);
@@ -116,7 +123,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
     const educationInfo = inputEducationInfo;
     const educationStartYear = inputStartYear;
     const educationEndYear = inputEndYear;
-    const isShowDiplom = true;
+    const isShowDiplom = isChecked;
 
     const nonEmptyFiles = selectedFiles.filter((file) => file !== null);
 
@@ -274,6 +281,25 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
           </div>
         ))}
       </div>
+
+      {selectedFiles.some((file) => file !== null) && (
+        <div className={componentStyles.containerEducationShow}>
+          <div className={styles.inputContainer}>
+            <label className={componentStyles.iosSwitch}>
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={toggleSwitch}
+              />
+              <span className={componentStyles.slider}></span>
+            </label>
+          </div>
+          <div className={styles.description2}>
+            Показывать документы всем пользователям
+          </div>
+        </div>
+      )}
+
       <div className={styles.button}>
         <button onClick={create} type="button" disabled={isButtonDisabled}>
           Добавить

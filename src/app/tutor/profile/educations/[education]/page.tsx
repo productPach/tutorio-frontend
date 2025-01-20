@@ -61,7 +61,12 @@ const EducationPage: React.FC = () => {
       ></Modal>
       <Modal
         titleModal={"Образование"}
-        contentModal={<EditEducationModal educationId={educationId} />}
+        contentModal={
+          <EditEducationModal
+            educationId={educationId}
+            educationIndex={educationIndex}
+          />
+        }
         isModal={isModalEditEducation}
         modalId={"editEducation"}
       ></Modal>

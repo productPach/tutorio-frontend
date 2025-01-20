@@ -1,5 +1,9 @@
 .description {
   margin: 10px 0;
+  color: #777;
+}
+.description2 {
+  margin: 10px 0;
 }
 
 .inputContainer {
