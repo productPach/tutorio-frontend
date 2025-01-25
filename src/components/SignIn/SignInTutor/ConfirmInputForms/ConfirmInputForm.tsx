@@ -44,12 +44,13 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
   // Получаем значение regionUser из Redux
   const regionUser = useAppSelector((state) => state.auth.regionUser);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
   // ПЕРЕДЕЛАТЬ!!!
   // Нужно вытаскивать код подтверждения в БД
   // Временно вытаскиваем код из LocalStorage
-  const confirmCodeLS = localStorage.getItem("confirm-code");
-  const confirmCode: string = confirmCodeLS && JSON.parse(confirmCodeLS);
+  // const confirmCodeLS = localStorage.getItem("confirm-code");
+  // const confirmCode: string = confirmCodeLS && JSON.parse(confirmCodeLS);
   //console.log(confirmCode);
 
   // Состояние текстового поля
@@ -74,75 +75,154 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   ]);
 
   // Авторизация пользователя
+  // СТАРАЯ ВЕРСИЯ
+  // const handleGetToken = async (secretCode: string) => {
+  //   try {
+  //     const jsonPhone = localStorage.getItem("origin-phone");
+  //     const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+  //     if (phone) {
+  //       const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+  //       setErrorInput(false);
+  //       if (token) {
+  //         setIsSuccess(true);
+  //         await dispatch(getCurrentTutor(token))
+  //           .unwrap()
+  //           .catch(async () => {
+  //             // Репетитора не существет, создаем нового
+  //             await dispatch(
+  //               createTutor({
+  //                 phone: phone,
+  //                 token,
+  //               })
+  //             );
+  //           })
+  //           .finally(async () => {
+  //             // Повторно получаем статус репетитора после создания
+  //             const updatedTutor = await dispatch(
+  //               getCurrentTutor(token)
+  //             ).unwrap();
+  //             if (updatedTutor?.status === "Rega: Fullname") {
+  //               handleNextStep("fio");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Subjects") {
+  //               handleNextStep("subjects");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Locations") {
+  //               handleNextStep("locations");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Email") {
+  //               handleNextStep("email");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Photo") {
+  //               handleNextStep("photo");
+  //             }
+  //             if (
+  //               updatedTutor?.status === "Pending" ||
+  //               updatedTutor?.status === "Active"
+  //             ) {
+  //               handleNextStep("../tutor/orders");
+  //             }
+  //           });
+  //       } else {
+  //         setErrorInput(true);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.warn(error);
+  //   }
+  // };
+
+  // Авторизация пользователя
+  // НОВАЯ ВЕРСИЯ ОТ 25.01.2025
   const handleGetToken = async (secretCode: string) => {
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+
       if (phone) {
+        // Получаем токен с обработкой ошибок
         const token = await dispatch(getToken({ phone, secretCode })).unwrap();
-        setErrorInput(false);
+
         if (token) {
           setIsSuccess(true);
-          await dispatch(getCurrentTutor(token))
-            .unwrap()
-            .catch(async () => {
-              // Репетитора не существет, создаем нового
-              await dispatch(
-                createTutor({
-                  phone: phone,
-                  token,
-                })
-              );
-            })
-            .finally(async () => {
-              // Повторно получаем статус репетитора после создания
-              const updatedTutor = await dispatch(
-                getCurrentTutor(token)
-              ).unwrap();
-              if (updatedTutor?.status === "Rega: Fullname") {
+          setErrorInput(false);
+          try {
+            // Пытаемся получить данные репетитора
+            await dispatch(getCurrentTutor(token)).unwrap();
+          } catch {
+            // Если репетитор не существует, создаем нового
+            await dispatch(
+              createTutor({
+                phone: phone,
+                token,
+              })
+            ).unwrap();
+          } finally {
+            // Повторно получаем статус репетитора после создания
+            const updatedTutor = await dispatch(
+              getCurrentTutor(token)
+            ).unwrap();
+
+            switch (updatedTutor?.status) {
+              case "Rega: Fullname":
                 handleNextStep("fio");
-              }
-              if (updatedTutor?.status === "Rega: Subjects") {
+                break;
+              case "Rega: Subjects":
                 handleNextStep("subjects");
-              }
-              if (updatedTutor?.status === "Rega: Locations") {
+                break;
+              case "Rega: Locations":
                 handleNextStep("locations");
-              }
-              if (updatedTutor?.status === "Rega: Email") {
+                break;
+              case "Rega: Email":
                 handleNextStep("email");
-              }
-              if (updatedTutor?.status === "Rega: Photo") {
+                break;
+              case "Rega: Photo":
                 handleNextStep("photo");
-              }
-              if (
-                updatedTutor?.status === "Pending" ||
-                updatedTutor?.status === "Active"
-              ) {
+                break;
+              case "Pending":
+              case "Active":
                 handleNextStep("../tutor/orders");
-              }
-            });
+                break;
+              default:
+                console.warn("Неизвестный статус репетитора");
+            }
+          }
         } else {
           setErrorInput(true);
         }
       }
     } catch (error) {
-      console.warn(error);
+      if (!isLoggedIn) {
+        setErrorInput(true); // Если ошибка 400 — неверные данные
+      } else {
+        console.warn("Ошибка получения токена:", error);
+      }
     }
   };
 
   // Обновляем inputValue когда меняется содержимое отдельных инпутов
+  // СТАРАЯ ВЕРСИЯ
+  // useEffect(() => {
+  //   const inputValue = codes.join("");
+  //   if (inputValue.length === 4) {
+  //     if (inputValue !== confirmCode) {
+  //       setErrorInput(true);
+  //       console.log("Invalid code");
+  //     } else {
+  //       setErrorInput(false);
+  //       handleGetToken(inputValue);
+  //     }
+  //   }
+  // }, [codes, confirmCode]);
+
+  // Обновляем inputValue когда меняется содержимое отдельных инпутов
+  // НОВАЯ ВЕРСИЯ ОТ 25.01.2025
   useEffect(() => {
     const inputValue = codes.join("");
     if (inputValue.length === 4) {
-      if (inputValue !== confirmCode) {
-        setErrorInput(true);
-        console.log("Invalid code");
-      } else {
-        setErrorInput(false);
-        handleGetToken(inputValue);
-      }
+      handleGetToken(inputValue);
     }
-  }, [codes, confirmCode]);
+  }, [codes]);
 
   // Функция добавления значения в инпут
   const handleChange = (value: string, index: number) => {
