@@ -15,14 +15,11 @@ import { formatTimeAgo } from "@/utils/date/date";
 import { findLocTitlesByIds } from "@/utils/locations/getTitleLocationById";
 import { fetchStudentById } from "@/api/server/studentApi";
 import { Student } from "@/types/types";
-import { getAllLocations } from "@/store/features/locationSlice";
 
 export const Order = () => {
   const page = "Order";
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(getAllLocations());
-  }, [dispatch]);
+
   const { order } = useParams();
   const token = useAppSelector((state) => state.auth.token);
   // Получаем дату городов из Redux

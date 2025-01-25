@@ -85,8 +85,12 @@ const SideBar = () => {
     setRegionMenu((state) => !state);
   };
 
-  const regionArr = locations.map((region) => region.shortTitle);
-  const [regionList, setRegionList] = useState(regionArr);
+  const [regionList, setRegionList] = useState<string[] | undefined>();
+
+  useEffect(() => {
+    const regionArr = locations.map((region) => region.shortTitle);
+    setRegionList(regionArr);
+  }, [locations]);
 
   const handleInputRegion = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase(); // Преобразуем значение ввода в нижний регистр для поиска
@@ -123,7 +127,7 @@ const SideBar = () => {
       localStorage.setItem("tutor", JSON.stringify(updateTutor));
       setTimeout(() => {
         setInputRegionValue("");
-        setRegionList(regionArr);
+        setRegionList(regionList);
       }, 500);
 
       token && dispatch(getAllOrders(token));
@@ -227,15 +231,16 @@ const SideBar = () => {
                 </div>
 
                 <div className={styles.listRegion}>
-                  {regionList.map((region, index) => (
-                    <div
-                      className={styles.listRegion_region}
-                      key={index}
-                      onClick={() => changeRegion(region)}
-                    >
-                      {region}
-                    </div>
-                  ))}
+                  {regionList &&
+                    regionList.map((region, index) => (
+                      <div
+                        className={styles.listRegion_region}
+                        key={index}
+                        onClick={() => changeRegion(region)}
+                      >
+                        {region}
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
