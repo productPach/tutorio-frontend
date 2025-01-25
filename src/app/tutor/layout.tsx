@@ -8,7 +8,7 @@ import { setLogout, setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { setTutorLogout } from "@/store/features/tutorSlice";
+import { getCurrentTutor, setTutorLogout } from "@/store/features/tutorSlice";
 import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 
@@ -36,6 +36,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     const token = getTokenFromCookie();
     if (token) {
       dispatch(setToken(token));
+      dispatch(getCurrentTutor(token));
     } else {
       router.push("/");
       return;
