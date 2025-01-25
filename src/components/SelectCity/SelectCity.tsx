@@ -1,5 +1,4 @@
 "use client";
-import { locations } from "@/utils/locations/locations";
 import styles from "../SelectCity/SelectCityModal.module.css";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -19,6 +18,9 @@ export const SelectCity = () => {
   const regionUser: UserRegion | null = useAppSelector(
     (state) => state.auth.regionUser
   );
+
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
 
   const handleSearch = (value: string) => {
     setInputSearch(value);

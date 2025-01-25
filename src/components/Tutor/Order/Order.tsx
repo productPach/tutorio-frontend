@@ -19,8 +19,11 @@ import { Student } from "@/types/types";
 export const Order = () => {
   const page = "Order";
   const dispatch = useDispatch<AppDispatch>();
+
   const { order } = useParams();
   const token = useAppSelector((state) => state.auth.token);
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
 
   const [student, setStudent] = useState<Student | null>(null);
 
@@ -215,7 +218,7 @@ export const Order = () => {
               Ближайшие локации к ученику
             </span>
             <span>
-              {findLocTitlesByIds(orderById?.studentHomeLoc).map(
+              {findLocTitlesByIds(orderById?.studentHomeLoc, locations).map(
                 (location, index) => (
                   <div key={index}>
                     {typeof location !== "string" && location.lineNumber && (
@@ -271,7 +274,7 @@ export const Order = () => {
           <div className={styles.containerOrderInfo}>
             <span className={styles.titleOrderInfo}>Ученик готов приехать</span>
             <span>
-              {findLocTitlesByIds(orderById?.studentTrip).map(
+              {findLocTitlesByIds(orderById?.studentTrip, locations).map(
                 (location, index) => (
                   <div key={index}>
                     {typeof location !== "string" && location.lineNumber && (

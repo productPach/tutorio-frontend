@@ -1,4 +1,4 @@
-import { locations } from "./locations";
+import { City } from "@/types/types";
 
 interface TitleWithLine {
     title: string;
@@ -6,7 +6,7 @@ interface TitleWithLine {
   }
 
 // Функция для поиска title по id
-export const findLocTitleById = (id: string): TitleWithLine | null => {
+export const findLocTitleById = (id: string, locations: City[]): TitleWithLine | null => {
     for (const city of locations) {
         // Поиск по массиву метро в каждом районе
         for (const district of city.districts) {
@@ -27,7 +27,7 @@ export const findLocTitleById = (id: string): TitleWithLine | null => {
       return null;
     }
 
-    export const findLocTitlesByIds = (ids: string[]): (TitleWithLine | string)[] => {
+    export const findLocTitlesByIds = (ids: string[], locations: City[]): (TitleWithLine | string)[] => {
       return ids.map((id) => {
         for (const city of locations) {
           // Поиск по массиву метро в каждом районе

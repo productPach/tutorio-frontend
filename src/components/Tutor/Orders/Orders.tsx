@@ -23,6 +23,8 @@ const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
   const { orders, loading, error, filters } = useSelector(
     (state: RootState) => state.orders
   );
@@ -192,7 +194,10 @@ const Orders = () => {
             let firstLocationHome;
             let countHome;
             if (studentPlace?.includes("У меня дома") && studentHomeLoc) {
-              firstLocationHome = findLocTitleById(studentHomeLoc[0]);
+              firstLocationHome = findLocTitleById(
+                studentHomeLoc[0],
+                locations
+              );
               countHome = studentHomeLoc.length - 1;
             }
 
@@ -200,7 +205,7 @@ const Orders = () => {
             let firstLocationTrip;
             let countTrip;
             if (studentPlace?.includes("У репетитора") && studentTrip) {
-              firstLocationTrip = findLocTitleById(studentTrip[0]);
+              firstLocationTrip = findLocTitleById(studentTrip[0], locations);
               countTrip = studentTrip.length - 1;
             }
 

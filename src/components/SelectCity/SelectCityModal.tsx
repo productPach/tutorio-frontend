@@ -11,15 +11,22 @@ import {
   getAreaByCoordinates,
   getGeolocation,
 } from "@/utils/locations/getGeolocation";
-import { locations } from "@/utils/locations/locations";
+import { useEffect } from "react";
+import { getAllLocations } from "@/store/features/locationSlice";
 
 export const SelectCityModal = () => {
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getAllLocations());
+  }, [dispatch]);
   // Получаем значение regionUser из Redux
   const regionUserFromStore: UserRegion | null = useAppSelector(
     (state) => state.auth.regionUser
   );
   let regionUser: UserRegion | null = regionUserFromStore;
+
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
 
   // Проверка на наличие данных о регионе
   if (!regionUser) {
@@ -41,20 +48,30 @@ export const SelectCityModal = () => {
       .then(async (position) => {
         const { latitude, longitude } = position.coords;
 
-        // Получаем область по координатам
-        const locationData = await getAreaByCoordinates(latitude, longitude);
+        try {
+          // Получаем область по координатам
+          const locationData = await getAreaByCoordinates(latitude, longitude);
 
-        // Проверяем, есть ли область в объекте locations
-        const foundCity = locations.find(
-          (city) => city.area === locationData.area
-        );
+          // Проверяем, что полученные данные корректны
+          if (!locationData || !locationData.area) {
+            console.error("Ошибка: Не удалось найти область");
+            return;
+          }
 
-        if (foundCity) {
-          const userRegion = { city: foundCity.title, area: foundCity.area };
-          localStorage.setItem("region-user", JSON.stringify(userRegion));
-          dispatch(setRegionUser(userRegion));
-        } else {
-          console.error("Область не найдена в объекте locations");
+          // Проверяем, есть ли область в объекте locations
+          const foundCity = locations.find(
+            (city) => city.area === locationData.area
+          );
+
+          if (foundCity) {
+            const userRegion = { city: foundCity.title, area: foundCity.area };
+            localStorage.setItem("region-user", JSON.stringify(userRegion));
+            dispatch(setRegionUser(userRegion));
+          } else {
+            console.error("Область не найдена в объекте locations");
+          }
+        } catch (error) {
+          console.error("Ошибка при получении данных о местоположении:", error);
         }
       })
       .catch((error) => {

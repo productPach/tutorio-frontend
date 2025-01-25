@@ -11,6 +11,7 @@ import { Spinner } from "@/components/Spinner/Spinner";
 import { getCurrentTutor, setTutorLogout } from "@/store/features/tutorSlice";
 import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
+import { getAllLocations } from "@/store/features/locationSlice";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -43,6 +44,10 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     }
     setIsLoadedPage(true);
   }, [dispatch, router]);
+
+  useEffect(() => {
+    dispatch(getAllLocations());
+  }, [dispatch]);
 
   return (
     <>

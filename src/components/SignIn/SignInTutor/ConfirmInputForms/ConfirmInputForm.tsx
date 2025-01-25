@@ -46,6 +46,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const regionUser = useAppSelector((state) => state.auth.regionUser);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
+  // ПЕРЕДЕЛАНО ОТ 25.01.2025
   // ПЕРЕДЕЛАТЬ!!!
   // Нужно вытаскивать код подтверждения в БД
   // Временно вытаскиваем код из LocalStorage
