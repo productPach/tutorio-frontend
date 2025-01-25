@@ -11,6 +11,7 @@ import { studentReducer } from "./features/studentSlice";
 import { modalReducer } from "./features/modalSlice";
 import { tutorReducer } from "./features/tutorSlice";
 import { ordersReducer } from "./features/orderSlice";
+import { locationReducer } from "./features/locationSlice";
 
 // Функция makeStore создает и возвращает хранилище Redux с помощью функции configureStore.
 export const makeStore = () => {
@@ -23,6 +24,7 @@ export const makeStore = () => {
       match: matchReducer,
       modal: modalReducer,
       orders: ordersReducer,
+      locations: locationReducer,
     }),
   });
 };

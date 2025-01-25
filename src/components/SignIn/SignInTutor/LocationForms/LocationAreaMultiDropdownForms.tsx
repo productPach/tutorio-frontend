@@ -39,6 +39,9 @@ export const LocationAreaMultiDropdownForms: React.FC<ComponentRenderProps> = ({
     (state) => state.tutor.selectedValuesArea
   );
 
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
+
   // Создаем флаг для отслеживания первоначальной загрузки
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -69,7 +72,8 @@ export const LocationAreaMultiDropdownForms: React.FC<ComponentRenderProps> = ({
         const data = await getLocation(
           inputValue,
           regionUser.city,
-          selectedValues
+          selectedValues,
+          locations
         );
 
         // Объединяем результаты и фильтруем выбранные значения

@@ -57,6 +57,9 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
   const getDataMatchLS = localStorage.getItem("currentMatch");
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
+
   useEffect(() => {
     const regionUserJson = localStorage.getItem("region-user");
     const regionUser = regionUserJson ? JSON.parse(regionUserJson) : "";
@@ -73,7 +76,8 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
         const data = await getLocation(
           inputValue,
           regionUser.city,
-          selectedValues
+          selectedValues,
+          locations
         );
 
         // Объединяем результаты и фильтруем выбранные значения

@@ -1,223 +1,223 @@
 import { City } from "@/types/types";
 
-export const locations: City[] = [
-  {
-    id: "1",
-    title: "Москва",
-    area: "Московская область",
-    shortTitle: "Москва и область",
-    districts: [
-      {
-        id: "1",
-        title: "Центральный",
-        metros: [
-          {
-            id: "14235",
-            title: "Баррикадная",
-            color: "brown",
-            lineName: "Таганско-Краснопресненская линия",
-            lineNumber: "7",
-          },
-          {
-            id: "232342",
-            title: "Краснопресненская",
-            color: "red",
-            lineName: "Кольцевая линия",
-            lineNumber: "5",
-          },
-        ],
-      },
-      {
-        id: "2",
-        title: "Юго-Западный",
-        metros: [
-          {
-            id: "6",
-            title: "Юго-Западная",
-            color: "green",
-            lineName: "Линия",
-            lineNumber: "1",
-          },
-          {
-            id: "7",
-            title: "Фрунзенская",
-            color: "green",
-            lineName: "Линия",
-            lineNumber: "1",
-          },
-        ],
-      },
-    ],
-    regionalCities: [
-      {
-        id: "1031452",
-        title: "пос. Володарского",
-      },
-      {
-        id: "10314522334",
-        title: "г. Видное",
-      },
-      {
-        id: "103145221214",
-        title: "г. Дзержинский",
-      },
-    ]
-  },
-  {
-    id: "2",
-    title: "Санкт-Петербург",
-    area: "Ленинградская область",
-    shortTitle: "Санкт-Петербург и область",
-    districts: [
-      {
-        id: "1325345",
-        title: "Питерский",
-        metros: [
-          {
-            id: "10",
-            title: "Литический проспект",
-            color: "brown",
-            lineName: "Таганско-Краснопресненская линия",
-            lineNumber: "7",
-          },
-          {
-            id: "20",
-            title: "Ворошиловская",
-            color: "red",
-            lineName: "Кольцевая линия",
-            lineNumber: "5",
-          },
-        ],
-      },
-      {
-        id: "221343145",
-        title: "Западный",
-        metros: [
-          {
-            id: "6432543",
-            title: "Студенческая",
-            color: "green",
-            lineName: "Линия 6",
-            lineNumber: "6",
-          },
-          {
-            id: "70",
-            title: "Балтийская",
-            color: "green",
-            lineName: "Линия 6",
-            lineNumber: "6",
-          },
-        ],
-      },
-    ],
-    regionalCities: [
-      {
-        id: "103341452",
-        title: "г. Лосиный",
-      },
-      {
-        id: "10314531222334",
-        title: "г. Кронштадт",
-      },
-    ]
-  },
-  {
-    id: "3",
-    title: "Волгоград",
-    area: "Волгоградская область",
-    shortTitle: "Волгоградская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "4",
-    title: "Самара",
-    area: "Самарская область",
-    shortTitle: "Самарская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "5",
-    title: "Пенза",
-    area: "Пензенская область",
-    shortTitle: "Пензенская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "6",
-    title: "Владивосток",
-    area: "Приморский край",
-    shortTitle: "Приморский край",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "7",
-    title: "Ростов-на-Дону",
-    area: "Ростовская область",
-    shortTitle: "Ростовская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "8",
-    title: "Луганск",
-    area: "Луганская область",
-    shortTitle: "Луганская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "9",
-    title: "Донецк",
-    area: "Донецкая область",
-    shortTitle: "Донецкая область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "10",
-    title: "Мариуполь",
-    area: "Донецкая область",
-    shortTitle: "Донецкая область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "11",
-    title: "Саратов",
-    area: "Саратовская область",
-    shortTitle: "Саратовская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "12",
-    title: "Вологда",
-    area: "Вологодская область",
-    shortTitle: "Вологодская област",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "13",
-    title: "Рыбинск",
-    area: "Ярославская область",
-    shortTitle: "Ярославская область",
-    districts: [],
-    regionalCities: []
-  },
-  {
-    id: "14",
-    title: "Салехард",
-    area: "Ямало-Ненецкий АО",
-    shortTitle: "Ямало-Ненецкий АО",
-    districts: [],
-    regionalCities: []
-  },
-];
+// export const locations: City[] = [
+//   {
+//     id: "1",
+//     title: "Москва",
+//     area: "Московская область",
+//     shortTitle: "Москва и область",
+//     districts: [
+//       {
+//         id: "1",
+//         title: "Центральный",
+//         metros: [
+//           {
+//             id: "14235",
+//             title: "Баррикадная",
+//             color: "brown",
+//             lineName: "Таганско-Краснопресненская линия",
+//             lineNumber: "7",
+//           },
+//           {
+//             id: "232342",
+//             title: "Краснопресненская",
+//             color: "red",
+//             lineName: "Кольцевая линия",
+//             lineNumber: "5",
+//           },
+//         ],
+//       },
+//       {
+//         id: "2",
+//         title: "Юго-Западный",
+//         metros: [
+//           {
+//             id: "6",
+//             title: "Юго-Западная",
+//             color: "green",
+//             lineName: "Линия",
+//             lineNumber: "1",
+//           },
+//           {
+//             id: "7",
+//             title: "Фрунзенская",
+//             color: "green",
+//             lineName: "Линия",
+//             lineNumber: "1",
+//           },
+//         ],
+//       },
+//     ],
+//     regionalCities: [
+//       {
+//         id: "1031452",
+//         title: "пос. Володарского",
+//       },
+//       {
+//         id: "10314522334",
+//         title: "г. Видное",
+//       },
+//       {
+//         id: "103145221214",
+//         title: "г. Дзержинский",
+//       },
+//     ]
+//   },
+//   {
+//     id: "2",
+//     title: "Санкт-Петербург",
+//     area: "Ленинградская область",
+//     shortTitle: "Санкт-Петербург и область",
+//     districts: [
+//       {
+//         id: "1325345",
+//         title: "Питерский",
+//         metros: [
+//           {
+//             id: "10",
+//             title: "Литический проспект",
+//             color: "brown",
+//             lineName: "Таганско-Краснопресненская линия",
+//             lineNumber: "7",
+//           },
+//           {
+//             id: "20",
+//             title: "Ворошиловская",
+//             color: "red",
+//             lineName: "Кольцевая линия",
+//             lineNumber: "5",
+//           },
+//         ],
+//       },
+//       {
+//         id: "221343145",
+//         title: "Западный",
+//         metros: [
+//           {
+//             id: "6432543",
+//             title: "Студенческая",
+//             color: "green",
+//             lineName: "Линия 6",
+//             lineNumber: "6",
+//           },
+//           {
+//             id: "70",
+//             title: "Балтийская",
+//             color: "green",
+//             lineName: "Линия 6",
+//             lineNumber: "6",
+//           },
+//         ],
+//       },
+//     ],
+//     regionalCities: [
+//       {
+//         id: "103341452",
+//         title: "г. Лосиный",
+//       },
+//       {
+//         id: "10314531222334",
+//         title: "г. Кронштадт",
+//       },
+//     ]
+//   },
+//   {
+//     id: "3",
+//     title: "Волгоград",
+//     area: "Волгоградская область",
+//     shortTitle: "Волгоградская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "4",
+//     title: "Самара",
+//     area: "Самарская область",
+//     shortTitle: "Самарская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "5",
+//     title: "Пенза",
+//     area: "Пензенская область",
+//     shortTitle: "Пензенская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "6",
+//     title: "Владивосток",
+//     area: "Приморский край",
+//     shortTitle: "Приморский край",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "7",
+//     title: "Ростов-на-Дону",
+//     area: "Ростовская область",
+//     shortTitle: "Ростовская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "8",
+//     title: "Луганск",
+//     area: "Луганская область",
+//     shortTitle: "Луганская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "9",
+//     title: "Донецк",
+//     area: "Донецкая область",
+//     shortTitle: "Донецкая область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "10",
+//     title: "Мариуполь",
+//     area: "Донецкая область",
+//     shortTitle: "Донецкая область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "11",
+//     title: "Саратов",
+//     area: "Саратовская область",
+//     shortTitle: "Саратовская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "12",
+//     title: "Вологда",
+//     area: "Вологодская область",
+//     shortTitle: "Вологодская област",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "13",
+//     title: "Рыбинск",
+//     area: "Ярославская область",
+//     shortTitle: "Ярославская область",
+//     districts: [],
+//     regionalCities: []
+//   },
+//   {
+//     id: "14",
+//     title: "Салехард",
+//     area: "Ямало-Ненецкий АО",
+//     shortTitle: "Ямало-Ненецкий АО",
+//     districts: [],
+//     regionalCities: []
+//   },
+// ];
 
 // Третьяковская
 // Медведково

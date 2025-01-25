@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { data } from "@/utils/listSubjects";
 import { listGoalForSubjects } from "@/utils/subjects/goalForSubjects";
-import { locations } from "@/utils/locations/locations";
 import { setRegionUser } from "@/store/features/authSlice";
 import { setTutor } from "@/store/features/tutorSlice";
 import { Tutor } from "@/types/types";
@@ -24,6 +23,8 @@ const SideBar = () => {
   const selectedGoalFilters = useSelector(
     (state: RootState) => state.orders.filters.selectedGoalFilters
   );
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
 
   const handleFilterChange = (filter: string, type: "place" | "goal") => {
     if (type === "place") {

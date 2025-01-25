@@ -1,5 +1,4 @@
 import { District, Metro, RegionalCity } from "@/types/types";
-import { locations } from "@/utils/locations/locations";
 
 const token = "59e590bc5ae2c3975912f9ace2aedfe5f36014c4";
 
@@ -30,7 +29,8 @@ export const getAdressDadata = async (query: string) => {
 export const getLocation = async (
   query: string,
   city: string, // Новый параметр для фильтрации по городу
-  selectedValues: (District | Metro | RegionalCity)[]
+  selectedValues: (District | Metro | RegionalCity)[],
+  locations: { title: string; districts: District[]; regionalCities: RegionalCity[] }[] // Добавляем параметр locations
 ): Promise<{ districts: District[]; metros: Metro[]; regionalCities: RegionalCity[] }> => {
   const normalizedQuery = query.toLowerCase();
   const normalizedCity = city.toLowerCase();
@@ -84,7 +84,8 @@ export const getLocation = async (
 
 // Метод для получения всех локаций города
 export const getLocationForCity = async (
-  city: string // параметр для фильтрации по городу
+  city: string, // параметр для фильтрации по городу
+  locations: { title: string; districts: District[]; regionalCities: RegionalCity[] }[] // Добавляем параметр locations
 ): Promise<(District | Metro)[]> => {
   const normalizedCity = city.toLowerCase();
 
