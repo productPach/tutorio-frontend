@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import styles from "../SignInTutor.module.css";
+import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { getAdressDadata } from "@/api/addresses/addresses";
@@ -16,7 +16,6 @@ interface ComponentRenderProps {
   id: number;
   question: string;
   typeForm: string;
-  setFormState: React.Dispatch<React.SetStateAction<any>>; // передаем функцию для обновления состояния
 }
 
 // Определяем тип для объекта в массиве
@@ -42,19 +41,16 @@ type DataAdress = {
   };
 };
 
-export const AdressInputForms: React.FC<ComponentRenderProps> = ({
+export const Adress: React.FC<ComponentRenderProps> = ({
   id,
   question,
   typeForm,
-  setFormState, // получаем функцию setFormState из родительского компонента
 }) => {
   const route = useRouter();
-  const tutor = useAppSelector((state) => state.tutor.tutor);
 
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   // Состояние текстового поля
-  const [inputValue, setInputValue] = useState(
-    tutor?.tutorAdress ? tutor?.tutorAdress : ""
-  );
+  const [inputValue, setInputValue] = useState(tutor?.tutorAdress);
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
   // Состояние для ошибки текстового поля
@@ -62,6 +58,7 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
 
   // Состояние для определения начал ли вводить пользователь в поисковую строку
   const [isInput, setIsInput] = useState(false);
+  console.log(inputValue);
 
   // Состояние для получения индекса выделенного элемента
   const [resultAdressIndex, setResultAdressIndex] = useState(0);
@@ -88,9 +85,6 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
   // Состояние для массива адресов
   const [adressList, setAdressList] =
     useState<DataAdress[]>(initialCheckboxValue);
-
-  // console.log(adressList);
-  // console.log(resultAdressIndex);
 
   // Флаг для проверки, было ли изменено значение inputValue
   const [isInputValueChanged, setIsInputValueChanged] = useState(false);
@@ -133,15 +127,6 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       // Сбрасываем ошибку если уровень подходит
       setErrorInputText("");
 
-      // Обновляем состояние через setFormState из родительского компонента
-      setFormState((prevState: Order) => ({
-        ...prevState,
-        tutorHomeAdress: {
-          adress: inputValue,
-          dataAdress: adressList,
-        },
-      }));
-
       // Обновляем объект в localStorage
       const updatedDataMatch = dataMatch.map((item) => {
         if (item.id === id) {
@@ -159,7 +144,7 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
       // Сохраняем обновленные данные обратно в localStorage
       localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
     },
-    [adressList, dataMatch, id, setFormState]
+    [adressList, dataMatch, id]
   );
 
   useEffect(() => {

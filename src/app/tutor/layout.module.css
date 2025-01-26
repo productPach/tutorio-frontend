@@ -218,7 +218,17 @@
   margin: 10px 0;
 }
 
-.content_block button {
+/* .content_block button {
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+} */
+
+.content_block_button {
   padding: 18px 20px;
   border: none;
   border-radius: 10px;
