@@ -48,6 +48,9 @@ export const fetchUpdateTutor = async (data: {
   tutorPlace?: string[];
   tutorAdress?: string;
   tutorTrip?: string[];
+  tutorTripCity?: string[];
+  tutorTripCityData?: string;
+  tutorTripArea?: string[];
   profileInfo?: string;
 }) => {
   const { id, token, ...fields } = data;

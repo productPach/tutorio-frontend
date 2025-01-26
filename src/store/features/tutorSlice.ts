@@ -69,6 +69,9 @@ export const updateTutor = createAsyncThunk<
     tutorPlace?: string[];
     tutorAdress?: string;
     tutorTrip?: string[];
+    tutorTripCity?: string[];
+    tutorTripCityData?: string;
+    tutorTripArea?: string[];
     profileInfo?: string;
     experience?: string;
   }
@@ -97,6 +100,15 @@ export const updateTutor = createAsyncThunk<
       }),
       ...(optionalFields.tutorTrip !== undefined && {
         tutorTrip: optionalFields.tutorTrip,
+      }),
+      ...(optionalFields.tutorTripCity !== undefined && {
+        tutorTripCity: optionalFields.tutorTripCity,
+      }),
+      ...(optionalFields.tutorTripCityData !== undefined && {
+        tutorTripCityData: optionalFields.tutorTripCityData,
+      }),
+      ...(optionalFields.tutorTripArea !== undefined && {
+        tutorTripArea: optionalFields.tutorTripArea,
       }),
       ...(optionalFields.profileInfo !== undefined && {
         profileInfo: optionalFields.profileInfo,

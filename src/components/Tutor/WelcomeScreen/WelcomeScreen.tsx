@@ -50,7 +50,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ page }) => {
           <p className={styles.content_block_p}>{item.content}</p>
           <button
             onClick={() => handleHideScreen(item.id)}
-            className={styles.buttonBlc}
+            className={clsx(styles.content_block_button, styles.buttonBlc)}
             type="button"
           >
             Всё понятно

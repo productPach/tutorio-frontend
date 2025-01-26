@@ -434,7 +434,10 @@ const Orders = () => {
                   >
                     <div className={styles.header__menu}>
                       <button
-                        className={styles.buttonYlw}
+                        className={clsx(
+                          styles.content_block_button,
+                          styles.buttonYlw
+                        )}
                         onClick={(e) => {
                           e.preventDefault();
                           dispatch(setIsModalBalanceBoost(true));

@@ -12,7 +12,10 @@ import { getLocationForCity } from "@/api/addresses/addresses";
 import { LocationAreaMultiDropdownForms } from "./LocationAreaMultiDropdownForms";
 import { LocationCityMultiDropdownForms } from "./LocationCityMultiDropdownForms";
 import { District, Metro } from "@/types/types";
-import { setSelectedValuesCity } from "@/store/features/tutorSlice";
+import {
+  setSelectedValuesCity,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 import { getAllLocations } from "@/store/features/locationSlice";
 
 interface ComponentRenderProps {
@@ -61,7 +64,6 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   }, [dispatch]);
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
-  console.log(locations);
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
@@ -87,12 +89,15 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   const [formState, setFormState] = useState<Order | null>(
     containsClassProperty || null
   );
+
   // Состояние для отслеживания выбранной радиокнопки
   const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
   // Получаем значение selectedValuesCity из Redux
   const selectedValuesCity: (District | Metro)[] = useAppSelector(
     (state) => state.tutor.selectedValuesCity
   );
+  //console.log(selectedValuesCity);
+
   // Получаем значение selectedValuesArea из Redux
   const selectedValuesArea = useAppSelector(
     (state) => state.tutor.selectedValuesArea
@@ -102,58 +107,40 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   const tutorPlace = checkbox;
   const tutorAdress = formState?.tutorHomeAdress?.adress;
   // Вытаскиваем из объектов только id, чтобы записать в БД + объединяем их в один массив (tutorTrip)
-  const tutorTrip = [
-    ...selectedValuesCity.map((item) => item.id),
-    ...selectedValuesArea.map((item) => item.id),
-  ];
+  // ОТКАЩАЛИСЬ ОТ ДАННОГО РЕШЕНИЯ 25.01.2025, ТАК КАК РЕШИЛИ ЛОКАЦИИ ГОРОДА И ОБЛАСТИ
+  // ХРАНИТЬ В РАЗНЫХ СУЩНОСТЯХ - tutorTripCity И tutorTripArea СООТВЕТСТВЕННО.
+  // В tutorTrip ТЕПЕРЬ ХРАНИТСЯ ВЫБОР РЕПЕТИТОРА КУДА ОН ВЫЕЗЖАЕТ - ГОРОД И/ИЛИ ОБЛАСТЬ: string["1", "2"]
+  // const tutorTrip = [
+  //   ...selectedValuesCity.map((item) => item.id),
+  //   ...selectedValuesArea.map((item) => item.id),
+  // ];
+  const tutorTrip = checkboxTrip;
+  const tutorTripCityData = selectedRadio ?? undefined;
+  const tutorTripCity = [...selectedValuesCity.map((item) => item.id)];
+  const tutorTripArea = [...selectedValuesArea.map((item) => item.id)];
 
   // Обновление данных репетитора
   const updateDataTutor = () => {
-    // Фильтруем данные, оставляя только нужные поля
-    const cleanedData: LocationData[] = dataMatch
-      .filter(
-        (item: any) =>
-          item.locations &&
-          item.locationsTrip &&
-          item.locationsTripArea &&
-          item.locationsTripCity &&
-          item.locationsTripCityData
-      )
-      .map(
-        ({
-          locations,
-          locationsTrip,
-          locationsTripArea,
-          locationsTripCity,
-          locationsTripCityData,
-        }) => ({
-          locations,
-          locationsTrip,
-          locationsTripArea,
-          locationsTripCity,
-          locationsTripCityData,
-        })
-      );
-
-    console.log("Отправляемые данные:", cleanedData);
-
     const id = tutor?.id;
-    // if (token && id) {
-    //   dispatch(
-    //     updateTutor({
-    //       id,
-    //       token,
-    //       status,
-    //       region,
-    //       tutorPlace,
-    //       tutorAdress,
-    //       tutorTrip,
-    //     })
-    //   ).unwrap;
-    //   handleNextStep();
-    // } else {
-    //   console.log("Нет токена");
-    // }
+    if (token && id) {
+      dispatch(
+        updateTutor({
+          id,
+          token,
+          status,
+          region,
+          tutorPlace,
+          tutorAdress,
+          tutorTrip,
+          tutorTripCityData,
+          tutorTripCity,
+          tutorTripArea,
+        })
+      ).unwrap;
+      handleNextStep();
+    } else {
+      console.log("Нет токена");
+    }
   };
 
   const handleCheckboxClick = (title: string) => {
@@ -190,7 +177,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
           locationsTrip: formState?.locationsTrip || [], // Сохраняем текущие locationsTrip
           locationsTripArea: formState?.locationsTripArea || [], // Сохраняем текущие locationsTripArea
           locationsTripCity: formState?.locationsTripCity || [], // Сохраняем текущие locationsTripCity
-          locationsTripCityData: formState?.locationsTripCityData || [], // Сохраняем текущие locationsTripCity
+          locationsTripCityData: formState?.locationsTripCityData || null, // Сохраняем текущие locationsTripCity
         });
       }
 
@@ -234,7 +221,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
           tutorHomeAdress: formState?.tutorHomeAdress,
           locationsTripArea: formState?.locationsTripArea || [], // Сохраняем текущие locationsTripArea
           locationsTripCity: formState?.locationsTripCity || [], // Сохраняем текущие locationsTripCity
-          locationsTripCityData: formState?.locationsTripCityData || [], // Сохраняем текущие locationsTripCity
+          locationsTripCityData: formState?.locationsTripCityData || null, // Сохраняем текущие locationsTripCity
         });
       }
 
