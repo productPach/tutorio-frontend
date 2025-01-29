@@ -127,9 +127,11 @@ export const Location = () => {
   const selectedValuesArea = useAppSelector(
     (state) => state.tutor.selectedValuesArea
   );
+  // Стейт для адреса репетитора
+  const [inputTutorAdress, setInputTutorAdress] = useState(initialTutorAdress);
 
   const tutorPlace = checkbox;
-  const tutorAdress = initialTutorAdress;
+  const tutorAdress = inputTutorAdress;
 
   const tutorTrip = checkboxTrip;
   const tutorTripCityData = selectedRadio ?? undefined;
@@ -194,6 +196,64 @@ export const Location = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
+  // Функция для валидации условий активации кнопки
+  const isFormValid = () => {
+    // Условие 1: Если выбран только чекбокс "Дистанционно"
+    if (
+      checkbox.includes("1") &&
+      !checkbox.includes("2") &&
+      !checkbox.includes("3")
+    ) {
+      return true;
+    }
+
+    // Условие 2: Если выбран чекбокс "Занимаюсь с учениками у себя", и адрес добавлен
+    if (
+      checkbox.includes("2") &&
+      inputTutorAdress &&
+      inputTutorAdress?.trim().length > 0 &&
+      !checkbox.includes("3")
+    ) {
+      return true;
+    }
+
+    // Условие 4: Если выбран чекбокс "Готов выезжать к ученикам"
+    // и выбран чекбокс "checkboxTrip-2" (без дополнительных условий)
+    if (
+      checkbox?.includes("3") &&
+      checkboxTrip?.includes("1") &&
+      ((selectedRadio === "2" && selectedValuesCity.length > 0) ||
+        selectedRadio === "1") &&
+      (!checkboxTrip?.includes("2") ||
+        (checkboxTrip?.includes("2") && selectedValuesArea.length > 0)) &&
+      (!checkbox?.includes("2") ||
+        (checkbox.includes("2") &&
+          inputTutorAdress &&
+          inputTutorAdress?.trim().length > 0))
+    ) {
+      return true;
+    }
+
+    // Условие 5: Если выбран чекбокс "Готов выезжать к ученикам", но не выбран ни один из чекбоксов поездки
+    if (
+      checkbox.includes("3") &&
+      (!checkboxTrip?.includes("1") ||
+        (checkboxTrip?.includes("1") &&
+          ((selectedRadio === "2" && selectedValuesCity.length > 0) ||
+            selectedRadio === "1"))) &&
+      checkboxTrip.includes("2") &&
+      selectedValuesArea.length > 0 &&
+      (!checkbox?.includes("2") ||
+        (checkbox.includes("2") &&
+          inputTutorAdress &&
+          inputTutorAdress?.trim().length > 0))
+    ) {
+      return true;
+    }
+    // Если ни одно из условий не выполняется, форма не валидна
+    return false;
+  };
+
   return (
     <>
       <div className={styles.content_block}>
@@ -249,7 +309,12 @@ export const Location = () => {
                 </label>
               </div>
               {checkbox.includes("2") && (
-                <Adress id={5} question={"question"} typeForm={"typeForm"} />
+                <Adress
+                  id={5}
+                  question={"question"}
+                  typeForm={"typeForm"}
+                  setInputTutorAdress={setInputTutorAdress}
+                />
               )}
             </React.Fragment>
             <React.Fragment key={"3"}>
@@ -449,7 +514,11 @@ export const Location = () => {
           </div>
         </div>
         <div className={componentLocationStyle.containerButton}>
-          <button type="button" className={componentLocationStyle.saveButton}>
+          <button
+            type="button"
+            className={componentLocationStyle.saveButton}
+            disabled={!isFormValid()}
+          >
             Сохранить
           </button>
         </div>

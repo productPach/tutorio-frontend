@@ -230,6 +230,42 @@ export const AdressInputForms: React.FC<ComponentRenderProps> = ({
     };
   }, [adressList, resultAdressIndex, handleNextStep]);
 
+  // Когда адрес не выбран до дома, очищаем inputTutorAdress, чтобы задизейблить кнопку "Продолжить"
+  useEffect(() => {
+    if (
+      Number(adressList[resultAdressIndex]?.data.fias_level) < 8 &&
+      !isInput
+    ) {
+      // Обновляем состояние через setFormState из родительского компонента
+      setFormState((prevState: Order) => ({
+        ...prevState,
+        tutorHomeAdress: {
+          adress: "",
+          dataAdress: "",
+        },
+      }));
+    }
+  }, [adressList, resultAdressIndex, isInput]);
+
+  // Когда выпадающее меню с адресами показывается, очищаем адрес в setFormState, чтобы задизейблить кнопку "Продолжить"
+  useEffect(() => {
+    if (
+      adressList.length > 0 &&
+      inputValue &&
+      inputValue.length > 1 &&
+      errorInputText === "" &&
+      isInput
+    ) {
+      setFormState((prevState: Order) => ({
+        ...prevState,
+        tutorHomeAdress: {
+          adress: "",
+          dataAdress: "",
+        },
+      }));
+    }
+  }, [adressList, inputValue, errorInputText, isInput]);
+
   return (
     <>
       <div className={styles.wrapAdress}>
