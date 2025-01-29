@@ -10,6 +10,7 @@ import { setRegionUser } from "@/store/features/authSlice";
 import {
   setSelectedValuesArea,
   setSelectedValuesCity,
+  updateTutor,
 } from "@/store/features/tutorSlice";
 
 export const SelectCity = () => {
@@ -21,6 +22,8 @@ export const SelectCity = () => {
 
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
 
   const handleSearch = (value: string) => {
     setInputSearch(value);
@@ -34,6 +37,13 @@ export const SelectCity = () => {
     dispatch(setSelectedValues([]));
     dispatch(setSelectedValuesCity([]));
     dispatch(setSelectedValuesArea([]));
+
+    if (token && tutor) {
+      const id = tutor.id;
+      const status = tutor.status;
+      const region = city;
+      dispatch(updateTutor({ id, token, status, region })).unwrap;
+    }
 
     // Удаляем данные о городе из Local Storage, если выбран другой регион
     const storedData = JSON.parse(localStorage.getItem("current-user") || "[]");
