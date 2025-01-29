@@ -2,7 +2,7 @@
 import styles from "../SelectCity/SelectCityModal.module.css";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setModalSelectCity } from "@/store/features/modalSlice";
+import { setModalSelectCity, setScrollY } from "@/store/features/modalSlice";
 import { setSelectedValues } from "@/store/features/matchSlice";
 import { UserRegion } from "@/types/types";
 import { setRegionUser } from "@/store/features/authSlice";
@@ -27,6 +27,7 @@ export const SelectCity = () => {
   };
 
   const handleSelectCity = (city: string, area: string) => {
+    dispatch(setScrollY(0));
     localStorage.setItem("region-user", JSON.stringify({ city, area }));
     dispatch(setModalSelectCity(false));
     dispatch(setRegionUser({ city, area }));
