@@ -141,8 +141,8 @@ export const Location = () => {
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
-    const status = "Active";
-    if (token && id) {
+    const status = tutor?.status;
+    if (token && id && status) {
       dispatch(
         updateTutor({
           id,
@@ -518,6 +518,7 @@ export const Location = () => {
             type="button"
             className={componentLocationStyle.saveButton}
             disabled={!isFormValid()}
+            onClick={() => updateDataTutor()}
           >
             Сохранить
           </button>

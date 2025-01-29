@@ -60,7 +60,6 @@ export const Adress: React.FC<ComponentRenderProps> = ({
 
   // Состояние для определения начал ли вводить пользователь в поисковую строку
   const [isInput, setIsInput] = useState(false);
-  console.log(inputValue);
 
   // Состояние для получения индекса выделенного элемента
   const [resultAdressIndex, setResultAdressIndex] = useState(0);
