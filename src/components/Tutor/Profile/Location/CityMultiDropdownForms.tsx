@@ -13,15 +13,18 @@ interface ComponentRenderProps {
   id: number;
   question: string;
   typeForm: string;
+  setSuccessUpdateTutor: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
   id,
   question,
   typeForm,
+  setSuccessUpdateTutor,
 }) => {
   // Получаем значение tutor из Redux
   const tutor = useAppSelector((state) => state.tutor.tutor);
+
   const dispatch = useAppDispatch();
   // Получаем значение regionUser из Redux
   const regionUser = useAppSelector((state) => state.auth.regionUser);
@@ -93,6 +96,7 @@ export const CityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
 
   // Обновляем adressListCity в handleInputValue
   const handleInputValue = async (e: ChangeEvent<HTMLInputElement>) => {
+    setSuccessUpdateTutor(false);
     setInputValueCity(e.target.value);
     setIsInput(true);
     // Обновление будет происходить автоматически благодаря useEffect
@@ -105,6 +109,7 @@ export const CityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
 
   // Удаление локации
   const handleRemoveItem = (index: number) => {
+    setSuccessUpdateTutor(false);
     const updatedValues = selectedValuesCity.filter((_, i) => i !== index);
     dispatch(setSelectedValuesCity(updatedValues)); // Передаём обновлённый массив
   };
@@ -141,6 +146,7 @@ export const CityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
     }
 
     if (e.key === "Enter" && adressListCity.length > 0) {
+      setSuccessUpdateTutor(false);
       const selectedAdress = adressListCity[resultAdressIndexCity];
       const updatedValues = [...selectedValuesCity, selectedAdress]; // Добавляем новый элемент к текущему состоянию
       dispatch(setSelectedValuesCity(updatedValues)); // Передаём обновлённый массив в Redux
