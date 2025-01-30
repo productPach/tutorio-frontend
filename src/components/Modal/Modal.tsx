@@ -38,6 +38,8 @@ export const Modal: React.FC<ModalProps> = ({
   const closeModal = () => {
     if (modalId === "selectCity") {
       dispatch(setModalSelectCity(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "balanceBoost") {
       dispatch(setIsModalBalanceBoost(false));

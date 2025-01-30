@@ -16,6 +16,7 @@ interface ComponentRenderProps {
   id: number;
   question: string;
   typeForm: string;
+  setInputTutorAdress: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 // Определяем тип для объекта в массиве
@@ -45,6 +46,7 @@ export const Adress: React.FC<ComponentRenderProps> = ({
   id,
   question,
   typeForm,
+  setInputTutorAdress,
 }) => {
   const route = useRouter();
 
@@ -58,7 +60,6 @@ export const Adress: React.FC<ComponentRenderProps> = ({
 
   // Состояние для определения начал ли вводить пользователь в поисковую строку
   const [isInput, setIsInput] = useState(false);
-  console.log(inputValue);
 
   // Состояние для получения индекса выделенного элемента
   const [resultAdressIndex, setResultAdressIndex] = useState(0);
@@ -103,6 +104,7 @@ export const Adress: React.FC<ComponentRenderProps> = ({
 
     // Обновляем состояние поля ввода
     setInputValue(value);
+    setInputTutorAdress(value);
     setIsInputValueChanged(true); // Устанавливаем флаг, что значение изменено
 
     // Проверяем введенное значение через API ДаДата
@@ -127,6 +129,8 @@ export const Adress: React.FC<ComponentRenderProps> = ({
       // Сбрасываем ошибку если уровень подходит
       setErrorInputText("");
 
+      setInputTutorAdress(inputValue);
+
       // Обновляем объект в localStorage
       const updatedDataMatch = dataMatch.map((item) => {
         if (item.id === id) {
@@ -144,7 +148,7 @@ export const Adress: React.FC<ComponentRenderProps> = ({
       // Сохраняем обновленные данные обратно в localStorage
       localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
     },
-    [adressList, dataMatch, id]
+    [adressList, dataMatch, id, setInputTutorAdress]
   );
 
   useEffect(() => {
@@ -214,6 +218,29 @@ export const Adress: React.FC<ComponentRenderProps> = ({
       input?.removeEventListener("keydown", handleKeyDown);
     };
   }, [adressList, resultAdressIndex, handleNextStep]);
+
+  // Когда адрес не выбран до дома, очищаем inputTutorAdress, чтобы в компоненте Location.tsx задизейблить кнопку "Сохранить"
+  useEffect(() => {
+    if (
+      Number(adressList[resultAdressIndex]?.data.fias_level) < 8 &&
+      !isInput
+    ) {
+      setInputTutorAdress(""); // Обновляем состояние здесь
+    }
+  }, [adressList, resultAdressIndex, isInput]);
+
+  // Когда выпадающее меню с адресами показывается, очищаем inputTutorAdress, чтобы в компоненте Location.tsx задизейблить кнопку "Сохранить"
+  useEffect(() => {
+    if (
+      adressList.length > 0 &&
+      inputValue &&
+      inputValue.length > 1 &&
+      errorInputText === "" &&
+      isInput
+    ) {
+      setInputTutorAdress(""); // Обновляем состояние, когда выполняется условие
+    }
+  }, [adressList, inputValue, errorInputText, isInput]);
 
   return (
     <>

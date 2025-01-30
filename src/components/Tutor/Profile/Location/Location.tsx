@@ -1,42 +1,37 @@
 "use client";
-import { useDispatch } from "react-redux";
-import generalStyle from "../../../../app/general.module.css";
 import styles from "../../../../app/tutor/layout.module.css";
-import componentStyle from "../GeneralInfo/GeneralInfo.module.css";
 import componentLocationStyle from "./Location.module.css";
-//mport styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
-import animation from "../../../../app/sign-in-tutor/layout.module.css";
-
-import clsx from "clsx";
-import { AppDispatch, useAppDispatch, useAppSelector } from "@/store/store";
-import Image from "next/image";
-import {
-  setIsModalFio,
-  setIsModalProfileInfo,
-  setModalSelectCity,
-} from "@/store/features/modalSlice";
-import { LocationForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationForms";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setModalSelectCity } from "@/store/features/modalSlice";
 import React, { useEffect, useState } from "react";
-import { District, Metro, Order, RegionalCity } from "@/types/types";
-import { useRouter } from "next/navigation";
+import { District, Metro, RegionalCity } from "@/types/types";
 import { getAllLocations } from "@/store/features/locationSlice";
 import {
   setSelectedValuesArea,
   setSelectedValuesCity,
   updateTutor,
 } from "@/store/features/tutorSlice";
-import { LocationAreaMultiDropdownForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationAreaMultiDropdownForms";
-import { LocationCityMultiDropdownForms } from "@/components/SignIn/SignInTutor/LocationForms/LocationCityMultiDropdownForms";
-import { AdressInputForms } from "@/components/SignIn/SignInTutor/LocationForms/AdressInputForms";
 import { getLocationForCity } from "@/api/addresses/addresses";
 import { Adress } from "./Adress";
 import { CityMultiDropdownForms } from "./CityMultiDropdownForms";
 import { AreaMultiDropdownForms } from "./AreaMultiDropdownForms";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 export const Location = () => {
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  // Получаем значение loading из Redux
+  const isLoading = useAppSelector((state) => state.tutor.loading);
+  const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
+
+  const [successUpdateTutor, setSuccessUpdateTutor] = useState(false);
+
+  useEffect(() => {
+    updateStatus === "success" && setSuccessUpdateTutor(true);
+  }, [updateStatus]);
+
+  console.log(isLoading);
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -44,6 +39,7 @@ export const Location = () => {
   }, [dispatch]);
   // Получаем города из Redux
   const locations = useAppSelector((state) => state.locations.city);
+
   // Получаем значение региона tutor из Redux
   const regionUser = locations.find((city) => city.title === tutor?.region);
   const region = regionUser?.title;
@@ -145,8 +141,11 @@ export const Location = () => {
     (state) => state.tutor.selectedValuesArea
   );
 
+  // Стейт для адреса репетитора
+  const [inputTutorAdress, setInputTutorAdress] = useState(initialTutorAdress);
+
   const tutorPlace = checkbox;
-  const tutorAdress = initialTutorAdress;
+  const tutorAdress = inputTutorAdress;
 
   const tutorTrip = checkboxTrip;
   const tutorTripCityData = selectedRadio ?? undefined;
@@ -156,8 +155,8 @@ export const Location = () => {
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
-    const status = "Active";
-    if (token && id) {
+    const status = tutor?.status;
+    if (token && id && status) {
       dispatch(
         updateTutor({
           id,
@@ -178,6 +177,7 @@ export const Location = () => {
   };
 
   const handleCheckboxClick = (title: string) => {
+    setSuccessUpdateTutor(false);
     setCheckbox((prev) => {
       const updatedCheckboxes = prev.includes(title)
         ? prev.filter((item) => item !== title)
@@ -187,6 +187,7 @@ export const Location = () => {
   };
 
   const handleCheckboxTripClick = (title: string) => {
+    setSuccessUpdateTutor(false);
     setCheckboxTrip((prev) => {
       const updatedCheckboxes = prev.includes(title)
         ? prev.filter((item) => item !== title)
@@ -198,6 +199,7 @@ export const Location = () => {
   // Обработчик для радио-кнопки
   // Функция для обработки клика по радиокнопке
   const handleRadioClick = async (numRadio: string) => {
+    setSuccessUpdateTutor(false);
     setSelectedRadio(numRadio); // Устанавливаем выбранную радиокнопку
     let locationsTripCity: (District | Metro)[] = [];
     if (numRadio === "1" && regionUser) {
@@ -211,242 +213,338 @@ export const Location = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
+  // Функция для валидации условий активации кнопки
+  const isFormValid = () => {
+    // Условие 1: Если выбран только чекбокс "Дистанционно"
+    if (
+      checkbox.includes("1") &&
+      !checkbox.includes("2") &&
+      !checkbox.includes("3")
+    ) {
+      return true;
+    }
+
+    // Условие 2: Если выбран чекбокс "Занимаюсь с учениками у себя", и адрес добавлен
+    if (
+      checkbox.includes("2") &&
+      inputTutorAdress &&
+      inputTutorAdress?.trim().length > 0 &&
+      !checkbox.includes("3")
+    ) {
+      return true;
+    }
+
+    // Условие 4: Если выбран чекбокс "Готов выезжать к ученикам"
+    // и выбран чекбокс "checkboxTrip-2" (без дополнительных условий)
+    if (
+      checkbox?.includes("3") &&
+      checkboxTrip?.includes("1") &&
+      ((selectedRadio === "2" && selectedValuesCity.length > 0) ||
+        selectedRadio === "1") &&
+      (!checkboxTrip?.includes("2") ||
+        (checkboxTrip?.includes("2") && selectedValuesArea.length > 0)) &&
+      (!checkbox?.includes("2") ||
+        (checkbox.includes("2") &&
+          inputTutorAdress &&
+          inputTutorAdress?.trim().length > 0))
+    ) {
+      return true;
+    }
+
+    // Условие 5: Если выбран чекбокс "Готов выезжать к ученикам", но не выбран ни один из чекбоксов поездки
+    if (
+      checkbox.includes("3") &&
+      (!checkboxTrip?.includes("1") ||
+        (checkboxTrip?.includes("1") &&
+          ((selectedRadio === "2" && selectedValuesCity.length > 0) ||
+            selectedRadio === "1"))) &&
+      checkboxTrip.includes("2") &&
+      selectedValuesArea.length > 0 &&
+      (!checkbox?.includes("2") ||
+        (checkbox.includes("2") &&
+          inputTutorAdress &&
+          inputTutorAdress?.trim().length > 0))
+    ) {
+      return true;
+    }
+    // Если ни одно из условий не выполняется, форма не валидна
+    return false;
+  };
+
   return (
     <>
       <div className={styles.content_block}>
         <h3>Место занятий и локации</h3>
       </div>
 
-      <div className={styles.content_block}>
-        {/* <div className={componentLocationStyle.title}>Заголовок</div> */}
-        {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
-        <div className={componentLocationStyle.containerAnswers}>
-          <React.Fragment key={"1"}>
-            <div className={componentLocationStyle.answerLocation}>
-              <input
-                value={checkbox}
-                onChange={() => handleCheckboxClick("1")}
-                checked={checkbox.includes("1")}
-                type="checkbox"
-                className={componentLocationStyle.checkboxInput}
-                id={`checkbox-1`}
-                name="checkbox"
-              />
-              <label
-                className={componentLocationStyle.checkboxLabelLocation}
-                htmlFor={`checkbox-1`}
-              >
-                <span className={componentLocationStyle.checkbox}></span>
-                <p className={componentLocationStyle.answerTitle}>
-                  Дистанционно
-                </p>
-              </label>
-            </div>
-          </React.Fragment>
-          <React.Fragment key={"2"}>
-            <div className={componentLocationStyle.answerLocation}>
-              <input
-                value={checkbox}
-                onChange={() => handleCheckboxClick("2")}
-                checked={checkbox.includes("2")}
-                type="checkbox"
-                className={componentLocationStyle.checkboxInput}
-                id={`checkbox-2`}
-                name="checkbox"
-              />
-              <label
-                className={componentLocationStyle.checkboxLabelLocation}
-                htmlFor={`checkbox-2`}
-              >
-                <span className={componentLocationStyle.checkbox}></span>
-                <p className={componentLocationStyle.answerTitle}>
-                  Занимаюсь с учениками у себя
-                </p>
-              </label>
-            </div>
-            {checkbox.includes("2") && (
-              <Adress id={5} question={"question"} typeForm={"typeForm"} />
-            )}
-          </React.Fragment>
-          <React.Fragment key={"3"}>
-            <div className={componentLocationStyle.answerLocation}>
-              <input
-                value={checkbox}
-                onChange={() => handleCheckboxClick("3")}
-                checked={checkbox.includes("3")}
-                type="checkbox"
-                className={componentLocationStyle.checkboxInput}
-                id={`checkbox-3`}
-                name="checkbox"
-              />
-              <label
-                className={componentLocationStyle.checkboxLabelLocation}
-                htmlFor={`checkbox-3`}
-              >
-                <span className={componentLocationStyle.checkbox}></span>
-                <p className={componentLocationStyle.answerTitle}>
-                  Готов выезжать к ученикам
-                </p>
-              </label>
-            </div>
-            {checkbox.includes("3") && (
-              <div className={componentLocationStyle.wrapAdress}>
-                <div className={componentLocationStyle.description}>
-                  Укажите места, куда вы готовы выезжать на занятия с учениками
-                </div>
-                <div className={componentLocationStyle.description}>
-                  Регион:{" "}
-                  <span
-                    onClick={() => {
-                      dispatch(setModalSelectCity(true));
-                    }}
-                    style={{ textDecoration: "underline", cursor: "pointer" }}
-                  >
-                    {regionUser && regionUser.title} и{" "}
-                    {regionUser && regionUser.area}
-                  </span>
-                </div>
-                <div className={componentLocationStyle.containerAnswers}>
-                  <React.Fragment key={"10"}>
-                    <div className={componentLocationStyle.answerLocation}>
-                      <input
-                        value={checkboxTrip}
-                        onChange={() => handleCheckboxTripClick("1")}
-                        checked={checkboxTrip.includes("1")}
-                        type="checkbox"
-                        className={componentLocationStyle.checkboxInput}
-                        id={`checkboxTrip-1`}
-                        name="checkboxTrip"
-                      />
-                      <label
-                        className={componentLocationStyle.checkboxLabelLocation}
-                        htmlFor={`checkboxTrip-1`}
-                      >
-                        <span
-                          className={componentLocationStyle.checkbox}
-                        ></span>
-                        <p className={componentLocationStyle.answerTitle}>
-                          {regionUser?.title}
-                        </p>
-                      </label>
-                    </div>
-                    {checkboxTrip.includes("1") && (
-                      <>
-                        <div className={componentLocationStyle.wrapAdress}>
-                          <div
-                            className={componentLocationStyle.containerAnswers}
-                          >
-                            <React.Fragment key={"1"}>
-                              <div
-                                className={
-                                  componentLocationStyle.answerContainer
-                                }
-                              >
-                                <input
-                                  checked={selectedRadio === "1"}
-                                  readOnly
-                                  type="radio"
-                                  className={componentLocationStyle.radioInput}
-                                  id={`radio-1`}
-                                  name="goal"
-                                  onChange={() => handleRadioClick("1")}
-                                />
-                                <label
-                                  className={componentLocationStyle.radioLabel}
-                                  htmlFor={`radio-1`}
+      <div className={componentLocationStyle.content_blockGap32}>
+        <div className={styles.content_block}>
+          {/* <div className={componentLocationStyle.title}>Заголовок</div> */}
+          {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
+          <div className={componentLocationStyle.containerAnswers}>
+            <React.Fragment key={"1"}>
+              <div className={componentLocationStyle.answerLocation}>
+                <input
+                  value={checkbox}
+                  onChange={() => handleCheckboxClick("1")}
+                  checked={checkbox.includes("1")}
+                  type="checkbox"
+                  className={componentLocationStyle.checkboxInput}
+                  id={`checkbox-1`}
+                  name="checkbox"
+                />
+                <label
+                  className={componentLocationStyle.checkboxLabelLocation}
+                  htmlFor={`checkbox-1`}
+                >
+                  <span className={componentLocationStyle.checkbox}></span>
+                  <p className={componentLocationStyle.answerTitle}>
+                    Дистанционно
+                  </p>
+                </label>
+              </div>
+            </React.Fragment>
+            <React.Fragment key={"2"}>
+              <div className={componentLocationStyle.answerLocation}>
+                <input
+                  value={checkbox}
+                  onChange={() => handleCheckboxClick("2")}
+                  checked={checkbox.includes("2")}
+                  type="checkbox"
+                  className={componentLocationStyle.checkboxInput}
+                  id={`checkbox-2`}
+                  name="checkbox"
+                />
+                <label
+                  className={componentLocationStyle.checkboxLabelLocation}
+                  htmlFor={`checkbox-2`}
+                >
+                  <span className={componentLocationStyle.checkbox}></span>
+                  <p className={componentLocationStyle.answerTitle}>
+                    Занимаюсь с учениками у себя
+                  </p>
+                </label>
+              </div>
+              {checkbox.includes("2") && (
+                <Adress
+                  id={5}
+                  question={"question"}
+                  typeForm={"typeForm"}
+                  setInputTutorAdress={setInputTutorAdress}
+                />
+              )}
+            </React.Fragment>
+            <React.Fragment key={"3"}>
+              <div className={componentLocationStyle.answerLocation}>
+                <input
+                  value={checkbox}
+                  onChange={() => handleCheckboxClick("3")}
+                  checked={checkbox.includes("3")}
+                  type="checkbox"
+                  className={componentLocationStyle.checkboxInput}
+                  id={`checkbox-3`}
+                  name="checkbox"
+                />
+                <label
+                  className={componentLocationStyle.checkboxLabelLocation}
+                  htmlFor={`checkbox-3`}
+                >
+                  <span className={componentLocationStyle.checkbox}></span>
+                  <p className={componentLocationStyle.answerTitle}>
+                    Готов выезжать к ученикам
+                  </p>
+                </label>
+              </div>
+              {checkbox.includes("3") && (
+                <div className={componentLocationStyle.wrapAdress}>
+                  <div className={componentLocationStyle.description}>
+                    Укажите места, куда вы готовы выезжать на занятия с
+                    учениками
+                  </div>
+                  <div className={componentLocationStyle.description}>
+                    Регион:{" "}
+                    <span
+                      onClick={() => {
+                        dispatch(setModalSelectCity(true));
+                      }}
+                      style={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
+                      {regionUser && regionUser.title} и{" "}
+                      {regionUser && regionUser.area}
+                    </span>
+                  </div>
+                  <div className={componentLocationStyle.containerAnswers}>
+                    <React.Fragment key={"10"}>
+                      <div className={componentLocationStyle.answerLocation}>
+                        <input
+                          value={checkboxTrip}
+                          onChange={() => handleCheckboxTripClick("1")}
+                          checked={checkboxTrip.includes("1")}
+                          type="checkbox"
+                          className={componentLocationStyle.checkboxInput}
+                          id={`checkboxTrip-1`}
+                          name="checkboxTrip"
+                        />
+                        <label
+                          className={
+                            componentLocationStyle.checkboxLabelLocation
+                          }
+                          htmlFor={`checkboxTrip-1`}
+                        >
+                          <span
+                            className={componentLocationStyle.checkbox}
+                          ></span>
+                          <p className={componentLocationStyle.answerTitle}>
+                            {regionUser?.title}
+                          </p>
+                        </label>
+                      </div>
+                      {checkboxTrip.includes("1") && (
+                        <>
+                          <div className={componentLocationStyle.wrapAdress}>
+                            <div
+                              className={
+                                componentLocationStyle.containerAnswers
+                              }
+                            >
+                              <React.Fragment key={"1"}>
+                                <div
+                                  className={
+                                    componentLocationStyle.answerContainer
+                                  }
                                 >
-                                  <span
-                                    className={componentLocationStyle.radio}
-                                  ></span>
-                                  <p
+                                  <input
+                                    checked={selectedRadio === "1"}
+                                    readOnly
+                                    type="radio"
                                     className={
-                                      componentLocationStyle.answerTitle
+                                      componentLocationStyle.radioInput
                                     }
+                                    id={`radio-1`}
+                                    name="goal"
+                                    onChange={() => handleRadioClick("1")}
+                                  />
+                                  <label
+                                    className={
+                                      componentLocationStyle.radioLabel
+                                    }
+                                    htmlFor={`radio-1`}
                                   >
-                                    Выезжаю по всему городу
-                                  </p>
-                                </label>
-                              </div>
-                            </React.Fragment>
-                            <React.Fragment key={"2"}>
-                              <div
-                                className={
-                                  componentLocationStyle.answerContainer
-                                }
-                              >
-                                <input
-                                  checked={selectedRadio === "2"}
-                                  readOnly
-                                  type="radio"
-                                  className={componentLocationStyle.radioInput}
-                                  id={`radio-2`}
-                                  name="goal"
-                                  onChange={() => handleRadioClick("2")}
-                                />
-                                <label
-                                  className={componentLocationStyle.radioLabel}
-                                  htmlFor={`radio-2`}
+                                    <span
+                                      className={componentLocationStyle.radio}
+                                    ></span>
+                                    <p
+                                      className={
+                                        componentLocationStyle.answerTitle
+                                      }
+                                    >
+                                      Выезжаю по всему городу
+                                    </p>
+                                  </label>
+                                </div>
+                              </React.Fragment>
+                              <React.Fragment key={"2"}>
+                                <div
+                                  className={
+                                    componentLocationStyle.answerContainer
+                                  }
                                 >
-                                  <span
-                                    className={componentLocationStyle.radio}
-                                  ></span>
-                                  <p
+                                  <input
+                                    checked={selectedRadio === "2"}
+                                    readOnly
+                                    type="radio"
                                     className={
-                                      componentLocationStyle.answerTitle
+                                      componentLocationStyle.radioInput
                                     }
+                                    id={`radio-2`}
+                                    name="goal"
+                                    onChange={() => handleRadioClick("2")}
+                                  />
+                                  <label
+                                    className={
+                                      componentLocationStyle.radioLabel
+                                    }
+                                    htmlFor={`radio-2`}
                                   >
-                                    Выбрать отдельные районы и станции метро
-                                  </p>
-                                </label>
-                              </div>
-                              {selectedRadio === "2" && (
-                                <CityMultiDropdownForms
-                                  id={5}
-                                  question={"question"}
-                                  typeForm={"typeForm"}
-                                />
-                              )}
-                            </React.Fragment>
+                                    <span
+                                      className={componentLocationStyle.radio}
+                                    ></span>
+                                    <p
+                                      className={
+                                        componentLocationStyle.answerTitle
+                                      }
+                                    >
+                                      Выбрать отдельные районы и станции метро
+                                    </p>
+                                  </label>
+                                </div>
+                                {selectedRadio === "2" && (
+                                  <CityMultiDropdownForms
+                                    id={5}
+                                    question={"question"}
+                                    typeForm={"typeForm"}
+                                  />
+                                )}
+                              </React.Fragment>
+                            </div>
                           </div>
-                        </div>
-                      </>
-                    )}
-                  </React.Fragment>
-                  <React.Fragment key={"20"}>
-                    <div className={componentLocationStyle.answerLocation}>
-                      <input
-                        value={checkboxTrip}
-                        onChange={() => handleCheckboxTripClick("2")}
-                        checked={checkboxTrip.includes("2")}
-                        type="checkbox"
-                        className={componentLocationStyle.checkboxInput}
-                        id={`checkboxTrip-2`}
-                        name="checkboxTrip"
-                      />
-                      <label
-                        className={componentLocationStyle.checkboxLabelLocation}
-                        htmlFor={`checkboxTrip-2`}
-                      >
-                        <span
-                          className={componentLocationStyle.checkbox}
-                        ></span>
-                        <p className={componentLocationStyle.answerTitle}>
-                          {regionUser?.area}
-                        </p>
-                      </label>
-                    </div>
-                    {checkboxTrip.includes("2") && (
-                      <AreaMultiDropdownForms
-                        id={5}
-                        question={"question"}
-                        typeForm={"typeForm"}
-                      />
-                    )}
-                  </React.Fragment>
+                        </>
+                      )}
+                    </React.Fragment>
+                    <React.Fragment key={"20"}>
+                      <div className={componentLocationStyle.answerLocation}>
+                        <input
+                          value={checkboxTrip}
+                          onChange={() => handleCheckboxTripClick("2")}
+                          checked={checkboxTrip.includes("2")}
+                          type="checkbox"
+                          className={componentLocationStyle.checkboxInput}
+                          id={`checkboxTrip-2`}
+                          name="checkboxTrip"
+                        />
+                        <label
+                          className={
+                            componentLocationStyle.checkboxLabelLocation
+                          }
+                          htmlFor={`checkboxTrip-2`}
+                        >
+                          <span
+                            className={componentLocationStyle.checkbox}
+                          ></span>
+                          <p className={componentLocationStyle.answerTitle}>
+                            {regionUser?.area}
+                          </p>
+                        </label>
+                      </div>
+                      {checkboxTrip.includes("2") && (
+                        <AreaMultiDropdownForms
+                          id={5}
+                          question={"question"}
+                          typeForm={"typeForm"}
+                        />
+                      )}
+                    </React.Fragment>
+                  </div>
                 </div>
+              )}
+            </React.Fragment>
+          </div>
+        </div>
+        <div className={componentLocationStyle.containerButton}>
+          <button
+            type="button"
+            className={componentLocationStyle.saveButton}
+            disabled={!isFormValid() || isLoading || successUpdateTutor}
+            onClick={() => updateDataTutor()}
+          >
+            {successUpdateTutor ? "Сохранено" : "Сохранить"}
+            {isLoading && (
+              <div className={styles.buttonYlSpinner}>
+                <Spinner />
               </div>
             )}
-          </React.Fragment>
+          </button>
+          <div>{successUpdateTutor && "Данные успешно обновлены"}</div>
         </div>
       </div>
     </>

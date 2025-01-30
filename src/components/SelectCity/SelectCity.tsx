@@ -2,7 +2,7 @@
 import styles from "../SelectCity/SelectCityModal.module.css";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setModalSelectCity } from "@/store/features/modalSlice";
+import { setModalSelectCity, setScrollY } from "@/store/features/modalSlice";
 import { setSelectedValues } from "@/store/features/matchSlice";
 import { UserRegion } from "@/types/types";
 import { setRegionUser } from "@/store/features/authSlice";
@@ -10,6 +10,7 @@ import { setRegionUser } from "@/store/features/authSlice";
 import {
   setSelectedValuesArea,
   setSelectedValuesCity,
+  updateTutor,
 } from "@/store/features/tutorSlice";
 
 export const SelectCity = () => {
@@ -21,18 +22,28 @@ export const SelectCity = () => {
 
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
+  const token = useAppSelector((state) => state.auth.token);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
 
   const handleSearch = (value: string) => {
     setInputSearch(value);
   };
 
   const handleSelectCity = (city: string, area: string) => {
+    dispatch(setScrollY(0));
     localStorage.setItem("region-user", JSON.stringify({ city, area }));
     dispatch(setModalSelectCity(false));
     dispatch(setRegionUser({ city, area }));
     dispatch(setSelectedValues([]));
     dispatch(setSelectedValuesCity([]));
     dispatch(setSelectedValuesArea([]));
+
+    if (token && tutor) {
+      const id = tutor.id;
+      const status = tutor.status;
+      const region = city;
+      dispatch(updateTutor({ id, token, status, region })).unwrap;
+    }
 
     // Удаляем данные о городе из Local Storage, если выбран другой регион
     const storedData = JSON.parse(localStorage.getItem("current-user") || "[]");

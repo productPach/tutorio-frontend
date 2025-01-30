@@ -96,6 +96,15 @@
   top: 50%;
 }
 
+.buttonYlSpinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 38px;
+  left: 174px;
+}
+
 .container {
   margin-top: 18px;
   display: grid;
