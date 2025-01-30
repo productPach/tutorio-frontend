@@ -15,11 +15,23 @@ import { getLocationForCity } from "@/api/addresses/addresses";
 import { Adress } from "./Adress";
 import { CityMultiDropdownForms } from "./CityMultiDropdownForms";
 import { AreaMultiDropdownForms } from "./AreaMultiDropdownForms";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 export const Location = () => {
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  // Получаем значение loading из Redux
+  const isLoading = useAppSelector((state) => state.tutor.loading);
+  const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
+
+  const [successUpdateTutor, setSuccessUpdateTutor] = useState(false);
+
+  useEffect(() => {
+    updateStatus === "success" && setSuccessUpdateTutor(true);
+  }, [updateStatus]);
+
+  console.log(isLoading);
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -27,6 +39,7 @@ export const Location = () => {
   }, [dispatch]);
   // Получаем города из Redux
   const locations = useAppSelector((state) => state.locations.city);
+
   // Получаем значение региона tutor из Redux
   const regionUser = locations.find((city) => city.title === tutor?.region);
   const region = regionUser?.title;
@@ -127,6 +140,7 @@ export const Location = () => {
   const selectedValuesArea = useAppSelector(
     (state) => state.tutor.selectedValuesArea
   );
+
   // Стейт для адреса репетитора
   const [inputTutorAdress, setInputTutorAdress] = useState(initialTutorAdress);
 
@@ -163,6 +177,7 @@ export const Location = () => {
   };
 
   const handleCheckboxClick = (title: string) => {
+    setSuccessUpdateTutor(false);
     setCheckbox((prev) => {
       const updatedCheckboxes = prev.includes(title)
         ? prev.filter((item) => item !== title)
@@ -172,6 +187,7 @@ export const Location = () => {
   };
 
   const handleCheckboxTripClick = (title: string) => {
+    setSuccessUpdateTutor(false);
     setCheckboxTrip((prev) => {
       const updatedCheckboxes = prev.includes(title)
         ? prev.filter((item) => item !== title)
@@ -183,6 +199,7 @@ export const Location = () => {
   // Обработчик для радио-кнопки
   // Функция для обработки клика по радиокнопке
   const handleRadioClick = async (numRadio: string) => {
+    setSuccessUpdateTutor(false);
     setSelectedRadio(numRadio); // Устанавливаем выбранную радиокнопку
     let locationsTripCity: (District | Metro)[] = [];
     if (numRadio === "1" && regionUser) {
@@ -517,11 +534,17 @@ export const Location = () => {
           <button
             type="button"
             className={componentLocationStyle.saveButton}
-            disabled={!isFormValid()}
+            disabled={!isFormValid() || isLoading || successUpdateTutor}
             onClick={() => updateDataTutor()}
           >
-            Сохранить
+            {successUpdateTutor ? "Сохранено" : "Сохранить"}
+            {isLoading && (
+              <div className={styles.buttonYlSpinner}>
+                <Spinner />
+              </div>
+            )}
           </button>
+          <div>{successUpdateTutor && "Данные успешно обновлены"}</div>
         </div>
       </div>
     </>

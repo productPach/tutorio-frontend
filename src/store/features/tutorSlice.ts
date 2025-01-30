@@ -315,6 +315,7 @@ export const deletePhotoTutorEducation = createAsyncThunk<
 type TutorStateType = {
   tutor: null | Tutor;
   loading: boolean;
+  updateStatus: string;
   selectedValuesCity: (District | Metro)[];
   selectedValuesArea: RegionalCity[];
   supportMenu: boolean;
@@ -328,6 +329,7 @@ const initialTutor = getTutorFromLocalStorage();
 const initialState: TutorStateType = {
   tutor: initialTutor,
   loading: false,
+  updateStatus: "idle", // idle | loading | success | failed
   selectedValuesCity: [],
   selectedValuesArea: [],
   supportMenu: false,
@@ -381,17 +383,30 @@ const tutorSlice = createSlice({
       )
       .addCase(getCurrentTutor.pending, (state) => {
         state.loading = true;
+        state.updateStatus = "loading";
       })
       .addCase(getCurrentTutor.rejected, (state) => {
         state.loading = false;
+        state.updateStatus = "failed";
       })
       .addCase(createTutor.fulfilled, (state, action: PayloadAction<Tutor>) => {
         state.tutor = action.payload;
+        state.updateStatus = "success";
         setLocalStorage("tutor", state.tutor);
       })
       .addCase(updateTutor.fulfilled, (state, action: PayloadAction<Tutor>) => {
         state.tutor = action.payload;
+        state.loading = false;
+        state.updateStatus = "success";
         setLocalStorage("tutor", state.tutor);
+      })
+      .addCase(updateTutor.pending, (state) => {
+        state.loading = true;
+        state.updateStatus = "loading";
+      })
+      .addCase(updateTutor.rejected, (state) => {
+        state.loading = false;
+        state.updateStatus = "failed";
       })
       .addCase(updateTutorAvatar.fulfilled, (state, action) => {
         if (state.tutor && state.tutor.id === action.payload.id) {
