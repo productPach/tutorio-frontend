@@ -31,8 +31,6 @@ export const Location = () => {
     updateStatus === "success" && setSuccessUpdateTutor(true);
   }, [updateStatus]);
 
-  console.log(isLoading);
-
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getAllLocations());
@@ -483,6 +481,9 @@ export const Location = () => {
                                     id={5}
                                     question={"question"}
                                     typeForm={"typeForm"}
+                                    setSuccessUpdateTutor={
+                                      setSuccessUpdateTutor
+                                    }
                                   />
                                 )}
                               </React.Fragment>
@@ -521,6 +522,7 @@ export const Location = () => {
                           id={5}
                           question={"question"}
                           typeForm={"typeForm"}
+                          setSuccessUpdateTutor={setSuccessUpdateTutor}
                         />
                       )}
                     </React.Fragment>
