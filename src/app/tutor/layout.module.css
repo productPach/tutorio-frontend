@@ -223,6 +223,12 @@
   width: fit-content;
 }
 
+.content_block h4 {
+  font-size: 18px;
+  margin: 0;
+  width: fit-content;
+}
+
 .content_block_p {
   margin: 10px 0;
 }
@@ -557,4 +563,8 @@
 .fireIcon {
   position: relative;
   top: -8px;
+}
+
+.titleGrey {
+  color: #777777;
 }

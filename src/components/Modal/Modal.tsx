@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/store";
 import {
   setIsModalBalanceBoost,
   setIsModalEditEducation,
+  setIsModalEditSubject,
   setIsModalEducation,
   setIsModalEducationItem,
   setIsModalExperience,
@@ -63,6 +64,9 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "editEducation") {
       dispatch(setIsModalEditEducation(false));
+    }
+    if (modalId === "editSubject") {
+      dispatch(setIsModalEditSubject(false));
     }
   };
 
