@@ -11,7 +11,6 @@ type ModalStateType = {
   isModalEducation: boolean;
   isModalEducationItem: boolean;
   isModalEditEducation: boolean;
-  isModalEditSubject: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -25,7 +24,6 @@ const initialState: ModalStateType = {
   isModalEducation: false,
   isModalEducationItem: false,
   isModalEditEducation: false,
-  isModalEditSubject: false,
 };
 
 const modalSlice = createSlice({
@@ -61,10 +59,7 @@ const modalSlice = createSlice({
     },
     setIsModalEditEducation: (state, action: PayloadAction<boolean>) => {
       state.isModalEditEducation = action.payload;
-    },
-    setIsModalEditSubject: (state, action: PayloadAction<boolean>) => {
-      state.isModalEditSubject = action.payload;
-    },
+    }
   },
 });
 
@@ -79,6 +74,5 @@ export const {
   setIsModalEducation,
   setIsModalEducationItem,
   setIsModalEditEducation,
-  setIsModalEditSubject
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

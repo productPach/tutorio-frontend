@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { setIsModalEditSubject } from "@/store/features/modalSlice";
+import Link from "next/link";
 
 export const Subject = () => {
   const dispatch = useAppDispatch();
@@ -38,31 +38,32 @@ export const Subject = () => {
             <span className={styles.titleGrey}>Выбранные предметы</span>
           </div>
           <div className={componentSubjectStyle.containerImg}>
-            <Image
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(setIsModalEditSubject(true));
-              }}
-              title="Изменить список предметов"
-              className={componentSubjectStyle.img}
-              src="/../img/icon/tutor/pencilSimple.svg"
-              alt="Изменить список предметов"
-              width={21}
-              height={21}
-            />
-
-            <Image
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(setIsModalEditSubject(true));
-              }}
-              className={componentSubjectStyle.img}
-              src={"/../img/icon/tutor/plus.svg"}
-              alt="Добавить предметы"
-              title="Добавить предметы"
-              width={21}
-              height={21}
-            />
+            <Link
+              href={"/tutor/profile/subjects/subjects-settings"}
+              prefetch={true}
+            >
+              <Image
+                title="Изменить список предметов"
+                className={componentSubjectStyle.img}
+                src="/../img/icon/tutor/pencilSimple.svg"
+                alt="Изменить список предметов"
+                width={21}
+                height={21}
+              />
+            </Link>
+            <Link
+              href={"/tutor/profile/subjects/subjects-settings"}
+              prefetch={true}
+            >
+              <Image
+                className={componentSubjectStyle.img}
+                src={"/../img/icon/tutor/plus.svg"}
+                alt="Добавить предметы"
+                title="Добавить предметы"
+                width={21}
+                height={21}
+              />
+            </Link>
           </div>
         </div>
 

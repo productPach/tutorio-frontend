@@ -1,10 +1,10 @@
 "use client";
-import styles from "../../layout.module.css";
+import styles from "../../../layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import { Subject } from "@/components/Tutor/Profile/Subject/Subject";
+import { SubjectsSettings } from "@/components/Tutor/Profile/Subject/SubjectsSettings";
 
-const SubjectsPage: React.FC = () => {
+const SubjectsSettingsPage: React.FC = () => {
   const page = "Main";
 
   return (
@@ -12,11 +12,11 @@ const SubjectsPage: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <Subject />
+          <SubjectsSettings />
         </div>
       </section>
     </>
   );
 };
 
-export default SubjectsPage;
+export default SubjectsSettingsPage;
