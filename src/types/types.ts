@@ -43,6 +43,8 @@ export type Tutor = {
   email: string;
   avatarUrl: string;
   subject: string[];
+  subjectPrices: Record<string, number>;
+  defaultPrice: number;
   region: string;
   tutorPlace: string[];
   tutorAdress: string;
@@ -53,6 +55,7 @@ export type Tutor = {
   profileInfo: string;
   experience: string;
   educations: TutorEducation[];
+  isGroup: boolean;
   status: string;
   response: Response[];
 };

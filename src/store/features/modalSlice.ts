@@ -59,7 +59,7 @@ const modalSlice = createSlice({
     },
     setIsModalEditEducation: (state, action: PayloadAction<boolean>) => {
       state.isModalEditEducation = action.payload;
-    },
+    }
   },
 });
 

@@ -25,7 +25,7 @@ export const Location = () => {
   const isLoading = useAppSelector((state) => state.tutor.loading);
   const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
 
-  const [successUpdateTutor, setSuccessUpdateTutor] = useState(false);
+  const [successUpdateTutor, setSuccessUpdateTutor] = useState(true);
 
   useEffect(() => {
     updateStatus === "success" && setSuccessUpdateTutor(true);
@@ -329,6 +329,7 @@ export const Location = () => {
                   question={"question"}
                   typeForm={"typeForm"}
                   setInputTutorAdress={setInputTutorAdress}
+                  setSuccessUpdateTutor={setSuccessUpdateTutor}
                 />
               )}
             </React.Fragment>
@@ -539,14 +540,20 @@ export const Location = () => {
             disabled={!isFormValid() || isLoading || successUpdateTutor}
             onClick={() => updateDataTutor()}
           >
-            {successUpdateTutor ? "Сохранено" : "Сохранить"}
+            {successUpdateTutor && updateStatus === "success"
+              ? "Сохранено"
+              : "Сохранить"}
             {isLoading && (
               <div className={styles.buttonYlSpinner}>
                 <Spinner />
               </div>
             )}
           </button>
-          <div>{successUpdateTutor && "Данные успешно обновлены"}</div>
+          <div>
+            {successUpdateTutor &&
+              updateStatus === "success" &&
+              "Данные успешно обновлены"}
+          </div>
         </div>
       </div>
     </>

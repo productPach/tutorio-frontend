@@ -74,6 +74,7 @@ export const updateTutor = createAsyncThunk<
     tutorTripArea?: string[];
     profileInfo?: string;
     experience?: string;
+    isGroup?: boolean;
   }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
@@ -115,6 +116,9 @@ export const updateTutor = createAsyncThunk<
       }),
       ...(optionalFields.experience !== undefined && {
         experience: optionalFields.experience,
+      }),
+      ...(optionalFields.isGroup !== undefined && {
+        isGroup: optionalFields.isGroup,
       }),
     };
 

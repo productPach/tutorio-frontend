@@ -51,7 +51,7 @@ export const Education = () => {
             title="Изменить"
             className={componentStyle.img}
             src="/../img/icon/tutor/pencilSimple.svg"
-            alt="Добавить стаж"
+            alt="Изменить стаж"
             width={21}
             height={21}
           />

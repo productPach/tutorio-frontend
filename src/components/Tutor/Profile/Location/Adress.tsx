@@ -17,6 +17,7 @@ interface ComponentRenderProps {
   question: string;
   typeForm: string;
   setInputTutorAdress: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setSuccessUpdateTutor: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Определяем тип для объекта в массиве
@@ -47,6 +48,7 @@ export const Adress: React.FC<ComponentRenderProps> = ({
   question,
   typeForm,
   setInputTutorAdress,
+  setSuccessUpdateTutor,
 }) => {
   const route = useRouter();
 
@@ -116,6 +118,7 @@ export const Adress: React.FC<ComponentRenderProps> = ({
   // Функция для обновления состояния формы
   const handleNextStep = useCallback(
     (inputValue: string, fiasLevel: string) => {
+      setSuccessUpdateTutor(false);
       setInputValue(inputValue);
       setIsInput(false);
 
