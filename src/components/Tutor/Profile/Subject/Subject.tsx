@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { updateTutor } from "@/store/features/tutorSlice";
 
 export const Subject = () => {
   const dispatch = useAppDispatch();
@@ -26,10 +27,57 @@ export const Subject = () => {
     (subject) => subject.general
   );
 
+  // Состояние для свитча
+  const [isChecked, setIsChecked] = useState(tutor?.isGroup || false);
+
+  const toggleSwitch = () => {
+    setIsChecked((prev) => {
+      const newState = !prev;
+      update(newState); // Передаем новое значение
+      return newState;
+    });
+  };
+
+  const update = (isGroup: boolean) => {
+    console.log(isChecked);
+
+    if (tutor && token) {
+      const id = tutor.id;
+      const status = tutor?.status;
+      dispatch(
+        updateTutor({
+          id,
+          token,
+          status,
+          isGroup,
+        })
+      ).unwrap();
+    }
+  };
+
   return (
     <>
       <div className={styles.content_block}>
         <h3>Предметы и условия</h3>
+      </div>
+
+      <div className={styles.content_block}>
+        <div className={componentSubjectStyle.containerTitle}>
+          <span className={styles.titleGrey}>Условия занятий</span>
+          <div className={styles.containerEntityShow}>
+            <div className={styles.inputContainer}>
+              <label className={styles.iosSwitch}>
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={toggleSwitch}
+                />
+                <span className={styles.slider}></span>
+              </label>
+            </div>
+            <div className={styles.description2}>Провожу занятия в группах</div>
+          </div>
+        </div>
       </div>
 
       <div className={styles.content_block}>

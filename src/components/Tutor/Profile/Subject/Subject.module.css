@@ -53,3 +53,53 @@
   font-size: 16px;
   color: #777777;
 }
+
+.checkboxInputDisabled {
+  border: 1px solid #2a2a2a;
+  border-radius: 5px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  margin-top: -2px;
+  z-index: 10;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    background-color: #2a2a2a;
+    border-radius: 3px;
+    transition: 0.3s;
+  }
+}
+
+.checkbox p {
+  margin-left: 32px;
+  position: absolute;
+  top: -19px;
+  font-weight: 400;
+  width: 200px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.titleSubject {
+  color: #777777;
+  margin: 10px 0 20px 0;
+}
+
+.titleSubject2 {
+  color: #777777;
+  margin: 40px 0 20px 0;
+}

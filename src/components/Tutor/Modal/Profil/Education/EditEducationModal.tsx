@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "../Fio/Fio.module.css";
+import stylesGen from "../../../../../app/tutor/layout.module.css";
 import componentStyles from "./Education.module.css";
 import { ChangeEvent, useState, useEffect } from "react";
 import {
@@ -344,15 +345,15 @@ export const EditEducationModal = ({
       </div>
 
       {selectedFiles.some((file) => file !== null) && (
-        <div className={componentStyles.containerEducationShow}>
+        <div className={stylesGen.containerEntityShow}>
           <div className={styles.inputContainer}>
-            <label className={componentStyles.iosSwitch}>
+            <label className={stylesGen.iosSwitch}>
               <input
                 type="checkbox"
                 checked={isChecked}
                 onChange={toggleSwitch}
               />
-              <span className={componentStyles.slider}></span>
+              <span className={stylesGen.slider}></span>
             </label>
           </div>
           <div className={styles.description2}>
