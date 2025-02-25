@@ -42,9 +42,8 @@ export type Tutor = {
   phone: string;
   email: string;
   avatarUrl: string;
-  subject: string[];
-  subjectPrices: Record<string, number>;
-  defaultPrice: number;
+  subject: string[]; // Список id предметов, которые преподает репетитор
+  subjectPrices: SubjectPrices[]; // Новый формат хранения цен
   region: string;
   tutorPlace: string[];
   tutorAdress: string;
@@ -58,6 +57,25 @@ export type Tutor = {
   isGroup: boolean;
   status: string;
   response: Response[];
+};
+
+// Возможные значения длительности занятия
+export type LessonDuration = "45" | "60" | "90" | "120" | "day";
+
+// Возможные форматы занятий
+export type LessonFormat = "online" | "home" | "travel" | "group";
+
+// Массив цен по предмету
+export type SubjectPrices = {
+  subjectId: string; // id предмета
+  prices?: SubjectPrice[]; // Цены для разных форматов (если указаны)
+};
+
+// Цена для конкретного формата
+export type SubjectPrice = {
+  format: LessonFormat;
+  price: number;
+  duration: LessonDuration;
 };
 
 export interface UpdateTutorAvatarResponse {

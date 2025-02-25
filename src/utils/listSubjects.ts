@@ -1,7 +1,7 @@
 // mock object: Предметы
 
 import { Subject } from "@/types/types";
-
+export const availableDurations = ["30", "45", "60", "90", "120", "day"];
 export const data: Subject[] = [
   {
     id: "1",

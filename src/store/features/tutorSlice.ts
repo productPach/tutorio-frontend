@@ -65,6 +65,10 @@ export const updateTutor = createAsyncThunk<
     name?: string;
     email?: string;
     subject?: string[];
+    subjectPrices?: Record<
+      string,
+      Partial<Record<"online" | "home" | "travel", { price: number; duration: string }>>
+    >;
     region?: string;
     tutorPlace?: string[];
     tutorAdress?: string;
@@ -84,42 +88,19 @@ export const updateTutor = createAsyncThunk<
       token,
       status,
       ...(optionalFields.name !== undefined && { name: optionalFields.name }),
-      ...(optionalFields.email !== undefined && {
-        email: optionalFields.email,
-      }),
-      ...(optionalFields.subject !== undefined && {
-        subject: optionalFields.subject,
-      }),
-      ...(optionalFields.region !== undefined && {
-        region: optionalFields.region,
-      }),
-      ...(optionalFields.tutorPlace !== undefined && {
-        tutorPlace: optionalFields.tutorPlace,
-      }),
-      ...(optionalFields.tutorAdress !== undefined && {
-        tutorAdress: optionalFields.tutorAdress,
-      }),
-      ...(optionalFields.tutorTrip !== undefined && {
-        tutorTrip: optionalFields.tutorTrip,
-      }),
-      ...(optionalFields.tutorTripCity !== undefined && {
-        tutorTripCity: optionalFields.tutorTripCity,
-      }),
-      ...(optionalFields.tutorTripCityData !== undefined && {
-        tutorTripCityData: optionalFields.tutorTripCityData,
-      }),
-      ...(optionalFields.tutorTripArea !== undefined && {
-        tutorTripArea: optionalFields.tutorTripArea,
-      }),
-      ...(optionalFields.profileInfo !== undefined && {
-        profileInfo: optionalFields.profileInfo,
-      }),
-      ...(optionalFields.experience !== undefined && {
-        experience: optionalFields.experience,
-      }),
-      ...(optionalFields.isGroup !== undefined && {
-        isGroup: optionalFields.isGroup,
-      }),
+      ...(optionalFields.email !== undefined && { email: optionalFields.email }),
+      ...(optionalFields.subject !== undefined && { subject: optionalFields.subject }),
+      ...(optionalFields.subjectPrices !== undefined && { subjectPrices: optionalFields.subjectPrices }),
+      ...(optionalFields.region !== undefined && { region: optionalFields.region }),
+      ...(optionalFields.tutorPlace !== undefined && { tutorPlace: optionalFields.tutorPlace }),
+      ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
+      ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
+      ...(optionalFields.tutorTripCity !== undefined && { tutorTripCity: optionalFields.tutorTripCity }),
+      ...(optionalFields.tutorTripCityData !== undefined && { tutorTripCityData: optionalFields.tutorTripCityData }),
+      ...(optionalFields.tutorTripArea !== undefined && { tutorTripArea: optionalFields.tutorTripArea }),
+      ...(optionalFields.profileInfo !== undefined && { profileInfo: optionalFields.profileInfo }),
+      ...(optionalFields.experience !== undefined && { experience: optionalFields.experience }),
+      ...(optionalFields.isGroup !== undefined && { isGroup: optionalFields.isGroup }),
     };
 
     const response = await fetchUpdateTutor(dataToUpdate);
@@ -129,6 +110,7 @@ export const updateTutor = createAsyncThunk<
     throw error;
   }
 });
+
 
 export const updateTutorAvatar = createAsyncThunk<
   UpdateTutorAvatarResponse,
