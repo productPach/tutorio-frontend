@@ -1,114 +1,75 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import styles from "../../../../SignIn/SignInTutor/SignInTutor.module.css";
-import React, { useCallback, useEffect, useState } from "react";
+import styles from "../ProfileInfo/ProfileInfo.module.css";
+import componentStyles from "./SubjectModal.module.css";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
 import { Search } from "@/components/SelectSubject/Search";
 import { data } from "@/utils/listSubjects";
 import { SubjectItem } from "@/components/SignIn/SignInTutor/SubjectsForms/SubjectItem";
+import { setIsModalEditSubjectPrices } from "@/store/features/modalSlice";
+import clsx from "clsx";
+import { Subject } from "@/types/types";
 
 export const SubjectModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const [listSubjectChecked, setListSubjectChecked] = useState<string[]>([]);
-  // Состояние для выбранной категории
-  const [clickedCategory, setClickedCategory] = useState("");
-  // Состояние для выбранного предмета
-  const [clickedSubject, setClickedSubject] = useState("");
-
+  const editSubjectId = useAppSelector(
+    (state) => state.modal.subjectForEditInModal
+  );
+  const subject: Subject | undefined = data.find(
+    (item) => item.id_p === editSubjectId
+  );
+  // Стейт для знаения инпута с суммой пополнения
+  const [inputValue, setInputValue] = useState(tutor?.profileInfo);
+  const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value; // Убираем все не буквенные символы
+    setInputValue(value);
+  };
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
 
-  // Обновление данных репетитора
-  const updateDataTutor = () => {
+  // Состояние для фиксации фокусирования на поле с вводом телефона
+  const [isFocused, setIsFocused] = useState(false);
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
+  const update = () => {
     const id = tutor?.id;
-    if (token && id) {
-      const subject = listSubjectChecked;
-      dispatch(updateTutor({ id, token, status, subject })).unwrap;
-      // Обновляем состояния для красивого эффекта перехода
-      setIsDisabled(true);
-      setIsVisible(false);
-    } else {
-      console.log("Нет токена");
+    const profileInfo = inputValue;
+    const status = tutor?.status;
+    if (token && id && status) {
+      dispatch(updateTutor({ id, token, status, profileInfo })).unwrap;
+      dispatch(setIsModalEditSubjectPrices(false));
     }
   };
 
-  const handleSubjectCheckedChange = useCallback(
-    (subjectId: string, isChecked: boolean) => {
-      if (!subjectId) return; // Добавляем проверку, чтобы игнорировать пустые значения
-      setListSubjectChecked((prev) => {
-        if (isChecked) {
-          return prev.includes(subjectId) ? prev : [...prev, subjectId];
-        } else {
-          return prev.filter((id) => id !== subjectId);
-        }
-      });
-    },
-    []
-  );
-
-  // Импортируем предметы
-  const listSubjects = data;
-  // Предметы-категории
-  const listCategorySubjects = listSubjects.filter(
-    (subject) => subject.general
-  );
-
-  const handleScrollToSubject = useCallback(
-    (subjectId: string, category: string) => {
-      setClickedCategory(category);
-      setClickedSubject(subjectId);
-    },
-    []
-  );
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []); // Анимация будет стартовать после монтирования компонента
-
   return (
     <>
-      <div className={styles.description}>
-        Выберите предметы и укажите стоимость занятий
+      <h2 className={componentStyles.title}>{subject?.title}</h2>
+      <div className={componentStyles.description}>Комментарий по занятиям</div>
+      <div className={styles.inputContainer}>
+        <textarea
+          placeholder={
+            "Дополнительная информация о занятиях: пожелания, формат, особенности обучения"
+          }
+          autoComplete="off"
+          value={inputValue}
+          onChange={handleInputValue}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          className={clsx(styles.textarea, {
+            [styles.focused]: isFocused,
+            [styles.errorInput]: errorInput,
+          })}
+          maxLength={5000}
+        />
       </div>
-
-      <div className={styles.sticky}>
-        <Search handleScrollToSubject={handleScrollToSubject} />
-      </div>
-
-      <div className={styles.containerAnswers}>
-        {listCategorySubjects.map((category) => {
-          const subjectsInCategory = listSubjects.filter(
-            (subject) => subject.id_cat === category.id_cat
-          );
-          const countSubjectsInCategory = subjectsInCategory.length;
-          return (
-            <React.Fragment key={category.id_p}>
-              <SubjectItem
-                id={0}
-                typeForm={"typeForm"}
-                category={category}
-                subjectsInCategory={subjectsInCategory}
-                countSubjectsInCategory={countSubjectsInCategory}
-                listSubjectChecked={listSubjectChecked}
-                onSubjectCheckedChange={handleSubjectCheckedChange}
-                clickedCategory={clickedCategory}
-                clickedSubject={clickedSubject}
-                setClickedSubject={setClickedSubject}
-              />
-            </React.Fragment>
-          );
-        })}
-      </div>
-
       <div className={styles.button}>
-        <button onClick={updateDataTutor} type="button" disabled={errorInput}>
+        <button onClick={update} type="button">
           Сохранить
         </button>
       </div>

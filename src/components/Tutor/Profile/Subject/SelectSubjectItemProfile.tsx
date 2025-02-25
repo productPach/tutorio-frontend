@@ -3,6 +3,14 @@ import { Subject } from "@/types/types";
 import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
 import componentSubjectStyle from "./Subject.module.css";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { availableDurations } from "@/utils/listSubjects";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import {
+  setIsModalEditSubjectPrices,
+  setSubjectForEditInModal,
+} from "@/store/features/modalSlice";
+import Link from "next/link";
 
 interface ComponentProps {
   id: number;
@@ -31,6 +39,8 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
   clickedSubject,
   setClickedSubject,
 }) => {
+  const dispatch = useAppDispatch();
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   const [toggle, setToggle] = useState(true);
   const [categoryChecked, setCategoryChecked] = useState(false);
   const [subjectChecked, setSubjectChecked] = useState<SubjectCheckedState>({});
@@ -122,26 +132,26 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
   };
 
   return (
-    <div className={styles.answerContainer}>
+    <div className={componentSubjectStyle.answerContainer}>
       <div className={styles.answer} onClick={clickCategorySubject}>
         <div className={styles.checkboxLeftContent}>
-          <input
-            type="checkbox"
-            className={styles.checkboxInput}
-            id={`checkbox-${category.id}`}
-            name="checkbox"
-            checked={categoryChecked}
-            onChange={handleCategoryCheckboxClick}
-            disabled
-          />
-          <label
-            className={styles.checkboxLabel}
-            htmlFor={`checkbox-${category.id}`}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
           >
-            <span
-              className={componentSubjectStyle.checkboxInputDisabled}
-            ></span>
-          </label>
+            <path
+              d={
+                !toggle
+                  ? "M15.5359 10.4082L12.3539 13.5902C12.1586 13.7855 11.842 13.7855 11.6468 13.5902L8.46481 10.4082C8.26954 10.213 8.26954 9.8964 8.46481 9.70113C8.66007 9.50587 8.97665 9.50587 9.17191 9.70113L11.972 12.5012C11.9814 12.5007 11.9908 12.5004 12.0003 12.5004C12.0027 12.5004 12.0051 12.5004 12.0075 12.5005C12.0146 12.5006 12.0216 12.5008 12.0287 12.5012L14.8288 9.70113C15.024 9.50587 15.3406 9.50587 15.5359 9.70113C15.7311 9.8964 15.7311 10.213 15.5359 10.4082Z"
+                  : "M8.46481 13.5918L11.6468 10.4098C11.842 10.2145 12.1586 10.2145 12.3539 10.4098L15.5359 13.5918C15.7311 13.787 15.7311 14.1036 15.5359 14.2989C15.3406 14.4941 15.024 14.4941 14.8288 14.2989L12.0287 11.4988C12.0193 11.4993 12.0099 11.4996 12.0003 11.4996C11.9979 11.4996 11.9955 11.4996 11.9931 11.4995C11.986 11.4994 11.979 11.4992 11.972 11.4988L9.17191 14.2989C8.97665 14.4941 8.66007 14.4941 8.46481 14.2989C8.26954 14.1036 8.26954 13.787 8.46481 13.5918Z"
+              }
+              fill="#2A2A2A"
+            />
+          </svg>
+
           <p className={styles.answerTitle}>{category.title}</p>
         </div>
         <div className={styles.checkboxRightContent}>
@@ -153,7 +163,7 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
       </div>
 
       {toggle && (
-        <div className={styles.embeded}>
+        <div className={componentSubjectStyle.embeded}>
           {subjectsInCategory.map((subject) => (
             <div className={styles.checkboxContentSpBtwn} key={subject.id_p}>
               <div
@@ -180,12 +190,55 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                   <p className={styles.answerTitle}>{subject.title}</p>
                 </label>
               </div>
+              <div
+                className={componentSubjectStyle.selectSubjectLiBorder}
+              ></div>
               <div className={styles.checkboxRightContent}>
-                <input
-                  type="text"
-                  className={styles.inputPriceSubject}
-                  placeholder="Цена не указана"
+                {/* <div className={componentSubjectStyle.inputPriceWrapper}>
+                  <input
+                    type="text"
+                    className={componentSubjectStyle.inputPriceSubject}
+                    placeholder="Цена занятия, ₽"
+                  />
+
+                  <select className={componentSubjectStyle.inputPriceSelect}>
+                    {availableDurations.map((duration) => (
+                      <option key={duration} value={duration}>
+                        {duration === "day" ? "день" : `${duration} мин.`}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
+
+                <Image
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(setIsModalEditSubjectPrices(true));
+                    dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                  }}
+                  className={componentSubjectStyle.img}
+                  src={
+                    tutor?.subjectPrices?.some(
+                      (item) => subject.id_p === item.subjectId
+                    )
+                      ? "/../img/icon/tutor/pencilSimple.svg"
+                      : "/../img/icon/tutor/plus.svg"
+                  }
+                  alt="Настройки цены занятия в зависимости от места"
+                  width={21}
+                  height={21}
                 />
+                <Link
+                  href="#"
+                  className={componentSubjectStyle.linkToPriceSubject}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(setIsModalEditSubjectPrices(true));
+                    dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                  }}
+                >
+                  добавить стоимость
+                </Link>
               </div>
             </div>
           ))}

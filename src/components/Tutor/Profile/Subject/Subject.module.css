@@ -38,7 +38,7 @@
 
 .selectSubjectLiBorder {
   border-bottom: 1px solid #dddddd;
-  width: 100%;
+  width: -webkit-fill-available;
   order: 1;
 }
 
@@ -102,4 +102,78 @@
 .titleSubject2 {
   color: #777777;
   margin: 40px 0 20px 0;
+}
+
+.embeded {
+  padding: 0 18px 10px 40px;
+}
+.answerContainer {
+  border-radius: 10px;
+  min-height: 56px;
+  box-sizing: border-box;
+  background-color: rgb(241, 242, 244);
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Older Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+.inputPriceSubject {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  transition: padding-left 0.3s;
+}
+.inputPriceSubject::-moz-placeholder {
+  color: #c1c1c1;
+}
+.inputPriceSubject::placeholder {
+  color: #c1c1c1;
+}
+.inputPriceSubject:focus {
+  outline: none;
+  border: 1px solid #fad949;
+}
+.inputPriceWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputPriceSubject {
+  font-size: 16px;
+  padding: 0 70px 0 10px; /* Увеличил правый отступ, чтобы влез знак рубля и select */
+}
+
+.inputPriceRub {
+  position: absolute;
+  right: 50px; /* Размещаем перед select */
+  color: #c1c1c1;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.inputPriceSelect {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 16px;
+  position: absolute;
+  right: 0px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  cursor: pointer;
+  appearance: none;
+  color: #333;
+}
+
+.inputPriceSelect:focus {
+  outline: none;
+}
+
+.linkToPriceSubject {
+  text-decoration: none;
 }

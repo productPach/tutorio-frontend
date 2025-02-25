@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/store";
 import {
   setIsModalBalanceBoost,
   setIsModalEditEducation,
+  setIsModalEditSubjectPrices,
   setIsModalEducation,
   setIsModalEducationItem,
   setIsModalExperience,
@@ -34,7 +35,9 @@ export const Modal: React.FC<ModalProps> = ({
   modalId,
 }) => {
   const dispatch = useAppDispatch();
-
+  if (modalId === "editSubjectPrices") {
+    titleModal = "";
+  }
   const closeModal = () => {
     if (modalId === "selectCity") {
       dispatch(setModalSelectCity(false));
@@ -63,6 +66,11 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "editEducation") {
       dispatch(setIsModalEditEducation(false));
+    }
+    if (modalId === "editSubjectPrices") {
+      dispatch(setIsModalEditSubjectPrices(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
   };
 

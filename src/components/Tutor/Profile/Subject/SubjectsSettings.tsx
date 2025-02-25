@@ -135,7 +135,7 @@ export const SubjectsSettings = () => {
                   subjectsInCategory={subjectsInCategory}
                   countSubjectsInCategory={
                     subjectsInCategory.filter((s) =>
-                      listSubjectChecked.includes(s.id_p)
+                      tutor?.subject.includes(s.id_p)
                     ).length
                   } // Количество отмеченных предметов в категории
                   listSubjectChecked={listSubjectChecked} // Используем локальное состояние

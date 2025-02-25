@@ -44,6 +44,10 @@ export const fetchUpdateTutor = async (data: {
   name?: string;
   email?: string;
   subject?: string[];
+  subjectPrices?: Record<
+    string,
+    Partial<Record<"online" | "home" | "travel", { price: number; duration: string }>>
+  >;
   region?: string;
   tutorPlace?: string[];
   tutorAdress?: string;
@@ -52,6 +56,7 @@ export const fetchUpdateTutor = async (data: {
   tutorTripCityData?: string;
   tutorTripArea?: string[];
   profileInfo?: string;
+  experience?: string;
   isGroup?: boolean;
 }) => {
   const { id, token, ...fields } = data;
@@ -62,12 +67,13 @@ export const fetchUpdateTutor = async (data: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(fields), // Сериализуем только поля для обновления
+    body: JSON.stringify(fields), // Сериализуем только переданные поля
   });
 
   const responseData = await response.json();
   return responseData;
 };
+
 
 // Обновление аватара репетитора
 export const updateTutorAvatarApi = async (
