@@ -34,6 +34,8 @@ export const SubjectsSettings = () => {
     updateStatus === "success" && setSuccessUpdateTutor(true);
   }, [updateStatus]);
 
+  console.log(successUpdateTutor);
+
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -62,6 +64,7 @@ export const SubjectsSettings = () => {
             : [...prev, subjectId]
           : prev.filter((id) => id !== subjectId)
       );
+      setSuccessUpdateTutor(false);
     },
     []
   );
@@ -205,7 +208,7 @@ export const SubjectsSettings = () => {
           <button
             type="button"
             className={componentSubjectStyle.saveButton}
-            disabled={!isFormValid() || isLoading}
+            disabled={!isFormValid() || isLoading || successUpdateTutor}
             onClick={() => updateDataTutor()}
           >
             {successUpdateTutor && updateStatus === "success"

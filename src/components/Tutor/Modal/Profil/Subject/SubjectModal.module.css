@@ -170,3 +170,11 @@
   transform: translateX(20px);
   opacity: 0;
 }
+.buttonYlSpinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 38px;
+  left: 174px;
+}
