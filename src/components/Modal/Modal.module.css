@@ -7,7 +7,7 @@
 
 .popupWrapper {
   position: fixed;
-  top: 136px;
+  top: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,6 +24,8 @@
   transition:
     transform 300ms ease-out,
     opacity 300ms ease-out;
+
+  max-height: 70vh; /* Ограничиваем высоту окна */
 }
 
 .popup::-webkit-scrollbar {
