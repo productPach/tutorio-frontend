@@ -223,8 +223,8 @@ export const SubjectModal = () => {
           onChange={handleInputValue}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={clsx(styles.textarea, {
-            [styles.focused]: isFocused,
+          className={clsx(componentStyles.textarea, {
+            [componentStyles.focused]: isFocused,
             [styles.errorInput]: errorInput,
           })}
           maxLength={5000}
