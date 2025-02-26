@@ -1,10 +1,12 @@
 import { baseUrl } from "@/api/server/configApi";
 import {
+  fetchAddSubjectPrice,
   fetchCreateTutor,
   fetchCreateTutorEducation,
   fetchCurrentTutor,
   fetchDeletePhotoTutorEducation,
   fetchDeleteTutorEducation,
+  fetchUpdateSubjectPrice,
   fetchUpdateTutor,
   fetchUpdateTutorEducation,
 } from "@/api/server/tutorApi";
@@ -14,10 +16,12 @@ import {
 } from "@/api/server/userApi";
 import {
   District,
+  LessonDuration,
   Metro,
   RegionalCity,
   Tutor,
-  TutorEducation,
+  TutorSubjectPrice,
+  TutorSubjectPriceInput,
   UpdateTutorAvatarPayload,
   UpdateTutorAvatarResponse,
   WelcomeScreen,
@@ -65,10 +69,7 @@ export const updateTutor = createAsyncThunk<
     name?: string;
     email?: string;
     subject?: string[];
-    subjectPrices?: Record<
-      string,
-      Partial<Record<"online" | "home" | "travel", { price: number; duration: string }>>
-    >;
+    subjectComments?: { subjectId: string; comment: string }[];
     region?: string;
     tutorPlace?: string[];
     tutorAdress?: string;
@@ -82,25 +83,11 @@ export const updateTutor = createAsyncThunk<
   }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
-    // Базовый объект с обязательными полями
     const dataToUpdate = {
       id,
       token,
       status,
-      ...(optionalFields.name !== undefined && { name: optionalFields.name }),
-      ...(optionalFields.email !== undefined && { email: optionalFields.email }),
-      ...(optionalFields.subject !== undefined && { subject: optionalFields.subject }),
-      ...(optionalFields.subjectPrices !== undefined && { subjectPrices: optionalFields.subjectPrices }),
-      ...(optionalFields.region !== undefined && { region: optionalFields.region }),
-      ...(optionalFields.tutorPlace !== undefined && { tutorPlace: optionalFields.tutorPlace }),
-      ...(optionalFields.tutorAdress !== undefined && { tutorAdress: optionalFields.tutorAdress }),
-      ...(optionalFields.tutorTrip !== undefined && { tutorTrip: optionalFields.tutorTrip }),
-      ...(optionalFields.tutorTripCity !== undefined && { tutorTripCity: optionalFields.tutorTripCity }),
-      ...(optionalFields.tutorTripCityData !== undefined && { tutorTripCityData: optionalFields.tutorTripCityData }),
-      ...(optionalFields.tutorTripArea !== undefined && { tutorTripArea: optionalFields.tutorTripArea }),
-      ...(optionalFields.profileInfo !== undefined && { profileInfo: optionalFields.profileInfo }),
-      ...(optionalFields.experience !== undefined && { experience: optionalFields.experience }),
-      ...(optionalFields.isGroup !== undefined && { isGroup: optionalFields.isGroup }),
+      ...optionalFields,
     };
 
     const response = await fetchUpdateTutor(dataToUpdate);
@@ -110,6 +97,39 @@ export const updateTutor = createAsyncThunk<
     throw error;
   }
 });
+
+// Создание новой цены по предмету
+export const addSubjectPrice = createAsyncThunk<
+  Tutor, // API возвращает обновленного репетитора
+  TutorSubjectPriceInput & { tutorId: string; token: string }
+>("subjectPrice/add", async ({ tutorId, token, ...fields }) => {
+  try {
+    const response = await fetchAddSubjectPrice({ tutorId, token, ...fields }); 
+    return response; // Теперь response — это объект Tutor
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+});
+
+
+
+
+// Обновление цены по предмету
+export const updateSubjectPrice = createAsyncThunk<
+  Tutor, // API возвращает обновленного репетитора
+  { id: string; token: string; price: number; duration: LessonDuration }
+>("subjectPrice/update", async ({ id, token, ...fields }) => {
+  try {
+    const response = await fetchUpdateSubjectPrice({ id, token, ...fields });
+    return response; // Теперь response — это объект Tutor
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+});
+
+
 
 
 export const updateTutorAvatar = createAsyncThunk<
@@ -456,7 +476,15 @@ const tutorSlice = createSlice({
             setLocalStorage("tutor", state.tutor); // Сохранение tutor в локальном хранилище
           }
         }
-      );
+      ).addCase(addSubjectPrice.fulfilled, (state, action: PayloadAction<Tutor>) => {
+        state.tutor = action.payload; // Просто заменяем репетитора
+        setLocalStorage("tutor", state.tutor);
+      })
+      .addCase(updateSubjectPrice.fulfilled, (state, action: PayloadAction<Tutor>) => {
+        state.tutor = action.payload; // Аналогично обновляем
+        setLocalStorage("tutor", state.tutor);
+      });
+      
   },
 });
 
