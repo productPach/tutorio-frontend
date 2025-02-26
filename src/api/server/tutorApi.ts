@@ -1,3 +1,4 @@
+import { LessonDuration, TutorSubjectPriceInput } from "@/types/types";
 import { baseUrl } from "./configApi";
 
 // Регистрация репетитора
@@ -44,10 +45,7 @@ export const fetchUpdateTutor = async (data: {
   name?: string;
   email?: string;
   subject?: string[];
-  subjectPrices?: Record<
-    string,
-    Partial<Record<"online" | "home" | "travel", { price: number; duration: string }>>
-  >;
+  subjectComments?: { subjectId: string; comment: string }[];
   region?: string;
   tutorPlace?: string[];
   tutorAdress?: string;
@@ -67,7 +65,41 @@ export const fetchUpdateTutor = async (data: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(fields), // Сериализуем только переданные поля
+    body: JSON.stringify(fields), // Отправляем только переданные поля
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+// Добавление новой цены по предмету
+export const fetchAddSubjectPrice = async (data: TutorSubjectPriceInput & { tutorId: string; token: string }) => {
+  const { token, ...fields } = data;
+
+  const response = await fetch(`${baseUrl}tutorsSubjectPrice`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(fields),
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+// Обновление цены по предмету
+export const fetchUpdateSubjectPrice = async (data: { id: string; token: string; price?: number; duration?: LessonDuration }) => {
+  const { id, token, ...fields } = data;
+
+  const response = await fetch(`${baseUrl}tutorsSubjectPrice/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(fields),
   });
 
   const responseData = await response.json();

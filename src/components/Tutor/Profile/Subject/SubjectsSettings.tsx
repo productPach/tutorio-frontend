@@ -11,6 +11,7 @@ import { SubjectItemProfile } from "./SubjectItemProfile";
 import { SelectSubjectItemProfile } from "./SelectSubjectItemProfile";
 import componentSubjectStyle from "./Subject.module.css";
 import { Subject } from "@/types/types";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 export const SubjectsSettings = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,16 @@ export const SubjectsSettings = () => {
   const [errorInput, setErrorInput] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+
+  // Получаем значение loading из Redux
+  const isLoading = useAppSelector((state) => state.tutor.loading);
+  const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
+
+  const [successUpdateTutor, setSuccessUpdateTutor] = useState(true);
+
+  useEffect(() => {
+    updateStatus === "success" && setSuccessUpdateTutor(true);
+  }, [updateStatus]);
 
   useEffect(() => {
     setIsVisible(true);
@@ -108,6 +119,17 @@ export const SubjectsSettings = () => {
     );
   };
 
+  // Функция для валидации условий активации кнопки
+  const isFormValid = () => {
+    if (!tutor?.subject) return false; // Если нет данных, кнопка неактивна
+
+    const hasSubjectChanged =
+      JSON.stringify([...tutor.subject].sort()) !==
+      JSON.stringify([...listSubjectChecked].sort());
+
+    return hasSubjectChanged;
+  };
+
   return (
     <>
       <div className={stylesGen.content_block}>
@@ -179,10 +201,27 @@ export const SubjectsSettings = () => {
           )}
         </div>
 
-        <div className={styles.button}>
-          <button type="button" disabled={errorInput} onClick={updateDataTutor}>
-            Сохранить
+        <div className={componentSubjectStyle.containerButton}>
+          <button
+            type="button"
+            className={componentSubjectStyle.saveButton}
+            disabled={!isFormValid() || isLoading}
+            onClick={() => updateDataTutor()}
+          >
+            {successUpdateTutor && updateStatus === "success"
+              ? "Сохранено"
+              : "Сохранить"}
+            {isLoading && (
+              <div className={componentSubjectStyle.buttonYlSpinner}>
+                <Spinner />
+              </div>
+            )}
           </button>
+          <div>
+            {successUpdateTutor &&
+              updateStatus === "success" &&
+              "Данные успешно обновлены"}
+          </div>
         </div>
       </div>
     </>
