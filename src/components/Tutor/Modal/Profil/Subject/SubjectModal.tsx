@@ -3,7 +3,7 @@ import { NumericFormat } from "react-number-format";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import styles from "../ProfileInfo/ProfileInfo.module.css";
 import componentStyles from "./SubjectModal.module.css";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { availableDurations, data } from "@/utils/listSubjects";
 import clsx from "clsx";
 import {
@@ -17,11 +17,23 @@ import {
   updateSubjectPrice,
   updateTutor,
 } from "@/store/features/tutorSlice";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 export const SubjectModal = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+
+  // Получаем значение loading из Redux
+  const isLoading = useAppSelector((state) => state.tutor.loading);
+  const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
+
+  const [successUpdateTutor, setSuccessUpdateTutor] = useState(true);
+
+  useEffect(() => {
+    updateStatus === "success" && setSuccessUpdateTutor(true);
+  }, [updateStatus]);
+
   const editSubjectId = useAppSelector(
     (state) => state.modal.subjectForEditInModal
   );
@@ -66,6 +78,7 @@ export const SubjectModal = () => {
       ...prev,
       [format]: { ...prev[format], price: value },
     }));
+    setSuccessUpdateTutor(false);
   };
 
   const handleDurationChange = (
@@ -76,6 +89,7 @@ export const SubjectModal = () => {
       ...prev,
       [format]: { ...prev[format], duration: value },
     }));
+    setSuccessUpdateTutor(false);
   };
 
   const existingComment =
@@ -88,6 +102,7 @@ export const SubjectModal = () => {
 
   const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
+    setSuccessUpdateTutor(false);
   };
 
   const handleFocus = () => {
@@ -223,8 +238,8 @@ export const SubjectModal = () => {
           onChange={handleInputValue}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={clsx(styles.textarea, {
-            [styles.focused]: isFocused,
+          className={clsx(componentStyles.textarea, {
+            [componentStyles.focused]: isFocused,
             [styles.errorInput]: errorInput,
           })}
           maxLength={5000}
@@ -232,8 +247,19 @@ export const SubjectModal = () => {
       </div>
 
       <div className={styles.button}>
-        <button onClick={update} type="button">
-          Сохранить
+        <button
+          onClick={update}
+          type="button"
+          disabled={isLoading || successUpdateTutor}
+        >
+          {successUpdateTutor && updateStatus === "success"
+            ? "Сохранено"
+            : "Сохранить"}
+          {isLoading && (
+            <div className={componentStyles.buttonYlSpinner}>
+              <Spinner />
+            </div>
+          )}
         </button>
       </div>
     </>
