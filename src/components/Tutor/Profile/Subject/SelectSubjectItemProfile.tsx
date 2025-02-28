@@ -165,7 +165,10 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
       {toggle && (
         <div className={componentSubjectStyle.embeded}>
           {subjectsInCategory.map((subject) => (
-            <div className={styles.checkboxContentSpBtwn} key={subject.id_p}>
+            <div
+              className={componentSubjectStyle.checkboxContentSpBtwn}
+              key={subject.id_p}
+            >
               <div
                 className={styles.checkboxLeftContent}
                 ref={(el) => {
@@ -193,8 +196,11 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
               <div
                 className={componentSubjectStyle.selectSubjectLiBorder}
               ></div>
-              <div className={styles.checkboxRightContent}>
-                {/* <div className={componentSubjectStyle.inputPriceWrapper}>
+              <div
+                className={componentSubjectStyle.containerCheckboxRightContent}
+              >
+                <div className={componentSubjectStyle.checkboxRightContent}>
+                  {/* <div className={componentSubjectStyle.inputPriceWrapper}>
                   <input
                     type="text"
                     className={componentSubjectStyle.inputPriceSubject}
@@ -210,35 +216,58 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                   </select>
                 </div> */}
 
-                <Image
-                  onClick={(e) => {
-                    e.preventDefault();
-                    dispatch(setIsModalEditSubjectPrices(true));
-                    dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
-                  }}
-                  className={componentSubjectStyle.img}
-                  src={
-                    tutor?.subjectPrices?.some(
+                  <Image
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(setIsModalEditSubjectPrices(true));
+                      dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                    }}
+                    className={componentSubjectStyle.img}
+                    src={
+                      tutor?.subjectPrices?.some(
+                        (item) => subject.id_p === item.subjectId
+                      )
+                        ? "/../img/icon/tutor/pencilSimple.svg"
+                        : "/../img/icon/tutor/plus.svg"
+                    }
+                    alt="Настройки цены занятия в зависимости от места"
+                    width={21}
+                    height={21}
+                  />
+                  <Link
+                    href="#"
+                    className={componentSubjectStyle.linkToPriceSubject}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(setIsModalEditSubjectPrices(true));
+                      dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                    }}
+                  >
+                    {tutor?.subjectPrices?.some(
                       (item) => subject.id_p === item.subjectId
                     )
-                      ? "/../img/icon/tutor/pencilSimple.svg"
-                      : "/../img/icon/tutor/plus.svg"
-                  }
-                  alt="Настройки цены занятия в зависимости от места"
-                  width={21}
-                  height={21}
-                />
-                <Link
-                  href="#"
-                  className={componentSubjectStyle.linkToPriceSubject}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    dispatch(setIsModalEditSubjectPrices(true));
-                    dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
-                  }}
-                >
-                  добавить стоимость
-                </Link>
+                      ? "редактировать"
+                      : "добавить стоимость"}
+                  </Link>
+                </div>
+                {tutor?.subjectPrices.some(
+                  (item) => item.subjectId === subject.id_p
+                ) && (
+                  <div className={componentSubjectStyle.subjectPrises}>
+                    {tutor.subjectPrices
+                      .filter(
+                        (item) => item.subjectId === subject.id_p && item.price
+                      )
+                      .map(({ format, price }) => (
+                        <div key={format}>
+                          {format === "home" && "дома"}
+                          {format === "travel" && "выезд"}
+                          {format === "online" && "онлайн"}
+                          {format === "group" && "группа"}: {price} ₽
+                        </div>
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}

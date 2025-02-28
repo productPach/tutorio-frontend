@@ -40,6 +40,7 @@
   border-bottom: 1px solid #dddddd;
   width: -webkit-fill-available;
   order: 1;
+  height: 27px;
 }
 
 .selectSubjectLiTitle {
@@ -214,4 +215,36 @@
 .saveButton:disabled {
   background-color: #c1c1c1;
   opacity: 0.5;
+}
+.checkboxRightContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: fit-content;
+}
+.containerCheckboxRightContent {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: end;
+  justify-content: flex-end;
+  order: 1;
+  min-width: fit-content;
+  padding-top: 8px;
+}
+.subjectPrises {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #777777;
+  font-size: 13px;
+}
+.checkboxContentSpBtwn {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 16px;
 }

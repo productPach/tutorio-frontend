@@ -1,7 +1,15 @@
 "use client";
 import { Subject } from "@/types/types";
 import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
+import componentSubjectStyle from "./Subject.module.css";
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import {
+  setIsModalEditSubjectPrices,
+  setSubjectForEditInModal,
+} from "@/store/features/modalSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import Link from "next/link";
 
 interface ComponentProps {
   id: number;
@@ -30,6 +38,8 @@ export const SubjectItemProfile: React.FC<ComponentProps> = ({
   clickedSubject,
   setClickedSubject,
 }) => {
+  const dispatch = useAppDispatch();
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   const [toggle, setToggle] = useState(false);
   const [categoryChecked, setCategoryChecked] = useState(false);
   const [subjectChecked, setSubjectChecked] = useState<SubjectCheckedState>({});
@@ -145,32 +155,82 @@ export const SubjectItemProfile: React.FC<ComponentProps> = ({
       </div>
 
       {toggle && (
-        <div className={styles.embeded}>
+        <div className={componentSubjectStyle.embeded}>
           {subjectsInCategory.map((subject) => (
             <div
+              className={componentSubjectStyle.checkboxContentSpBtwn}
               key={subject.id_p}
-              className={styles.checkboxLeftContent}
-              ref={(el) => {
-                itemRefs.current[+subject.id_p] = el;
-              }}
             >
-              <input
-                type="checkbox"
-                className={styles.checkboxInput}
-                id={`subject-${subject.id_p}`}
-                name="subject"
-                checked={!!subjectChecked[subject.id_p]}
-                onChange={(e) =>
-                  handleSubjectCheckboxChange(subject.id_p, e.target.checked)
-                }
-              />
-              <label
-                className={styles.checkboxLabel}
-                htmlFor={`subject-${subject.id_p}`}
+              <div
+                className={styles.checkboxLeftContent}
+                ref={(el) => {
+                  itemRefs.current[+subject.id_p] = el;
+                }}
               >
-                <span className={styles.checkbox}></span>
-                <p className={styles.answerTitle}>{subject.title}</p>
-              </label>
+                <input
+                  type="checkbox"
+                  className={styles.checkboxInput}
+                  id={`subject-${subject.id_p}`}
+                  name="subject"
+                  checked={!!subjectChecked[subject.id_p]}
+                  onChange={(e) =>
+                    handleSubjectCheckboxChange(subject.id_p, e.target.checked)
+                  }
+                />
+                <label
+                  className={styles.checkboxLabel}
+                  htmlFor={`subject-${subject.id_p}`}
+                >
+                  <span className={styles.checkbox}></span>
+                  <p className={styles.answerTitle}>{subject.title}</p>
+                </label>
+              </div>
+              {subjectChecked[subject.id_p] && (
+                // если чекбокс с этим предметом отмечен, то нужно показать ниже эти два дива
+
+                <>
+                  <div
+                    className={componentSubjectStyle.selectSubjectLiBorder}
+                  ></div>
+                  <div
+                    className={
+                      componentSubjectStyle.containerCheckboxRightContent
+                    }
+                  >
+                    <div className={componentSubjectStyle.checkboxRightContent}>
+                      <Image
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(setIsModalEditSubjectPrices(true));
+                          dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                        }}
+                        className={componentSubjectStyle.img}
+                        src={
+                          tutor?.subjectPrices?.some(
+                            (item) => subject.id_p === item.subjectId
+                          )
+                            ? "/../img/icon/tutor/pencilSimple.svg"
+                            : "/../img/icon/tutor/plus.svg"
+                        }
+                        alt="Настройки цены занятия в зависимости от места"
+                        width={21}
+                        height={21}
+                      />
+                      <Link
+                        href="#"
+                        className={componentSubjectStyle.linkToPriceSubject}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(setIsModalEditSubjectPrices(true));
+                          dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                        }}
+                      >
+                        добавить стоимость
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>

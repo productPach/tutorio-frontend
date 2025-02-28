@@ -126,6 +126,19 @@ export const SubjectModal = () => {
   const update = async () => {
     if (!token || !tutor?.id || !editSubjectId) return;
 
+    const hasSubject = tutor.subject?.includes(editSubjectId);
+
+    if (!hasSubject) {
+      await dispatch(
+        updateTutor({
+          id: tutor.id,
+          token,
+          status: tutor.status,
+          subject: [...(tutor.subject || []), editSubjectId],
+        })
+      );
+    }
+
     const priceUpdates = formats
       .map(({ key: format }) => {
         const { price, duration } = prices[format];
@@ -153,7 +166,6 @@ export const SubjectModal = () => {
 
     await Promise.all(priceUpdates.map(dispatch));
 
-    // === ОБНОВЛЕНИЕ КОММЕНТАРИЯ ===
     const trimmedComment = inputValue.trim();
     const existingComments = tutor.subjectComments || [];
 
