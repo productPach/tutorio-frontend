@@ -8,6 +8,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { updateTutor } from "@/store/features/tutorSlice";
+import clsx from "clsx";
+import {
+  setIsModalEditSubjectPrices,
+  setSubjectForEditInModal,
+} from "@/store/features/modalSlice";
 
 export const Subject = () => {
   const dispatch = useAppDispatch();
@@ -120,20 +125,116 @@ export const Subject = () => {
             const subjectTitle = listSubjects.find(
               (subject) => subject.id_p === subjectId
             )?.title;
+
+            // Отфильтруем предметы, у которых указана цена
+            const subjectPrices = tutor.subjectPrices.filter(
+              (item) => item.subjectId === subjectId && item.price
+            );
+
             return (
               <li
                 key={index}
-                className={componentSubjectStyle.ContainerSelectSubjectLi}
+                className={componentSubjectStyle.subjectAndPriceLi}
               >
-                <div
-                  className={componentSubjectStyle.selectSubjectLiBorder}
-                ></div>
-                <div className={componentSubjectStyle.selectSubjectLiTitle}>
-                  {subjectTitle}
+                <div className={componentSubjectStyle.ContainerSelectSubjectLi}>
+                  <div
+                    className={componentSubjectStyle.selectSubjectLiBorder}
+                  ></div>
+                  <div className={componentSubjectStyle.selectSubjectLiTitle}>
+                    {subjectTitle}
+                  </div>
+                  {/* <div className={componentSubjectStyle.selectSubjectLiPrice}>
+                    {subjectPrices.length === 0 ? "Стоимость не указана" : ""}
+                  </div> */}
+
+                  <div className={componentSubjectStyle.selectSubjectLiPrice}>
+                    <div className={componentSubjectStyle.checkboxRightContent}>
+                      {/* <div className={componentSubjectStyle.inputPriceWrapper}>
+                  <input
+                    type="text"
+                    className={componentSubjectStyle.inputPriceSubject}
+                    placeholder="Цена занятия, ₽"
+                  />
+
+                  <select className={componentSubjectStyle.inputPriceSelect}>
+                    {availableDurations.map((duration) => (
+                      <option key={duration} value={duration}>
+                        {duration === "day" ? "день" : `${duration} мин.`}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
+
+                      {/* <Image
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(setIsModalEditSubjectPrices(true));
+                          dispatch(setSubjectForEditInModal(subjectId)); // Передаем ID предмета
+                        }}
+                        className={componentSubjectStyle.img}
+                        src={
+                          tutor?.subjectPrices?.some(
+                            (item) => subjectId === item.subjectId
+                          )
+                            ? "/../img/icon/tutor/pencilSimple.svg"
+                            : "/../img/icon/tutor/plus.svg"
+                        }
+                        alt="Настройки цены занятия в зависимости от места"
+                        width={21}
+                        height={21}
+                      /> */}
+                      <Link
+                        href="#"
+                        className={componentSubjectStyle.linkToPriceSubject}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(setIsModalEditSubjectPrices(true));
+                          dispatch(setSubjectForEditInModal(subjectId)); // Передаем ID предмета
+                        }}
+                      >
+                        {tutor?.subjectPrices?.some(
+                          (item) => subjectId === item.subjectId
+                        )
+                          ? "редактировать"
+                          : "добавить стоимость"}
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-                <div className={componentSubjectStyle.selectSubjectLiPrice}>
-                  Цена не указана
-                </div>
+
+                {subjectPrices.length > 0 ? (
+                  <div className={componentSubjectStyle.subjectPrisesStart}>
+                    {subjectPrices
+                      .sort(
+                        (a, b) =>
+                          ["online", "group", "travel", "home"].indexOf(
+                            a.format
+                          ) -
+                          ["online", "group", "travel", "home"].indexOf(
+                            b.format
+                          )
+                      )
+                      .map(({ format, price, duration }) => (
+                        <div key={format}>
+                          {format === "online" && "Онлайн"}
+                          {format === "group" && "Группа"}
+                          {format === "travel" && "Выезд"}
+                          {format === "home" && "Дома"}:{" "}
+                          {new Intl.NumberFormat("ru-RU").format(price)} ₽ /{" "}
+                          {duration === "day" ? "за день" : `${duration} мин`}
+                        </div>
+                      ))}
+                  </div>
+                ) : (
+                  <div
+                    className={clsx(
+                      componentSubjectStyle.subjectPrisesStart,
+                      componentSubjectStyle.textColorRed
+                    )}
+                  >
+                    Стоимость не указана
+                  </div>
+                )}
               </li>
             );
           })}

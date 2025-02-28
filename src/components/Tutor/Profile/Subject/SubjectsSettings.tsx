@@ -34,8 +34,6 @@ export const SubjectsSettings = () => {
     updateStatus === "success" && setSuccessUpdateTutor(true);
   }, [updateStatus]);
 
-  console.log(successUpdateTutor);
-
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -220,11 +218,11 @@ export const SubjectsSettings = () => {
               </div>
             )}
           </button>
-          <div>
+          {/* <div>
             {successUpdateTutor &&
               updateStatus === "success" &&
               "Данные успешно обновлены"}
-          </div>
+          </div> */}
         </div>
       </div>
     </>

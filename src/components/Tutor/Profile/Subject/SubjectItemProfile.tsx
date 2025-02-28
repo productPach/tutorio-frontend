@@ -185,9 +185,8 @@ export const SubjectItemProfile: React.FC<ComponentProps> = ({
                   <p className={styles.answerTitle}>{subject.title}</p>
                 </label>
               </div>
-              {subjectChecked[subject.id_p] && (
+              {/* {subjectChecked[subject.id_p] && (
                 // если чекбокс с этим предметом отмечен, то нужно показать ниже эти два дива
-
                 <>
                   <div
                     className={componentSubjectStyle.selectSubjectLiBorder}
@@ -230,7 +229,7 @@ export const SubjectItemProfile: React.FC<ComponentProps> = ({
                     </div>
                   </div>
                 </>
-              )}
+              )} */}
             </div>
           ))}
         </div>

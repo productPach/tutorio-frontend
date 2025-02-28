@@ -11,6 +11,7 @@ import {
   setSubjectForEditInModal,
 } from "@/store/features/modalSlice";
 import Link from "next/link";
+import clsx from "clsx";
 
 interface ComponentProps {
   id: number;
@@ -194,7 +195,10 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                 </label>
               </div>
               <div
-                className={componentSubjectStyle.selectSubjectLiBorder}
+                className={clsx(
+                  componentSubjectStyle.selectSubjectLiBorder,
+                  componentSubjectStyle.selectSubjectLiBorderHght
+                )}
               ></div>
               <div
                 className={componentSubjectStyle.containerCheckboxRightContent}
@@ -258,12 +262,21 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                       .filter(
                         (item) => item.subjectId === subject.id_p && item.price
                       )
+                      .sort(
+                        (a, b) =>
+                          ["online", "group", "travel", "home"].indexOf(
+                            a.format
+                          ) -
+                          ["online", "group", "travel", "home"].indexOf(
+                            b.format
+                          )
+                      )
                       .map(({ format, price }) => (
                         <div key={format}>
-                          {format === "home" && "дома"}
-                          {format === "travel" && "выезд"}
                           {format === "online" && "онлайн"}
-                          {format === "group" && "группа"}: {price} ₽
+                          {format === "group" && "группа"}
+                          {format === "travel" && "выезд"}
+                          {format === "home" && "дома"}: {price} ₽
                         </div>
                       ))}
                   </div>
