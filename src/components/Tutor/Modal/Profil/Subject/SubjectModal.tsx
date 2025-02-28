@@ -54,10 +54,10 @@ export const SubjectModal = () => {
   };
 
   const formats: { key: LessonFormat; label: string }[] = [
-    { key: "home", label: "Стоимость занятий у себя дома" },
-    { key: "travel", label: "Стоимость занятий с выездом" },
     { key: "online", label: "Стоимость занятий онлайн" },
     { key: "group", label: "Стоимость групповых занятий" },
+    { key: "travel", label: "Стоимость занятий с выездом" },
+    { key: "home", label: "Стоимость занятий у себя дома" },
   ];
 
   const [prices, setPrices] = useState(() =>
@@ -126,18 +126,20 @@ export const SubjectModal = () => {
   const update = async () => {
     if (!token || !tutor?.id || !editSubjectId) return;
 
-    const hasSubject = tutor.subject?.includes(editSubjectId);
+    // СОХРАНЕНИЕ ПРЕДМЕТА ИЗ НЕДОБАВЛЕННЫХ: ВЫБИРАЕМ ДОБАВИТЬ СТОИМОСТЬ У НЕДОБАВЛЕННОГО ПРЕДМЕТА, УКАЗЫВАЕМ СТОИМОСТЬ
+    // И СОХРАНЯЕМ. СНАЧАЛА СОХРАНИТСЯ ПРЕДМЕТ, ПОТОМ К НЕМУ СОХРАНЯТСЯ ЦЕНЫ И КОММЕНТАРИЙ
+    // const hasSubject = tutor.subject?.includes(editSubjectId);
 
-    if (!hasSubject) {
-      await dispatch(
-        updateTutor({
-          id: tutor.id,
-          token,
-          status: tutor.status,
-          subject: [...(tutor.subject || []), editSubjectId],
-        })
-      );
-    }
+    // if (!hasSubject) {
+    //   await dispatch(
+    //     updateTutor({
+    //       id: tutor.id,
+    //       token,
+    //       status: tutor.status,
+    //       subject: [...(tutor.subject || []), editSubjectId],
+    //     })
+    //   );
+    // }
 
     const priceUpdates = formats
       .map(({ key: format }) => {
