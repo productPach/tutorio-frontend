@@ -146,7 +146,24 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
               </span>
             </li>
           </Link>
-          <li onClick={() => handleSupportMenu()}>
+          <Link href={"/tutor/wiki"} prefetch={true}>
+            <li>
+              <Image
+                src="/../img/icon/tutor/base.svg"
+                alt="Настройки"
+                width={27}
+                height={27}
+              />
+              <span
+                className={clsx(styles.left_menu__list_text, {
+                  [styles.undrln]: page === "Wiki",
+                })}
+              >
+                База знаний
+              </span>
+            </li>
+          </Link>
+          {/* <li onClick={() => handleSupportMenu()}>
             <Image
               src="/../img/icon/tutor/support.svg"
               alt="Помощь"
@@ -208,7 +225,7 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
                 <span className={styles.count_block}>3</span>
               </li>
             </Link>
-          </ul>
+          </ul> */}
         </ul>
       </div>
     </div>
