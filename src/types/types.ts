@@ -233,3 +233,23 @@ export type WelcomeScreen = {
   isActive: boolean;
   createAt: Date;
 }
+
+export type Topic = {
+  id: string;
+  title: string;
+  description: string;
+  themes?: Theme[];
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type Theme = {
+  id: string;
+  topicId: string; // Ссылка на топик
+  title: string;
+  content: string;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
