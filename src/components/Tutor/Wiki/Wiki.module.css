@@ -1,0 +1,30 @@
+.contentFlxRw {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.wikiBlock {
+  width: -webkit-fill-available; /* Для WebKit-браузеров (Chrome, Safari) */
+  width: -moz-available; /* Для Firefox */
+  width: -webkit-stretch; /* Альтернативный вариант для WebKit */
+  width: -moz-stretch; /* Альтернативный вариант для Firefox */
+  width: stretch; /* Стандартный вариант */
+  width: 100%; /* Резервный вариант */
+  background-color: #ffffff;
+  border-radius: 10px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  flex: 0 1 calc(50% - 8px); /* Жестко фиксируем 50% ширины */
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.container {
+  padding: 18px;
+}
+.titleWiki {
+  font-size: 20px;
+}
