@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ReduxProvider from "@/store/ReduxProvider";
+import VerboxChat from "@/components/Vendor/Verbox/VerboxChat";
 
 export const metadata: Metadata = {
   title: "Tutorio — место, где встречаются ученики и репетиторы",
@@ -24,9 +25,11 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Fira+Sans&family=Montserrat:wght@400;500;600&family=PT+Sans&family=Poppins:wght@400;600&family=Sofia+Sans:wght@900&family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
           rel="stylesheet"
         />
+        {/* <script src="//code.jivo.ru/widget/b6FSfh54M9" async></script> */}
       </head>
       <body>
         <ReduxProvider>{children}</ReduxProvider>
+        <VerboxChat />
       </body>
     </html>
   );
