@@ -241,13 +241,15 @@
   flex-direction: column;
   align-items: flex-end;
   color: #777777;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 22px;
 }
 .subjectPrisesStart {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 22px;
 }
 .checkboxContentSpBtwn {
   display: flex;

@@ -192,6 +192,9 @@
 .content {
   grid-column: span 15;
 }
+.contentFull {
+  grid-column: span 22;
+}
 
 .content_block {
   background-color: #ffffff;
