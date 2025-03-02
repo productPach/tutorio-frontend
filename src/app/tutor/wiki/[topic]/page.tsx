@@ -7,11 +7,17 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/store/store";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { getAllTopics, getThemesByTopic } from "@/store/features/wikiSlice";
+import {
+  clearThemes,
+  getAllTopics,
+  getThemesByTopic,
+} from "@/store/features/wikiSlice";
 import { shallowEqual } from "react-redux";
+import { InviteSidebar } from "@/components/Tutor/SideBar/InviteSidbar/InviteSidebar";
 
 const TopicPage: React.FC = () => {
   const page = "Main";
+  const pageName = "ThemesByTopic";
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
 
@@ -34,16 +40,19 @@ const TopicPage: React.FC = () => {
 
   useEffect(() => {
     if (token && topic) {
+      // Очищаем темы перед загрузкой новых
+      dispatch(clearThemes());
       dispatch(getThemesByTopic({ topicId: topic, token }));
     }
   }, [token, topic, dispatch]);
 
   return (
     <section className={clsx(styles.container, styles.center)}>
-      <LeftBar page={page} />
+      <LeftBar page={page} pageName={pageName} />
       <div className={styles.content}>
         {topicArr && <Topic themes={themes} topicTitle={topicArr.title} />}
       </div>
+      <InviteSidebar />
     </section>
   );
 };

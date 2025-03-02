@@ -1,0 +1,53 @@
+.sidebarResponse {
+  margin-bottom: 18px;
+  grid-column: span 7;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: fit-content;
+  position: sticky;
+  top: 0;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  opacity: 0; /* Начальная прозрачность */
+  animation: fadeIn 0.5s forwards; /* Анимация появления */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.sidebar_filterBlack {
+  border-radius: 10px;
+  padding: 2px 18px 18px 18px;
+  height: fit-content;
+  color: #333333;
+  background: linear-gradient(
+    90deg,
+    rgb(250, 217, 73) 18%,
+    rgb(241, 193, 64) 100%
+  );
+}
+
+.buttonBlc {
+  width: 100%;
+  margin: 18px 0 0 0;
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: #2a2a2a;
+  color: white;
+}

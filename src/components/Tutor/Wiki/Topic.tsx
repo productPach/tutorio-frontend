@@ -11,7 +11,6 @@ export const Topic = memo(
     if (!themes) {
       return <p>Загрузка тем ...</p>;
     }
-    console.log(themes);
 
     return (
       <>
@@ -38,18 +37,10 @@ export const Topic = memo(
             <ReactMarkdown>{theme.content}</ReactMarkdown>
           </div>
         ))}
-
-        {/* <div className={componentStyle.contentFlxRw}>
-          {themes.map((theme) => (
-            <div key={theme.id} className={componentStyle.wikiBlock}>
-              <div className={componentStyle.container}>
-                <h2 className={componentStyle.titleWiki}>{theme.title}</h2>
-                <span>{theme.content}</span>
-              </div>
-            </div>
-          ))}
-        </div> */}
       </>
     );
   }
 );
+
+// Добавляем displayName
+Topic.displayName = "Topic";

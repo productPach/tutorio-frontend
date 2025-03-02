@@ -182,7 +182,11 @@ const initialState: wikiState = {
 const wikiSlice = createSlice({
   name: "wiki",
   initialState,
-  reducers: {},
+  reducers: {
+    clearThemes: (state) => {
+      state.themes = []; // Очищаем темы перед загрузкой новых
+    },
+  },
   extraReducers: (builder) => {
     builder
       // --- Топики ---
@@ -270,4 +274,5 @@ const wikiSlice = createSlice({
   },
 });
 
+export const { clearThemes } = wikiSlice.actions;
 export const wikiReducer = wikiSlice.reducer;
