@@ -28,3 +28,12 @@
 .titleWiki {
   font-size: 20px;
 }
+.containerThemesList {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.itemThemesList:hover {
+  text-decoration: underline;
+}
