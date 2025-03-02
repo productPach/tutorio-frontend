@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["158.160.91.73"], // Указываем только IP-адрес без порта
+    domains: ["158.160.76.102"], // Указываем только IP-адрес без порта
   },
 };
 
