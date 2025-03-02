@@ -9,7 +9,10 @@ import { AppDispatch, useAppSelector } from "@/store/store";
 import { setSupportMenu } from "@/store/features/tutorSlice";
 import { useRouter } from "next/navigation";
 
-const LeftBar: React.FC<{ page: string }> = ({ page }) => {
+const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
+  page,
+  pageName,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
@@ -32,7 +35,11 @@ const LeftBar: React.FC<{ page: string }> = ({ page }) => {
   const router = useRouter();
 
   const handleBack = () => {
-    router.back(); // Возврат на предыдущую страницу
+    if (pageName === "ThemesByTopic") {
+      router.push("../wiki");
+    } else {
+      router.back(); // Возврат на предыдущую страницу
+    }
   };
 
   return (
