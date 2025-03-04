@@ -1,8 +1,6 @@
-"use client";
 import styles from "../layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import SideBar from "@/components/Tutor/SideBar/SideBar";
 import { Profile } from "@/components/Tutor/Profile/Profile";
 
 const ProfilePage: React.FC = () => {
