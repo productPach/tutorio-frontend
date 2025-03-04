@@ -14,46 +14,23 @@ import { getYearWord } from "@/utils/words/getYearWord";
 import { formatTimeAgo } from "@/utils/date/date";
 import { findLocTitlesByIds } from "@/utils/locations/getTitleLocationById";
 import { fetchStudentById } from "@/api/server/studentApi";
-import { Student } from "@/types/types";
+import { City, Order, Student } from "@/types/types";
 
-export const Order = () => {
-  const page = "Order";
-  const dispatch = useDispatch<AppDispatch>();
+type OrderProps = {
+  loading: boolean;
+  student: Student | null;
+  orderById: Order | null;
+  error: string | null;
+  locations: City[];
+};
 
-  const { order } = useParams();
-  const token = useAppSelector((state) => state.auth.token);
-  // Получаем дату городов из Redux
-  const locations = useAppSelector((state) => state.locations.city);
-
-  const [student, setStudent] = useState<Student | null>(null);
-
-  const { orderById, loading, error } = useSelector(
-    (state: RootState) => state.orders
-  );
-
-  useEffect(() => {
-    if (token && typeof order === "string") {
-      dispatch(getOrderById({ token, id: order }));
-    }
-  }, [dispatch, token, order]);
-
-  useEffect(() => {
-    const fetchStudent = async () => {
-      if (orderById?.studentId) {
-        try {
-          if (token) {
-            const data = await fetchStudentById(token, orderById.studentId);
-            setStudent(data);
-          }
-        } catch (error) {
-          console.error("Ошибка при загрузке данных студента:", error);
-        }
-      }
-    };
-
-    fetchStudent();
-  }, [orderById, token]);
-
+export const OrderComponent = ({
+  loading,
+  student,
+  orderById,
+  error,
+  locations,
+}: OrderProps) => {
   //console.log(process.env.NODE_ENV);
 
   if (loading && !student?.name)
