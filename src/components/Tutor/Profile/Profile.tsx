@@ -1,6 +1,5 @@
 import Image from "next/image";
 import styles from "../../../app/tutor/layout.module.css";
-import clsx from "clsx";
 import Link from "next/link";
 
 export const Profile = () => {
