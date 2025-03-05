@@ -44,8 +44,6 @@ export const Subject = () => {
   };
 
   const update = (isGroup: boolean) => {
-    console.log(isChecked);
-
     if (tutor && token) {
       const id = tutor.id;
       const status = tutor?.status;

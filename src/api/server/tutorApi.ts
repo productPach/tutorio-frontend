@@ -44,6 +44,8 @@ export const fetchUpdateTutor = async (data: {
   status: string;
   name?: string;
   email?: string;
+  telegram?: string;
+  skype?: string;
   subject?: string[];
   subjectComments?: { subjectId: string; comment: string }[];
   region?: string;
@@ -56,6 +58,16 @@ export const fetchUpdateTutor = async (data: {
   profileInfo?: string;
   experience?: string;
   isGroup?: boolean;
+  isPublicProfile?: boolean;
+  isStudentResponses?: boolean;
+  isNotifications?: boolean;
+  isNotificationsOrders?: boolean;
+  isNotificationsResponse?: boolean;
+  isNotificationsPromo?: boolean;
+  isNotificationsSms?: boolean;
+  isNotificationsEmail?: boolean;
+  isNotificationsTelegram?: boolean;
+  isNotificationsVk?: boolean;
 }) => {
   const { id, token, ...fields } = data;
 

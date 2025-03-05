@@ -68,6 +68,8 @@ export const updateTutor = createAsyncThunk<
     status: string;
     name?: string;
     email?: string;
+    telegram?: string;
+    skype?: string;
     subject?: string[];
     subjectComments?: { subjectId: string; comment: string }[];
     region?: string;
@@ -80,6 +82,16 @@ export const updateTutor = createAsyncThunk<
     profileInfo?: string;
     experience?: string;
     isGroup?: boolean;
+    isPublicProfile?: boolean;
+    isStudentResponses?: boolean;
+    isNotifications?: boolean;
+    isNotificationsOrders?: boolean;
+    isNotificationsResponse?: boolean;
+    isNotificationsPromo?: boolean;
+    isNotificationsSms?: boolean;
+    isNotificationsEmail?: boolean;
+    isNotificationsTelegram?: boolean;
+    isNotificationsVk?: boolean;
   }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {
