@@ -2,20 +2,21 @@
 import styles from "../layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import SideBar from "@/components/Tutor/SideBar/SideBar";
+import { Wallet } from "@/components/Tutor/Wallet/Wallet";
 
-const Wallet: React.FC = () => {
+const WalletPage: React.FC = () => {
   const page = "Wallet";
 
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
-        <div className={styles.content}></div>
-        <SideBar />
+        <div className={styles.content}>
+          <Wallet />
+        </div>
       </section>
     </>
   );
 };
 
-export default Wallet;
+export default WalletPage;

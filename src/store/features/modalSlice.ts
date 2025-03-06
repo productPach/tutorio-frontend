@@ -13,6 +13,7 @@ type ModalStateType = {
   isModalEditEducation: boolean;
   isModalEditSubjectPrices: boolean;
   subjectForEditInModal: string | null; // ID предмета или объект предмета
+  isModalExit: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -28,6 +29,7 @@ const initialState: ModalStateType = {
   isModalEditEducation: false,
   isModalEditSubjectPrices: false,
   subjectForEditInModal: null,
+  isModalExit: false,
 };
 
 const modalSlice = createSlice({
@@ -70,6 +72,9 @@ const modalSlice = createSlice({
     setSubjectForEditInModal(state, action: PayloadAction<string | null>) {
       state.subjectForEditInModal = action.payload;
     },
+    setIsModalExit: (state, action: PayloadAction<boolean>) => {
+      state.isModalExit = action.payload;
+    },
   },
 });
 
@@ -86,5 +91,6 @@ export const {
   setIsModalEditEducation,
   setIsModalEditSubjectPrices,
   setSubjectForEditInModal,
+  setIsModalExit,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

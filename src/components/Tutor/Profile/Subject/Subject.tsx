@@ -67,7 +67,15 @@ export const Subject = () => {
       <div className={styles.content_block}>
         <div className={componentSubjectStyle.containerTitle}>
           <span className={styles.titleGrey}>Условия занятий</span>
-          <div className={styles.containerEntityShow}>
+          <div className={styles.containerEntityShowEnd}>
+            <div className={styles.containerEntityTitleDescription}>
+              <div>Провожу занятия в группах</div>
+              <span>
+                Мы будем группировать заявки учеников с одинаковыми условиями.
+                Отклик на такой заказ предоставит контакты всех учеников в
+                группе
+              </span>
+            </div>
             <div className={styles.inputContainer}>
               <label className={styles.iosSwitch}>
                 <input
@@ -78,7 +86,6 @@ export const Subject = () => {
                 <span className={styles.slider}></span>
               </label>
             </div>
-            <div className={styles.description2}>Провожу занятия в группах</div>
           </div>
         </div>
       </div>

@@ -5,6 +5,10 @@
   align-items: center;
 }
 
+.containerTitle span {
+  color: #777;
+}
+
 .containerImg {
   display: flex;
   flex-direction: row;
