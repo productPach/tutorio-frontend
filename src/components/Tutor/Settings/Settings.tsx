@@ -300,10 +300,10 @@ export const Settings = () => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>СМС</div>
-                <span>
+                {/* <span>
                   Получите уведомления о заказах, которые соответствуют вашим
                   условиям
-                </span>
+                </span> */}
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -320,7 +320,7 @@ export const Settings = () => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>E-mail</div>
-                <span>Уведомления о новых откликах от учеников в заказах</span>
+                {/* <span>Уведомления о новых откликах от учеников в заказах</span> */}
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -337,7 +337,7 @@ export const Settings = () => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Telegram</div>
-                <span>Информируем вас о скидках, акциях и важных новостях</span>
+                {/* <span>Информируем вас о скидках, акциях и важных новостях</span> */}
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -354,7 +354,7 @@ export const Settings = () => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Вконтакте</div>
-                <span>Информируем вас о скидках, акциях и важных новостях</span>
+                {/* <span>Информируем вас о скидках, акциях и важных новостях</span> */}
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>

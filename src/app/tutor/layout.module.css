@@ -601,8 +601,10 @@
 .iosSwitch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 32px;
+  /* width: 60px;
+  height: 32px; */
+  width: 54px;
+  height: 28px;
 }
 
 .iosSwitch input {
@@ -619,15 +621,18 @@
   right: 0;
   bottom: 0;
   background-color: #e5e5ea; /* Серый цвет */
-  border-radius: 32px;
+  /* border-radius: 32px; */
+  border-radius: 28px;
   transition: background-color 0.3s ease;
 }
 
 .iosSwitch .slider::before {
   content: "";
   position: absolute;
-  height: 28px;
-  width: 28px;
+  /* height: 28px;
+  width: 28px; */
+  height: 24px;
+  width: 24px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -642,5 +647,5 @@
 }
 
 .iosSwitch input:checked + .slider::before {
-  transform: translateX(28px);
+  transform: translateX(26px);
 }
