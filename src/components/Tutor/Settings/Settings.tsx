@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import styles from "../../../app/tutor/layout.module.css";
 import componentStyle from "./Settings.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { updateTutor } from "@/store/features/tutorSlice";
+import { Tutor } from "@/types/types";
+import Link from "next/link";
+import { setIsModalExit } from "@/store/features/modalSlice";
+import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
+import Image from "next/image";
 
-export const Settings = () => {
+type SettingsProps = {
+  tutor: Tutor | null;
+  logout: () => void;
+};
+
+export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
-  const tutor = useAppSelector((state) => state.tutor.tutor);
 
   // Состояние для свитча публичной анкеты
   const [isCheckedPublic, setIsCheckedPublic] = useState(
@@ -374,12 +383,135 @@ export const Settings = () => {
       <div className={styles.content_block}>
         <div className={componentStyle.container}>
           <span>Данные</span>
+
+          <div className={styles.containerEntityShowEnd}>
+            <div className={styles.containerEntityTitleDescription}>
+              <div>Телефон</div>
+              <span>
+                +7
+                {tutor?.phone &&
+                  " " + formatPhoneNumber(tutor.phone).formattedWithStars}
+              </span>
+            </div>
+            <div className={styles.inputContainer}>
+              <Image
+                onClick={(e) => {
+                  e.preventDefault();
+                  //dispatch(setIsModalProfileInfo(true));
+                }}
+                className={componentStyle.img}
+                src={
+                  tutor?.phone
+                    ? "/../img/icon/tutor/pencilSimple.svg"
+                    : "/../img/icon/tutor/plus.svg"
+                }
+                alt="Общая информация"
+                width={21}
+                height={21}
+              />
+            </div>
+          </div>
+
+          <div className={styles.containerEntityShowEnd}>
+            <div className={styles.containerEntityTitleDescription}>
+              <div>E-mail</div>
+              <span>
+                {tutor?.email
+                  ? tutor?.email
+                  : "Не показывается в анкете. Мы будем отправлять на неё уведомления о новых заказах и откликах учеников"}
+              </span>
+            </div>
+            <div className={styles.inputContainer}>
+              <Image
+                onClick={(e) => {
+                  e.preventDefault();
+                  //dispatch(setIsModalProfileInfo(true));
+                }}
+                className={componentStyle.img}
+                src={
+                  tutor?.email
+                    ? "/../img/icon/tutor/pencilSimple.svg"
+                    : "/../img/icon/tutor/plus.svg"
+                }
+                alt="Общая информация"
+                width={21}
+                height={21}
+              />
+            </div>
+          </div>
+
+          <div className={styles.containerEntityShowEnd}>
+            <div className={styles.containerEntityTitleDescription}>
+              <div>Telegram</div>
+              <span>
+                {tutor?.telegram
+                  ? tutor?.telegram
+                  : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
+              </span>
+            </div>
+            <div className={styles.inputContainer}>
+              <Image
+                onClick={(e) => {
+                  e.preventDefault();
+                  //dispatch(setIsModalProfileInfo(true));
+                }}
+                className={componentStyle.img}
+                src={
+                  tutor?.telegram
+                    ? "/../img/icon/tutor/pencilSimple.svg"
+                    : "/../img/icon/tutor/plus.svg"
+                }
+                alt="Общая информация"
+                width={21}
+                height={21}
+              />
+            </div>
+          </div>
+
+          <div className={styles.containerEntityShowEnd}>
+            <div className={styles.containerEntityTitleDescription}>
+              <div>Skype</div>
+              <span>
+                {tutor?.skype
+                  ? tutor?.skype
+                  : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
+              </span>
+            </div>
+            <div className={styles.inputContainer}>
+              <Image
+                onClick={(e) => {
+                  e.preventDefault();
+                  //dispatch(setIsModalProfileInfo(true));
+                }}
+                className={componentStyle.img}
+                src={
+                  tutor?.skype
+                    ? "/../img/icon/tutor/pencilSimple.svg"
+                    : "/../img/icon/tutor/plus.svg"
+                }
+                alt="Общая информация"
+                width={21}
+                height={21}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
       <div className={styles.content_block}>
         <div className={componentStyle.container}>
           <span>Безопасность</span>
+          <div className={componentStyle.containerEntityLink}>
+            <div
+              className={componentStyle.link}
+              onClick={() => dispatch(setIsModalExit(true))}
+            >
+              Выйти из аккаунта
+            </div>
+            <Link className={componentStyle.link} href={""}>
+              Удалить аккаунт
+            </Link>
+          </div>
         </div>
       </div>
     </>

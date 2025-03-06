@@ -23,13 +23,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const dispatch = useAppDispatch();
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
-  // Функция выхода
-  const logout = () => {
-    dispatch(setLogout());
-    dispatch(setTutorLogout());
-    router.push("/");
-  };
-
   // Получаем токен из куки
   // Если токен в куки есть, тогда добавляем токен в Redux
   // Если токена в куках нет, тогда делаем редирект на главную
@@ -101,7 +94,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             <p></p>
             {/* Добавьте здесь другие элементы подвала */}
           </footer>
-          <button onClick={logout}>Выйти</button>
         </>
       )}
     </>

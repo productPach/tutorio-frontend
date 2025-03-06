@@ -14,6 +14,7 @@ import {
   setIsModalEditSubjectPrices,
   setIsModalEducation,
   setIsModalEducationItem,
+  setIsModalExit,
   setIsModalExperience,
   setIsModalFio,
   setIsModalProfileInfo,
@@ -71,6 +72,12 @@ export const Modal: React.FC<ModalProps> = ({
       dispatch(setIsModalEditSubjectPrices(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
+    }
+    if (modalId === "exit") {
+      dispatch(setIsModalExit(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+      console.log("j,yekbkb");
     }
   };
 
