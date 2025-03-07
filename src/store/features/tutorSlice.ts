@@ -9,6 +9,7 @@ import {
   fetchUpdateSubjectPrice,
   fetchUpdateTutor,
   fetchUpdateTutorEducation,
+  fetchVerifyEmail,
 } from "@/api/server/tutorApi";
 import {
   fetchShowWelcomeScreen,
@@ -68,6 +69,7 @@ export const updateTutor = createAsyncThunk<
     status: string;
     name?: string;
     email?: string;
+    isVerifedEmail?: boolean;
     telegram?: string;
     skype?: string;
     subject?: string[];
@@ -330,6 +332,35 @@ export const deletePhotoTutorEducation = createAsyncThunk<
   }
 });
 
+// Асинхронный экшен для верификации почты
+export const verifyEmail = createAsyncThunk<
+  void, // Возвращаемое значение
+  { token: string }, // Параметры
+  { rejectValue: string } // Тип ошибки
+>("tutor/verifyEmail", async ({ token }, { rejectWithValue }) => {
+  try {
+    const response = await fetchVerifyEmail(token); // Отправляем запрос на сервер
+
+    if (response.message === "Email подтверждён") {
+      // Возвращаем пустое значение, так как экшен типа void
+      return;
+    } else {
+      // Если ошибка, возвращаем ошибку через rejectWithValue
+      return rejectWithValue(response.error || "Что-то пошло не так");
+    }
+  } catch (error: unknown) {
+    console.error(error);
+    // Проверяем тип ошибки и возвращаем корректное сообщение
+    if (error instanceof Error) {
+      return rejectWithValue(error.message || "Ошибка верификации");
+    } else {
+      return rejectWithValue("Неизвестная ошибка");
+    }
+  }
+});
+
+
+
 type TutorStateType = {
   tutor: null | Tutor;
   loading: boolean;
@@ -495,6 +526,16 @@ const tutorSlice = createSlice({
       .addCase(updateSubjectPrice.fulfilled, (state, action: PayloadAction<Tutor>) => {
         state.tutor = action.payload; // Аналогично обновляем
         setLocalStorage("tutor", state.tutor);
+      })
+      .addCase(verifyEmail.fulfilled, (state) => {
+        if (state.tutor) {
+          state.tutor.isVerifedEmail = true; // Обновляем поле isVerifedEmail
+          setLocalStorage("tutor", state.tutor);
+        }
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.updateStatus = "failed";
+        console.error(action.payload); // Логируем ошибку
       });
       
   },

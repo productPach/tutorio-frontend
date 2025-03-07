@@ -1,13 +1,27 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styles from "../../../app/tutor/layout.module.css";
 import componentStyle from "./Settings.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { updateTutor } from "@/store/features/tutorSlice";
+import {
+  getCurrentTutor,
+  setTutor,
+  updateTutor,
+  verifyEmail,
+} from "@/store/features/tutorSlice";
 import { Tutor } from "@/types/types";
 import Link from "next/link";
-import { setIsModalExit } from "@/store/features/modalSlice";
+import {
+  setIsModalEmail,
+  setIsModalExit,
+  setIsModalPhone,
+  setIsModalSkype,
+  setIsModalTelegram,
+} from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
+import { io } from "socket.io-client";
+
+const socket = io("http://158.160.78.58:3000");
 
 type SettingsProps = {
   tutor: Tutor | null;
@@ -18,6 +32,55 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
+
+  const tutor2 = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
+  const isVerifiedEmail = tutor?.isVerifedEmail;
+
+  // // Слушаем изменения в localStorage (если почта подтверждена в другой вкладке)
+  // useEffect(() => {
+  //   const handleStorageChange = (event: StorageEvent) => {
+  //     if (event.key === "tutor") {
+  //       const updatedTutor = JSON.parse(event.newValue || "{}");
+  //       if (updatedTutor) {
+  //         dispatch(setTutor(updatedTutor)); // Обновляем Redux
+  //       }
+  //     }
+  //   };
+
+  //   window.addEventListener("storage", handleStorageChange);
+
+  //   return () => {
+  //     window.removeEventListener("storage", handleStorageChange);
+  //   };
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (tutor2) {
+  //     localStorage.setItem("tutor", JSON.stringify(tutor2));
+  //   }
+  // }, [tutor2]);
+
+  useEffect(() => {
+    console.log("Connecting to socket...");
+    const socket = io("http://158.160.78.58:3000");
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+    });
+
+    socket.on("emailVerified", ({ tutorId }) => {
+      console.log("Received emailVerified event");
+      if (tutor?.id === tutorId && token) {
+        dispatch(getCurrentTutor(token)); // Загружаем свежие данные
+        console.log("Email verified, updating tutor data.");
+      }
+    });
+
+    return () => {
+      socket.off("emailVerified");
+      socket.disconnect();
+    };
+  }, [dispatch, tutor?.id, token]);
 
   // Состояние для свитча публичной анкеты
   const [isCheckedPublic, setIsCheckedPublic] = useState(
@@ -170,12 +233,12 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
 
       <div className={styles.content_block}>
         <div className={componentStyle.container}>
-          <span>Деятельность</span>
+          <span className={componentStyle.containerSpan}>Деятельность</span>
 
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Публичная анкета</div>
-              <span>
+              <span className={componentStyle.containerSpan}>
                 Анкета размещена в публичной части сайта, а также индексируется
                 поисковиками
               </span>
@@ -195,7 +258,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Получать отклики от учеников</div>
-              <span>
+              <span className={componentStyle.containerSpan}>
                 Анкета будет доступна ученикам в процессе оформления заказа, они
                 смогут написать вам первыми
               </span>
@@ -216,12 +279,12 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
 
       <div className={styles.content_block}>
         <div className={componentStyle.container}>
-          <span>Уведомления</span>
+          <span className={componentStyle.containerSpan}>Уведомления</span>
 
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Получать уведомления</div>
-              <span>
+              <span className={componentStyle.containerSpan}>
                 Будем отправлять вам уведомления на указанные каналы связи
               </span>
             </div>
@@ -242,12 +305,14 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
       {isCheckedNotifications && (
         <div className={styles.content_block}>
           <div className={componentStyle.container}>
-            <span>Типы уведомлений</span>
+            <span className={componentStyle.containerSpan}>
+              Типы уведомлений
+            </span>
 
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Новые заказы</div>
-                <span>
+                <span className={componentStyle.containerSpan}>
                   Получите уведомления о заказах, которые соответствуют вашим
                   условиям
                 </span>
@@ -267,7 +332,9 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Отклики от учеников</div>
-                <span>Уведомления о новых откликах от учеников в заказах</span>
+                <span className={componentStyle.containerSpan}>
+                  Уведомления о новых откликах от учеников в заказах
+                </span>
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -284,7 +351,9 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Скидки, акции и новости</div>
-                <span>Информируем вас о скидках, акциях и важных новостях</span>
+                <span className={componentStyle.containerSpan}>
+                  Информируем вас о скидках, акциях и важных новостях
+                </span>
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -304,7 +373,9 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
       {isCheckedNotifications && (
         <div className={styles.content_block}>
           <div className={componentStyle.container}>
-            <span>Куда отправлять уведомления</span>
+            <span className={componentStyle.containerSpan}>
+              Куда отправлять уведомления
+            </span>
 
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
@@ -382,12 +453,12 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
 
       <div className={styles.content_block}>
         <div className={componentStyle.container}>
-          <span>Данные</span>
+          <span className={componentStyle.containerSpan}>Данные</span>
 
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Телефон</div>
-              <span>
+              <span className={componentStyle.containerSpan}>
                 +7
                 {tutor?.phone &&
                   " " + formatPhoneNumber(tutor.phone).formattedWithStars}
@@ -397,7 +468,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  //dispatch(setIsModalProfileInfo(true));
+                  dispatch(setIsModalPhone(true));
                 }}
                 className={componentStyle.img}
                 src={
@@ -415,9 +486,17 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>E-mail</div>
-              <span>
-                {tutor?.email
-                  ? tutor?.email
+              <span
+                className={
+                  !isVerifiedEmail
+                    ? componentStyle.redText
+                    : componentStyle.containerSpan
+                }
+              >
+                {tutor2?.email
+                  ? isVerifiedEmail
+                    ? tutor2?.email
+                    : `Подтвердите почту`
                   : "Не показывается в анкете. Мы будем отправлять на неё уведомления о новых заказах и откликах учеников"}
               </span>
             </div>
@@ -425,7 +504,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  //dispatch(setIsModalProfileInfo(true));
+                  dispatch(setIsModalEmail(true));
                 }}
                 className={componentStyle.img}
                 src={
@@ -443,7 +522,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Telegram</div>
-              <span>
+              <span className={componentStyle.containerSpan}>
                 {tutor?.telegram
                   ? tutor?.telegram
                   : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
@@ -453,7 +532,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  //dispatch(setIsModalProfileInfo(true));
+                  dispatch(setIsModalTelegram(true));
                 }}
                 className={componentStyle.img}
                 src={
@@ -471,7 +550,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Skype</div>
-              <span>
+              <span className={componentStyle.containerSpan}>
                 {tutor?.skype
                   ? tutor?.skype
                   : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
@@ -481,7 +560,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  //dispatch(setIsModalProfileInfo(true));
+                  dispatch(setIsModalSkype(true));
                 }}
                 className={componentStyle.img}
                 src={
@@ -500,7 +579,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
 
       <div className={styles.content_block}>
         <div className={componentStyle.container}>
-          <span>Безопасность</span>
+          <span className={componentStyle.containerSpan}>Безопасность</span>
           <div className={componentStyle.containerEntityLink}>
             <div
               className={componentStyle.link}
