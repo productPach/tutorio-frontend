@@ -13,6 +13,10 @@ type ModalStateType = {
   isModalEditEducation: boolean;
   isModalEditSubjectPrices: boolean;
   subjectForEditInModal: string | null; // ID предмета или объект предмета
+  isModalPhone: boolean,
+  isModalEmail: boolean,
+  isModalTelegram: boolean;
+  isModalSkype: boolean;
   isModalExit: boolean;
 };
 
@@ -29,6 +33,10 @@ const initialState: ModalStateType = {
   isModalEditEducation: false,
   isModalEditSubjectPrices: false,
   subjectForEditInModal: null,
+  isModalPhone: false,
+  isModalEmail: false,
+  isModalTelegram: false,
+  isModalSkype: false,
   isModalExit: false,
 };
 
@@ -72,6 +80,18 @@ const modalSlice = createSlice({
     setSubjectForEditInModal(state, action: PayloadAction<string | null>) {
       state.subjectForEditInModal = action.payload;
     },
+    setIsModalPhone: (state, action: PayloadAction<boolean>) => {
+      state.isModalPhone = action.payload;
+    },
+    setIsModalEmail: (state, action: PayloadAction<boolean>) => {
+      state.isModalEmail = action.payload;
+    },
+    setIsModalTelegram: (state, action: PayloadAction<boolean>) => {
+      state.isModalTelegram = action.payload;
+    },
+    setIsModalSkype: (state, action: PayloadAction<boolean>) => {
+      state.isModalSkype = action.payload;
+    },
     setIsModalExit: (state, action: PayloadAction<boolean>) => {
       state.isModalExit = action.payload;
     },
@@ -92,5 +112,9 @@ export const {
   setIsModalEditSubjectPrices,
   setSubjectForEditInModal,
   setIsModalExit,
+  setIsModalPhone,
+  setIsModalEmail,
+  setIsModalTelegram,
+  setIsModalSkype,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

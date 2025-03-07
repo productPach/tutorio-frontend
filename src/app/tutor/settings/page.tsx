@@ -9,6 +9,10 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { Modal } from "@/components/Modal/Modal";
 import { ExitModal } from "@/components/Tutor/Modal/Settings/ExitModal";
+import { TelegramModal } from "@/components/Tutor/Modal/Settings/TelegramModal";
+import { SkypeModal } from "@/components/Tutor/Modal/Settings/SkypeModal";
+import { EmailModal } from "@/components/Tutor/Modal/Settings/EmailModal";
+import { PhoneModal } from "@/components/Tutor/Modal/Settings/PhoneModal";
 
 const SettingsPage: React.FC = () => {
   const page = "Settings";
@@ -18,6 +22,12 @@ const SettingsPage: React.FC = () => {
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
   const isModalExit = useAppSelector((state) => state.modal.isModalExit);
+  const isModalTelegram = useAppSelector(
+    (state) => state.modal.isModalTelegram
+  );
+  const isModalSkype = useAppSelector((state) => state.modal.isModalSkype);
+  const isModalEmail = useAppSelector((state) => state.modal.isModalEmail);
+  const isModalPhone = useAppSelector((state) => state.modal.isModalPhone);
 
   // Функция выхода
   const logout = () => {
@@ -39,6 +49,30 @@ const SettingsPage: React.FC = () => {
         contentModal={<ExitModal logout={logout} />}
         isModal={isModalExit}
         modalId={"exit"}
+      ></Modal>
+      <Modal
+        titleModal={"Telegram"}
+        contentModal={<TelegramModal />}
+        isModal={isModalTelegram}
+        modalId={"telegram"}
+      ></Modal>
+      <Modal
+        titleModal={"Skype"}
+        contentModal={<SkypeModal />}
+        isModal={isModalSkype}
+        modalId={"skype"}
+      ></Modal>
+      <Modal
+        titleModal={"E-mail"}
+        contentModal={<EmailModal />}
+        isModal={isModalEmail}
+        modalId={"email"}
+      ></Modal>
+      <Modal
+        titleModal={"Сменить номер телефона"}
+        contentModal={<PhoneModal />}
+        isModal={isModalPhone}
+        modalId={"phone"}
       ></Modal>
     </>
   );

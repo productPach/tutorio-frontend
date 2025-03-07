@@ -1,7 +1,7 @@
 .container {
   margin: 0;
 }
-.container span {
+.containerSpan {
   color: #777;
 }
 .containerEntityLink {
@@ -27,4 +27,7 @@
 }
 .img:hover {
   background-color: #eee;
+}
+.redText {
+  color: red;
 }

@@ -14,10 +14,14 @@ import {
   setIsModalEditSubjectPrices,
   setIsModalEducation,
   setIsModalEducationItem,
+  setIsModalEmail,
   setIsModalExit,
   setIsModalExperience,
   setIsModalFio,
+  setIsModalPhone,
   setIsModalProfileInfo,
+  setIsModalSkype,
+  setIsModalTelegram,
   setModalSelectCity,
   setScrollY,
 } from "@/store/features/modalSlice";
@@ -70,6 +74,26 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "editSubjectPrices") {
       dispatch(setIsModalEditSubjectPrices(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "phone") {
+      dispatch(setIsModalPhone(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "email") {
+      dispatch(setIsModalEmail(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "telegram") {
+      dispatch(setIsModalTelegram(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "skype") {
+      dispatch(setIsModalSkype(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }

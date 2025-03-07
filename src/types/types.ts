@@ -41,6 +41,7 @@ export type Tutor = {
   name: string;
   phone: string;
   email: string;
+  isVerifedEmail: boolean;
   avatarUrl: string;
   subject: string[]; // Список id предметов, которые преподает репетитор
   subjectComments: { subjectId: string; comment: string }[]; // Комментарии к предметам

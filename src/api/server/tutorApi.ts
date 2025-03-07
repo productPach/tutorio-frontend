@@ -44,6 +44,7 @@ export const fetchUpdateTutor = async (data: {
   status: string;
   name?: string;
   email?: string;
+  isVerifedEmail?: boolean;
   telegram?: string;
   skype?: string;
   subject?: string[];
@@ -300,3 +301,56 @@ export const fetchDeletePhotoTutorEducation = async (
   }
 };
 
+interface EmailData {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string; // HTML не обязателен
+}
+
+export const sendEmail = async (emailData: EmailData) => {
+  const response = await fetch(`${baseUrl}send-email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(emailData), // Просто передаём параметры письма
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(`Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`);
+  }
+
+  return data;
+};
+
+export const sendVerificationEmail = async (tutorId: string, token: string) => {
+  const response = await fetch(`${baseUrl}send-verification-email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Передаем токен в заголовке
+    },
+    body: JSON.stringify({ id: tutorId }), // Передаем ID в теле запроса
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(`Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`);
+  }
+
+  return data;
+};
+
+// Функция для подтверждения email
+export const fetchVerifyEmail = async (token: string) => {
+  const response = await fetch(`${baseUrl}tutors/verify-email?token=${token}`, {
+    method: "GET",
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
