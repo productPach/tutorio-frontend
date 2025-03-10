@@ -72,7 +72,7 @@ export default function VerifyEmailPage() {
   };
 
   if (isLoading) return <div>Загрузка...</div>;
-  if (!isVerified)
+  if (isVerified)
     return (
       <div className={clsx(styles.container, styles.center)}>
         <div className={styles.content_block}>
