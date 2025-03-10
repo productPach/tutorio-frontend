@@ -27,6 +27,9 @@ type SettingsProps = {
   tutor: Tutor | null;
   logout: () => void;
 };
+interface EmailVerifiedResponse {
+  tutorId: string;
+}
 
 export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   const dispatch = useAppDispatch();
@@ -35,28 +38,33 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
 
   const tutor2 = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
   const isVerifiedEmail = tutor?.isVerifedEmail;
-
+  const socket = io(`${host}${port}`);
   useEffect(() => {
-    console.log("Connecting to socket...");
-    const socket = io(`${host}${port}`);
-    //const socket2 = socket;
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
-    });
+    if (tutor?.id) {
+      socket.emit("registerTutor", tutor.id);
+    }
 
-    socket.on("emailVerified", ({ tutorId }) => {
-      console.log("Received emailVerified event");
-      if (tutor?.id === tutorId && token) {
-        dispatch(getCurrentTutor(token)); // Загружаем свежие данные
-        console.log("Email verified, updating tutor data.");
+    // Обработка события emailVerified
+    const handleVerified = ({ tutorId }: EmailVerifiedResponse) => {
+      console.log("Email confirmed for tutor:", tutorId);
+      if (token) {
+        dispatch(getCurrentTutor(token)); // Загружаем свежие данные с использованием токена
       }
-    });
-
-    return () => {
-      socket.off("emailVerified");
-      socket.disconnect();
     };
-  }, [dispatch, tutor?.id, token]);
+
+    const handleError = ({ error }: { error: string }) => {
+      console.log("Error during email verification:", error);
+    };
+
+    socket.on("emailVerified", handleVerified);
+    socket.on("emailVerificationError", handleError);
+
+    // Очистка после размонтирования компонента
+    return () => {
+      socket.off("emailVerified", handleVerified);
+      socket.off("emailVerificationError", handleError);
+    };
+  }, [dispatch, token, tutor]);
 
   // Состояние для свитча публичной анкеты
   const [isCheckedPublic, setIsCheckedPublic] = useState(
