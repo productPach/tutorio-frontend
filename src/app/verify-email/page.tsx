@@ -1,10 +1,12 @@
 "use client";
+import styles from "./page.module.css";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { verifyEmail } from "@/store/features/tutorSlice";
 import { useAppDispatch } from "@/store/store";
 import { io } from "socket.io-client";
 import { host, port } from "@/api/server/configApi";
+import clsx from "clsx";
 
 const socket = io(`${host}${port}`);
 
@@ -15,11 +17,11 @@ export default function VerifyEmailPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!token) {
-      setError("Отсутствует токен для подтверждения.");
+      setError(true);
       setIsLoading(false);
       return;
     }
@@ -33,7 +35,7 @@ export default function VerifyEmailPage() {
         }
       })
       .catch(() => {
-        setError("Произошла ошибка при верификации почты.");
+        setError(true);
       })
       .finally(() => {
         setIsLoading(false);
@@ -47,11 +49,11 @@ export default function VerifyEmailPage() {
   // 🔹 Ожидаем ответ от сервера через сокет
   useEffect(() => {
     const handleVerified = ({ tutorId }: { tutorId: string }) => {
-      console.log("Email подтвержден для ID:", tutorId);
+      //console.log("Email подтвержден для ID:", tutorId);
     };
 
     const handleError = ({ error }: { error: string }) => {
-      setError(error);
+      setError(true);
     };
 
     socket.on("emailVerified", handleVerified);
@@ -63,8 +65,40 @@ export default function VerifyEmailPage() {
     };
   }, []);
 
-  if (isLoading) return <div>Загрузка...</div>;
-  if (isVerified) return <div>Ваша почта успешно верифицирована!</div>;
+  // Функция для разделения текста по строкам
+  const formatErrorText = (text: string | null) => {
+    if (!text) return null;
+    return text.split("\n").map((line, index) => <div key={index}>{line}</div>);
+  };
 
-  return <div>{error}</div>;
+  if (isLoading) return <div>Загрузка...</div>;
+  if (!isVerified)
+    return (
+      <div className={clsx(styles.container, styles.center)}>
+        <div className={styles.content_block}>
+          <p className={styles.title}>🎉 Бам! Почта подтверждена! 🚀</p>
+          <p className={styles.description}>
+            Ваш email теперь на связи! 📩 Готовьтесь получать уведомления о
+            новых заказах и откликах от учеников! 💌<br></br>
+            <br></br> Время для новых возможностей — не пропустите! ⏰
+          </p>
+        </div>
+      </div>
+    );
+
+  return (
+    <div className={clsx(styles.container, styles.center)}>
+      <div className={styles.content_block}>
+        {error && (
+          <>
+            <p className={styles.title}>Упс, ошибка! 😟</p>{" "}
+            <p className={styles.description}>
+              Мы попробуем разобраться.<br></br> Попробуйте позже или свяжитесь
+              с нами! 💬
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
