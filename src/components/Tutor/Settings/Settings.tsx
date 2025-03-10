@@ -20,8 +20,8 @@ import {
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
 import { io } from "socket.io-client";
-
-const socket = io("http://158.160.78.58:3000");
+import "dotenv/config";
+import { host, port } from "@/api/server/configApi";
 
 type SettingsProps = {
   tutor: Tutor | null;
@@ -36,34 +36,10 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   const tutor2 = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
   const isVerifiedEmail = tutor?.isVerifedEmail;
 
-  // // Слушаем изменения в localStorage (если почта подтверждена в другой вкладке)
-  // useEffect(() => {
-  //   const handleStorageChange = (event: StorageEvent) => {
-  //     if (event.key === "tutor") {
-  //       const updatedTutor = JSON.parse(event.newValue || "{}");
-  //       if (updatedTutor) {
-  //         dispatch(setTutor(updatedTutor)); // Обновляем Redux
-  //       }
-  //     }
-  //   };
-
-  //   window.addEventListener("storage", handleStorageChange);
-
-  //   return () => {
-  //     window.removeEventListener("storage", handleStorageChange);
-  //   };
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (tutor2) {
-  //     localStorage.setItem("tutor", JSON.stringify(tutor2));
-  //   }
-  // }, [tutor2]);
-
   useEffect(() => {
     console.log("Connecting to socket...");
-    const socket = io("http://158.160.78.58:3000");
-
+    const socket = io(`${host}${port}`);
+    //const socket2 = socket;
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
     });

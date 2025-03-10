@@ -5,8 +5,9 @@ import { useSearchParams } from "next/navigation"; // Импортируем д�
 import { verifyEmail } from "@/store/features/tutorSlice"; // Импортируем экшен для верификации почты
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { io } from "socket.io-client";
+import { host, port } from "@/api/server/configApi";
 
-const socket = io("http://158.160.78.58:3000");
+const socket = io(`${host}${port}`);
 
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams(); // Получаем параметры URL
