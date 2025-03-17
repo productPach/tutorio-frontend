@@ -1,6 +1,7 @@
 import {
   fetchCreateStudent,
   fetchCurrentStudent,
+  fetchUpdateStudent,
 } from "@/api/server/studentApi";
 import { Student } from "@/types/types";
 import { setLocalStorage } from "@/utils/localStorage/localStorage";
@@ -34,13 +35,44 @@ export const createStudent = createAsyncThunk<
   }
 });
 
+// Изменение студента
+export const updateStudent = createAsyncThunk<
+  Student,
+  {
+    id: string;
+    token: string;
+    status: string;
+    name?: string;
+    phone?: string;
+    email?: string;
+    region?: string;
+  }
+>("student/update", async ({ id, token, status, ...optionalFields }) => {
+  try {
+    const dataToUpdate = {
+      id,
+      token,
+      status,
+      ...optionalFields,
+    };
+
+    const response = await fetchUpdateStudent(dataToUpdate);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+});
+
 type StudentStateType = {
   student: null | Student;
+  updateStatus: string;
   loading: boolean;
 };
 
 const initialState: StudentStateType = {
   student: null,
+  updateStatus: "idle", // idle | loading | success | failed
   loading: false,
 };
 
@@ -79,7 +111,27 @@ const studentSlice = createSlice({
           state.student = action.payload;
           setLocalStorage("student", state.student);
         }
-      );
+      )
+      .addCase(
+        updateStudent.fulfilled, 
+        (state, action: PayloadAction<Student>) => {
+          state.student = action.payload;
+          state.loading = false;
+          state.updateStatus = "success";
+          setLocalStorage("student", state.student);
+        })
+      .addCase(
+        updateStudent.pending, 
+        (state) => {
+          state.loading = true;
+          state.updateStatus = "loading";
+        })
+      .addCase(
+        updateStudent.rejected, 
+        (state) => {
+          state.loading = false;
+          state.updateStatus = "failed";
+        });
   },
 });
 

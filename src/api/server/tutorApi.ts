@@ -44,6 +44,7 @@ export const fetchUpdateTutor = async (data: {
   status: string;
   name?: string;
   email?: string;
+  phone?: string;
   isVerifedEmail?: boolean;
   telegram?: string;
   skype?: string;
