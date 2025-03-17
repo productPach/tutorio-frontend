@@ -1,4 +1,4 @@
-import { SignInFormType } from "@/types/types";
+import { SignInFormType, UpdatePhoneUser } from "@/types/types";
 import { baseUrl } from "./configApi";
 
 // Получение токена
@@ -39,6 +39,36 @@ export const fetchExistUser = async (phone: string) => {
     const data = false;
     return data;
   }
+};
+
+// Изменение пользователя
+export const fetchUpdatePhoneUser = async ({
+  id: userId,
+  token,
+  phone,
+  secretCode,
+}: UpdatePhoneUser): Promise<boolean> => {
+  const response = await fetch(`${baseUrl}users/${userId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      phone: phone,
+      secretSMS: secretCode,
+    }),
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Некорректные данные");
+    }
+    throw new Error("Ошибка при обновлении юзера");
+  }
+
+  return response.status === 200;
 };
 
 // Изменение секретного кода

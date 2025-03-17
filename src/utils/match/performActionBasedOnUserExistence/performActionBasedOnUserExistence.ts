@@ -20,3 +20,19 @@ export const performActionBasedOnUserExistence = async (
     fetchUpdSecretUser({ phone, secretCode });
   }
 };
+
+// Проверяем есть ли пользователь
+export const userExistence = async (
+  to: string,
+  oldPhone: string,
+  secretCode: string
+) => {
+  const newPhone = to;
+  const existUser = await fetchExistUser(newPhone);
+  if (existUser) {
+    // Если пользователя с новым номером телефона нет, обновляем секретный код в БД для пользователя с еще старым телефоном
+    fetchUpdSecretUser({ phone: oldPhone, secretCode });
+  }
+
+  return existUser; // Возвращаем результат
+};

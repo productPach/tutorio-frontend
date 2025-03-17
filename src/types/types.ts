@@ -3,6 +3,13 @@ export type SignInFormType = {
   secretCode: string;
 };
 
+export type UpdatePhoneUser = {
+  id: string;
+  token: string;
+  phone: string;
+  secretCode: string;
+};
+
 export type User = {
   id: string;
   phone: string;

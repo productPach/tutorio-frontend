@@ -60,3 +60,28 @@ export const fetchStudentById = async (token: string, id: string) => {
   const data = await response.json();
   return data.student;
 };
+
+// Изменение репетитора
+export const fetchUpdateStudent = async (data: {
+  id: string;
+  token: string;
+  status: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  region?: string;
+}) => {
+  const { id, token, ...fields } = data;
+
+  const response = await fetch(`${baseUrl}students/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(fields), // Отправляем только переданные поля
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};

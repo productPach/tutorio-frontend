@@ -68,6 +68,7 @@ export const updateTutor = createAsyncThunk<
     token: string;
     status: string;
     name?: string;
+    phone?: string;
     email?: string;
     isVerifedEmail?: boolean;
     telegram?: string;
