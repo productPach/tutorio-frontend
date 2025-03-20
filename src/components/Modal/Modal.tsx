@@ -10,6 +10,7 @@ import styles from "../Modal/Modal.module.css";
 import { useAppDispatch } from "@/store/store";
 import {
   setIsModalBalanceBoost,
+  setIsModalDelete,
   setIsModalEditEducation,
   setIsModalEditSubjectPrices,
   setIsModalEducation,
@@ -101,7 +102,11 @@ export const Modal: React.FC<ModalProps> = ({
       dispatch(setIsModalExit(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
-      console.log("j,yekbkb");
+    }
+    if (modalId === "delete") {
+      dispatch(setIsModalDelete(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
   };
 

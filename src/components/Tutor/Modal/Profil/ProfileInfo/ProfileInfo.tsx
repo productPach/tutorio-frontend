@@ -3,12 +3,9 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "./ProfileInfo.module.css";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
-import {
-  setIsModalFio,
-  setIsModalProfileInfo,
-} from "@/store/features/modalSlice";
+import { setIsModalProfileInfo } from "@/store/features/modalSlice";
 
 export const ProfileInfo = () => {
   const dispatch = useAppDispatch();

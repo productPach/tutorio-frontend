@@ -18,6 +18,7 @@ type ModalStateType = {
   isModalTelegram: boolean;
   isModalSkype: boolean;
   isModalExit: boolean;
+  isModalDelete: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -38,6 +39,7 @@ const initialState: ModalStateType = {
   isModalTelegram: false,
   isModalSkype: false,
   isModalExit: false,
+  isModalDelete: false,
 };
 
 const modalSlice = createSlice({
@@ -95,6 +97,9 @@ const modalSlice = createSlice({
     setIsModalExit: (state, action: PayloadAction<boolean>) => {
       state.isModalExit = action.payload;
     },
+    setIsModalDelete: (state, action: PayloadAction<boolean>) => {
+      state.isModalDelete = action.payload;
+    },
   },
 });
 
@@ -116,5 +121,6 @@ export const {
   setIsModalEmail,
   setIsModalTelegram,
   setIsModalSkype,
+  setIsModalDelete,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;
