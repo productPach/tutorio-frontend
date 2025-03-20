@@ -5,6 +5,7 @@ import {
   fetchCreateTutorEducation,
   fetchCurrentTutor,
   fetchDeletePhotoTutorEducation,
+  fetchDeleteRequest,
   fetchDeleteTutorEducation,
   fetchUpdateSubjectPrice,
   fetchUpdateTutor,
@@ -21,7 +22,6 @@ import {
   Metro,
   RegionalCity,
   Tutor,
-  TutorSubjectPrice,
   TutorSubjectPriceInput,
   UpdateTutorAvatarPayload,
   UpdateTutorAvatarResponse,
@@ -361,6 +361,20 @@ export const verifyEmail = createAsyncThunk<
 });
 
 
+export const deleteTutorRequest = createAsyncThunk<
+  boolean, // Возвращаем true при успешном запросе
+  { tutorId: string; answer: string; token: string } // Входные параметры
+>("tutor/deleteRequest", async ({ tutorId, answer, token }, { rejectWithValue }) => {
+  try {
+    await fetchDeleteRequest(tutorId, answer, token);
+    return true; // Успешный запрос
+  } catch (error) {
+    console.error("Ошибка удаления репетитора:", error);
+    return rejectWithValue(false); // Возвращаем false при ошибке
+  }
+});
+
+
 
 type TutorStateType = {
   tutor: null | Tutor;
@@ -371,6 +385,7 @@ type TutorStateType = {
   supportMenu: boolean;
   welcomeScreens: null | WelcomeScreen[];
   hiddenScreens: string[]; // Добавляем скрытые экраны
+  deleteRequest: boolean,
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -385,6 +400,7 @@ const initialState: TutorStateType = {
   supportMenu: false,
   welcomeScreens: null,
   hiddenScreens: [],
+  deleteRequest: false,
 };
 
 const tutorSlice = createSlice({
@@ -414,6 +430,9 @@ const tutorSlice = createSlice({
       if (!state.hiddenScreens.includes(action.payload)) {
         state.hiddenScreens.push(action.payload);
       }
+    },
+    resetDeleteRequest: (state) => {
+      state.deleteRequest = false; // Сбросить состояние
     },
   },
   extraReducers(builder) {
@@ -537,6 +556,18 @@ const tutorSlice = createSlice({
       .addCase(verifyEmail.rejected, (state, action) => {
         state.updateStatus = "failed";
         console.error(action.payload); // Логируем ошибку
+      })
+      .addCase(deleteTutorRequest.pending, (state) => {
+        state.deleteRequest = false;
+        state.loading = true;
+      })
+      .addCase(deleteTutorRequest.fulfilled, (state) => {
+        state.deleteRequest = true; // Успешный запрос
+        state.loading = false;
+      })
+      .addCase(deleteTutorRequest.rejected, (state) => {
+        state.deleteRequest = false; // Ошибка, не удалилось
+        state.loading = false;
       });
       
   },
@@ -549,5 +580,6 @@ export const {
   setSelectedValuesArea,
   setSupportMenu,
   addHiddenScreen,
+  resetDeleteRequest,
 } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;

@@ -13,6 +13,7 @@ import { TelegramModal } from "@/components/Tutor/Modal/Settings/TelegramModal";
 import { SkypeModal } from "@/components/Tutor/Modal/Settings/SkypeModal";
 import { EmailModal } from "@/components/Tutor/Modal/Settings/EmailModal";
 import { PhoneModal } from "@/components/Tutor/Modal/Settings/PhoneModal";
+import { DeleteModal } from "@/components/Tutor/Modal/Settings/DeleteModal";
 
 const SettingsPage: React.FC = () => {
   const page = "Settings";
@@ -28,6 +29,7 @@ const SettingsPage: React.FC = () => {
   const isModalSkype = useAppSelector((state) => state.modal.isModalSkype);
   const isModalEmail = useAppSelector((state) => state.modal.isModalEmail);
   const isModalPhone = useAppSelector((state) => state.modal.isModalPhone);
+  const isModalDelete = useAppSelector((state) => state.modal.isModalDelete);
 
   // Функция выхода
   const logout = () => {
@@ -73,6 +75,12 @@ const SettingsPage: React.FC = () => {
         contentModal={<PhoneModal />}
         isModal={isModalPhone}
         modalId={"phone"}
+      ></Modal>
+      <Modal
+        titleModal={"Удаление аккаунта 💔"}
+        contentModal={<DeleteModal logout={logout} />}
+        isModal={isModalDelete}
+        modalId={"delete"}
       ></Modal>
     </>
   );

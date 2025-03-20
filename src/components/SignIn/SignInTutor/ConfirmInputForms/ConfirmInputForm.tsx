@@ -6,10 +6,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
-import { fetchGetToken } from "@/api/server/userApi";
+import { fetchCancelDeleteRequest, fetchGetToken } from "@/api/server/userApi";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getToken } from "@/store/features/authSlice";
-import { createTutor, getCurrentTutor } from "@/store/features/tutorSlice";
+import {
+  createTutor,
+  getCurrentTutor,
+  resetDeleteRequest,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 
 interface ComponentRenderProps {
   id: number;
@@ -182,6 +187,19 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 break;
               case "Pending":
               case "Active":
+              case "Canceled delete":
+                handleNextStep("../tutor/orders");
+                break;
+              case "Deleted":
+                dispatch(
+                  updateTutor({
+                    id: updatedTutor?.id,
+                    token,
+                    status: "Canceled delete",
+                  })
+                );
+                fetchCancelDeleteRequest({ token, role: "tutor" });
+                dispatch(resetDeleteRequest());
                 handleNextStep("../tutor/orders");
                 break;
               default:

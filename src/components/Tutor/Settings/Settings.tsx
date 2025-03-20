@@ -11,6 +11,7 @@ import {
 import { Tutor } from "@/types/types";
 import Link from "next/link";
 import {
+  setIsModalDelete,
   setIsModalEmail,
   setIsModalExit,
   setIsModalPhone,
@@ -569,9 +570,12 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             >
               Выйти из аккаунта
             </div>
-            <Link className={componentStyle.link} href={""}>
+            <div
+              className={componentStyle.link}
+              onClick={() => dispatch(setIsModalDelete(true))}
+            >
               Удалить аккаунт
-            </Link>
+            </div>
           </div>
         </div>
       </div>

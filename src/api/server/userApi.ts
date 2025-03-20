@@ -139,3 +139,28 @@ export const fetchWelcomeScreens = async (token: string) => {
   const data = await response.json();
   return data;
 };
+
+// Удаление запроса на удаление
+export const fetchCancelDeleteRequest = async ({
+  token,
+  role,
+}: {
+  token: string;
+  role: "student" | "tutor";
+}): Promise<boolean> => {
+  const response = await fetch(`${baseUrl}/users/cancel-delete-request`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ role }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Ошибка при отмене запроса на удаление");
+  }
+
+  return true;
+};

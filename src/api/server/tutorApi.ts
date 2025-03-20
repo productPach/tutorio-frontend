@@ -86,6 +86,21 @@ export const fetchUpdateTutor = async (data: {
   return responseData;
 };
 
+export const fetchDeleteRequest = async (tutorId: string, answer: string, token: string): Promise<void> => {
+  const res = await fetch(`${baseUrl}tutors/delete-request/${tutorId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ answer }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Ошибка при создании запроса на удаление");
+  }
+};
+
 // Добавление новой цены по предмету
 export const fetchAddSubjectPrice = async (data: TutorSubjectPriceInput & { tutorId: string; token: string }) => {
   const { token, ...fields } = data;
