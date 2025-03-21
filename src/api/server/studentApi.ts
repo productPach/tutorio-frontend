@@ -4,6 +4,7 @@ import { baseUrl } from "./configApi";
 export const fetchCreateStudent = async (
   name: string,
   phone: string,
+  avatarUrl: string,
   region: string,
   token: string
 ) => {
@@ -16,6 +17,7 @@ export const fetchCreateStudent = async (
     body: JSON.stringify({
       name: name,
       phone: phone,
+      avatarUrl: avatarUrl,
       region: region,
       status: "Pending",
     }),

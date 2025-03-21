@@ -34,7 +34,8 @@ export type Student = {
   name: string;
   phone: string;
   email: string;
-  location: string;
+  region: string;
+  avatarUrl: string;
   status: string;
   orders: Order[];
 };

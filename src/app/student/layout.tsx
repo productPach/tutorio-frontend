@@ -1,16 +1,18 @@
 "use client";
-import Image from "next/image";
 import React, { ReactNode, useEffect, useState } from "react";
-import styles from "../student/layout.module.css";
+import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import Head from "next/head";
-import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setLogout, setToken } from "@/store/features/authSlice";
+import { setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
+import { getCurrentTutor } from "@/store/features/tutorSlice";
+import Image from "next/image";
+import { host, port } from "@/api/server/configApi";
+import { getAllLocations } from "@/store/features/locationSlice";
+import { getCurrentStudent } from "@/store/features/studentSlice";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -20,12 +22,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const [isLoadedPage, setIsLoadedPage] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  // Функция выхода
-  const logout = () => {
-    dispatch(setLogout());
-    router.push("/");
-  };
+  const student = useAppSelector((state) => state.student.student);
 
   // Получаем токен из куки
   // Если токен в куки есть, тогда добавляем токен в Redux
@@ -34,12 +31,17 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     const token = getTokenFromCookie();
     if (token) {
       dispatch(setToken(token));
+      dispatch(getCurrentStudent(token));
     } else {
       router.push("/");
       return;
     }
     setIsLoadedPage(true);
   }, [dispatch, router]);
+
+  useEffect(() => {
+    dispatch(getAllLocations());
+  }, [dispatch]);
 
   return (
     <>
@@ -60,20 +62,35 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </Head>
           <header>
             <div className={clsx(styles.header, styles.center)}>
-              <SelectCityModal />
-              <Link href="/">
+              <a href="#">
                 <div className={styles.header__logo}>
                   tutorio
                   <span className={styles.header__underLogo}>
-                    Cервис подбора репетиторов
+                    Онлайн-сервис подбора репетиторов
                   </span>
                 </div>
-              </Link>
+              </a>
+              <div className={styles.header__menu}>
+                {student && (
+                  <>
+                    <span>{student.name}</span>
+                    <Image
+                      src={
+                        student?.avatarUrl
+                          ? `${student?.avatarUrl}`
+                          : `/img/icon/student/avatar/animal7.svg`
+                      }
+                      alt={`${student?.name}`}
+                      width={42}
+                      height={42}
+                      priority
+                    />
+                  </>
+                )}
+              </div>
             </div>
           </header>
-          <button onClick={logout}>Выйти</button>
-          <main>{children}</main>
-
+          {student && <main>{children}</main>}
           <footer className={clsx(styles.center)}>
             <p></p>
             {/* Добавьте здесь другие элементы подвала */}

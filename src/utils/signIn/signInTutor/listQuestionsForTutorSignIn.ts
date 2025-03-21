@@ -3,7 +3,7 @@ export const listQuestionsForTutorSignIn = [
         id: 1,
         typeForm: "phone",
         question: "Номер телефона",
-        description: "Отправим уведомление для подтверждения входа",
+        description: "На указанный номер придёт проверочный код для подтверждения",
         placeholder: "Введите номер телефона",
         nextPage: "/sign-in-tutor/confirmation",
     },

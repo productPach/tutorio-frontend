@@ -1,40 +1,47 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import styles from "../Match.module.css";
-import animation from "../../../app/match/layout.module.css";
+import styles from "../../SignInTutor/SignInTutor.module.css";
+import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
-import { fetchCreateOrder } from "@/api/server/orderApi";
-import { Order } from "@/types/types";
+import { fetchCancelDeleteRequest } from "@/api/server/userApi";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getToken } from "@/store/features/authSlice";
-import { Spinner } from "@/components/Spinner/Spinner";
-import {
-  createStudent,
-  getCurrentStudent,
-} from "@/store/features/studentSlice";
 
-interface Answer {
-  id: number;
-  title: string;
-  nextPage: string;
-}
+import {
+  getCurrentStudent,
+  resetDeleteRequest,
+  updateStudent,
+} from "@/store/features/studentSlice";
 
 interface ComponentRenderProps {
   id: number;
+  typeForm: string;
   question: string;
   description: string;
-  typeForm: string;
-  answerArray: Answer[];
+  placeholder: string;
+  nextPage: string;
 }
+
+// Определяем тип для объекта в массиве
+type Order = {
+  id: number;
+  subject?: string;
+  goal?: string;
+  class?: string;
+  deadline?: string;
+  [key: string]: any;
+};
 
 export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   id,
-  question,
   typeForm,
-  answerArray,
+  question,
+  description,
+  placeholder,
+  nextPage,
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
@@ -42,9 +49,15 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
   // Получаем значение regionUser из Redux
   const regionUser = useAppSelector((state) => state.auth.regionUser);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
-  let region: string;
-  regionUser && (region = regionUser?.city);
+  // ПЕРЕДЕЛАНО ОТ 25.01.2025
+  // ПЕРЕДЕЛАТЬ!!!
+  // Нужно вытаскивать код подтверждения в БД
+  // Временно вытаскиваем код из LocalStorage
+  // const confirmCodeLS = localStorage.getItem("confirm-code");
+  // const confirmCode: string = confirmCodeLS && JSON.parse(confirmCodeLS);
+  //console.log(confirmCode);
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -67,170 +80,149 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     null,
   ]);
 
-  // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
-  // Конвертируем массив c данными формы из JSON в JS объект
-  const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+  // Авторизация пользователя
+  // СТАРАЯ ВЕРСИЯ
+  // const handleGetToken = async (secretCode: string) => {
+  //   try {
+  //     const jsonPhone = localStorage.getItem("origin-phone");
+  //     const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+  //     if (phone) {
+  //       const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+  //       setErrorInput(false);
+  //       if (token) {
+  //         setIsSuccess(true);
+  //         await dispatch(getCurrentTutor(token))
+  //           .unwrap()
+  //           .catch(async () => {
+  //             // Репетитора не существет, создаем нового
+  //             await dispatch(
+  //               createTutor({
+  //                 phone: phone,
+  //                 token,
+  //               })
+  //             );
+  //           })
+  //           .finally(async () => {
+  //             // Повторно получаем статус репетитора после создания
+  //             const updatedTutor = await dispatch(
+  //               getCurrentTutor(token)
+  //             ).unwrap();
+  //             if (updatedTutor?.status === "Rega: Fullname") {
+  //               handleNextStep("fio");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Subjects") {
+  //               handleNextStep("subjects");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Locations") {
+  //               handleNextStep("locations");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Email") {
+  //               handleNextStep("email");
+  //             }
+  //             if (updatedTutor?.status === "Rega: Photo") {
+  //               handleNextStep("photo");
+  //             }
+  //             if (
+  //               updatedTutor?.status === "Pending" ||
+  //               updatedTutor?.status === "Active"
+  //             ) {
+  //               handleNextStep("../tutor/orders");
+  //             }
+  //           });
+  //       } else {
+  //         setErrorInput(true);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.warn(error);
+  //   }
+  // };
 
   // Авторизация пользователя
+  // НОВАЯ ВЕРСИЯ ОТ 25.01.2025
   const handleGetToken = async (secretCode: string) => {
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+
       if (phone) {
+        // Получаем токен с обработкой ошибок
         const token = await dispatch(getToken({ phone, secretCode })).unwrap();
-        setErrorInput(false);
+
         if (token) {
           setIsSuccess(true);
-          await dispatch(getCurrentStudent(token))
-            .unwrap()
-            .catch(() => {
-              const avatars = [
-                "/img/icon/student/avatar/animal1.svg",
-                "/img/icon/student/avatar/animal2.svg",
-                "/img/icon/student/avatar/animal3.svg",
-                "/img/icon/student/avatar/animal4.svg",
-                "/img/icon/student/avatar/animal5.svg",
-                "/img/icon/student/avatar/animal6.svg",
-                "/img/icon/student/avatar/animal7.svg",
-              ];
+          setErrorInput(false);
+          try {
+            // Пытаемся получить данные ученика
+            await dispatch(getCurrentStudent(token)).unwrap();
+          } catch {
+            // Если ученик не существует, создаем нового
+            console.log("Такого пользователя нет");
+          } finally {
+            // Повторно получаем статус ученика после создания
+            const updatedStudent = await dispatch(
+              getCurrentStudent(token)
+            ).unwrap();
 
-              // Выбор случайной аватарки
-              const randomAvatar =
-                avatars[Math.floor(Math.random() * avatars.length)];
-
-              const fioDataMatch = dataMatch.find((obj) => obj.id === 19);
-              // Вытаскиваем значение данного объека из свойства fio
-              const fioValue = fioDataMatch ? fioDataMatch.fio : "";
-              fioValue &&
-                // Студента не существет, создаем нового
+            switch (updatedStudent?.status) {
+              case "Rega: Order":
+                handleNextStep("../student/order");
+                break;
+              case "Pending":
+              case "Active":
+              case "Canceled delete":
+                handleNextStep("../student/order");
+                break;
+              case "Deleted":
                 dispatch(
-                  createStudent({
-                    name: fioValue,
-                    phone: phone,
-                    avatarUrl: randomAvatar,
-                    region: region,
+                  updateStudent({
+                    id: updatedStudent?.id,
                     token,
+                    status: "Canceled delete",
                   })
                 );
-            })
-            .finally(() => {
-              const subjectDataMatch = dataMatch.find(
-                (obj) => obj.id === 0
-              )?.subject;
-              const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;
-              const classDataMatch = dataMatch.find(
-                (obj) => obj.id === 2
-              )?.class;
-              const studentTypeDataMatch = dataMatch.find(
-                (obj) => obj.id === 3
-              )?.studentType;
-              const studentCourseDataMatch = dataMatch.find(
-                (obj) => obj.id === 4
-              )?.studentCourse;
-              const deadlineDataMatch = dataMatch.find(
-                (obj) => obj.id === 5
-              )?.deadline;
-              const studentLevelDataMatch = dataMatch.find(
-                (obj) => obj.id === 6
-              )?.studentLevel;
-              const studentYearsDataMatch = dataMatch.find(
-                (obj) => obj.id === 7
-              )?.studentYears;
-              const tutorGenderDataMatch = dataMatch.find(
-                (obj) => obj.id === 8
-              )?.tutorGender;
-              const studentUniversityDataMatch = dataMatch.find(
-                (obj) => obj.id === 9
-              )?.studentUniversity;
-              const internationalExamDataMatch = dataMatch.find(
-                (obj) => obj.id === 10
-              )?.internationalExam;
-              const studyMethodsDataMatch = dataMatch.find(
-                (obj) => obj.id === 11
-              )?.studyMethods;
-              const studyProgrammsDataMatch = dataMatch.find(
-                (obj) => obj.id === 12
-              )?.studyProgramms;
-              const timetableDataMatch = dataMatch.find(
-                (obj) => obj.id === 13
-              )?.timetable;
-              const studyPlaceDataMatch = dataMatch.find(
-                (obj) => obj.id === 14
-              )?.studyPlace;
-              const studentAdressDataMatch = dataMatch.find(
-                (obj) => obj.id === 15
-              )?.studentAdress;
-              const studentTripDataMatchLS =
-                dataMatch.find((obj) => obj.id === 16)?.studentTrip || [];
-              const studentTripDataMatch = Array.isArray(studentTripDataMatchLS)
-                ? studentTripDataMatchLS.map((item: { id: string }) => item.id)
-                : [];
-              const tutorTypeDataMatch = dataMatch.find(
-                (obj) => obj.id === 17
-              )?.tutorType;
-              const autoContactsString = dataMatch.find(
-                (obj) => obj.id === 22
-              )?.autoContacts;
-              let autoContactsBoolean;
-              if (autoContactsString === "Да, показывать контакты") {
-                autoContactsBoolean = true;
-              } else {
-                autoContactsBoolean = false;
-              }
-              const infoDataMatch = dataMatch.find(
-                (obj) => obj.id === 18
-              )?.info;
-
-              // Создание заказа
-              fetchCreateOrder(
-                token,
-                subjectDataMatch,
-                goalDataMatch,
-                classDataMatch,
-                studentTypeDataMatch,
-                studentYearsDataMatch,
-                studentCourseDataMatch,
-                studentUniversityDataMatch,
-                internationalExamDataMatch,
-                studyMethodsDataMatch,
-                studyProgrammsDataMatch,
-                deadlineDataMatch,
-                studentLevelDataMatch,
-                tutorGenderDataMatch,
-                timetableDataMatch,
-                region,
-                studyPlaceDataMatch,
-                studentAdressDataMatch,
-                studentTripDataMatch,
-                tutorTypeDataMatch,
-                autoContactsBoolean,
-                infoDataMatch
-              )
-                .catch((error) => {
-                  console.error("Ошибка при создании заказа:", error);
-                })
-                .finally(() => {
-                  // Вызываем функцию перехода на следующий шаг
-                  handleNextStep(nextPageProperty);
-                });
-            });
+                fetchCancelDeleteRequest({ token, role: "student" });
+                dispatch(resetDeleteRequest());
+                handleNextStep("../student/order");
+                break;
+              default:
+                console.warn("Неизвестный статус ученика");
+            }
+          }
         } else {
           setErrorInput(true);
         }
       }
     } catch (error) {
-      console.warn(error);
+      if (!isLoggedIn) {
+        setErrorInput(true); // Если ошибка 400 — неверные данные
+      } else {
+        console.warn("Ошибка получения токена:", error);
+      }
     }
   };
 
   // Обновляем inputValue когда меняется содержимое отдельных инпутов
+  // СТАРАЯ ВЕРСИЯ
+  // useEffect(() => {
+  //   const inputValue = codes.join("");
+  //   if (inputValue.length === 4) {
+  //     if (inputValue !== confirmCode) {
+  //       setErrorInput(true);
+  //       console.log("Invalid code");
+  //     } else {
+  //       setErrorInput(false);
+  //       handleGetToken(inputValue);
+  //     }
+  //   }
+  // }, [codes, confirmCode]);
+
+  // Обновляем inputValue когда меняется содержимое отдельных инпутов
+  // НОВАЯ ВЕРСИЯ ОТ 25.01.2025
   useEffect(() => {
     const inputValue = codes.join("");
     if (inputValue.length === 4) {
-      setIsSuccess(false);
       handleGetToken(inputValue);
-      console.log(region);
     }
   }, [codes]);
 
@@ -286,8 +278,13 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     inputRefs.current[activeIndex]?.focus();
   }, [activeIndex]);
 
+  // Вытаскиваем актуальный массив c данными формы из LocalStorage
+  const getDataUserLS = localStorage.getItem("current-user");
+  // Конвертируем массив c данными формы из JSON в JS объект
+  const dataUser: Order[] = getDataUserLS ? JSON.parse(getDataUserLS) : [];
+
   // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
-  const containsClassProperty = dataMatch.some((obj) =>
+  const containsClassProperty = dataUser.some((obj) =>
     obj.hasOwnProperty(typeForm)
   );
 
@@ -297,6 +294,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
       // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
+
       // Для красоты делаем переход через 0,4 секунды после клика
       setTimeout(() => route.push(link), 400);
     },
@@ -315,9 +313,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const [isDisabled, setIsDisabled] = useState(false);
 
   // Находим объект массива с введенным телефоном
-  const phoneDataMatch = dataMatch.find((obj) => obj.id === 20);
+  const phoneDataUser = dataUser.find((obj) => obj.id === 1);
   // Вытаскиваем значение данного объека из свойства phone
-  const phoneValue = phoneDataMatch ? phoneDataMatch.phone : "";
+  const phoneValue = phoneDataUser ? phoneDataUser.phone : "";
 
   useEffect(() => {
     setIsVisible(true);
@@ -325,13 +323,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
+    const currentDataUser = dataUser.find((obj) => obj.id === id);
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
+    const valueProperty = currentDataUser ? currentDataUser[typeForm] : "";
     setInputValue(valueProperty);
   }, [typeForm]);
-
-  const nextPageProperty = answerArray[0].nextPage;
 
   return (
     <>
@@ -353,7 +349,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           </div>
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>
-            {answerArray[0].title} +7{phoneValue}
+            {description} +7{phoneValue}
           </div>
 
           <div className={styles.inputCodeConfirmContainer}>
@@ -383,16 +379,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         <div className={styles.wrapButton}>
           <button
             type="button"
-            onClick={() => handleNextStep(nextPageProperty)}
+            onClick={() => handleNextStep(nextPage)}
             className={styles.continueButton}
             disabled={codes.join("").length < 4 || !isSuccess || loadingAuth}
           >
             Продолжить
-            {loadingAuth && (
-              <div className={styles.spinner}>
-                <Spinner />
-              </div>
-            )}
           </button>
         </div>
       </div>
