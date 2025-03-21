@@ -51,7 +51,7 @@ export const HeaderMenu = () => {
             Репетиторам
           </Link>
 
-          <Link href={"/sign-in-tutor"} prefetch>
+          <Link href={"/sign-in-student/phone"} prefetch>
             Ученикам
           </Link>
         </>

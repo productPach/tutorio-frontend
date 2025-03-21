@@ -23,10 +23,10 @@ export const getCurrentStudent = createAsyncThunk<Student, string>(
 
 export const createStudent = createAsyncThunk<
   Student,
-  { name: string; phone: string; region: string; token: string }
->("student/create", async ({ name, phone, region, token }) => {
+  { name: string; phone: string; avatarUrl: string; region: string; token: string }
+>("student/create", async ({ name, phone, avatarUrl, region, token }) => {
   try {
-    const response = await fetchCreateStudent(name, phone, region, token);
+    const response = await fetchCreateStudent(name, phone, avatarUrl, region, token);
     return response;
   } catch (error) {
     // Здесь можно вернуть undefined или обработать ошибку
@@ -64,16 +64,32 @@ export const updateStudent = createAsyncThunk<
   }
 });
 
+// Удаление запроса об удалении!! НЕДОДЕЛАНО!!!
+export const deleteStudentRequest = createAsyncThunk<
+  boolean, // Возвращаем true при успешном запросе
+  { tutorId: string; answer: string; token: string } // Входные параметры
+>("tutor/deleteRequest", async ({ tutorId, answer, token }, { rejectWithValue }) => {
+  try {
+    //await fetchDeleteRequest(tutorId, answer, token);
+    return true; // Успешный запрос
+  } catch (error) {
+    console.error("Ошибка удаления репетитора:", error);
+    return rejectWithValue(false); // Возвращаем false при ошибке
+  }
+});
+
 type StudentStateType = {
   student: null | Student;
   updateStatus: string;
   loading: boolean;
+  deleteRequest: boolean;
 };
 
 const initialState: StudentStateType = {
   student: null,
   updateStatus: "idle", // idle | loading | success | failed
   loading: false,
+  deleteRequest: false,
 };
 
 const studentSlice = createSlice({
@@ -82,6 +98,9 @@ const studentSlice = createSlice({
   reducers: {
     setStudent: (state, action: PayloadAction<Student>) => {
       state.student = action.payload;
+    },
+    resetDeleteRequest: (state) => {
+      state.deleteRequest = false; // Сбросить состояние
     },
   },
   extraReducers(builder) {
@@ -135,5 +154,5 @@ const studentSlice = createSlice({
   },
 });
 
-export const { setStudent } = studentSlice.actions;
+export const { setStudent, resetDeleteRequest } = studentSlice.actions;
 export const studentReducer = studentSlice.reducer;

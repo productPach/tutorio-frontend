@@ -255,8 +255,27 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
 
     if (!student) {
       if (tutor) {
+        const avatars = [
+          "/img/icon/student/avatar/animal1.svg",
+          "/img/icon/student/avatar/animal2.svg",
+          "/img/icon/student/avatar/animal3.svg",
+          "/img/icon/student/avatar/animal4.svg",
+          "/img/icon/student/avatar/animal5.svg",
+          "/img/icon/student/avatar/animal6.svg",
+          "/img/icon/student/avatar/animal7.svg",
+        ];
+
+        // Выбор случайной аватарки
+        const randomAvatar =
+          avatars[Math.floor(Math.random() * avatars.length)];
         dispatch(
-          createStudent({ name: tutor.name, phone: tutor.phone, region, token })
+          createStudent({
+            name: tutor.name,
+            phone: tutor.phone,
+            avatarUrl: randomAvatar,
+            region,
+            token,
+          })
         );
         //createOrder();
       } else {
