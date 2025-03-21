@@ -1,4 +1,4 @@
-import { fetchGetAllOrders, fetchGetOrderById } from "@/api/server/orderApi";
+import { fetchGetAllOrders, fetchGetOrderById, fetchOrdersByStudentId } from "@/api/server/orderApi";
 import { Order } from "@/types/types";
 import { getFiltersOrdersForTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -21,6 +21,24 @@ export const getAllOrders = createAsyncThunk<
     }
   }
 );
+
+export const getOrdersByStudentId = createAsyncThunk<
+  Order[], // Тип возвращаемых данных - массив заказов
+  { token: string; studentId: string }, // Тип ожидаемого аргумента
+  { rejectValue: string } // Тип для ошибки
+>(
+  'order/getOrdersByStudentId',
+  async ({ token, studentId }, { rejectWithValue }) => {
+    try {
+      const orders = await fetchOrdersByStudentId(token, studentId);
+      return orders;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Ошибка при получении заказов студента';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 
 export const getOrderById = createAsyncThunk<
   Order, // Тип возвращаемых данных
@@ -106,6 +124,18 @@ const ordersSlice = createSlice({
       .addCase(getOrderById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(getOrdersByStudentId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrdersByStudentId.fulfilled, (state, action) => {
+        state.orders = action.payload;
+        state.loading = false;
+      })
+      .addCase(getOrdersByStudentId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Произошла ошибка при загрузке заказов";
       });
   },
 });

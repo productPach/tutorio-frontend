@@ -1,7 +1,6 @@
 "use client";
 import styles from "../layout.module.css";
 import clsx from "clsx";
-import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import { Settings } from "@/components/Tutor/Settings/Settings";
 import { setLogout } from "@/store/features/authSlice";
 import { setTutorLogout } from "@/store/features/tutorSlice";
@@ -14,6 +13,7 @@ import { SkypeModal } from "@/components/Tutor/Modal/Settings/SkypeModal";
 import { EmailModal } from "@/components/Tutor/Modal/Settings/EmailModal";
 import { PhoneModal } from "@/components/Tutor/Modal/Settings/PhoneModal";
 import { DeleteModal } from "@/components/Tutor/Modal/Settings/DeleteModal";
+import LeftBar from "@/components/Student/LeftBar/LeftBar";
 
 const SettingsPage: React.FC = () => {
   const page = "Settings";

@@ -88,6 +88,30 @@ export const fetchGetAllOrders = async (token: string) => {
   }
 }
 
+// Получение заказов студента по studentId
+export const fetchOrdersByStudentId = async (token: string, studentId: string) => {
+  try {
+    const response = await fetch(`${baseUrl}orders/student/${studentId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data; // Возвращаем массив заказов
+  } catch (error) {
+    console.error("Ошибка при получении заказов студента:", error);
+    throw error;
+  }
+};
+
+
 // Получение заказа по ID
 
 export const fetchGetOrderById = async (token: string, id: string) => {

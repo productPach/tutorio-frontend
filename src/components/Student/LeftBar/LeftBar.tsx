@@ -67,7 +67,7 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
         ))}
       <div className={styles.left_menu}>
         <ul>
-          <Link href={"/tutor/orders"} prefetch={true}>
+          <Link href={"/student/orders"} prefetch={true}>
             <li>
               <Image
                 src="/../img/icon/tutor/orders.svg"
