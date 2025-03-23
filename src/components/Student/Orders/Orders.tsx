@@ -14,10 +14,7 @@ import { getYearWord } from "@/utils/words/getYearWord";
 import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
-import { Spinner } from "@/components/Spinner/Spinner";
 import Image from "next/image";
-import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
-import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +35,7 @@ const Orders = () => {
 
   useEffect(() => {
     setActiveOrders(
-      orders.sort(
+      [...orders].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
@@ -427,9 +424,9 @@ const Orders = () => {
                         alt=""
                       />
                     </div>
-                    {/* <div className={styles.studentBlockOrderWithResponseCount}>
-                      3 отклика
-                    </div> */}
+                    <div className={styles.studentBlockOrderWithResponseCount}>
+                      3 репетитора откликнулись
+                    </div>
                   </div>
                 </Link>
               </div>
