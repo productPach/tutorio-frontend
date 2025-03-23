@@ -19,7 +19,7 @@ export const fetchCreateStudent = async (
       phone: phone,
       avatarUrl: avatarUrl,
       region: region,
-      status: "Pending",
+      status: "Active",
     }),
   });
 

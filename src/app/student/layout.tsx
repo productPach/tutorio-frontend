@@ -75,6 +75,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
                   <>
                     <span>{student.name}</span>
                     <Image
+                      className={styles.header__menu_avatar}
                       src={
                         student?.avatarUrl
                           ? `${student?.avatarUrl}`

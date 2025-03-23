@@ -3,15 +3,26 @@ import { useRouter } from "next/navigation";
 import styles from "./HeaderMenu.module.css";
 import { useAppSelector } from "@/store/store";
 import Image from "next/image";
-import { Tutor } from "@/types/types";
+import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
 
 export const HeaderMenu = () => {
   const route = useRouter();
 
   // Получаем студента из Redux
+  const student: Student | null = useAppSelector(
+    (state) => state.student.student
+  );
   const tutor: Tutor | null = useAppSelector((state) => state.tutor.tutor);
   let nextPage = "";
+  let name = "";
+  if (tutor) {
+    tutor.name ? (name = tutor.name) : "Личный кабинет";
+  }
+  if (student) {
+    name = "Личный кабинет";
+  }
+
   if (tutor?.status === "Rega: Fullname") {
     nextPage = "/sign-in-tutor/fio";
   }
@@ -27,13 +38,24 @@ export const HeaderMenu = () => {
   if (tutor?.status === "Rega: Photo") {
     nextPage = "/sign-in-tutor/photo";
   }
-  if (tutor?.status === "Pending" || tutor?.status === "Active") {
+  if (
+    tutor?.status === "Pending" ||
+    tutor?.status === "Active" ||
+    tutor?.status === "Canceled delete"
+  ) {
     nextPage = "tutor/orders";
+  }
+  if (
+    student?.status === "Pending" ||
+    student?.status === "Active" ||
+    student?.status === "Canceled delete"
+  ) {
+    nextPage = "student/orders";
   }
 
   return (
     <div className={styles.header__menu}>
-      {tutor ? (
+      {tutor || student ? (
         <>
           <Link href={nextPage} prefetch>
             <Image
@@ -42,7 +64,7 @@ export const HeaderMenu = () => {
               height={17}
               alt="Профиль"
             />
-            {tutor.name ? tutor.name : "Личный кабинет"}
+            {name}
           </Link>
         </>
       ) : (

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import Orders from "@/components/Student/Orders/Orders";
 
-const StudentOrder: React.FC = () => {
+const StudentArchiveOrder: React.FC = () => {
   const page = "Orders";
 
   useEffect(() => {
@@ -44,4 +44,4 @@ const StudentOrder: React.FC = () => {
   );
 };
 
-export default StudentOrder;
+export default StudentArchiveOrder;

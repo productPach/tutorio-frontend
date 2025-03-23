@@ -7,20 +7,17 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
-import {
-  getAllOrders,
-  getOrdersByStudentId,
-} from "@/store/features/orderSlice";
+import { getOrdersByStudentId } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
-import {
-  setIsModalBalanceBoost,
-  setValueModalBalanceBoost,
-} from "@/store/features/modalSlice";
+import { Spinner } from "@/components/Spinner/Spinner";
+import Image from "next/image";
+import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
+import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,6 +58,10 @@ const Orders = () => {
 
   return (
     <>
+      {/* <div className={styles.studentFilterOrders}>
+        <div className={styles.content_block1}>Активные заказы</div>
+        <div className={styles.content_block1}>Завершённые</div>
+      </div> */}
       {activeOrders.length > 0
         ? activeOrders.map((order) => {
             const subject = data.find((item) => item.id_p === order.subject);
@@ -196,16 +197,17 @@ const Orders = () => {
                 <Link href={`${order.id}`}>
                   <div className={styles.order_block_flx_rw_spbtw}>
                     <h3>{subject?.title}</h3>
-                    <span className={styles.order_block_flx_rw_spbtw_price}>
+                    {/* <span className={styles.order_block_flx_rw_spbtw_price}>
                       {price}
-                    </span>
+                    </span> */}
                   </div>
 
                   <p className={styles.content_block_p}>
                     {goal} {deadline} {studentType} {studentYears}{" "}
                     {studentClass}
                     {studentCourse} {studentUniversity} {studentExam}{" "}
-                    {studyProgramm} {studyMethod}
+                    {studyProgramm} {studyMethod} {price}{" "}
+                    {" // " + formatTimeAgo(order.createdAt)}
                   </p>
                   <p className={styles.content_block_p}>{studentWishes}</p>
 
@@ -276,13 +278,6 @@ const Orders = () => {
                                   ]
                                 )}
                               ></div>
-                              {/* <div
-                            className={clsx(
-                              styles.order_block,
-                              locationsStyles.crcl_mtr,
-                              locationsStyles.crcl_mtr_msk_7
-                            )}
-                          ></div> */}
                             </div>
                           )}
                         </div>
@@ -355,13 +350,6 @@ const Orders = () => {
                                   ]
                                 )}
                               ></div>
-                              {/* <div
-                            className={clsx(
-                              styles.order_block,
-                              locationsStyles.crcl_mtr,
-                              locationsStyles.crcl_mtr_msk_7
-                            )}
-                          ></div> */}
                             </div>
                           )}
                         </div>
@@ -380,43 +368,68 @@ const Orders = () => {
                     </div>
                   )}
 
+                  {
+                    // Тут нужна проверка на существование откликов!!
+                  }
+
                   <div
                     className={clsx(
-                      styles.order_block_flx_rw_spbtw,
+                      styles.containerTextAndLoader,
                       generalStyles.mrgnTp10
                     )}
                   >
-                    <div className={styles.header__menu}>
-                      <button
-                        className={clsx(
-                          styles.content_block_button,
-                          styles.buttonYlw
-                        )}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          dispatch(setIsModalBalanceBoost(true));
-                          dispatch(
-                            setValueModalBalanceBoost(order.responseCost)
-                          );
-                        }}
-                        type="button"
-                      >
-                        {order.autoContactsOnResponse
-                          ? "Получить контакты"
-                          : "Откликнуться"}
-                      </button>
+                    {/* <div className={styles.spinner}>
+                      <SpinnerOrange />
+                    </div> */}
+                    {/* Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
+                    Скоро тут появятся отклики ...  */}
+                    {/* Ждем отклики репетиторов! ⏳
+                    <br></br>
+                    Как только появится первый отклик, вы сразу увидите его
+                    здесь. 📬  */}
+                    У вас есть новые отклики от репетиторов! 🎉
+                    <br></br>
+                    Откройте сообщения, чтобы выбрать подходящего репетитора и
+                    начать обучение! 🏆
+                  </div>
 
-                      {order.autoContactsOnResponse && (
-                        <div className={styles.blockAutoContakts}>
-                          <div className={styles.fireIcon}>🔥</div>
-                          <div>доступ к контактам после отклика</div>
-                        </div>
-                      )}
-                    </div>
-
-                    <span className={styles.order_block_flx_rw_subtext}>
+                  {/* <span className={styles.order_block_flx_rw_subtext}>
                       {formatTimeAgo(order.createdAt)}
-                    </span>
+                    </span> */}
+
+                  <div className={styles.studentBlockOrderWithResponse}>
+                    <div className={styles.studentBlockOrderWithResponseImg}>
+                      <Image
+                        className={styles.studentResponseImg}
+                        src={
+                          "/img/icon/student/mock/3xDJ0CD56zmSlPE-_7m_YHd8KwRUP97r1ZsSt1ByQ_zETsXxO5ym-WBT2fdI6uUJqqk7K50h1aCgl7u45y-B9iHz.jpg"
+                        }
+                        width={30}
+                        height={30}
+                        alt=""
+                      />
+                      <Image
+                        className={styles.studentResponseImg}
+                        src={
+                          "/img/icon/student/mock/kIMK-qrfBXArZ7zoyVBVm2gvVzVzoN_YaozHv2k8WRXy6-B43PNaKFmZjyKzFGw0F2CirPVQfqrzsPHaIj1PeQUh.jpg"
+                        }
+                        width={30}
+                        height={30}
+                        alt=""
+                      />
+                      <Image
+                        className={styles.studentResponseImg}
+                        src={
+                          "/img/icon/student/mock/JWX2_bGGYXXAYM5md0DGbcQR8zOzhgXPylylMF0K8IoZGvzHWQHVbeXaiB1S6td18pr-n_FK.jpg"
+                        }
+                        width={30}
+                        height={30}
+                        alt=""
+                      />
+                    </div>
+                    {/* <div className={styles.studentBlockOrderWithResponseCount}>
+                      3 отклика
+                    </div> */}
                   </div>
                 </Link>
               </div>

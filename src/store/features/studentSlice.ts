@@ -4,7 +4,7 @@ import {
   fetchUpdateStudent,
 } from "@/api/server/studentApi";
 import { Student } from "@/types/types";
-import { setLocalStorage } from "@/utils/localStorage/localStorage";
+import { getStudentFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const getCurrentStudent = createAsyncThunk<Student, string>(
@@ -85,8 +85,11 @@ type StudentStateType = {
   deleteRequest: boolean;
 };
 
+// Получаем данные репетитора из localStorage, если они есть
+const initialStudent = getStudentFromLocalStorage();
+
 const initialState: StudentStateType = {
-  student: null,
+  student: initialStudent,
   updateStatus: "idle", // idle | loading | success | failed
   loading: false,
   deleteRequest: false,

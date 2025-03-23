@@ -15,7 +15,7 @@ import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import { OrderComponent } from "@/components/Student/Order/Order";
 
 const OrderPage: React.FC = () => {
-  const page = "Order";
+  const page = "Main";
   const { order } = useParams();
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
