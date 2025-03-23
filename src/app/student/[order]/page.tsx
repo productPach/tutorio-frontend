@@ -13,6 +13,8 @@ import { fetchStudentById } from "@/api/server/studentApi";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import { OrderComponent } from "@/components/Student/Order/Order";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
+import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
+import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -56,18 +58,31 @@ const OrderPage: React.FC = () => {
     fetchStudent();
   }, [orderById, token]);
 
+  const [component, setComponent] = useState(1);
+
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
+        <LeftBarOrder component={component} setComponent={setComponent} />
         <div className={styles.content}>
-          <OrderComponent
-            loading={loading}
-            student={student}
-            orderById={orderById}
-            error={error}
-            locations={locations}
-          />
+          {component === 1 && (
+            <OrderComponent
+              loading={loading}
+              student={student}
+              orderById={orderById}
+              error={error}
+              locations={locations}
+            />
+          )}
+          {component === 2 && (
+            <TutorsComponent
+              loading={loading}
+              student={student}
+              orderById={orderById}
+              error={error}
+              locations={locations}
+            />
+          )}
         </div>
         <ResponseSidbar />
       </section>

@@ -1,6 +1,8 @@
 "use client";
 import generalStyles from "../../../app/tutor/layout.module.css";
 import styles from "./ResponseSidbar.module.css";
+
+import stylesStudent from "../Student.module.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
@@ -13,9 +15,11 @@ import Image from "next/image";
 import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
 import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
+import { updateOrder } from "@/store/features/orderSlice";
 
 export const ResponseSidbar = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const token = useAppSelector((state) => state.auth.token);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
@@ -34,6 +38,35 @@ export const ResponseSidbar = () => {
     (state: RootState) => state.orders
   );
 
+  // Состояние для свитча
+  const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
+
+  useEffect(() => {
+    setIsChecked(orderById?.status === "Active");
+  }, [orderById]);
+
+  const toggleSwitch = () => {
+    setIsChecked((prev) => {
+      const newState = !prev;
+      update(newState); // Передаем новое значение
+      return newState;
+    });
+  };
+
+  const update = (newState: boolean) => {
+    if (orderById && token) {
+      const id = orderById.id;
+      let status = newState ? "Active" : "Hidden";
+      dispatch(
+        updateOrder({
+          id,
+          token,
+          status,
+        })
+      ).unwrap();
+    }
+  };
+
   return (
     <>
       {!loading && (
@@ -46,7 +79,7 @@ export const ResponseSidbar = () => {
           {(orderById?.status === "Pending" ||
             orderById?.status === "Sending") && (
             <div className={generalStyles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderPending}>
+              <div className={generalStyles.studentSidebarOrderNoResponse}>
                 {/* <Image
                   className={styles.studentResponseImg}
                   src={"/img/icon/student/icons8-alarm.gif"}
@@ -71,7 +104,7 @@ export const ResponseSidbar = () => {
 
           {orderById?.status === "Active" && (
             <div className={generalStyles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderPending}>
+              <div className={generalStyles.studentSidebarOrderNoResponse}>
                 <Player
                   autoplay
                   loop
@@ -83,6 +116,40 @@ export const ResponseSidbar = () => {
                   <br></br>
                   Как только появится первый отклик, вы сразу увидите его
                   здесь&nbsp;📬
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ДОБАВИТЬ ПРОВЕРКУ НА КОЛИЧЕСТВО ОТКЛИКОВ!! ПОКАЗЫВАТЬ, ЕСЛИ ОТКЛИКОВ НЕТ */}
+          {orderById?.status === "Hidden" && (
+            <div className={generalStyles.sidebar_filter}>
+              <div className={generalStyles.studentSidebarOrderNoResponse}>
+                <div>
+                  Отклики на заказ отключены!&nbsp;🚫<br></br>
+                  <br></br>К сожалению, на данный момент нет ни одного
+                  отклика&nbsp;😔
+                </div>
+              </div>
+            </div>
+          )}
+
+          {(orderById?.status === "Active" ||
+            orderById?.status === "Hidden") && (
+            <div className={generalStyles.sidebar_filter}>
+              <div className={stylesStudent.containerEntityShowEnd}>
+                <div className={stylesStudent.containerEntityTitleDescription}>
+                  <div>Получать новые отклики</div>
+                </div>
+                <div className={stylesStudent.inputContainer}>
+                  <label className={stylesStudent.iosSwitch}>
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={toggleSwitch}
+                    />
+                    <span className={stylesStudent.slider}></span>
+                  </label>
                 </div>
               </div>
             </div>

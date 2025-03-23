@@ -1,4 +1,4 @@
-import { fetchGetAllOrders, fetchGetOrderById, fetchOrdersByStudentId } from "@/api/server/orderApi";
+import { fetchGetAllOrders, fetchGetOrderById, fetchOrdersByStudentId, fetchUpdateOrder } from "@/api/server/orderApi";
 import { Order } from "@/types/types";
 import { getFiltersOrdersForTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -58,6 +58,52 @@ export const getOrderById = createAsyncThunk<
     }
   }
 );
+
+
+// Обновление заказа студентом
+export const updateOrder = createAsyncThunk<
+  Order, // Возвращаемый объект — обновленный заказ
+  {
+    id: string;
+    token: string;
+    studentType?: string;
+    studentYears?: string;
+    studentClass?: string;
+    studentCourse?: string;
+    studentUniversity?: string;
+    studentExam?: string;
+    studyMethod?: string;
+    studyProgramm?: string;
+    deadline?: string;
+    studentLevel?: string;
+    tutorGender?: string;
+    studentSchedule?: string[];
+    studentPlace?: string[];
+    studentAdress?: string;
+    studentHomeLoc?: string;
+    studentTrip?: string[];
+    tutorType?: string;
+    autoContactsOnResponse?: boolean;
+    studentWishes?: string;
+    responseCost?: number;
+    status?: string;
+  }
+>("order/update", async ({ id, token, ...optionalFields }) => {
+  try {
+    const dataToUpdate = {
+      id,
+      token,
+      ...optionalFields,
+    };
+
+    const response = await fetchUpdateOrder(dataToUpdate); // Предполагается, что fetchUpdateOrder делает запрос на сервер
+    return response; // API возвращает обновленный заказ
+  } catch (error) {
+    console.error("Ошибка обновления заказа:", error);
+    throw error;
+  }
+});
+
 
 type OrdersStateType =  {
     orders: [] | Order[];
@@ -136,7 +182,16 @@ const ordersSlice = createSlice({
       .addCase(getOrdersByStudentId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Произошла ошибка при загрузке заказов";
-      });
+      })
+      .addCase(
+        updateOrder.fulfilled,
+              (state, action: PayloadAction<Order>) => {
+                if (state.orderById) {
+                  state.orderById = action.payload;
+                }
+              }
+            )
+            ;
   },
 });
 

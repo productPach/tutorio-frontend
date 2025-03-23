@@ -169,7 +169,7 @@ export type GoalForSubject = {
 
 // Определяем тип для объекта заказа в массиве
 export type Order = {
-  id: number;
+  id: string;
   createdAt: Date;
   studentId: string;
   subject?: string;

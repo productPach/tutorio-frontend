@@ -15,6 +15,7 @@ import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import Image from "next/image";
+import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -369,32 +370,71 @@ const Orders = () => {
                     // Тут нужна проверка на существование откликов!!
                   }
 
-                  <div
+                  {order.status === "Pending" ||
+                    (order.status === "Sending" && (
+                      <>
+                        <div
+                          className={clsx(
+                            styles.containerTextAndLoader,
+                            generalStyles.mrgnTp10
+                          )}
+                        >
+                          <div className={styles.spinner}>
+                            <SpinnerOrange />
+                          </div>
+                          Рассылаем ваш заказ подходящим репетиторам! 🎯{" "}
+                          <br></br>
+                          Скоро тут появятся отклики ...
+                        </div>
+                      </>
+                    ))}
+                  {order.status === "Active" && (
+                    <>
+                      <div
+                        className={clsx(
+                          styles.containerTextAndLoader,
+                          generalStyles.mrgnTp10
+                        )}
+                      >
+                        Ждем отклики репетиторов! ⏳<br></br>
+                        Как только появится первый отклик, вы сразу увидите его
+                        здесь 📬
+                      </div>
+                    </>
+                  )}
+
+                  {order.status === "Hidden" && (
+                    <>
+                      <div
+                        className={clsx(
+                          styles.containerTextAndLoader,
+                          generalStyles.mrgnTp10
+                        )}
+                      >
+                        Отклики на заказ отключены!&nbsp;🚫
+                      </div>
+                    </>
+                  )}
+
+                  {/* 
+                    <div
                     className={clsx(
                       styles.containerTextAndLoader,
                       generalStyles.mrgnTp10
                     )}
                   >
-                    {/* <div className={styles.spinner}>
-                      <SpinnerOrange />
-                    </div> */}
-                    {/* Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
-                    Скоро тут появятся отклики ...  */}
-                    {/* Ждем отклики репетиторов! ⏳
-                    <br></br>
-                    Как только появится первый отклик, вы сразу увидите его
-                    здесь. 📬  */}
                     У вас есть новые отклики от репетиторов! 🎉
                     <br></br>
                     Откройте сообщения, чтобы выбрать подходящего репетитора и
-                    начать обучение! 🏆
-                  </div>
+                    начать обучение! 🏆 
+                    </div>
+                    */}
 
                   {/* <span className={styles.order_block_flx_rw_subtext}>
                       {formatTimeAgo(order.createdAt)}
                     </span> */}
 
-                  <div className={styles.studentBlockOrderWithResponse}>
+                  {/* <div className={styles.studentBlockOrderWithResponse}>
                     <div className={styles.studentBlockOrderWithResponseImg}>
                       <Image
                         className={styles.studentResponseImg}
@@ -427,7 +467,7 @@ const Orders = () => {
                     <div className={styles.studentBlockOrderWithResponseCount}>
                       3 репетитора откликнулись
                     </div>
-                  </div>
+                  </div> */}
                 </Link>
               </div>
             );
