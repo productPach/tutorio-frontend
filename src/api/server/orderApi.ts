@@ -1,3 +1,4 @@
+import { Order } from "@/types/types";
 import { baseUrl } from "./configApi";
 
 // Создание заказа
@@ -113,7 +114,6 @@ export const fetchOrdersByStudentId = async (token: string, studentId: string) =
 
 
 // Получение заказа по ID
-
 export const fetchGetOrderById = async (token: string, id: string) => {
   try {
     const response = await fetch(`${baseUrl}orders/${id}`, {
@@ -136,5 +136,53 @@ export const fetchGetOrderById = async (token: string, id: string) => {
   } catch (error) {
     console.error("Ошибка при получении заказа:", error);
     throw error; // Чтобы обработать ошибку в вызывающем коде, если необходимо
+  }
+}
+
+// Функция для обновления заказа студента
+export async function fetchUpdateOrder(dataToUpdate: {
+  id: string;
+  token: string;
+  studentType?: string;
+  studentYears?: string;
+  studentClass?: string;
+  studentCourse?: string;
+  studentUniversity?: string;
+  studentExam?: string;
+  studyMethod?: string;
+  studyProgramm?: string;
+  deadline?: string;
+  studentLevel?: string;
+  tutorGender?: string;
+  studentSchedule?: string[];
+  studentPlace?: string[];
+  studentAdress?: string;
+  studentHomeLoc?: string;
+  studentTrip?: string[];
+  tutorType?: string;
+  autoContactsOnResponse?: boolean;
+  studentWishes?: string;
+  responseCost?: number;
+  status?: string;
+}): Promise<Order> {
+  try {
+    const response = await fetch(`${baseUrl}/orders/${dataToUpdate.id}`, {
+      method: "PATCH", // Метод PUT для обновления данных
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${dataToUpdate.token}`, // Добавление токена для аутентификации
+      },
+      body: JSON.stringify(dataToUpdate), // Отправляем обновляемые данные в теле запроса
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка обновления заказа: ${response.statusText}`);
+    }
+
+    const updatedOrder: Order = await response.json(); // Предполагаем, что API возвращает обновленный заказ
+    return updatedOrder;
+  } catch (error) {
+    console.error("Ошибка при отправке запроса на обновление заказа:", error);
+    throw error;
   }
 }
