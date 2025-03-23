@@ -39,6 +39,33 @@
   animation: spin 1s linear infinite;
 }
 
+.loaderOrange2::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.05); /* Тусклая окружность */
+}
+
+.loaderOrange2::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #f9db4a; /* Желтый с мягким тоном */
+  border-left-color: #f9db4a;
+  animation: spin 1s linear infinite;
+}
+
 .loaderContainer {
   display: flex;
   flex-direction: row;

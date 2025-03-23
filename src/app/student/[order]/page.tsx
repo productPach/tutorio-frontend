@@ -2,7 +2,6 @@
 import styles from "../layout.module.css";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
-import { ResponseSidbar } from "@/components/Tutor/SideBar/ResponseSidbar";
 import { Modal } from "@/components/Modal/Modal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
@@ -13,9 +12,10 @@ import { getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import { OrderComponent } from "@/components/Student/Order/Order";
+import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 
 const OrderPage: React.FC = () => {
-  const page = "Order";
+  const page = "Main";
   const { order } = useParams();
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost

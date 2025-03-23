@@ -65,6 +65,9 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
             </ul>
           </div>
         ))}
+      <button className={clsx(styles.content_block_button, styles.buttonBlc)}>
+        Новый заказ
+      </button>
       <div className={styles.left_menu}>
         <ul>
           <Link href={"/student/orders"} prefetch={true}>
