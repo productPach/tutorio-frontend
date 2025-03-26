@@ -87,3 +87,18 @@ export const fetchUpdateStudent = async (data: {
   const responseData = await response.json();
   return responseData;
 };
+
+export const fetchDeleteRequest = async (studentId: string, answer: string, token: string): Promise<void> => {
+  const res = await fetch(`${baseUrl}students/delete-request/${studentId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ answer }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Ошибка при создании запроса на удаление ученика");
+  }
+};
