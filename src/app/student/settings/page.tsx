@@ -1,26 +1,26 @@
 "use client";
 import styles from "../layout.module.css";
 import clsx from "clsx";
-import { Settings } from "@/components/Tutor/Settings/Settings";
 import { setLogout } from "@/store/features/authSlice";
-import { setTutorLogout } from "@/store/features/tutorSlice";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { Modal } from "@/components/Modal/Modal";
-import { ExitModal } from "@/components/Tutor/Modal/Settings/ExitModal";
-import { TelegramModal } from "@/components/Tutor/Modal/Settings/TelegramModal";
-import { SkypeModal } from "@/components/Tutor/Modal/Settings/SkypeModal";
 import { EmailModal } from "@/components/Tutor/Modal/Settings/EmailModal";
-import { PhoneModal } from "@/components/Tutor/Modal/Settings/PhoneModal";
-import { DeleteModal } from "@/components/Tutor/Modal/Settings/DeleteModal";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
+import { setStudentLogout } from "@/store/features/studentSlice";
+import { Settings } from "@/components/Student/Settings/Settings";
+import { TelegramModal } from "@/components/Student/Modal/Settings/TelegramModal";
+import { SkypeModal } from "@/components/Student/Modal/Settings/SkypeModal";
+import { ExitModal } from "@/components/Student/Modal/Settings/ExitModal";
+import { PhoneModal } from "@/components/Student/Modal/Settings/PhoneModal";
+import { DeleteModal } from "@/components/Student/Modal/Settings/DeleteModal";
 
 const SettingsPage: React.FC = () => {
   const page = "Settings";
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const student = useAppSelector((state) => state.student.student);
 
   const isModalExit = useAppSelector((state) => state.modal.isModalExit);
   const isModalTelegram = useAppSelector(
@@ -34,7 +34,7 @@ const SettingsPage: React.FC = () => {
   // Функция выхода
   const logout = () => {
     dispatch(setLogout());
-    dispatch(setTutorLogout());
+    dispatch(setStudentLogout());
     router.push("/");
   };
 
@@ -43,7 +43,7 @@ const SettingsPage: React.FC = () => {
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
         <div className={styles.content}>
-          <Settings tutor={tutor} logout={logout} />
+          <Settings student={student} logout={logout} />
         </div>
       </section>
       <Modal

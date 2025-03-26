@@ -1,6 +1,7 @@
 import {
   fetchCreateStudent,
   fetchCurrentStudent,
+  fetchDeleteRequest,
   fetchUpdateStudent,
 } from "@/api/server/studentApi";
 import { Student } from "@/types/types";
@@ -45,7 +46,17 @@ export const updateStudent = createAsyncThunk<
     name?: string;
     phone?: string;
     email?: string;
+    isVerifedEmail?: boolean;
+    telegram?: string;
+    skype?: string;
     region?: string;
+    isNotifications?: boolean;
+    isNotificationsResponse?: boolean;
+    isNotificationsPromo?: boolean;
+    isNotificationsSms?: boolean;
+    isNotificationsEmail?: boolean;
+    isNotificationsTelegram?: boolean;
+    isNotificationsVk?: boolean;
   }
 >("student/update", async ({ id, token, status, ...optionalFields }) => {
   try {
@@ -67,10 +78,10 @@ export const updateStudent = createAsyncThunk<
 // Удаление запроса об удалении!! НЕДОДЕЛАНО!!!
 export const deleteStudentRequest = createAsyncThunk<
   boolean, // Возвращаем true при успешном запросе
-  { tutorId: string; answer: string; token: string } // Входные параметры
->("tutor/deleteRequest", async ({ tutorId, answer, token }, { rejectWithValue }) => {
+  { studentId: string; answer: string; token: string } // Входные параметры
+>("tutor/deleteRequest", async ({ studentId, answer, token }, { rejectWithValue }) => {
   try {
-    //await fetchDeleteRequest(tutorId, answer, token);
+    await fetchDeleteRequest(studentId, answer, token);
     return true; // Успешный запрос
   } catch (error) {
     console.error("Ошибка удаления репетитора:", error);
@@ -101,6 +112,9 @@ const studentSlice = createSlice({
   reducers: {
     setStudent: (state, action: PayloadAction<Student>) => {
       state.student = action.payload;
+    },
+    setStudentLogout: (state) => {
+      state.student = null;
     },
     resetDeleteRequest: (state) => {
       state.deleteRequest = false; // Сбросить состояние
@@ -157,5 +171,5 @@ const studentSlice = createSlice({
   },
 });
 
-export const { setStudent, resetDeleteRequest } = studentSlice.actions;
+export const { setStudent, setStudentLogout, resetDeleteRequest } = studentSlice.actions;
 export const studentReducer = studentSlice.reducer;
