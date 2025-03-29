@@ -88,7 +88,11 @@ export const fetchUpdateStudent = async (data: {
   return responseData;
 };
 
-export const fetchDeleteRequest = async (studentId: string, answer: string, token: string): Promise<void> => {
+export const fetchDeleteRequest = async (
+  studentId: string,
+  answer: string,
+  token: string
+): Promise<void> => {
   const res = await fetch(`${baseUrl}students/delete-request/${studentId}`, {
     method: "POST",
     headers: {
@@ -101,4 +105,41 @@ export const fetchDeleteRequest = async (studentId: string, answer: string, toke
   if (!res.ok) {
     throw new Error("Ошибка при создании запроса на удаление ученика");
   }
+};
+
+export const sendVerificationEmail = async (
+  studentId: string,
+  token: string
+) => {
+  const response = await fetch(`${baseUrl}send-verification-email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Передаем токен в заголовке
+    },
+    body: JSON.stringify({ id: studentId, userType: "student" }), // Передаем ID в теле запроса
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      `Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`
+    );
+  }
+
+  return data;
+};
+
+// Функция для подтверждения email
+export const fetchVerifyEmail = async (token: string) => {
+  const response = await fetch(
+    `${baseUrl}students/verify-email?token=${token}`,
+    {
+      method: "GET",
+    }
+  );
+
+  const responseData = await response.json();
+  return responseData;
 };

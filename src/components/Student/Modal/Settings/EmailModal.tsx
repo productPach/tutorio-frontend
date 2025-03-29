@@ -2,23 +2,19 @@
 
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
-import styles from "../Profil/Fio/Fio.module.css";
+import styles from "../../../Tutor/Modal/Profil/Fio/Fio.module.css";
 import { ChangeEvent, useState } from "react";
-import { updateTutor } from "@/store/features/tutorSlice";
-import {
-  setIsModalEmail,
-  setIsModalTelegram,
-  setScrollY,
-} from "@/store/features/modalSlice";
-import { sendEmail, sendVerificationEmail } from "@/api/server/tutorApi";
+import { setIsModalEmail, setScrollY } from "@/store/features/modalSlice";
+import { updateStudent } from "@/store/features/studentSlice";
+import { sendVerificationEmail } from "@/api/server/studentApi";
 
 export const EmailModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
-  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const student = useAppSelector((state) => state.student.student);
   // Стейт для знаения инпута с суммой пополнения
-  const [inputValue, setInputValue] = useState(tutor?.email || "");
+  const [inputValue, setInputValue] = useState(student?.email || "");
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
 
@@ -43,9 +39,9 @@ export const EmailModal = () => {
   const handleBlur = () => setIsFocused(false);
 
   const update = () => {
-    const id = tutor?.id;
+    const id = student?.id;
     const email = inputValue;
-    const status = tutor?.status;
+    const status = student?.status;
     const isVerifedEmail = false;
 
     if (token && id && status) {
@@ -56,12 +52,10 @@ export const EmailModal = () => {
       //   html, // Передаём HTML-версию письма
       // });
 
-      dispatch(updateTutor({ id, token, status, email, isVerifedEmail }))
+      dispatch(updateStudent({ id, token, status, email, isVerifedEmail }))
         .unwrap()
         .then(() => sendVerificationEmail(id, token))
-        .catch((error) =>
-          console.error("Ошибка обновления репетитора:", error)
-        );
+        .catch((error) => console.error("Ошибка обновления ученика:", error));
 
       dispatch(setIsModalEmail(false));
       dispatch(setScrollY(0));
@@ -84,7 +78,7 @@ export const EmailModal = () => {
       <div className={styles.inputContainer}>
         <input
           type="text"
-          placeholder={"Например, loginTelegram"}
+          placeholder={"Например, name@mail.ru"}
           autoComplete="off"
           value={inputValue}
           onChange={handleInputValue}

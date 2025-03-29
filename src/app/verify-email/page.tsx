@@ -7,6 +7,14 @@ import { useAppDispatch } from "@/store/store";
 import { io } from "socket.io-client";
 import { host, port } from "@/api/server/configApi";
 import clsx from "clsx";
+import { jwtDecode } from "jwt-decode";
+import { verifyEmailStudent } from "@/store/features/studentSlice";
+
+interface DecodedToken {
+  userId: string;
+  email: string;
+  userType: "tutor" | "student"; // Здесь указываем возможные значения для userType
+}
 
 const socket = io(`${host}${port}`);
 
@@ -26,20 +34,34 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    dispatch(verifyEmail({ token }))
-      .unwrap()
-      .then(() => {
-        setIsVerified(true);
-        if (token) {
-          socket.emit("verifyEmail", token); // 🔹 Передаем токен
-        }
-      })
-      .catch(() => {
-        setError(true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    try {
+      const decodedToken = jwtDecode<DecodedToken>(token); // Декодируем токен
+      const userType = decodedToken.userType; // Получаем userType из payload токена
+
+      console.log(userType);
+
+      // Вызываем нужный метод в зависимости от userType
+      const action = userType === "tutor" ? verifyEmail : verifyEmailStudent;
+
+      dispatch(action({ token }))
+        .unwrap()
+        .then(() => {
+          setIsVerified(true);
+          if (token) {
+            socket.emit("verifyEmail", token); // 🔹 Передаем токен через сокет
+          }
+        })
+        .catch(() => {
+          setError(true);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } catch (error) {
+      console.error("Ошибка декодирования токена:", error);
+      setError(true);
+      setIsLoading(false);
+    }
 
     return () => {
       socket.off("emailVerified");
