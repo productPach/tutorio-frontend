@@ -24,6 +24,9 @@
 .jtfCntSpBtwn {
   justify-content: space-between;
 }
+.gap10 {
+  gap: 10px;
+}
 .gap20 {
   gap: 20px;
 }
@@ -80,11 +83,22 @@
   color: #206420;
   background: linear-gradient(
     90deg,
-    rgba(102, 187, 106, 0.7),
-    rgba(139, 195, 74, 0.5)
+    rgba(102, 187, 106, 0.5),
+    rgba(139, 195, 74, 0.4)
   );
 }
 .listEducation {
   list-style-type: circle;
   margin-left: 20px;
+}
+.profileInfoText {
+  white-space: pre-line;
+}
+.imageDiplomas {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #eee;
+  cursor: pointer;
 }

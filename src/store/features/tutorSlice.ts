@@ -1,6 +1,7 @@
 import { baseUrl } from "@/api/server/configApi";
 import {
   fetchAddSubjectPrice,
+  fetchAllTutors,
   fetchCreateTutor,
   fetchCreateTutorEducation,
   fetchCurrentTutor,
@@ -43,6 +44,20 @@ export const getCurrentTutor = createAsyncThunk<Tutor, string>(
       // Здесь можно вернуть undefined или обработать ошибку
       console.error(error);
       throw error;
+    }
+  }
+);
+
+// Получение всех репетиторов
+export const getAllTutors = createAsyncThunk<Tutor[], string>(
+  "tutor/all",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await fetchAllTutors(token);
+      return response;
+    } catch (error) {
+      console.error("Ошибка при получении всех репетиторов:", error);
+      return rejectWithValue("Не удалось загрузить список репетиторов");
     }
   }
 );
@@ -378,6 +393,7 @@ export const deleteTutorRequest = createAsyncThunk<
 
 type TutorStateType = {
   tutor: null | Tutor;
+  tutors: Tutor[];
   loading: boolean;
   updateStatus: string;
   selectedValuesCity: (District | Metro)[];
@@ -393,6 +409,7 @@ const initialTutor = getTutorFromLocalStorage();
 
 const initialState: TutorStateType = {
   tutor: initialTutor,
+  tutors: [] as Tutor[],
   loading: false,
   updateStatus: "idle", // idle | loading | success | failed
   selectedValuesCity: [],
@@ -457,6 +474,16 @@ const tutorSlice = createSlice({
       .addCase(getCurrentTutor.rejected, (state) => {
         state.loading = false;
         state.updateStatus = "failed";
+      })
+      .addCase(getAllTutors.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllTutors.fulfilled, (state, action: PayloadAction<Tutor[]>) => {
+        state.loading = false;
+        state.tutors = action.payload; // Сохраняем полученных репетиторов
+      })
+      .addCase(getAllTutors.rejected, (state, action) => {
+        state.loading = false;
       })
       .addCase(createTutor.fulfilled, (state, action: PayloadAction<Tutor>) => {
         state.tutor = action.payload;

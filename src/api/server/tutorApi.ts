@@ -383,3 +383,21 @@ export const fetchVerifyEmail = async (token: string) => {
   const responseData = await response.json();
   return responseData;
 };
+
+// Получение всех репетиторов
+export const fetchAllTutors = async (token: string) => {
+  const response = await fetch(`${baseUrl}tutors`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Не удалось получить список репетиторов");
+  }
+
+  const data = await response.json();
+  return data;
+};
