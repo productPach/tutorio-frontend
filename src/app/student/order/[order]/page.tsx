@@ -14,6 +14,7 @@ import { OrderComponent } from "@/components/Student/Order/Order";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
 import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
+import { getAllTutors } from "@/store/features/tutorSlice";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -33,12 +34,20 @@ const OrderPage: React.FC = () => {
   const { orderById, loading, error } = useSelector(
     (state: RootState) => state.orders
   );
+  // Получаем всех репетиторов (фильтровать будем на клиенте)
+  const tutorsForOrder = useAppSelector((state) => state.tutor.tutors);
+  // Получаем список регионов
+  const citiesAndRegions = useAppSelector((state) => state.locations.city);
 
   useEffect(() => {
     if (token && typeof order === "string") {
       dispatch(getOrderById({ token, id: order }));
     }
   }, [dispatch, token, order]);
+
+  useEffect(() => {
+    token && dispatch(getAllTutors(token));
+  }, [dispatch, token]);
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -75,6 +84,8 @@ const OrderPage: React.FC = () => {
           )}
           {component === 2 && (
             <TutorsComponent
+              tutorsForOrder={tutorsForOrder}
+              citiesAndRegions={citiesAndRegions}
               loading={loading}
               student={student}
               orderById={orderById}
