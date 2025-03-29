@@ -5,7 +5,6 @@ import { setLogout } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { Modal } from "@/components/Modal/Modal";
-import { EmailModal } from "@/components/Tutor/Modal/Settings/EmailModal";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import { setStudentLogout } from "@/store/features/studentSlice";
 import { Settings } from "@/components/Student/Settings/Settings";
@@ -14,6 +13,7 @@ import { SkypeModal } from "@/components/Student/Modal/Settings/SkypeModal";
 import { ExitModal } from "@/components/Student/Modal/Settings/ExitModal";
 import { PhoneModal } from "@/components/Student/Modal/Settings/PhoneModal";
 import { DeleteModal } from "@/components/Student/Modal/Settings/DeleteModal";
+import { EmailModal } from "@/components/Student/Modal/Settings/EmailModal";
 
 const SettingsPage: React.FC = () => {
   const page = "Settings";

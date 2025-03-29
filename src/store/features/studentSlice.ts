@@ -3,9 +3,13 @@ import {
   fetchCurrentStudent,
   fetchDeleteRequest,
   fetchUpdateStudent,
+  fetchVerifyEmail,
 } from "@/api/server/studentApi";
 import { Student } from "@/types/types";
-import { getStudentFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
+import {
+  getStudentFromLocalStorage,
+  setLocalStorage,
+} from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const getCurrentStudent = createAsyncThunk<Student, string>(
@@ -24,10 +28,22 @@ export const getCurrentStudent = createAsyncThunk<Student, string>(
 
 export const createStudent = createAsyncThunk<
   Student,
-  { name: string; phone: string; avatarUrl: string; region: string; token: string }
+  {
+    name: string;
+    phone: string;
+    avatarUrl: string;
+    region: string;
+    token: string;
+  }
 >("student/create", async ({ name, phone, avatarUrl, region, token }) => {
   try {
-    const response = await fetchCreateStudent(name, phone, avatarUrl, region, token);
+    const response = await fetchCreateStudent(
+      name,
+      phone,
+      avatarUrl,
+      region,
+      token
+    );
     return response;
   } catch (error) {
     // Здесь можно вернуть undefined или обработать ошибку
@@ -79,13 +95,43 @@ export const updateStudent = createAsyncThunk<
 export const deleteStudentRequest = createAsyncThunk<
   boolean, // Возвращаем true при успешном запросе
   { studentId: string; answer: string; token: string } // Входные параметры
->("tutor/deleteRequest", async ({ studentId, answer, token }, { rejectWithValue }) => {
+>(
+  "student/deleteRequest",
+  async ({ studentId, answer, token }, { rejectWithValue }) => {
+    try {
+      await fetchDeleteRequest(studentId, answer, token);
+      return true; // Успешный запрос
+    } catch (error) {
+      console.error("Ошибка удаления ученика:", error);
+      return rejectWithValue(false); // Возвращаем false при ошибке
+    }
+  }
+);
+
+// Асинхронный экшен для верификации почты
+export const verifyEmailStudent = createAsyncThunk<
+  void, // Возвращаемое значение
+  { token: string }, // Параметры
+  { rejectValue: string } // Тип ошибки
+>("student/verifyEmail", async ({ token }, { rejectWithValue }) => {
   try {
-    await fetchDeleteRequest(studentId, answer, token);
-    return true; // Успешный запрос
-  } catch (error) {
-    console.error("Ошибка удаления репетитора:", error);
-    return rejectWithValue(false); // Возвращаем false при ошибке
+    const response = await fetchVerifyEmail(token); // Отправляем запрос на сервер
+
+    if (response.message === "Email подтверждён") {
+      // Возвращаем пустое значение, так как экшен типа void
+      return;
+    } else {
+      // Если ошибка, возвращаем ошибку через rejectWithValue
+      return rejectWithValue(response.error || "Что-то пошло не так");
+    }
+  } catch (error: unknown) {
+    console.error(error);
+    // Проверяем тип ошибки и возвращаем корректное сообщение
+    if (error instanceof Error) {
+      return rejectWithValue(error.message || "Ошибка верификации");
+    } else {
+      return rejectWithValue("Неизвестная ошибка");
+    }
   }
 });
 
@@ -149,27 +195,35 @@ const studentSlice = createSlice({
         }
       )
       .addCase(
-        updateStudent.fulfilled, 
+        updateStudent.fulfilled,
         (state, action: PayloadAction<Student>) => {
           state.student = action.payload;
           state.loading = false;
           state.updateStatus = "success";
           setLocalStorage("student", state.student);
-        })
-      .addCase(
-        updateStudent.pending, 
-        (state) => {
-          state.loading = true;
-          state.updateStatus = "loading";
-        })
-      .addCase(
-        updateStudent.rejected, 
-        (state) => {
-          state.loading = false;
-          state.updateStatus = "failed";
-        });
+        }
+      )
+      .addCase(updateStudent.pending, (state) => {
+        state.loading = true;
+        state.updateStatus = "loading";
+      })
+      .addCase(updateStudent.rejected, (state) => {
+        state.loading = false;
+        state.updateStatus = "failed";
+      })
+      .addCase(verifyEmailStudent.fulfilled, (state) => {
+        if (state.student) {
+          state.student.isVerifedEmail = true; // Обновляем поле isVerifedEmail
+          setLocalStorage("student", state.student);
+        }
+      })
+      .addCase(verifyEmailStudent.rejected, (state, action) => {
+        state.updateStatus = "failed";
+        console.error(action.payload); // Логируем ошибку
+      });
   },
 });
 
-export const { setStudent, setStudentLogout, resetDeleteRequest } = studentSlice.actions;
+export const { setStudent, setStudentLogout, resetDeleteRequest } =
+  studentSlice.actions;
 export const studentReducer = studentSlice.reducer;

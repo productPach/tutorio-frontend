@@ -8,10 +8,10 @@ import profileInfoStyles from "../../../Tutor/Modal/Profil/ProfileInfo/ProfileIn
 import { setIsModalDelete, setScrollY } from "@/store/features/modalSlice";
 import { ChangeEvent, useState } from "react";
 import clsx from "clsx";
-import { resetDeleteRequest, updateTutor } from "@/store/features/tutorSlice";
 import { Spinner } from "@/components/Spinner/Spinner";
 import {
   deleteStudentRequest,
+  resetDeleteRequest,
   updateStudent,
 } from "@/store/features/studentSlice";
 
@@ -19,8 +19,8 @@ export const DeleteModal = ({ logout }: { logout: () => void }) => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const student = useAppSelector((state) => state.student.student); // Получаем tutor из Redux
-  const deleteRequest = useAppSelector((state) => state.tutor.deleteRequest);
-  const loading = useAppSelector((state) => state.tutor.loading);
+  const deleteRequest = useAppSelector((state) => state.student.deleteRequest);
+  const loading = useAppSelector((state) => state.student.loading);
 
   const handleDeleteRequest = () => {
     if (student && token) {

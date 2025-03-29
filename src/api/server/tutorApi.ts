@@ -86,7 +86,11 @@ export const fetchUpdateTutor = async (data: {
   return responseData;
 };
 
-export const fetchDeleteRequest = async (tutorId: string, answer: string, token: string): Promise<void> => {
+export const fetchDeleteRequest = async (
+  tutorId: string,
+  answer: string,
+  token: string
+): Promise<void> => {
   const res = await fetch(`${baseUrl}tutors/delete-request/${tutorId}`, {
     method: "POST",
     headers: {
@@ -102,7 +106,9 @@ export const fetchDeleteRequest = async (tutorId: string, answer: string, token:
 };
 
 // Добавление новой цены по предмету
-export const fetchAddSubjectPrice = async (data: TutorSubjectPriceInput & { tutorId: string; token: string }) => {
+export const fetchAddSubjectPrice = async (
+  data: TutorSubjectPriceInput & { tutorId: string; token: string }
+) => {
   const { token, ...fields } = data;
 
   const response = await fetch(`${baseUrl}tutorsSubjectPrice`, {
@@ -119,7 +125,12 @@ export const fetchAddSubjectPrice = async (data: TutorSubjectPriceInput & { tuto
 };
 
 // Обновление цены по предмету
-export const fetchUpdateSubjectPrice = async (data: { id: string; token: string; price?: number; duration?: LessonDuration }) => {
+export const fetchUpdateSubjectPrice = async (data: {
+  id: string;
+  token: string;
+  price?: number;
+  duration?: LessonDuration;
+}) => {
   const { id, token, ...fields } = data;
 
   const response = await fetch(`${baseUrl}tutorsSubjectPrice/${id}`, {
@@ -134,7 +145,6 @@ export const fetchUpdateSubjectPrice = async (data: { id: string; token: string;
   const responseData = await response.json();
   return responseData;
 };
-
 
 // Обновление аватара репетитора
 export const updateTutorAvatarApi = async (
@@ -205,7 +215,6 @@ export const fetchCreateTutorEducation = async (
   return data;
 };
 
-
 // Редактирование образования
 export const fetchUpdateTutorEducation = async (
   tutorId: string,
@@ -235,13 +244,16 @@ export const fetchUpdateTutorEducation = async (
     }
   });
 
-  const response = await fetch(`${baseUrl}tutorsEducation/${tutorId}/${educationId}`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
+  const response = await fetch(
+    `${baseUrl}tutorsEducation/${tutorId}/${educationId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Ошибка при обновлении образования");
@@ -250,8 +262,6 @@ export const fetchUpdateTutorEducation = async (
   const data = await response.json();
   return data; // Возвращаем обновленные данные
 };
-
-
 
 // Удаление образования
 // Функция для удаления места образования
@@ -284,7 +294,6 @@ export const fetchDeleteTutorEducation = async (
   }
 };
 
-
 // Функция для удаления фото образования
 export const fetchDeletePhotoTutorEducation = async (
   tutorId: string,
@@ -301,7 +310,7 @@ export const fetchDeletePhotoTutorEducation = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ fileName })  // Отправляем имя файла для удаления
+        body: JSON.stringify({ fileName }), // Отправляем имя файла для удаления
       }
     );
 
@@ -336,7 +345,9 @@ export const sendEmail = async (emailData: EmailData) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(`Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`);
+    throw new Error(
+      `Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`
+    );
   }
 
   return data;
@@ -349,13 +360,15 @@ export const sendVerificationEmail = async (tutorId: string, token: string) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`, // Передаем токен в заголовке
     },
-    body: JSON.stringify({ id: tutorId }), // Передаем ID в теле запроса
+    body: JSON.stringify({ id: tutorId, userType: "tutor" }), // Передаем ID в теле запроса
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(`Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`);
+    throw new Error(
+      `Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`
+    );
   }
 
   return data;
