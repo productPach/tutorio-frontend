@@ -207,12 +207,12 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 autoContactsBoolean,
                 infoDataMatch
               )
+                .then((data) => {
+                  // Вызываем функцию перехода на следующий шаг
+                  handleNextStep(nextPageProperty + data.id);
+                })
                 .catch((error) => {
                   console.error("Ошибка при создании заказа:", error);
-                })
-                .finally(() => {
-                  // Вызываем функцию перехода на следующий шаг
-                  handleNextStep(nextPageProperty);
                 });
             });
         } else {
@@ -230,7 +230,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     if (inputValue.length === 4) {
       setIsSuccess(false);
       handleGetToken(inputValue);
-      console.log(region);
     }
   }, [codes]);
 

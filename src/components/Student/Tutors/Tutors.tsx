@@ -1,11 +1,14 @@
 "use client";
-import generalStyles from "../../../app/tutor/layout.module.css";
+import generalStyles from "../../../app/student/layout.module.css";
 import styles from "../Order/Order.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { data } from "@/utils/listSubjects";
-import { formatTimeAgo } from "@/utils/date/date";
 import { City, Order, Student } from "@/types/types";
+import Image from "next/image";
+import { host, port } from "@/api/server/configApi";
+import Lightbox from "yet-another-react-lightbox"; // Импортируем Lightbox
+import "yet-another-react-lightbox/styles.css";
+import { useState } from "react";
 
 type OrderProps = {
   loading: boolean;
@@ -22,7 +25,19 @@ export const TutorsComponent = ({
   error,
   locations,
 }: OrderProps) => {
-  //console.log(process.env.NODE_ENV);
+  // Стейт для управления состоянием галереи (открыта ли она)
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Обработчик клика по изображению для открытия Lightbox
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index); // Устанавливаем текущий индекс изображения
+    setOpenLightbox(true); // Открываем Lightbox
+  };
+
+  const handleClose = () => {
+    setOpenLightbox(false); // Закрываем Lightbox
+  };
 
   if (loading && !student?.name)
     return (
@@ -35,66 +50,490 @@ export const TutorsComponent = ({
 
   if (error) return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
 
-  const subjectArr = data.find(
-    (subject) => subject.id_p === orderById?.subject
-  );
-  const subjectName = subjectArr?.title;
-
   return (
     <>
       <div
         className={clsx(
           generalStyles.content_block,
           generalStyles.order_block,
-          generalStyles.crsr_pntr
+          generalStyles.crsr_pntr,
+          styles.order_gap
         )}
       >
-        <div className={styles.containerOrderInfo}>
-          <div className={styles.subjectName}>
-            <h3>Репетитор</h3>
+        <div className={styles.tutorImgFioContainer}>
+          <div className={styles.flex1}>
+            <Image
+              className={styles.tutorImg}
+              src={`${host}${port}/uploads/67ddb6b808999575640c78b9_1743151026976-2809.png`}
+              width={120}
+              height={120}
+              alt=""
+            />
           </div>
-          <div className={styles.goal}>{orderById?.goal}</div>
+          <div className={styles.flex4}>
+            <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+              <h3>Федотов Павел Сергеевич</h3>
+              <div className={styles.containerIsOnline}>
+                <div className={styles.isOnline}></div>
+                <span>В сети</span>
+              </div>
+            </div>
+
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <Image
+                src="../../img/icon/location.svg"
+                alt="Геолокация"
+                width={15}
+                height={18}
+                className={styles.header_geoImage}
+              />
+              <span>Москва и Московская область</span>
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              Дистанционно&nbsp;🖥️ // У себя&nbsp;🏠 // Выезд к ученику&nbsp;📍
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <div className={styles.passportControl}>
+                ✅&nbsp;Паспорт проверен
+              </div>
+            </div>
+          </div>
         </div>
 
-        {orderById?.tutorType && (
-          <div className={styles.containerOrderInfo}>
-            <span className={styles.titleOrderInfo}>
-              Предпочтения по стоимости занятий
-            </span>
-            <span>{orderById?.tutorType}</span>
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>О себе</span>
+          <div>
+            Привет! <br></br>
+            👋 Я — репетитор по английскому с опытом 5 лет и готов помочь вам
+            заговорить уверенно! 🎯
+            <br></br>
+            <br></br>
+            На моих уроках мы: <br></br>✨ Разберем грамматику на понятных
+            примерах. <br></br>🗣 Прокачаем разговорный английский и уберем
+            страх общения. <br></br>📚 Расширим словарный запас через интересные
+            тексты, видео и диалоги. <br></br>🎓 Подготовимся к экзаменам (ЕГЭ,
+            ОГЭ, IELTS, TOEFL). <br></br>
+            <br></br>Занятия проходят онлайн или офлайн в дружелюбной атмосфере.
+            Готовы учиться? Тогда начнем! 🚀
           </div>
-        )}
+        </div>
 
-        {orderById?.studentWishes && (
-          <div className={styles.containerOrderInfo}>
-            <span className={styles.titleOrderInfo}>
-              Дополнительные пожелания
-            </span>
-            <span>{orderById?.studentWishes}</span>
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Образование</span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>
+            Диплом, сертификаты и другие документы
+          </span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Стоимость занятий</span>
+
+          <div>
+            <span className={styles.priceInt}>3&nbsp;000 ₽</span> / 60 мин
+            (дистанционно)
           </div>
-        )}
+        </div>
+
+        <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonYlw
+          )}
+        >
+          Предложить заказ
+        </button>
+        {/* <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonBlc
+          )}
+        >
+          Перейти в чат
+        </button> */}
       </div>
 
       <div
         className={clsx(
           generalStyles.content_block,
           generalStyles.order_block,
-          generalStyles.crsr_pntr
+          generalStyles.crsr_pntr,
+          styles.order_gap
         )}
       >
-        {student && (
-          <div className={styles.containerOrderInfo}>
-            <span className={styles.titleOrderInfo}>Ученик</span>
-            <span>{student?.name}</span>
+        <div className={styles.tutorImgFioContainer}>
+          <div className={styles.flex1}>
+            <Image
+              className={styles.tutorImg}
+              src={`${host}${port}/uploads/67ddb6b808999575640c78b9_1743151026976-2809.png`}
+              width={120}
+              height={120}
+              alt=""
+            />
           </div>
-        )}
+          <div className={styles.flex4}>
+            <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+              <h3>Федотов Павел Сергеевич</h3>
+              <div className={styles.containerIsOnline}>
+                <div className={styles.isOnline}></div>
+                <span>В сети</span>
+              </div>
+            </div>
 
-        {orderById?.createdAt && (
-          <div className={styles.containerOrderInfo}>
-            <span className={styles.titleOrderInfo}>Заказ добавлен</span>
-            <span>{formatTimeAgo(orderById?.createdAt)}</span>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <Image
+                src="../../img/icon/location.svg"
+                alt="Геолокация"
+                width={15}
+                height={18}
+                className={styles.header_geoImage}
+              />
+              <span>Москва и Московская область</span>
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              Дистанционно&nbsp;🖥️ // У себя&nbsp;🏠 // Выезд к ученику&nbsp;📍
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <div className={styles.passportControl}>
+                ✅&nbsp;Паспорт проверен
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>О себе</span>
+          <div>
+            Привет! <br></br>
+            👋 Я — репетитор по английскому с опытом 5 лет и готов помочь вам
+            заговорить уверенно! 🎯
+            <br></br>
+            <br></br>
+            На моих уроках мы: <br></br>✨ Разберем грамматику на понятных
+            примерах. <br></br>🗣 Прокачаем разговорный английский и уберем
+            страх общения. <br></br>📚 Расширим словарный запас через интересные
+            тексты, видео и диалоги. <br></br>🎓 Подготовимся к экзаменам (ЕГЭ,
+            ОГЭ, IELTS, TOEFL). <br></br>
+            <br></br>Занятия проходят онлайн или офлайн в дружелюбной атмосфере.
+            Готовы учиться? Тогда начнем! 🚀
+          </div>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Образование</span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>
+            Диплом, сертификаты и другие документы
+          </span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Стоимость занятий</span>
+
+          <div>
+            <span className={styles.priceInt}>3&nbsp;000 ₽</span> / 60 мин
+            (дистанционно)
+          </div>
+        </div>
+
+        <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonYlw
+          )}
+        >
+          Предложить заказ
+        </button>
+        {/* <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonBlc
+          )}
+        >
+          Перейти в чат
+        </button> */}
+      </div>
+
+      <div
+        className={clsx(
+          generalStyles.content_block,
+          generalStyles.order_block,
+          generalStyles.crsr_pntr,
+          styles.order_gap
         )}
+      >
+        <div className={styles.tutorImgFioContainer}>
+          <div className={styles.flex1}>
+            <Image
+              className={styles.tutorImg}
+              src={`${host}${port}/uploads/67ddb6b808999575640c78b9_1743151026976-2809.png`}
+              width={120}
+              height={120}
+              alt=""
+            />
+          </div>
+          <div className={styles.flex4}>
+            <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+              <h3>Федотов Павел Сергеевич</h3>
+              <div className={styles.containerIsOnline}>
+                <div className={styles.isOnline}></div>
+                <span>В сети</span>
+              </div>
+            </div>
+
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <Image
+                src="../../img/icon/location.svg"
+                alt="Геолокация"
+                width={15}
+                height={18}
+                className={styles.header_geoImage}
+              />
+              <span>Москва и Московская область</span>
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              Дистанционно&nbsp;🖥️ // У себя&nbsp;🏠 // Выезд к ученику&nbsp;📍
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <div className={styles.passportControl}>
+                ✅&nbsp;Паспорт проверен
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>О себе</span>
+          <div>
+            Привет! <br></br>
+            👋 Я — репетитор по английскому с опытом 5 лет и готов помочь вам
+            заговорить уверенно! 🎯
+            <br></br>
+            <br></br>
+            На моих уроках мы: <br></br>✨ Разберем грамматику на понятных
+            примерах. <br></br>🗣 Прокачаем разговорный английский и уберем
+            страх общения. <br></br>📚 Расширим словарный запас через интересные
+            тексты, видео и диалоги. <br></br>🎓 Подготовимся к экзаменам (ЕГЭ,
+            ОГЭ, IELTS, TOEFL). <br></br>
+            <br></br>Занятия проходят онлайн или офлайн в дружелюбной атмосфере.
+            Готовы учиться? Тогда начнем! 🚀
+          </div>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Образование</span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>
+            Диплом, сертификаты и другие документы
+          </span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Стоимость занятий</span>
+
+          <div>
+            <span className={styles.priceInt}>3&nbsp;000 ₽</span> / 60 мин
+            (дистанционно)
+          </div>
+        </div>
+
+        <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonYlw
+          )}
+        >
+          Предложить заказ
+        </button>
+        {/* <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonBlc
+          )}
+        >
+          Перейти в чат
+        </button> */}
+      </div>
+
+      <div
+        className={clsx(
+          generalStyles.content_block,
+          generalStyles.order_block,
+          generalStyles.crsr_pntr,
+          styles.order_gap
+        )}
+      >
+        <div className={styles.tutorImgFioContainer}>
+          <div className={styles.flex1}>
+            <Image
+              className={styles.tutorImg}
+              src={`${host}${port}/uploads/67ddb6b808999575640c78b9_1743151026976-2809.png`}
+              width={120}
+              height={120}
+              alt=""
+            />
+          </div>
+          <div className={styles.flex4}>
+            <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+              <h3>Федотов Павел Сергеевич</h3>
+              <div className={styles.containerIsOnline}>
+                <div className={styles.isOnline}></div>
+                <span>В сети</span>
+              </div>
+            </div>
+
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <Image
+                src="../../img/icon/location.svg"
+                alt="Геолокация"
+                width={15}
+                height={18}
+                className={styles.header_geoImage}
+              />
+              <span>Москва и Московская область</span>
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              Дистанционно&nbsp;🖥️ // У себя&nbsp;🏠 // Выезд к ученику&nbsp;📍
+            </div>
+            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+              <div className={styles.passportControl}>
+                ✅&nbsp;Паспорт проверен
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>О себе</span>
+          <div>
+            Привет! <br></br>
+            👋 Я — репетитор по английскому с опытом 5 лет и готов помочь вам
+            заговорить уверенно! 🎯
+            <br></br>
+            <br></br>
+            На моих уроках мы: <br></br>✨ Разберем грамматику на понятных
+            примерах. <br></br>🗣 Прокачаем разговорный английский и уберем
+            страх общения. <br></br>📚 Расширим словарный запас через интересные
+            тексты, видео и диалоги. <br></br>🎓 Подготовимся к экзаменам (ЕГЭ,
+            ОГЭ, IELTS, TOEFL). <br></br>
+            <br></br>Занятия проходят онлайн или офлайн в дружелюбной атмосфере.
+            Готовы учиться? Тогда начнем! 🚀
+          </div>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Образование</span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>
+            Диплом, сертификаты и другие документы
+          </span>
+
+          <ul>
+            <li className={styles.listEducation}>
+              МГТУ им. Н.Э. Баумана (2009-2015)
+            </li>
+            <li className={styles.listEducation}>
+              Frontend-разработчик (2023-2024)
+            </li>
+          </ul>
+        </div>
+
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Стоимость занятий</span>
+
+          <div>
+            <span className={styles.priceInt}>3&nbsp;000 ₽</span> / 60 мин
+            (дистанционно)
+          </div>
+        </div>
+
+        <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonYlw
+          )}
+        >
+          Предложить заказ
+        </button>
+        {/* <button
+          className={clsx(
+            generalStyles.content_block_button,
+            generalStyles.buttonBlc
+          )}
+        >
+          Перейти в чат
+        </button> */}
       </div>
     </>
   );

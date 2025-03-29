@@ -13,7 +13,7 @@ export const listQuestionsForStudentSignIn = [
         question: "Подтверждение номера телефона",
         description: "Отправили код на номер",
         placeholder: "",
-        nextPage: "/student/order",
+        nextPage: "/student/orders",
     },
   ];
   

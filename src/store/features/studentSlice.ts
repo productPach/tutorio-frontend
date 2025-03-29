@@ -220,6 +220,18 @@ const studentSlice = createSlice({
       .addCase(verifyEmailStudent.rejected, (state, action) => {
         state.updateStatus = "failed";
         console.error(action.payload); // Логируем ошибку
+      })
+      .addCase(deleteStudentRequest.pending, (state) => {
+        state.deleteRequest = false;
+        state.loading = true;
+      })
+      .addCase(deleteStudentRequest.fulfilled, (state) => {
+        state.deleteRequest = true; // Успешный запрос
+        state.loading = false;
+      })
+      .addCase(deleteStudentRequest.rejected, (state) => {
+        state.deleteRequest = false; // Ошибка, не удалилось
+        state.loading = false;
       });
   },
 });

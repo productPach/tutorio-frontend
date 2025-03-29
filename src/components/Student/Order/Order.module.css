@@ -1,3 +1,54 @@
+.order_gap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.tutorImgFioContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.tutorImg {
+  border-radius: 10px;
+}
+.containerFlxRw {
+  display: flex;
+  flex-direction: row;
+}
+.flex1 {
+  flex: 1;
+}
+.flex4 {
+  flex: 4;
+}
+.jtfCntSpBtwn {
+  justify-content: space-between;
+}
+.gap20 {
+  gap: 20px;
+}
+.containerIsOnline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.isOnline {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #66bb6a;
+}
+.isOffline {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #dddddd;
+}
+.mt6px {
+  margin-top: 6px;
+}
+
 .subjectName {
   font-weight: 600;
 }
@@ -9,9 +60,31 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 10px 0;
 }
 
 .titleOrderInfo {
   color: #777;
+}
+.titleTutorInfo {
+  font-size: 18px;
+  font-weight: 700;
+}
+.priceInt {
+  font-size: 28px;
+}
+.passportControl {
+  width: fit-content;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #206420;
+  background: linear-gradient(
+    90deg,
+    rgba(102, 187, 106, 0.7),
+    rgba(139, 195, 74, 0.5)
+  );
+}
+.listEducation {
+  list-style-type: circle;
+  margin-left: 20px;
 }
