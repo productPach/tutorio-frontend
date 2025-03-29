@@ -2,18 +2,12 @@
 import generalStyles from "../../../app/tutor/layout.module.css";
 import styles from "./Order.module.css";
 import locationsStyles from "../../../app/tutor/locations.module.css";
-import { useParams } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState, useAppSelector } from "@/store/store";
-import { useEffect, useState } from "react";
-import { getOrderById } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { formatTimeAgo } from "@/utils/date/date";
 import { findLocTitlesByIds } from "@/utils/locations/getTitleLocationById";
-import { fetchStudentById } from "@/api/server/studentApi";
 import { City, Order, Student } from "@/types/types";
 
 type OrderProps = {
@@ -31,8 +25,6 @@ export const OrderComponent = ({
   error,
   locations,
 }: OrderProps) => {
-  //console.log(process.env.NODE_ENV);
-
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
@@ -55,7 +47,8 @@ export const OrderComponent = ({
         className={clsx(
           generalStyles.content_block,
           generalStyles.order_block,
-          generalStyles.crsr_pntr
+          generalStyles.crsr_pntr,
+          styles.order_gap
         )}
       >
         <div className={styles.containerOrderInfo}>
@@ -326,7 +319,8 @@ export const OrderComponent = ({
         className={clsx(
           generalStyles.content_block,
           generalStyles.order_block,
-          generalStyles.crsr_pntr
+          generalStyles.crsr_pntr,
+          styles.order_gap
         )}
       >
         {student && (

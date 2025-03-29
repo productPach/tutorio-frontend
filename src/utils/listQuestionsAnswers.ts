@@ -1907,7 +1907,7 @@ export const listQuestionsAnswers = [
           {
             id: 1,
             title: "Отправили код на номер",
-            nextPage: "/student/order",
+            nextPage: "/student/order/",
           },
         ],
       },

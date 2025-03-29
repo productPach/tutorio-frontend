@@ -242,11 +242,11 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
         autoContactsBoolean,
         infoDataMatch
       )
-        .then(() => {
+        .then((data) => {
           // Обновляем состояния для красивого эффекта перехода
           setIsDisabled(true);
           setIsVisible(false);
-          setTimeout(() => route.push("/student/order"), 400);
+          setTimeout(() => route.push(`/student/order/${data.id}`), 400);
         })
         .catch((error) => {
           console.error("Ошибка при создании заказа:", error);

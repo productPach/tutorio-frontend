@@ -166,12 +166,12 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
             switch (updatedStudent?.status) {
               case "Rega: Order":
-                handleNextStep("../student/order");
+                handleNextStep("../student/orders");
                 break;
               case "Pending":
               case "Active":
               case "Canceled delete":
-                handleNextStep("../student/order");
+                handleNextStep("../student/orders");
                 break;
               case "Deleted":
                 dispatch(
@@ -183,7 +183,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 );
                 fetchCancelDeleteRequest({ token, role: "student" });
                 dispatch(resetDeleteRequest());
-                handleNextStep("../student/order");
+                handleNextStep("../student/orders");
                 break;
               default:
                 console.warn("Неизвестный статус ученика");

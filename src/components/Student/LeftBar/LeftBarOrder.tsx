@@ -46,63 +46,56 @@ const LeftBarOrder = ({ component, setComponent }: LeftBarOrderProps) => {
       style={isSafari ? undefined : { top: `${scrollYForLeftBar}px` }}
     >
       {
-        <div onClick={handleBack} className={styles.left_menu}>
-          <ul>
-            <li>
-              <Image
-                src="/../img/icon/tutor/go-back.svg"
-                alt="Заказы"
-                width={32}
-                height={32}
-              />
-              <span className={styles.left_menu__list_text}>
-                Вернуться назад
-              </span>
-            </li>
-          </ul>
-        </div>
+        <Link href={"../orders"}>
+          <div className={styles.left_menu}>
+            <ul>
+              <li>
+                <Image
+                  src="/../img/icon/tutor/go-back.svg"
+                  alt="Заказы"
+                  width={32}
+                  height={32}
+                />
+                <span className={styles.left_menu__list_text}>
+                  Вернуться назад
+                </span>
+              </li>
+            </ul>
+          </div>
+        </Link>
       }
       <div className={styles.left_menu}>
         <ul>
-          <li>
+          <li onClick={() => setComponent(1)}>
             <Image
               src="/../img/icon/tutor/orders.svg"
               alt="Заказы"
               width={32}
               height={32}
             />
-            <span
-              className={clsx(styles.left_menu__list_text, {})}
-              onClick={() => setComponent(1)}
-            >
+            <span className={clsx(styles.left_menu__list_text, {})}>
               Условия заказа
             </span>
           </li>
-          <li>
+          <li onClick={() => setComponent(2)}>
             <Image
               src="/../img/icon/tutor/settings.svg"
               alt="Настройки"
               width={32}
               height={32}
             />
-            <span
-              className={clsx(styles.left_menu__list_text, {})}
-              onClick={() => setComponent(2)}
-            >
+            <span className={clsx(styles.left_menu__list_text, {})}>
               Репетиторы
             </span>
           </li>
-          <li>
+          <li onClick={() => setComponent(3)}>
             <Image
               src="/../img/icon/tutor/base.svg"
               alt="Настройки"
               width={27}
               height={27}
             />
-            <span
-              className={clsx(styles.left_menu__list_text, {})}
-              onClick={() => setComponent(3)}
-            >
+            <span className={clsx(styles.left_menu__list_text, {})}>
               Помощь
             </span>
           </li>

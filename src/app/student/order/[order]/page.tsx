@@ -1,5 +1,5 @@
 "use client";
-import styles from "../layout.module.css";
+import styles from "../../layout.module.css";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
@@ -10,7 +10,6 @@ import { Student } from "@/types/types";
 import { useSelector } from "react-redux";
 import { getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
-import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import { OrderComponent } from "@/components/Student/Order/Order";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";

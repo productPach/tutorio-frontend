@@ -48,7 +48,7 @@ const SignInStudentPage: React.FC = () => {
       dispatch(setStudent(student));
       if (student.status === "Pending" || student.status === "Active") {
         // Редиректим сразу в кабинет
-        setTimeout(() => route.push("/student/order"));
+        setTimeout(() => route.push("/student/orders"));
       }
     }
   }, [dispatch]);

@@ -58,7 +58,7 @@ export const fetchCreateOrder = async (
     }),
   });
 
-  const data = await response.json();
+  const data: Order = await response.json();
   return data;
 };
 

@@ -1,5 +1,5 @@
 "use client";
-import generalStyles from "../../../app/tutor/layout.module.css";
+import generalStyles from "../../../app/student/layout.module.css";
 import styles from "./ResponseSidbar.module.css";
 
 import stylesStudent from "../Student.module.css";
