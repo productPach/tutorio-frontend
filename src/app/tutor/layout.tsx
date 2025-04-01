@@ -8,10 +8,11 @@ import { setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { getCurrentTutor } from "@/store/features/tutorSlice";
+import { getCurrentTutor, updateTutor } from "@/store/features/tutorSlice";
 import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
+import { usePathname } from "next/navigation"; // Правильный импорт для использования пути
 
 type LayoutComponent = {
   children: ReactNode;
@@ -20,6 +21,7 @@ type LayoutComponent = {
 const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const [isLoadedPage, setIsLoadedPage] = useState(false);
   const router = useRouter();
+  const pathname = usePathname(); // Получаем текущий путь
   const dispatch = useAppDispatch();
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
@@ -42,6 +44,44 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     dispatch(getAllLocations());
   }, [dispatch]);
 
+  useEffect(() => {
+    const currentTime = new Date().getTime();
+    const lastOnlineTime = tutor?.lastOnline
+      ? new Date(tutor.lastOnline).getTime()
+      : null;
+
+    const token = getTokenFromCookie();
+
+    // Если lastOnline существует, проверяем, прошло ли больше 5 минут
+    if (lastOnlineTime && currentTime - lastOnlineTime > 5 * 60 * 1000) {
+      if (token && tutor) {
+        // Отправляем данные на сервер, если прошло больше 5 минут
+        dispatch(
+          updateTutor({
+            id: tutor.id,
+            token,
+            status: tutor.status,
+            lastOnline: new Date(),
+          })
+        );
+      }
+    } else if (!lastOnlineTime) {
+      // Если lastOnline нет, считаем, что это первый вход
+      if (token && tutor) {
+        dispatch(
+          updateTutor({
+            id: tutor.id,
+            token,
+            status: tutor.status,
+            lastOnline: new Date(),
+          })
+        );
+      }
+    }
+
+    // Сохраняем текущее время в localStorage
+    localStorage.setItem("lastOnline", new Date().toISOString());
+  }, [pathname, dispatch, tutor]); // Используем pathname для отслеживания изменений
   return (
     <>
       {!isLoadedPage ? (

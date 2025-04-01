@@ -70,6 +70,7 @@ export const fetchUpdateTutor = async (data: {
   isNotificationsEmail?: boolean;
   isNotificationsTelegram?: boolean;
   isNotificationsVk?: boolean;
+  lastOnline?: Date;
 }) => {
   const { id, token, ...fields } = data;
 
