@@ -87,6 +87,18 @@
     rgba(139, 195, 74, 0.4)
   );
 }
+.goodReviews {
+  width: fit-content;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #8c6a00;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 217, 73, 0.5),
+    rgba(241, 193, 64, 0.4)
+  );
+}
 .listEducation {
   list-style-type: circle;
   margin-left: 20px;
