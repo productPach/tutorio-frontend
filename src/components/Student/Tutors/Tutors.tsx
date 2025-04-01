@@ -109,6 +109,23 @@ export const TutorsComponent = ({
           }
         }
 
+        let hasPassportValid = null;
+        let hasGoodReviews = null;
+        if (tutor.badges.length > 0) {
+          if (tutor.badges.includes("Паспорт проверен")) {
+            hasPassportValid = (
+              <div className={styles.passportControl}>
+                ✅&nbsp;Паспорт проверен
+              </div>
+            );
+          }
+          if (tutor.badges.includes("Хорошие отзывы")) {
+            hasGoodReviews = (
+              <div className={styles.goodReviews}>❤️&nbsp;Хорошие отзывы</div>
+            );
+          }
+        }
+
         return (
           <div
             key={tutor.id}
@@ -172,9 +189,8 @@ export const TutorsComponent = ({
                   </div>
                 )}
                 <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
-                  <div className={styles.passportControl}>
-                    ✅&nbsp;Паспорт проверен
-                  </div>
+                  {hasPassportValid}
+                  {hasGoodReviews}
                 </div>
               </div>
             </div>

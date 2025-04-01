@@ -92,6 +92,7 @@ export type Tutor = {
   telegram: string;
   skype: string;
   status: string;
+  badges: string[];
   lastOnline: Date | null;
   response: Response[];
 };
