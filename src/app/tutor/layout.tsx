@@ -50,39 +50,40 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       ? new Date(tutor.lastOnline).getTime()
       : null;
 
-    // Если lastOnline существует и прошло больше 5 минут с последнего захода
+    const token = getTokenFromCookie();
+
+    // Если lastOnline существует, проверяем, прошло ли больше 5 минут
     if (lastOnlineTime && currentTime - lastOnlineTime > 5 * 60 * 1000) {
-      const token = getTokenFromCookie();
       if (token && tutor) {
         // Отправляем данные на сервер, если прошло больше 5 минут
         dispatch(
           updateTutor({
             id: tutor.id,
-            token, // Здесь теперь гарантированно строка
+            token,
             status: tutor.status,
             lastOnline: new Date(), // Обновляем дату последнего посещения
           })
         );
       }
     } else if (!lastOnlineTime) {
-      // Если lastOnline нет, считаем, что это первый вход и сохраняем текущее время
-      const token = getTokenFromCookie();
+      // Если lastOnline нет, считаем, что это первый вход
       if (token && tutor) {
-        // Отправляем на сервер только если lastOnline не было
         dispatch(
           updateTutor({
             id: tutor.id,
-            token, // Здесь теперь гарантированно строка
+            token,
             status: tutor.status,
             lastOnline: new Date(), // Устанавливаем время первого входа
           })
         );
       }
+    } else {
+      // Если lastOnline есть и прошло менее 5 минут, обновление не требуется
     }
 
     // Сохраняем текущее время в localStorage
     localStorage.setItem("lastOnline", new Date().toISOString());
-  }, [dispatch, tutor]);
+  }, [pathname, dispatch, tutor]); // Используем pathname для отслеживания изменений
 
   return (
     <>
