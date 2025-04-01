@@ -110,6 +110,7 @@ export const updateTutor = createAsyncThunk<
     isNotificationsEmail?: boolean;
     isNotificationsTelegram?: boolean;
     isNotificationsVk?: boolean;
+    lastOnline?: Date;
   }
 >("tutor/update", async ({ id, token, status, ...optionalFields }) => {
   try {

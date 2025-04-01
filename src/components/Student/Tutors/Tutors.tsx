@@ -9,6 +9,7 @@ import { host, port } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useState } from "react";
+import { formatTimeAgo } from "@/utils/date/date";
 
 type OrderProps = {
   tutorsForOrder: Tutor[];
@@ -88,6 +89,26 @@ export const TutorsComponent = ({
           (location) => location.title === tutor.region
         );
 
+        // Получаем текущее время
+        const currentTime = new Date();
+
+        // Проверяем, был ли репетитор онлайн в последние 5 минут
+        const lastOnlineTime = tutor.lastOnline
+          ? new Date(tutor.lastOnline)
+          : null;
+
+        let onlineStatus = "";
+        let timeDifference = 0;
+
+        if (lastOnlineTime) {
+          timeDifference = currentTime.getTime() - lastOnlineTime.getTime(); // Получаем разницу во времени в миллисекундах
+          if (timeDifference <= 5 * 60 * 1000) {
+            onlineStatus = "В сети";
+          } else {
+            onlineStatus = `был ${formatTimeAgo(lastOnlineTime)}`;
+          }
+        }
+
         return (
           <div
             key={tutor.id}
@@ -113,10 +134,12 @@ export const TutorsComponent = ({
                   className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}
                 >
                   <h3>{tutor.name}</h3>
-                  <div className={styles.containerIsOnline}>
-                    <div className={styles.isOnline}></div>
-                    <span>В сети</span>
-                  </div>
+                  {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
+                    <div className={styles.containerIsOnline}>
+                      <div className={styles.isOnline}></div>
+                      <span>{onlineStatus}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
