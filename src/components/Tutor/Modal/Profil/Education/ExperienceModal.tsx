@@ -30,9 +30,8 @@ export const ExperienceModal = () => {
   const update = () => {
     const id = tutor?.id;
     const experience = inputValue;
-    const status = tutor?.status;
-    if (token && id && status) {
-      dispatch(updateTutor({ id, token, status, experience })).unwrap;
+    if (token && id) {
+      dispatch(updateTutor({ id, token, experience })).unwrap;
       dispatch(setIsModalExperience(false));
     }
   };

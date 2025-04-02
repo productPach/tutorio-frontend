@@ -196,12 +196,10 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   ) => {
     if (tutor && token) {
       const id = tutor.id;
-      const status = tutor?.status;
       dispatch(
         updateTutor({
           id,
           token,
-          status,
           ...updates, // Передаем только измененные поля
         })
       ).unwrap();

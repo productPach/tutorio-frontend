@@ -60,7 +60,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           updateTutor({
             id: tutor.id,
             token,
-            status: tutor.status,
             lastOnline: new Date(), // Обновляем дату последнего посещения
           })
         );
@@ -72,7 +71,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           updateTutor({
             id: tutor.id,
             token,
-            status: tutor.status,
             lastOnline: new Date(), // Устанавливаем время первого входа
           })
         );

@@ -45,7 +45,6 @@ export const EmailModal = () => {
   const update = () => {
     const id = tutor?.id;
     const email = inputValue;
-    const status = tutor?.status;
     const isVerifedEmail = false;
 
     if (token && id && status) {
@@ -56,7 +55,7 @@ export const EmailModal = () => {
       //   html, // Передаём HTML-версию письма
       // });
 
-      dispatch(updateTutor({ id, token, status, email, isVerifedEmail }))
+      dispatch(updateTutor({ id, token, email, isVerifedEmail }))
         .unwrap()
         .then(() => sendVerificationEmail(id, token))
         .catch((error) =>

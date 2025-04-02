@@ -15,12 +15,13 @@ import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
 import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
 import { getAllTutors } from "@/store/features/tutorSlice";
+import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
   const { order } = useParams();
-  const isModalBalanceBoost = useAppSelector(
-    (state) => state.modal.isModalBalanceBoost
+  const isModalResponseStudentToTutor = useAppSelector(
+    (state) => state.modal.isModalResponseStudentToTutor
   );
 
   const dispatch = useAppDispatch();
@@ -35,7 +36,33 @@ const OrderPage: React.FC = () => {
     (state: RootState) => state.orders
   );
   // Получаем всех репетиторов (фильтровать будем на клиенте)
-  const tutorsForOrder = useAppSelector((state) => state.tutor.tutors);
+  const tutorsForOrderNotFilter = useAppSelector((state) => state.tutor.tutors);
+  const placeMapping: Record<string, string> = {
+    Дистанционно: "1",
+    "У репетитора": "2",
+    "У меня дома": "3",
+  };
+
+  // Фильтруем репетиторов по условиям заказа
+  const tutorsForOrder = tutorsForOrderNotFilter
+    .filter((tutor) => tutor.status === "Active")
+    .filter(
+      (tutor) =>
+        orderById?.subject && tutor.subject.includes(orderById?.subject)
+    )
+    .filter((tutor) => {
+      if (!orderById?.studentPlace) return true; // Если ученик не указал место, не фильтруем
+
+      // Преобразуем studentPlace в числа согласно маппингу
+      const studentPlacesMapped = orderById.studentPlace
+        .map((place) => placeMapping[place])
+        .filter(Boolean); // Убираем возможные undefined
+
+      // Оставляем только тех репетиторов, у которых есть хотя бы одно совпадение
+      return tutor.tutorPlace.some((place) =>
+        studentPlacesMapped.includes(place)
+      );
+    });
   // Получаем список регионов
   const citiesAndRegions = useAppSelector((state) => state.locations.city);
 
@@ -97,10 +124,10 @@ const OrderPage: React.FC = () => {
         <ResponseSidbar />
       </section>
       <Modal
-        titleModal={"Пополните баланс, чтобы откликнуться"}
-        contentModal={<BalanceBoost />}
-        isModal={isModalBalanceBoost}
-        modalId={"balanceBoost"}
+        titleModal={"Предложить заказ репетитору"}
+        contentModal={<ResponseStudentToTutorModal />}
+        isModal={isModalResponseStudentToTutor}
+        modalId={"responseStudentToTutorModal"}
       ></Modal>
     </>
   );

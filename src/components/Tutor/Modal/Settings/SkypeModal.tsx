@@ -43,9 +43,8 @@ export const SkypeModal = () => {
   const update = () => {
     const id = tutor?.id;
     const skype = inputValue;
-    const status = tutor?.status;
-    if (token && id && status) {
-      dispatch(updateTutor({ id, token, status, skype })).unwrap;
+    if (token && id) {
+      dispatch(updateTutor({ id, token, skype })).unwrap;
       dispatch(setIsModalSkype(false));
       dispatch(setScrollY(0));
     }

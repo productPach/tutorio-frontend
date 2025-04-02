@@ -19,6 +19,8 @@ type ModalStateType = {
   isModalSkype: boolean;
   isModalExit: boolean;
   isModalDelete: boolean;
+  isModalResponseStudentToTutor: boolean;
+  tutorIdForResponseStudentToTutor: string | null;
 };
 
 const initialState: ModalStateType = {
@@ -40,6 +42,8 @@ const initialState: ModalStateType = {
   isModalSkype: false,
   isModalExit: false,
   isModalDelete: false,
+  isModalResponseStudentToTutor: false,
+  tutorIdForResponseStudentToTutor: null,
 };
 
 const modalSlice = createSlice({
@@ -100,6 +104,12 @@ const modalSlice = createSlice({
     setIsModalDelete: (state, action: PayloadAction<boolean>) => {
       state.isModalDelete = action.payload;
     },
+    setIsModalResponseStudentToTutor: (state, action: PayloadAction<boolean>) => {
+      state.isModalResponseStudentToTutor = action.payload;
+    },
+    setTutorIdForResponseStudentToTutor(state, action: PayloadAction<string | null>) {
+      state.tutorIdForResponseStudentToTutor = action.payload;
+    },
   },
 });
 
@@ -122,5 +132,7 @@ export const {
   setIsModalTelegram,
   setIsModalSkype,
   setIsModalDelete,
+  setIsModalResponseStudentToTutor,
+  setTutorIdForResponseStudentToTutor,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

@@ -182,7 +182,6 @@ export const SubjectModal = () => {
       updateTutor({
         id: tutor.id,
         token,
-        status: tutor.status,
         subjectComments: updatedComments,
       })
     );
