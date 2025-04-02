@@ -21,6 +21,7 @@ import {
   setIsModalFio,
   setIsModalPhone,
   setIsModalProfileInfo,
+  setIsModalResponseStudentToTutor,
   setIsModalSkype,
   setIsModalTelegram,
   setModalSelectCity,
@@ -57,21 +58,33 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "fio") {
       dispatch(setIsModalFio(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "profileInfo") {
       dispatch(setIsModalProfileInfo(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "education") {
       dispatch(setIsModalEducation(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "experience") {
       dispatch(setIsModalExperience(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "educationItem") {
       dispatch(setIsModalEducationItem(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "editEducation") {
       dispatch(setIsModalEditEducation(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
     }
     if (modalId === "editSubjectPrices") {
       dispatch(setIsModalEditSubjectPrices(false));
@@ -105,6 +118,11 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "delete") {
       dispatch(setIsModalDelete(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "responseStudentToTutorModal") {
+      dispatch(setIsModalResponseStudentToTutor(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }

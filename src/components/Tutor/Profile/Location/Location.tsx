@@ -153,13 +153,11 @@ export const Location = () => {
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
-    const status = tutor?.status;
-    if (token && id && status) {
+    if (token && id) {
       dispatch(
         updateTutor({
           id,
           token,
-          status,
           region,
           tutorPlace,
           tutorAdress,

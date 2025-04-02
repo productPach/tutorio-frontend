@@ -41,7 +41,7 @@ export const fetchCurrentTutor = async (token: string) => {
 export const fetchUpdateTutor = async (data: {
   id: string;
   token: string;
-  status: string;
+  status?: string;
   name?: string;
   email?: string;
   phone?: string;

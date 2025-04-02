@@ -81,7 +81,7 @@ export const updateTutor = createAsyncThunk<
   {
     id: string;
     token: string;
-    status: string;
+    status?: string;
     name?: string;
     phone?: string;
     email?: string;
@@ -112,12 +112,11 @@ export const updateTutor = createAsyncThunk<
     isNotificationsVk?: boolean;
     lastOnline?: Date;
   }
->("tutor/update", async ({ id, token, status, ...optionalFields }) => {
+>("tutor/update", async ({ id, token, ...optionalFields }) => {
   try {
     const dataToUpdate = {
       id,
       token,
-      status,
       ...optionalFields,
     };
 

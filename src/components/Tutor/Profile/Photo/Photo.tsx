@@ -62,7 +62,6 @@ export const Photo = () => {
     const id = tutor?.id;
     if (token && id) {
       try {
-        const status = "Pending";
         await dispatch(
           updateTutorAvatar({
             id,
@@ -71,7 +70,7 @@ export const Photo = () => {
             croppedAreaPixels,
           })
         ).unwrap();
-        dispatch(updateTutor({ id, token, status })).unwrap;
+        dispatch(updateTutor({ id, token })).unwrap;
       } catch (error) {
         console.error("Ошибка при обновлении аватара:", error);
       }

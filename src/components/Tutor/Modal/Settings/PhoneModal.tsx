@@ -5,7 +5,7 @@ import clsx from "clsx";
 import styles from "../Profil/Fio/Fio.module.css";
 import componentStyles from "./Settings.module.css";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { getCurrentTutor, updateTutor } from "@/store/features/tutorSlice";
+import { getCurrentTutor } from "@/store/features/tutorSlice";
 import { setIsModalPhone, setScrollY } from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import {
@@ -14,12 +14,8 @@ import {
   updatePhoneUser,
 } from "@/store/features/authSlice";
 import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerator";
-import {
-  performActionBasedOnUserExistence,
-  userExistence,
-} from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
+import { userExistence } from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
 import { sendSms } from "@/utils/sensSms/sendSms";
-import { TimerSms } from "@/components/TimerSms/TimerSms";
 import { Spinner } from "@/components/Spinner/Spinner";
 
 export const PhoneModal = () => {
@@ -244,9 +240,8 @@ export const PhoneModal = () => {
     const userId = tutor?.userId;
     const phone = to;
     const oldPhone = tutor?.phone;
-    const status = tutor?.status;
 
-    if (id && userId && oldPhone && status) {
+    if (id && userId && oldPhone) {
       try {
         const token = await dispatch(
           getToken({ phone: oldPhone, secretCode })

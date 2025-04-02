@@ -46,12 +46,10 @@ export const Subject = () => {
   const update = (isGroup: boolean) => {
     if (tutor && token) {
       const id = tutor.id;
-      const status = tutor?.status;
       dispatch(
         updateTutor({
           id,
           token,
-          status,
           isGroup,
         })
       ).unwrap();

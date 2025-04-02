@@ -39,9 +39,8 @@ export const TelegramModal = () => {
   const update = () => {
     const id = tutor?.id;
     const telegram = inputValue;
-    const status = tutor?.status;
-    if (token && id && status) {
-      dispatch(updateTutor({ id, token, status, telegram })).unwrap;
+    if (token && id) {
+      dispatch(updateTutor({ id, token, telegram })).unwrap;
       dispatch(setIsModalTelegram(false));
       dispatch(setScrollY(0));
     }

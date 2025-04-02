@@ -29,9 +29,8 @@ export const ProfileInfo = () => {
   const update = () => {
     const id = tutor?.id;
     const profileInfo = inputValue;
-    const status = tutor?.status;
-    if (token && id && status) {
-      dispatch(updateTutor({ id, token, status, profileInfo })).unwrap;
+    if (token && id) {
+      dispatch(updateTutor({ id, token, profileInfo })).unwrap;
       dispatch(setIsModalProfileInfo(false));
     }
   };
