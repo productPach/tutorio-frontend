@@ -4,18 +4,12 @@ import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
-import { useEffect, useState } from "react";
-import { Student } from "@/types/types";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getOrderById } from "@/store/features/orderSlice";
-import { fetchStudentById } from "@/api/server/studentApi";
-import { OrderComponent } from "@/components/Student/Order/Order";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
-import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
-import { getAllTutors, getTutorById } from "@/store/features/tutorSlice";
+import { getTutorById } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
-import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
 import { TutorComponent } from "@/components/Student/Tutor/Tutor";
 
 const TutorPage: React.FC = () => {

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
