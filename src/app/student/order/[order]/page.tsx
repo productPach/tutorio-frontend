@@ -16,6 +16,8 @@ import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
 import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
 import { getAllTutors } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
+import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
+import { TutorComponent } from "@/components/Student/Tutor/Tutor";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -29,6 +31,8 @@ const OrderPage: React.FC = () => {
   const token = useAppSelector((state) => state.auth.token);
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
+  // Получаем стейт храниения компонента для отображения
+  const component = useAppSelector((state) => state.orders.componentMenu);
 
   const [student, setStudent] = useState<Student | null>(null);
 
@@ -93,12 +97,10 @@ const OrderPage: React.FC = () => {
     fetchStudent();
   }, [orderById, token]);
 
-  const [component, setComponent] = useState(1);
-
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
-        <LeftBarOrder component={component} setComponent={setComponent} />
+        <LeftBarOrder />
         <div className={styles.content}>
           {component === 1 && (
             <OrderComponent
@@ -118,6 +120,13 @@ const OrderPage: React.FC = () => {
               orderById={orderById}
               error={error}
               locations={locations}
+            />
+          )}
+          {component === 3 && (
+            <WikiForOrderComponent
+              loading={loading}
+              student={student}
+              error={error}
             />
           )}
         </div>

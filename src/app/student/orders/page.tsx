@@ -5,13 +5,20 @@ import { useEffect } from "react";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
 import { Modal } from "@/components/Modal/Modal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import Orders from "@/components/Student/Orders/Orders";
+import {
+  setComponentMenu,
+  updateScrollPosition,
+} from "@/store/features/orderSlice";
 
 const StudentOrder: React.FC = () => {
   const page = "Orders";
+  const dispatch = useAppDispatch();
+  dispatch(setComponentMenu(1));
+  dispatch(updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 }));
 
   useEffect(() => {
     localStorage.removeItem("confirm-code");

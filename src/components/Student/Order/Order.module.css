@@ -59,6 +59,12 @@
 .goal {
 }
 
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .containerOrderInfo {
   display: flex;
   flex-direction: column;
@@ -99,6 +105,19 @@
     rgba(241, 193, 64, 0.4)
   );
 }
+.docsEducation {
+  width: fit-content;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #4a3d78; /* Глубокий лавандовый */
+  background: linear-gradient(
+    90deg,
+    rgba(190, 180, 255, 0.5),
+    rgba(160, 150, 230, 0.4)
+  );
+}
+
 .listEducation {
   list-style-type: circle;
   margin-left: 20px;
