@@ -8,13 +8,15 @@ import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
-import { useAppDispatch } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setIsModalResponseStudentToTutor,
   setTutorIdForResponseStudentToTutor,
 } from "@/store/features/modalSlice";
+import Link from "next/link";
+import { updateScrollPosition } from "@/store/features/orderSlice";
 
 type OrderProps = {
   tutorsForOrder: Tutor[];
@@ -58,6 +60,28 @@ export const TutorsComponent = ({
 
   const handleClose = () => {
     setOpenLightboxIndex(null); // Закрываем Lightbox
+  };
+
+  const { scrollPosition, scrollHeight } = useAppSelector(
+    (state) => state.orders
+  );
+
+  useEffect(() => {
+    if (scrollPosition && document.documentElement.scrollHeight) {
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: "smooth", // плавный скролл
+        });
+      }, 500);
+    }
+  }, [scrollPosition]);
+
+  // Для сохранения позиции
+  const saveScrollPosition = () => {
+    const scrollPosition = window.scrollY;
+    const scrollHeight = document.documentElement.scrollHeight; // Получаем высоту документа
+    dispatch(updateScrollPosition({ scrollPosition, scrollHeight }));
   };
 
   if (loading && !student?.name)
@@ -117,6 +141,7 @@ export const TutorsComponent = ({
 
           let hasPassportValid = null;
           let hasGoodReviews = null;
+          let hasDocsEducation = null;
           if (tutor.badges.length > 0) {
             if (tutor.badges.includes("Паспорт проверен")) {
               hasPassportValid = (
@@ -128,6 +153,11 @@ export const TutorsComponent = ({
             if (tutor.badges.includes("Хорошие отзывы")) {
               hasGoodReviews = (
                 <div className={styles.goodReviews}>❤️&nbsp;Хорошие отзывы</div>
+              );
+            }
+            if (tutor.badges.includes("Документы об образовании")) {
+              hasDocsEducation = (
+                <div className={styles.docsEducation}>🪪&nbsp;Образование</div>
               );
             }
           }
@@ -149,19 +179,26 @@ export const TutorsComponent = ({
             >
               <div className={styles.tutorImgFioContainer}>
                 <div className={styles.flex1}>
-                  <Image
-                    className={styles.tutorImg}
-                    src={tutorAvatar}
-                    width={120}
-                    height={120}
-                    alt=""
-                  />
+                  <Link
+                    href={`./${orderById?.id}/tutor/${tutor.id}`}
+                    onClick={saveScrollPosition} // Сохраняем скролл при клике
+                  >
+                    <Image
+                      className={styles.tutorImg}
+                      src={tutorAvatar}
+                      width={120}
+                      height={120}
+                      alt=""
+                    />
+                  </Link>
                 </div>
                 <div className={styles.flex4}>
                   <div
                     className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}
                   >
-                    <h3>{tutor.name}</h3>
+                    <Link href={`./tutor/${tutor.id}`}>
+                      <h3>{tutor.name}</h3>
+                    </Link>
                     {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
                       <div className={styles.containerIsOnline}>
                         <div className={styles.isOnline}></div>
@@ -204,6 +241,7 @@ export const TutorsComponent = ({
                   <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
                     {hasPassportValid}
                     {hasGoodReviews}
+                    {hasDocsEducation}
                   </div>
                 </div>
               </div>

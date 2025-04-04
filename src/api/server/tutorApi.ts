@@ -402,3 +402,21 @@ export const fetchAllTutors = async (token: string) => {
   const data = await response.json();
   return data;
 };
+
+// Получение репетитора по ID
+export const fetchTutorById = async (id: string, token: string) => {
+  const response = await fetch(`${baseUrl}tutors/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Не удалось получить репетитора с ID ${id}`);
+  }
+
+  const data = await response.json();
+  return data;
+};

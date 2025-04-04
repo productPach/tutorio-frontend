@@ -104,6 +104,10 @@ export const updateOrder = createAsyncThunk<
   }
 });
 
+interface ScrollPayload {
+  scrollPosition: number;
+  scrollHeight: number;
+}
 
 type OrdersStateType =  {
     orders: [] | Order[];
@@ -114,6 +118,9 @@ type OrdersStateType =  {
       selectedGoalFilters: string[];
     };
     orderById: null | Order;
+    componentMenu: number;
+    scrollPosition: number; // Положение скролла
+  scrollHeight: number;   // Общая высота страницы
 }
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -128,6 +135,9 @@ const initialState: OrdersStateType = {
       selectedGoalFilters: initialFilters.goalFilters?.length > 0 ? initialFilters.goalFilters : [],
     },
     orderById: null,
+    componentMenu: 1,
+    scrollPosition: 0, // Начальное положение скролла
+  scrollHeight: 0,   // Начальная высота страницы
 };
 
 const ordersSlice = createSlice({
@@ -143,6 +153,14 @@ const ordersSlice = createSlice({
     clearFilters(state) {
       state.filters.selectedPlaceFilters = [];
       state.filters.selectedGoalFilters = [];
+    },
+    setComponentMenu(state, action) {
+      state.componentMenu = action.payload;
+    },
+    updateScrollPosition: (state, action: PayloadAction<ScrollPayload>) => {
+      const { scrollPosition, scrollHeight } = action.payload;
+      state.scrollPosition = scrollPosition;
+      state.scrollHeight = scrollHeight;
     },
   },
   extraReducers: (builder) => {
@@ -195,5 +213,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { setOrderFilters, clearFilters } = ordersSlice.actions;
+export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition } = ordersSlice.actions;
 export const ordersReducer = ordersSlice.reducer;

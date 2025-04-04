@@ -4,18 +4,22 @@ import clsx from "clsx";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { AppDispatch, useAppSelector } from "@/store/store";
-import { setSupportMenu } from "@/store/features/tutorSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import {
+  setComponentMenu,
+  updateScrollPosition,
+} from "@/store/features/orderSlice";
 import { useRouter } from "next/navigation";
 
-type LeftBarOrderProps = {
-  component: number;
-  setComponent: Dispatch<SetStateAction<number>>; // Верная типизация для useState
-};
+interface LeftBarOrderProps {
+  page?: string; // Строковый пропс для указания страницы, если нужно
+}
 
-const LeftBarOrder = ({ component, setComponent }: LeftBarOrderProps) => {
-  const dispatch = useDispatch<AppDispatch>();
+const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
+  const route = useRouter();
+  const dispatch = useAppDispatch();
+  // Получаем стейт храниения компонента для отображения
+  const component = useAppSelector((state) => state.orders.componentMenu);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
   const [isSafari, setIsSafari] = useState(false);
@@ -27,18 +31,6 @@ const LeftBarOrder = ({ component, setComponent }: LeftBarOrderProps) => {
       setIsSafari(true);
     }
   }, []);
-
-  // Стейт для меню с ссылками помощи
-  const supportMenu = useAppSelector((state) => state.tutor.supportMenu);
-  const handleSupportMenu = () => {
-    dispatch(setSupportMenu(!supportMenu));
-  };
-
-  const router = useRouter();
-
-  const handleBack = () => {
-    router.back(); // Возврат на предыдущую страницу
-  };
 
   return (
     <div
@@ -57,7 +49,7 @@ const LeftBarOrder = ({ component, setComponent }: LeftBarOrderProps) => {
                   height={32}
                 />
                 <span className={styles.left_menu__list_text}>
-                  Вернуться назад
+                  Список заказов
                 </span>
               </li>
             </ul>
@@ -66,39 +58,127 @@ const LeftBarOrder = ({ component, setComponent }: LeftBarOrderProps) => {
       }
       <div className={styles.left_menu}>
         <ul>
-          <li onClick={() => setComponent(1)}>
-            <Image
-              src="/../img/icon/tutor/orders.svg"
-              alt="Заказы"
-              width={32}
-              height={32}
-            />
-            <span className={clsx(styles.left_menu__list_text, {})}>
-              Условия заказа
-            </span>
-          </li>
-          <li onClick={() => setComponent(2)}>
-            <Image
-              src="/../img/icon/tutor/settings.svg"
-              alt="Настройки"
-              width={32}
-              height={32}
-            />
-            <span className={clsx(styles.left_menu__list_text, {})}>
-              Репетиторы
-            </span>
-          </li>
-          <li onClick={() => setComponent(3)}>
-            <Image
-              src="/../img/icon/tutor/base.svg"
-              alt="Настройки"
-              width={27}
-              height={27}
-            />
-            <span className={clsx(styles.left_menu__list_text, {})}>
-              Помощь
-            </span>
-          </li>
+          {page && page === "Tutor" ? (
+            <>
+              <li
+                onClick={() => {
+                  dispatch(setComponentMenu(1));
+                  dispatch(
+                    updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
+                  );
+                  route.push("../");
+                }}
+              >
+                <Image
+                  src="/../img/icon/tutor/orders.svg"
+                  alt="Заказы"
+                  width={32}
+                  height={32}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 1,
+                  })}
+                >
+                  Условия заказа
+                </span>
+              </li>
+              <li
+                onClick={() => {
+                  dispatch(setComponentMenu(2));
+                  dispatch(
+                    updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
+                  );
+                  route.push("../");
+                }}
+              >
+                <Image
+                  src="/../img/icon/tutor/settings.svg"
+                  alt="Настройки"
+                  width={32}
+                  height={32}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 2,
+                  })}
+                >
+                  Репетиторы
+                </span>
+              </li>
+              <li
+                onClick={() => {
+                  dispatch(setComponentMenu(3));
+                  dispatch(
+                    updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
+                  );
+                  route.push("../");
+                }}
+              >
+                <Image
+                  src="/../img/icon/tutor/base.svg"
+                  alt="Настройки"
+                  width={27}
+                  height={27}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 3,
+                  })}
+                >
+                  Помощь
+                </span>
+              </li>
+            </>
+          ) : (
+            <>
+              <li onClick={() => dispatch(setComponentMenu(1))}>
+                <Image
+                  src="/../img/icon/tutor/orders.svg"
+                  alt="Заказы"
+                  width={32}
+                  height={32}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 1,
+                  })}
+                >
+                  Условия заказа
+                </span>
+              </li>
+              <li onClick={() => dispatch(setComponentMenu(2))}>
+                <Image
+                  src="/../img/icon/tutor/settings.svg"
+                  alt="Настройки"
+                  width={32}
+                  height={32}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 2,
+                  })}
+                >
+                  Репетиторы
+                </span>
+              </li>
+              <li onClick={() => dispatch(setComponentMenu(3))}>
+                <Image
+                  src="/../img/icon/tutor/base.svg"
+                  alt="Настройки"
+                  width={27}
+                  height={27}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 3,
+                  })}
+                >
+                  Помощь
+                </span>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>

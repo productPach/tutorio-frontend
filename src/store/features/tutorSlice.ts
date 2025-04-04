@@ -8,6 +8,7 @@ import {
   fetchDeletePhotoTutorEducation,
   fetchDeleteRequest,
   fetchDeleteTutorEducation,
+  fetchTutorById,
   fetchUpdateSubjectPrice,
   fetchUpdateTutor,
   fetchUpdateTutorEducation,
@@ -58,6 +59,20 @@ export const getAllTutors = createAsyncThunk<Tutor[], string>(
     } catch (error) {
       console.error("Ошибка при получении всех репетиторов:", error);
       return rejectWithValue("Не удалось загрузить список репетиторов");
+    }
+  }
+);
+
+// Получение репетитора по ID
+export const getTutorById = createAsyncThunk<Tutor, { id: string; token: string }>(
+  "tutor/getById",
+  async ({ id, token }, { rejectWithValue }) => {
+    try {
+      const response = await fetchTutorById(id, token);
+      return response.tutor;
+    } catch (error) {
+      console.error(`Ошибка при получении репетитора с ID ${id}:`, error);
+      return rejectWithValue(`Не удалось загрузить репетитора с ID ${id}`);
     }
   }
 );
@@ -142,9 +157,6 @@ export const addSubjectPrice = createAsyncThunk<
   }
 });
 
-
-
-
 // Обновление цены по предмету
 export const updateSubjectPrice = createAsyncThunk<
   Tutor, // API возвращает обновленного репетитора
@@ -158,9 +170,6 @@ export const updateSubjectPrice = createAsyncThunk<
     throw error;
   }
 });
-
-
-
 
 export const updateTutorAvatar = createAsyncThunk<
   UpdateTutorAvatarResponse,
@@ -270,7 +279,6 @@ export const createTutorEducation = createAsyncThunk<
     }
   }
 );
-
 
 // Редактирование образования
 export const updateTutorEducation = createAsyncThunk<
@@ -395,6 +403,7 @@ type TutorStateType = {
   tutor: null | Tutor;
   tutors: Tutor[];
   loading: boolean;
+  error: null | string;
   updateStatus: string;
   selectedValuesCity: (District | Metro)[];
   selectedValuesArea: RegionalCity[];
@@ -411,6 +420,7 @@ const initialState: TutorStateType = {
   tutor: initialTutor,
   tutors: [] as Tutor[],
   loading: false,
+  error: null as string | null,
   updateStatus: "idle", // idle | loading | success | failed
   selectedValuesCity: [],
   selectedValuesArea: [],
@@ -482,8 +492,20 @@ const tutorSlice = createSlice({
         state.loading = false;
         state.tutors = action.payload; // Сохраняем полученных репетиторов
       })
-      .addCase(getAllTutors.rejected, (state, action) => {
+      .addCase(getAllTutors.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(getTutorById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTutorById.fulfilled, (state, action: PayloadAction<Tutor>) => {
+        state.loading = false;
+        state.tutor = action.payload; // Сохраняем полученного репетитора
+      })
+      .addCase(getTutorById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || "Произошла ошибка при загрузке репетитора";
       })
       .addCase(createTutor.fulfilled, (state, action: PayloadAction<Tutor>) => {
         state.tutor = action.payload;
