@@ -2,10 +2,7 @@
 import styles from "../layout.module.css";
 import clsx from "clsx";
 import { useEffect } from "react";
-import SideBar from "@/components/Tutor/SideBar/SideBar";
-import { Modal } from "@/components/Modal/Modal";
-import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/store/store";
 import { useRouter } from "next/navigation";
 import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import Orders from "@/components/Student/Orders/Orders";

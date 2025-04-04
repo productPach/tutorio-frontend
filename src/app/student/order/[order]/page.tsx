@@ -3,7 +3,6 @@ import styles from "../../layout.module.css";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
-import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
 import { Student } from "@/types/types";
@@ -17,7 +16,6 @@ import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
 import { getAllTutors } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
-import { TutorComponent } from "@/components/Student/Tutor/Tutor";
 
 const OrderPage: React.FC = () => {
   const page = "Main";

@@ -3,14 +3,13 @@ import generalStyles from "../../../app/student/layout.module.css";
 import styles from "../Order/Order.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { City, Order, Student, Tutor } from "@/types/types";
+import { City, Order, Tutor } from "@/types/types";
 import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
-import { useAppDispatch } from "@/store/store";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -29,9 +28,12 @@ export const TutorComponent = ({
   locations,
   tutor, // принимаем tutorId
 }: OrderProps) => {
-  console.log(tutor);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, []);
 
-  const dispatch = useAppDispatch();
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
   );
