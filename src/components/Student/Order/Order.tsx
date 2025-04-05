@@ -9,6 +9,7 @@ import { getYearWord } from "@/utils/words/getYearWord";
 import { formatTimeAgo } from "@/utils/date/date";
 import { findLocTitlesByIds } from "@/utils/locations/getTitleLocationById";
 import { City, Order, Student } from "@/types/types";
+import { useEffect } from "react";
 
 type OrderProps = {
   loading: boolean;
@@ -25,6 +26,11 @@ export const OrderComponent = ({
   error,
   locations,
 }: OrderProps) => {
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, []);
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>

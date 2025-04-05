@@ -67,15 +67,14 @@ export const TutorsComponent = ({
   );
 
   useEffect(() => {
-    if (scrollPosition && document.documentElement.scrollHeight) {
-      setTimeout(() => {
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: "smooth", // плавный скролл
-        });
-      }, 500);
-    }
-  }, [scrollPosition]);
+    setTimeout(() => {
+      console.log("Прокручиваем страницу");
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: "smooth", // Плавный скролл
+      });
+    }, 500); // Задержка для плавного скролла
+  }, []);
 
   // Для сохранения позиции
   const saveScrollPosition = () => {
@@ -181,7 +180,9 @@ export const TutorsComponent = ({
                 <div className={styles.flex1}>
                   <Link
                     href={`./${orderById?.id}/tutor/${tutor.id}`}
-                    onClick={saveScrollPosition} // Сохраняем скролл при клике
+                    onClick={() => {
+                      saveScrollPosition();
+                    }} // Сохраняем скролл при клике
                   >
                     <Image
                       className={styles.tutorImg}
