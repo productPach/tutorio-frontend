@@ -10,6 +10,7 @@ import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
+import { data } from "@/utils/listSubjects";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -38,6 +39,12 @@ export const TutorComponent = ({
     null
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggle = () => {
+    setIsExpanded((prevState) => !prevState); // Переключаем состояние
+  };
 
   if (loading)
     return (
@@ -129,10 +136,33 @@ export const TutorComponent = ({
     }
   }
 
-  // Фильтруем цены по предмету заказа
-  const relevantPrices = tutor.subjectPrices.filter(
-    (price) => price.subjectId === orderById?.subject
+  // Сгруппируем цены по предметам
+  const groupedPrices = tutor.subjectPrices.reduce(
+    (acc, price) => {
+      if (!acc[price.subjectId]) {
+        acc[price.subjectId] = [];
+      }
+      acc[price.subjectId].push(price);
+      return acc;
+    },
+    {} as Record<string, typeof tutor.subjectPrices>
   );
+
+  // Получаем список всех предметов
+  const subjects = Object.keys(groupedPrices);
+
+  // Сортируем предметы так, чтобы предмет заказа был первым
+  const sortedSubjects = subjects.sort((a, b) => {
+    if (a === orderById?.subject) return -1;
+    if (b === orderById?.subject) return 1;
+    return 0;
+  });
+
+  // Функция для получения названия предмета по for_request
+  const getSubjectTitle = (subjectId: string) => {
+    const subject = data.find((item) => item.id_p === subjectId);
+    return subject ? subject.for_request : subjectId; // Если предмет не найден, возвращаем subjectId
+  };
 
   return (
     <div
@@ -199,13 +229,51 @@ export const TutorComponent = ({
         </div>
       </div>
 
-      {tutor.profileInfo && (
+      <div className={styles.containerOrderInfo}>
+        <span className={styles.titleTutorInfo}>Предметы</span>
+        <div className={styles.profileInfoText}>
+          {tutor.subject.map((item, index) => {
+            const subjectTitle = getSubjectTitle(item);
+            return (
+              <span key={index}>
+                {index === 0 ? "Репетитор по " : ""}
+                {subjectTitle}
+                {index < tutor.subject.length - 2
+                  ? ", "
+                  : index === tutor.subject.length - 2
+                    ? " и "
+                    : ""}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+
+      {slidesPerTutor.length > 0 && (
         <div className={styles.containerOrderInfo}>
-          <span className={styles.titleTutorInfo}>О себе</span>
-          <div className={styles.profileInfoText}>
-            {tutor.profileInfo.length > 450
-              ? `${tutor.profileInfo.slice(0, 450)}...`
-              : tutor.profileInfo}
+          <span className={styles.titleTutorInfo}>
+            Диплом, сертификаты и другие документы
+          </span>
+
+          <div
+            className={clsx(
+              styles.containerFlxRw,
+              styles.flxWrp,
+              slidesPerTutor.length > 5 && styles.jtfCntSpBtwn,
+              styles.gap10
+            )}
+          >
+            {slidesPerTutor.map((slide, index) => (
+              <Image
+                key={index}
+                onClick={() => handleImageClick(index)}
+                src={slide.src}
+                alt="Документ об образовании"
+                width={100}
+                height={120}
+                className={styles.imageDiplomas}
+              />
+            ))}
           </div>
         </div>
       )}
@@ -225,52 +293,70 @@ export const TutorComponent = ({
         </div>
       )}
 
-      {slidesPerTutor.length > 0 && (
-        <div className={styles.containerOrderInfo}>
-          <span className={styles.titleTutorInfo}>
-            Диплом, сертификаты и другие документы
-          </span>
+      <div>
+        {sortedSubjects.map((subjectId) => {
+          const relevantPrices = groupedPrices[subjectId];
+          const subjectTitle = getSubjectTitle(subjectId); // Получаем название предмета
 
-          <div className={clsx(styles.containerFlxRw, styles.gap10)}>
-            {slidesPerTutor.map((slide, index) => (
-              <Image
-                key={index}
-                onClick={() => handleImageClick(index)}
-                src={slide.src}
-                alt="Документ об образовании"
-                width={100}
-                height={120}
-                className={styles.imageDiplomas}
-              />
-            ))}
+          return (
+            <div key={subjectId} className={styles.containerOrderInfo}>
+              <span className={styles.titleTutorInfo}>
+                Стоимость занятий по {subjectTitle}{" "}
+                {/* Выводим название из for_request */}
+              </span>
+
+              <table className={generalStyles.table}>
+                <tbody>
+                  {relevantPrices.map((price) => (
+                    <tr key={price.id} className={generalStyles.tr}>
+                      <td className={generalStyles.td}>
+                        {price.format === "online" && "Дистанционно"}
+                        {price.format === "home" && "У себя дома"}
+                        {price.format === "travel" && "Выезд к ученику"}
+                        {price.format === "group" && "В группе"}
+                      </td>
+                      <td className={generalStyles.td}>
+                        <b>{price.price} ₽</b>{" "}
+                        <span className={generalStyles.text14px}>
+                          за {price.duration} минут
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+      </div>
+
+      {tutor.profileInfo && (
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>О себе</span>
+          <div className={styles.profileInfoText}>
+            {isExpanded
+              ? tutor.profileInfo // Показываем весь текст, если раскрыто
+              : tutor.profileInfo.length > 450
+                ? `${tutor.profileInfo.slice(0, 450)}...` // Показываем обрезанный текст
+                : tutor.profileInfo}
           </div>
-        </div>
-      )}
-
-      {relevantPrices.length > 0 && (
-        <div className={styles.containerOrderInfo}>
-          <span className={styles.titleTutorInfo}>Стоимость занятий</span>
-
-          <table className={generalStyles.table}>
-            <tbody>
-              {relevantPrices.map((price) => (
-                <tr key={price.id} className={generalStyles.tr}>
-                  <td className={generalStyles.td}>
-                    {price.format === "online" && "Дистанционно"}
-                    {price.format === "home" && "У себя дома"}
-                    {price.format === "travel" && "Выезд к ученику"}
-                    {price.format === "group" && "В группе"}
-                  </td>
-                  <td className={generalStyles.td}>
-                    <b>{price.price} ₽</b>{" "}
-                    <span className={generalStyles.text14px}>
-                      за {price.duration} минут
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {tutor.profileInfo.length > 450 && (
+            <button
+              onClick={(e) => {
+                e.preventDefault(); // Предотвращаем переход по ссылке
+                handleToggle(); // Переключаем состояние
+              }}
+              className={clsx(
+                generalStyles.content_block_button,
+                generalStyles.buttonBlc,
+                generalStyles.buttonWthCnt,
+                styles.mt12px,
+                styles.alignSelfCenter
+              )}
+            >
+              {isExpanded ? "Скрыть" : "Читать полностью"}
+            </button>
+          )}
         </div>
       )}
 

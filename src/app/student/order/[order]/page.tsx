@@ -109,7 +109,7 @@ const OrderPage: React.FC = () => {
               locations={locations}
             />
           )}
-          {component === 2 && (
+          {component === 2 || component === 4 ? (
             <TutorsComponent
               tutorsForOrder={tutorsForOrder}
               citiesAndRegions={citiesAndRegions}
@@ -119,7 +119,7 @@ const OrderPage: React.FC = () => {
               error={error}
               locations={locations}
             />
-          )}
+          ) : null}
           {component === 3 && (
             <WikiForOrderComponent
               loading={loading}

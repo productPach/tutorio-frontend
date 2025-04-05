@@ -14,8 +14,11 @@ import {
 const StudentOrder: React.FC = () => {
   const page = "Orders";
   const dispatch = useAppDispatch();
-  dispatch(setComponentMenu(1));
-  dispatch(updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 }));
+  // Выполнение dispatch в useEffect, чтобы избежать выполнения в процессе рендеринга
+  useEffect(() => {
+    dispatch(setComponentMenu(1));
+    dispatch(updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 }));
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.removeItem("confirm-code");

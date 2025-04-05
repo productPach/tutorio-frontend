@@ -15,6 +15,10 @@
   display: flex;
   flex-direction: row;
 }
+.flxWrp {
+  flex-wrap: wrap;
+}
+
 .flex1 {
   flex: 1;
 }
@@ -51,11 +55,15 @@
 .mt6px {
   margin-top: 6px;
 }
-
+.mt12px {
+  margin-top: 12px;
+}
 .subjectName {
   font-weight: 600;
 }
-
+.alignSelfCenter {
+  align-self: anchor-center;
+}
 .goal {
 }
 
@@ -126,10 +134,15 @@
   white-space: pre-line;
 }
 .imageDiplomas {
-  width: 80px;
-  height: 80px;
   object-fit: cover;
   border-radius: 10px;
-  border: 2px solid #eee;
   cursor: pointer;
+  flex: 1 1;
+  max-width: 85px;
+  height: auto;
+  max-height: 85px;
+}
+.readMoreLink {
+  color: blue;
+  text-decoration: underline;
 }
