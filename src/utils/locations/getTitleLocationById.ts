@@ -51,3 +51,32 @@ export const findLocTitleById = (id: string, locations: City[]): TitleWithLine |
         return ''; // или другой дефолтный вариант, который нужно вернуть, например, "Не найдено"
       });
     };
+
+    export const findLocTitleByIdWithDistrict = (
+      id: string,
+      locations: City[]
+    ): TitleWithLine | null => {
+      for (const city of locations) {
+        // Поиск в метро
+        for (const district of city.districts) {
+          const metro = district.metros.find((metro) => metro.id === id);
+          if (metro) {
+            return { title: metro.title, lineNumber: metro.lineNumber };
+          }
+        }
+    
+        // Поиск по районам (districts)
+        const district = city.districts.find((d) => d.id === id);
+        if (district) {
+          return { title: district.title };
+        }
+    
+        // Поиск в региональных городах
+        const regionalCity = city.regionalCities.find((rc) => rc.id === id);
+        if (regionalCity) {
+          return { title: regionalCity.title };
+        }
+      }
+    
+      return null;
+    };

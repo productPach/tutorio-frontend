@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import {
   setIsModalBalanceBoost,
+  setIsModalResponseStudentToTutor,
+  setTutorIdForResponseStudentToTutor,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
@@ -16,8 +18,16 @@ import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
 import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
 import { updateOrder } from "@/store/features/orderSlice";
+import { Tutor } from "@/types/types";
+import clsx from "clsx";
 
-export const ResponseSidbar = () => {
+type ResponseSidbarProps = {
+  tutor: Tutor | null; // добавляем tutorId как пропс
+};
+
+export const ResponseSidbar = ({
+  tutor, // принимаем tutorId
+}: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
@@ -67,6 +77,10 @@ export const ResponseSidbar = () => {
     }
   };
 
+  // Получаем стейт храниения компонента для отображения
+  const component = useAppSelector((state) => state.orders.componentMenu);
+  console.log(tutor);
+
   return (
     <>
       {!loading && (
@@ -76,6 +90,23 @@ export const ResponseSidbar = () => {
             isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
           }
         >
+          {component === 4 && tutor && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(setIsModalResponseStudentToTutor(true));
+                  dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+                }}
+                className={clsx(
+                  generalStyles.content_block_button,
+                  generalStyles.buttonYlw
+                )}
+              >
+                Предложить заказ репетитору
+              </button>
+            </>
+          )}
           {(orderById?.status === "Pending" ||
             orderById?.status === "Sending") && (
             <div className={generalStyles.sidebar_filter}>

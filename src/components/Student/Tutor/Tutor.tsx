@@ -11,6 +11,11 @@ import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
 import { data } from "@/utils/listSubjects";
+import {
+  findLocTitleById,
+  findLocTitleByIdWithDistrict,
+  findLocTitlesByIds,
+} from "@/utils/locations/getTitleLocationById";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -248,6 +253,31 @@ export const TutorComponent = ({
           })}
         </div>
       </div>
+
+      {tutor.tutorPlace.includes("3") &&
+        (tutor.tutorTripCity.length > 0 || tutor.tutorTripArea.length > 0) && (
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleTutorInfo}>Готов приехать</span>
+            <div className={styles.profileInfoText}>
+              {(() => {
+                const getTitles = (ids: string[]) =>
+                  ids
+                    .map(
+                      (id) => findLocTitleByIdWithDistrict(id, locations)?.title
+                    )
+                    .filter(Boolean)
+                    .join(", ");
+
+                const cityTitles = getTitles(tutor.tutorTripCity);
+                const areaTitles = getTitles(tutor.tutorTripArea);
+
+                return [cityTitles, areaTitles]
+                  .filter((str) => str.length > 0)
+                  .join(", ");
+              })()}
+            </div>
+          </div>
+        )}
 
       {slidesPerTutor.length > 0 && (
         <div className={styles.containerOrderInfo}>
