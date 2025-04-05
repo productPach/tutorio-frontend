@@ -290,3 +290,20 @@ export type Theme = {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type Chat = {
+  id: string;
+  studentId: string;
+  tutorId: string;
+  orderId: string;
+  createdAt: Date;
+}
+
+export type Message = {
+  id: string;
+  chatId: string;
+  senderId: string;
+  text: string;
+  createdAt: Date;
+  isRead: boolean;
+}
