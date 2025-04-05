@@ -10,11 +10,15 @@ import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost
 import { useAppSelector } from "@/store/store";
 import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
 import { useRouter } from "next/navigation";
+import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
 
 const TutorOrders: React.FC = () => {
   const page = "Orders";
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
+  );
+  const isModalResponseTutorToStudent = useAppSelector(
+    (state) => state.modal.isModalResponseTutorToStudent
   );
 
   useEffect(() => {
@@ -50,6 +54,12 @@ const TutorOrders: React.FC = () => {
         contentModal={<BalanceBoost />}
         isModal={isModalBalanceBoost}
         modalId={"balanceBoost"}
+      ></Modal>
+      <Modal
+        titleModal={"Отправить отклик"}
+        contentModal={<ResponseTutorToStudentModal />}
+        isModal={isModalResponseTutorToStudent}
+        modalId={"responseTutorToStudentModal"}
       ></Modal>
     </>
   );
