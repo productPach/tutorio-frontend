@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
-import { getAllOrders } from "@/store/features/orderSlice";
+import { getAllOrders, setOrderById } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
@@ -16,6 +16,7 @@ import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
   setIsModalBalanceBoost,
+  setIsModalResponseTutorToStudent,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
 
@@ -440,10 +441,12 @@ const Orders = () => {
                         )}
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalBalanceBoost(true));
-                          dispatch(
-                            setValueModalBalanceBoost(order.responseCost)
-                          );
+                          //dispatch(setIsModalBalanceBoost(true));
+                          // dispatch(
+                          //   setValueModalBalanceBoost(order.responseCost)
+                          // );
+                          dispatch(setIsModalResponseTutorToStudent(true));
+                          dispatch(setOrderById(order));
                         }}
                         type="button"
                       >

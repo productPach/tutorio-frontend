@@ -22,6 +22,7 @@ import {
   setIsModalPhone,
   setIsModalProfileInfo,
   setIsModalResponseStudentToTutor,
+  setIsModalResponseTutorToStudent,
   setIsModalSkype,
   setIsModalTelegram,
   setModalSelectCity,
@@ -123,6 +124,11 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "responseStudentToTutorModal") {
       dispatch(setIsModalResponseStudentToTutor(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "responseTutorToStudentModal") {
+      dispatch(setIsModalResponseTutorToStudent(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }

@@ -162,6 +162,9 @@ const ordersSlice = createSlice({
       state.scrollPosition = scrollPosition;
       state.scrollHeight = scrollHeight;
     },
+    setOrderById(state, action: PayloadAction<Order>) {
+      state.orderById = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -213,5 +216,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition } = ordersSlice.actions;
+export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById } = ordersSlice.actions;
 export const ordersReducer = ordersSlice.reducer;

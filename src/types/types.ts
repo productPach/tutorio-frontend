@@ -296,6 +296,8 @@ export type Chat = {
   studentId: string;
   tutorId: string;
   orderId: string;
+  messages: Message[];
+  tutorHasAccess: Boolean;
   createdAt: Date;
 }
 
