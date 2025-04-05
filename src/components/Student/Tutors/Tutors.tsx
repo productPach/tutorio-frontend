@@ -16,7 +16,10 @@ import {
   setTutorIdForResponseStudentToTutor,
 } from "@/store/features/modalSlice";
 import Link from "next/link";
-import { updateScrollPosition } from "@/store/features/orderSlice";
+import {
+  setComponentMenu,
+  updateScrollPosition,
+} from "@/store/features/orderSlice";
 
 type OrderProps = {
   tutorsForOrder: Tutor[];
@@ -35,20 +38,21 @@ export const TutorsComponent = ({
   student,
   orderById,
   error,
-  locations,
 }: OrderProps) => {
   const dispatch = useAppDispatch();
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  // Массив для хранения слайдов каждого репетитора отдельно
+  // Массив для хранения слайдов репетитора
   const slidesPerTutor: SlideImage[][] = tutorsForOrder.map((tutor) =>
     tutor.educations.flatMap((diplom) =>
       diplom.isShowDiplom
-        ? diplom.educationDiplomUrl.map((imgDiplom) => ({
-            src: `${host}${port}${imgDiplom}`,
-          }))
+        ? diplom.educationDiplomUrl
+            .slice(0, 6) // Ограничиваем количеством 6
+            .map((imgDiplom) => ({
+              src: `${host}${port}${imgDiplom}`,
+            }))
         : []
     )
   );
@@ -67,8 +71,8 @@ export const TutorsComponent = ({
   );
 
   useEffect(() => {
+    dispatch(setComponentMenu(2));
     setTimeout(() => {
-      console.log("Прокручиваем страницу");
       window.scrollTo({
         top: scrollPosition,
         behavior: "smooth", // Плавный скролл
@@ -182,6 +186,7 @@ export const TutorsComponent = ({
                     href={`./${orderById?.id}/tutor/${tutor.id}`}
                     onClick={() => {
                       saveScrollPosition();
+                      dispatch(setComponentMenu(4));
                     }} // Сохраняем скролл при клике
                   >
                     <Image
@@ -197,7 +202,13 @@ export const TutorsComponent = ({
                   <div
                     className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}
                   >
-                    <Link href={`./tutor/${tutor.id}`}>
+                    <Link
+                      href={`./${orderById?.id}/tutor/${tutor.id}`}
+                      onClick={() => {
+                        saveScrollPosition();
+                        dispatch(setComponentMenu(4));
+                      }} // Сохраняем скролл при клике
+                    >
                       <h3>{tutor.name}</h3>
                     </Link>
                     {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
@@ -280,18 +291,28 @@ export const TutorsComponent = ({
                     Диплом, сертификаты и другие документы
                   </span>
 
-                  <div className={clsx(styles.containerFlxRw, styles.gap10)}>
-                    {slidesPerTutor[tutorIndex].map((slide, index) => (
-                      <Image
-                        key={index}
-                        onClick={() => handleImageClick(tutorIndex, index)}
-                        src={slide.src}
-                        alt="Документ об образовании"
-                        width={100}
-                        height={100}
-                        className={styles.imageDiplomas}
-                      />
-                    ))}
+                  <div
+                    className={clsx(
+                      styles.containerFlxRw,
+                      styles.flxWrp,
+                      slidesPerTutor[tutorIndex].length > 5 &&
+                        styles.jtfCntSpBtwn,
+                      styles.gap10
+                    )}
+                  >
+                    {slidesPerTutor[tutorIndex]
+                      .slice(0, 6)
+                      .map((slide, index) => (
+                        <Image
+                          key={index}
+                          onClick={() => handleImageClick(tutorIndex, index)}
+                          src={slide.src}
+                          alt="Документ об образовании"
+                          width={100}
+                          height={100}
+                          className={styles.imageDiplomas}
+                        />
+                      ))}
                   </div>
                 </div>
               )}

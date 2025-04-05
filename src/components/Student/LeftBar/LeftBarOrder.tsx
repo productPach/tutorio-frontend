@@ -32,12 +32,34 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
     }
   }, []);
 
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back(); // Возврат на предыдущую страницу
+  };
+
   return (
     <div
       className={styles.leftbar}
       style={isSafari ? undefined : { top: `${scrollYForLeftBar}px` }}
     >
-      {
+      {component === 4 ? (
+        <div onClick={() => handleBack()} className={styles.left_menu}>
+          <ul>
+            <li>
+              <Image
+                src="/../img/icon/tutor/go-back.svg"
+                alt="Заказы"
+                width={32}
+                height={32}
+              />
+              <span className={styles.left_menu__list_text}>
+                Вернуться назад
+              </span>
+            </li>
+          </ul>
+        </div>
+      ) : (
         <Link href={"../orders"}>
           <div className={styles.left_menu}>
             <ul>
@@ -55,7 +77,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
             </ul>
           </div>
         </Link>
-      }
+      )}
       <div className={styles.left_menu}>
         <ul>
           {page && page === "Tutor" ? (
