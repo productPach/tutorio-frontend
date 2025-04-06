@@ -21,3 +21,64 @@
 .priceButton {
   font-weight: 400;
 }
+.studentChatWrap {
+  display: flex;
+  flex-direction: column;
+}
+.studentChatContainerImgAndMessage {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+.studentChatContainerImgAndMessage:hover {
+  background-color: #f9f9f9;
+}
+.firstChat {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.lastChat {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.studentChatImg {
+  border-radius: 10px;
+}
+.studentChatIcon {
+  margin: 0 0 -3px 0;
+}
+.studentChatMessageFlx {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+}
+.studentChatMessage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.studentChatMessageFio {
+  width: 210px;
+  white-space: nowrap; /* Запрещает перенос текста */
+  overflow: hidden; /* Обрезает текст, который выходит за пределы блока */
+  text-overflow: ellipsis; /* Добавляет многоточие в конце переполненного текста */
+  font-weight: 500;
+}
+.studentChatMessageText {
+  width: 210px;
+  white-space: nowrap; /* Запрещает перенос текста */
+  overflow: hidden; /* Обрезает текст, который выходит за пределы блока */
+  text-overflow: ellipsis; /* Добавляет многоточие в конце переполненного текста */
+}
+.studentChatMessageDate {
+  width: 210px;
+  white-space: nowrap; /* Запрещает перенос текста */
+  overflow: hidden; /* Обрезает текст, который выходит за пределы блока */
+  text-overflow: ellipsis; /* Добавляет многоточие в конце переполненного текста */
+  color: #777;
+  font-size: 13px;
+}

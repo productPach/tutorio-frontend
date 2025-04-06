@@ -11,6 +11,7 @@ import {
   setIsModalResponseTutorToStudent,
 } from "@/store/features/modalSlice";
 import { createChat, sendMessage } from "@/store/features/chatSlice";
+import { data } from "@/utils/listSubjects";
 
 export const ResponseTutorToStudentModal = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +33,10 @@ export const ResponseTutorToStudentModal = () => {
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
+
+  const subjectForRequest = data.find(
+    (item) => item.id_p === order?.subject
+  )?.for_request;
 
   const update = async () => {
     const messageResponse = inputValue;
@@ -55,10 +60,13 @@ export const ResponseTutorToStudentModal = () => {
         ).unwrap(); // Получаем результат из createChat
 
         if (chat?.id) {
+          const themeOrder = `${order.goal} по ${subjectForRequest}`;
           await dispatch(
             sendMessage({
               chatId: chat.id,
               senderId: tutor.id,
+              orderId: order.id,
+              themeOrder: themeOrder,
               text: messageResponse,
               token,
             })

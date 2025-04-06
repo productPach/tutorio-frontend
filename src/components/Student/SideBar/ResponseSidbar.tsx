@@ -20,6 +20,8 @@ import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
 import { updateOrder } from "@/store/features/orderSlice";
 import { Tutor } from "@/types/types";
 import clsx from "clsx";
+import { host, port } from "@/api/server/configApi";
+import { formatTimeAgo } from "@/utils/date/date";
 
 type ResponseSidbarProps = {
   tutor: Tutor | null; // добавляем tutorId как пропс
@@ -133,7 +135,7 @@ export const ResponseSidbar = ({
             </div>
           )}
 
-          {orderById?.status === "Active" && (
+          {orderById?.status === "Active" && orderById.chats.length < 1 && (
             <div className={generalStyles.sidebar_filter}>
               <div className={generalStyles.studentSidebarOrderNoResponse}>
                 <Player
@@ -152,8 +154,7 @@ export const ResponseSidbar = ({
             </div>
           )}
 
-          {/* ДОБАВИТЬ ПРОВЕРКУ НА КОЛИЧЕСТВО ОТКЛИКОВ!! ПОКАЗЫВАТЬ, ЕСЛИ ОТКЛИКОВ НЕТ */}
-          {orderById?.status === "Hidden" && (
+          {orderById?.status === "Hidden" && orderById.chats.length < 1 && (
             <div className={generalStyles.sidebar_filter}>
               <div className={generalStyles.studentSidebarOrderNoResponse}>
                 <div>
@@ -182,6 +183,81 @@ export const ResponseSidbar = ({
                     <span className={stylesStudent.slider}></span>
                   </label>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {orderById?.status === "Active" && orderById.chats.length > 0 && (
+            <div className={generalStyles.sidebar_filterForChat}>
+              <div className={styles.studentChatWrap}>
+                {[...orderById.chats]
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime()
+                  )
+                  .map((chat, index, array) => {
+                    const lastMessage = [...chat.messages].sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    )[0];
+
+                    const isFirst = index === 0; // Проверка для первого элемента
+                    const isLast = index === array.length - 1; // Проверка для последнего элемента
+
+                    return (
+                      <div
+                        className={clsx(
+                          styles.studentChatContainerImgAndMessage,
+                          {
+                            [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
+                            [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
+                          }
+                        )}
+                        key={chat.id}
+                      >
+                        <Image
+                          className={styles.studentChatImg}
+                          src={`${host}${port}${chat.tutor.avatarUrl}`}
+                          width={66}
+                          height={66}
+                          alt=""
+                        />
+                        <div className={styles.studentChatMessage}>
+                          <div className={styles.studentChatMessageFio}>
+                            {chat.tutor.name}
+                          </div>
+                          <div className={styles.studentChatMessageFlx}>
+                            <div className={styles.studentChatMessageText}>
+                              {lastMessage?.text}
+                            </div>
+                            {lastMessage.isRead ? (
+                              <Image
+                                className={styles.studentChatIcon}
+                                src={"/../img/icon/isRead.svg"}
+                                width={18}
+                                height={18}
+                                alt=""
+                              />
+                            ) : (
+                              <Image
+                                className={styles.studentChatIcon}
+                                src={"/../img/icon/noRead.svg"}
+                                width={18}
+                                height={18}
+                                alt=""
+                              />
+                            )}
+                          </div>
+
+                          <div className={styles.studentChatMessageDate}>
+                            {formatTimeAgo(lastMessage?.createdAt)}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           )}

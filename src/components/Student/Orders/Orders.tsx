@@ -1,5 +1,5 @@
 "use client";
-import styles from "../../../app/tutor/layout.module.css";
+import styles from "../../../app/student/layout.module.css";
 import locationsStyles from "../../../app/tutor/locations.module.css";
 import generalStyles from "../../../app/general.module.css";
 import clsx from "clsx";
@@ -16,6 +16,8 @@ import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import Image from "next/image";
 import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
+import { getDeclension } from "@/utils/words/getDeclension";
+import { host, port } from "@/api/server/configApi";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -388,7 +390,7 @@ const Orders = () => {
                         </div>
                       </>
                     ))}
-                  {order.status === "Active" && (
+                  {order.status === "Active" && order.chats.length < 1 && (
                     <>
                       <div
                         className={clsx(
@@ -416,8 +418,7 @@ const Orders = () => {
                     </>
                   )}
 
-                  {/* 
-                    <div
+                  {/* <div
                     className={clsx(
                       styles.containerTextAndLoader,
                       generalStyles.mrgnTp10
@@ -426,48 +427,32 @@ const Orders = () => {
                     У вас есть новые отклики от репетиторов! 🎉
                     <br></br>
                     Откройте сообщения, чтобы выбрать подходящего репетитора и
-                    начать обучение! 🏆 
-                    </div>
-                    */}
-
-                  {/* <span className={styles.order_block_flx_rw_subtext}>
-                      {formatTimeAgo(order.createdAt)}
-                    </span> */}
-
-                  {/* <div className={styles.studentBlockOrderWithResponse}>
-                    <div className={styles.studentBlockOrderWithResponseImg}>
-                      <Image
-                        className={styles.studentResponseImg}
-                        src={
-                          "/img/icon/student/mock/3xDJ0CD56zmSlPE-_7m_YHd8KwRUP97r1ZsSt1ByQ_zETsXxO5ym-WBT2fdI6uUJqqk7K50h1aCgl7u45y-B9iHz.jpg"
-                        }
-                        width={30}
-                        height={30}
-                        alt=""
-                      />
-                      <Image
-                        className={styles.studentResponseImg}
-                        src={
-                          "/img/icon/student/mock/kIMK-qrfBXArZ7zoyVBVm2gvVzVzoN_YaozHv2k8WRXy6-B43PNaKFmZjyKzFGw0F2CirPVQfqrzsPHaIj1PeQUh.jpg"
-                        }
-                        width={30}
-                        height={30}
-                        alt=""
-                      />
-                      <Image
-                        className={styles.studentResponseImg}
-                        src={
-                          "/img/icon/student/mock/JWX2_bGGYXXAYM5md0DGbcQR8zOzhgXPylylMF0K8IoZGvzHWQHVbeXaiB1S6td18pr-n_FK.jpg"
-                        }
-                        width={30}
-                        height={30}
-                        alt=""
-                      />
-                    </div>
-                    <div className={styles.studentBlockOrderWithResponseCount}>
-                      3 репетитора откликнулись
-                    </div>
+                    начать обучение! 🏆
                   </div> */}
+
+                  {order.status === "Active" && order.chats.length > 0 && (
+                    <div className={styles.studentBlockOrderWithResponse}>
+                      <div className={styles.studentBlockOrderWithResponseImg}>
+                        {order.chats.slice(0, 3).map((chat) => (
+                          <Image
+                            key={chat.id}
+                            className={styles.studentResponseImg}
+                            src={`${host}${port}${chat.tutor.avatarUrl}`}
+                            width={36}
+                            height={36}
+                            alt=""
+                          />
+                        ))}
+                      </div>
+                      <div
+                        className={styles.studentBlockOrderWithResponseCount}
+                      >
+                        {order.chats.length <= 3
+                          ? `${order.chats.length} ${getDeclension(order.chats.length)}`
+                          : `и ещё ${order.chats.length - 3} ${getDeclension(order.chats.length - 3)}`}
+                      </div>
+                    </div>
+                  )}
                 </Link>
               </div>
             );
