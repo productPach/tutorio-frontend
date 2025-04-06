@@ -31,11 +31,13 @@ export const sendMessage = createAsyncThunk<
   {
     chatId: string;
     senderId: string;
+    orderId: string;
+    themeOrder: string;
     text: string;
     token: string;
   }
->("chat/sendMessage", async ({ chatId, senderId, text, token }) => {
-  const response = await fetchSendMessage(chatId, senderId, text, token);
+>("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, token }) => {
+  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, token);
   return response;
 });
 

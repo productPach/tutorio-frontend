@@ -35,6 +35,8 @@ export const fetchCreateChat = async (
 export const fetchSendMessage = async (
     chatId: string,
     senderId: string,
+    orderId: string,
+    themeOrder: string,
     text: string,
     token: string
   ) => {
@@ -47,6 +49,8 @@ export const fetchSendMessage = async (
       body: JSON.stringify({
         chatId,
         senderId,
+        orderId,
+        themeOrder,
         text,
       }),
     });

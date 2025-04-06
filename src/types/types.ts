@@ -209,6 +209,7 @@ export type Order = {
   studentWishes?: string;
   autoContactsOnResponse: boolean,
   responseCost: string;
+  chats: Chat[];
   [key: string]: any;
   status: string;
 };
@@ -295,6 +296,7 @@ export type Chat = {
   id: string;
   studentId: string;
   tutorId: string;
+  tutor: Tutor;
   orderId: string;
   messages: Message[];
   tutorHasAccess: Boolean;

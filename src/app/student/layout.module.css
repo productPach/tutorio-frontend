@@ -394,6 +394,12 @@
   transition: all 0.3s;
 }
 
+.sidebar_filterForChat {
+  border-radius: 10px;
+  height: fit-content;
+  background-color: #ffffff;
+}
+
 .sidebar_filterBlack {
   border-radius: 10px;
   padding: 2px 18px 18px 18px;
@@ -678,7 +684,7 @@
   height: 36px;
 }
 .studentResponseImg {
-  border-radius: 22px;
+  border-radius: 10px;
   margin-right: -8px;
   border: 3px solid #fff;
 }
@@ -724,4 +730,15 @@
 }
 .textGr {
   color: #777777;
+}
+.containerTextAndLoader {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  padding: 20px;
+  background: #fad9492a;
+  border: 1px solid;
+  border-color: #fad9493a;
+  border-radius: 10px;
 }
