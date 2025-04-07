@@ -1,0 +1,142 @@
+.tutorImgContainer {
+  height: 40px;
+}
+.alnItmCntr {
+  align-items: center;
+}
+.gap14 {
+  gap: 14px;
+}
+.mrgnTp10 {
+  margin-top: 10px;
+}
+
+.mrgnBt10 {
+  margin-bottom: 10px;
+}
+.content__chat {
+  margin-bottom: 18px;
+}
+.flx1 {
+  flex: 1;
+}
+.flxClmn {
+  display: flex;
+  flex-direction: column;
+}
+.flxRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.jstContSpcBtwn {
+  justify-content: space-between;
+}
+.jstContFlxEnd {
+  justify-content: flex-end;
+}
+.chat__block {
+  background-color: #ffffff;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */ /* Internet Explorer/Edge */
+  user-select: none;
+  background: url(/img/static/chat-fon.jpg) no-repeat center;
+  background-size: cover;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column-reverse;
+  min-height: 260px;
+  max-height: calc(
+    100vh - 359px
+  ); /* Максимальная высота блока чата - высота экрана */
+  overflow: auto;
+  row-gap: 18px;
+}
+.chat__date {
+  width: -moz-fit-content;
+  width: fit-content;
+  align-self: center;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f1f2f4;
+  font-size: 14px;
+  color: #888888;
+}
+.chat__message {
+  max-width: 78%;
+  border-radius: 10px;
+  padding: 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.chat__message__left {
+  background-color: #efebe6;
+  align-self: flex-start;
+}
+.chat__message__left svg {
+  width: 22px;
+  height: 20px;
+}
+.chat__message__left span {
+  font-size: 13px;
+  color: #888888;
+  margin-right: 2px;
+}
+.chat__message__right {
+  background-color: #e7e9f0;
+  align-self: flex-end;
+}
+.chat__message__right svg {
+  width: 22px;
+  height: 20px;
+}
+.chat__message__right span {
+  font-size: 13px;
+  color: #888888;
+  margin-right: 2px;
+}
+.padng18 {
+  padding: 18px;
+}
+.inputMessageBlock {
+  background-color: #fcfcfc;
+  padding: 18px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-top: 1px solid #e9e9e9;
+}
+.inputMessageBlock button {
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.inputQuestion {
+  width: 100%;
+  height: 43px;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 20px 0 20px;
+  box-sizing: border-box;
+  font-family: "Source Sans 3", sans-serif;
+}
+
+.inputQuestion::-moz-placeholder {
+  color: #c1c1c1;
+}
+
+.inputQuestion::placeholder {
+  color: #c1c1c1;
+}
+
+.inputQuestion:focus {
+  outline: none;
+  border: 1px solid #fad949;
+}
