@@ -144,195 +144,56 @@ export const ChatComponent = ({
             chatStyles.padng18
           )}
         >
-          <div className={clsx(chatStyles.chat__date)}>Запрос закрыт</div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Пожалуйста, свяжитесь со мной по номеру телефона: +79269811041
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Добрый вечер! Готова приступить к занятиям. Когда удобно
-            созвониться? <br />
-            Контакты: +79269811047
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div className={clsx(chatStyles.chat__date)}>Вчера</div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Cообщения чата
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div className={clsx(chatStyles.chat__date)}>Четверг, 7 марта</div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Спасибо!
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__left
-            )}
-          >
-            Добрый день, Павел!
-            <br />
-            Чтобы посмотреть свою анкету, необходимо зайти в раздел "Настройки"
-            - "Моя анкета". Далее нажмите на кнопку "Как выглядит моя анкета для
-            учеников". В браузере откроется ваша страница в том виде, в котором
-            ее видят все ученики.
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-            </div>
-          </div>
-          <div className={clsx(chatStyles.chat__date)}>
+          {chat?.messages.map((message) =>
+            message.senderId === student?.id ? (
+              <div
+                key={message.id}
+                className={clsx(
+                  chatStyles.chat__message,
+                  chatStyles.chat__message__right
+                )}
+              >
+                {message.text}
+                <div
+                  className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
+                >
+                  <span>22:34</span>
+                  <img src="/media/img_static/check_read.svg" width="18" />
+                </div>
+              </div>
+            ) : (
+              <div
+                key={message.id}
+                className={clsx(
+                  chatStyles.chat__message,
+                  chatStyles.chat__message__left
+                )}
+              >
+                {message.text}
+                <div
+                  className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
+                >
+                  <span>22:34</span>
+                </div>
+              </div>
+            )
+          )}
+
+          {/* <div className={clsx(chatStyles.chat__date)}>Запрос закрыт</div> */}
+
+          {/* <div className={clsx(chatStyles.chat__date)}>Вчера</div> */}
+
+          {/* <div className={clsx(chatStyles.chat__date)}>Четверг, 7 марта</div> */}
+
+          {/* <div className={clsx(chatStyles.chat__date)}>
             Оператор Анастасия взяла ваш запрос в работу
-          </div>
-          <div
-            className={clsx(
-              chatStyles.chat__message,
-              chatStyles.chat__message__right
-            )}
-          >
-            Добрый вечер! ПОдскажите, каким образом я могу посмотреть как
-            выглядит моя анкета для учеников? Никак не могу ее нигде найти.
-            Спасибо
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>22:34</span>
-              <img src="/media/img_static/check_read.svg" width="18" />
-            </div>
-          </div>
-          <div className={clsx(chatStyles.chat__date)}>
+          </div> */}
+
+          {/* <div className={clsx(chatStyles.chat__date)}>
             Вы создали запрос #234-344 с темой "Как выглядит моя анкета для
             ученика?"
-          </div>
-          <div className={clsx(chatStyles.chat__date)}>Среда, 6 марта</div>
+          </div> */}
+          {/* <div className={clsx(chatStyles.chat__date)}>Среда, 6 марта</div> */}
         </div>
         <div className={clsx(chatStyles.inputMessageBlock)}>
           <input

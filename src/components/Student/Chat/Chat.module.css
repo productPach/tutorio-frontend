@@ -15,7 +15,7 @@
   margin-bottom: 10px;
 }
 .content__chat {
-  margin-bottom: 18px;
+  margin-bottom: 0px;
 }
 .flx1 {
   flex: 1;
@@ -50,10 +50,13 @@
   flex-direction: column-reverse;
   min-height: 260px;
   max-height: calc(
-    100vh - 359px
+    100vh - 340px
   ); /* Максимальная высота блока чата - высота экрана */
   overflow: auto;
   row-gap: 18px;
+}
+.chat__block::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 .chat__date {
   width: -moz-fit-content;
