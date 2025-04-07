@@ -128,7 +128,7 @@ const OrderPage: React.FC = () => {
               error={error}
             />
           )}
-          {component === 5 && <ChatComponent />}
+          {component === 5 && <ChatComponent orderById={orderById} />}
         </div>
         <ResponseSidbar />
       </section>

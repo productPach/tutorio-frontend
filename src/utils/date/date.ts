@@ -13,30 +13,37 @@ const getTimeDeclension = (count: number, unit: string): string => {
   };
 
   if (unit === "minute") {
-    if (count === 0) return "только что";
+    if (count <= 0) return "только что"; // Если разница меньше или равна 0 минут, возвращаем "только что"
     return `${count} ${getDeclension(count, ["минута", "минуты", "минут"])} назад`;
   }
 
   if (unit === "hour") {
+    if (count <= 0) return "только что"; // Если разница меньше или равна 0 часов, возвращаем "только что"
     return `${count} ${getDeclension(count, ["час", "часа", "часов"])} назад`;
   }
 
   if (unit === "day") {
+    if (count <= 0) return "только что"; // Если разница меньше или равна 0 дней, возвращаем "только что"
     return `${count} ${getDeclension(count, ["день", "дня", "дней"])} назад`;
   }
 
   return "";
 };
 
-
+// Функция для получения времени, прошедшего с момента указанной даты
 export const formatTimeAgo = (date: string | Date): string => {
   const dateString = typeof date === "string" ? new Date(date) : date;
 
-  // Получаем разницу во времени с использованием formatDistanceToNow
-  const distance = formatDistanceToNow(dateString, { addSuffix: true, locale: ru });
+  // Получаем разницу во времени
+  const diffInMilliseconds = new Date().getTime() - dateString.getTime();
 
-  // В зависимости от разницы времени, определяем, что именно мы склоняем
-  const diffInMinutes = Math.floor((new Date().getTime() - dateString.getTime()) / (1000 * 60));
+  // Если разница отрицательная, возвращаем "только что"
+  if (diffInMilliseconds < 0) {
+    return "только что";
+  }
+
+  // Вычисляем разницу в минутах, часах и днях
+  const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
   const diffInHours = Math.floor(diffInMinutes / 60);
   const diffInDays = Math.floor(diffInHours / 24);
 
@@ -53,3 +60,4 @@ export const formatTimeAgo = (date: string | Date): string => {
   // Если разница более 24 часов, склоняем дни
   return getTimeDeclension(diffInDays, "day");
 };
+

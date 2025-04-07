@@ -5,8 +5,8 @@ import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
-import { City, Order, Student } from "@/types/types";
-import { useEffect } from "react";
+import { City, Message, Order, Student } from "@/types/types";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setComponentMenu,
@@ -17,7 +17,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
-import { updateMessage } from "@/store/features/chatSlice";
+import {
+  sendMessage,
+  setChat,
+  updateMessage,
+} from "@/store/features/chatSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+
+type TempMessage = Message & { pending?: boolean; error?: boolean };
 
 type OrderProps = {
   loading?: boolean;
@@ -44,6 +51,18 @@ export const ChatComponent = ({
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
   const chat = useAppSelector((state) => state.chat.chat);
+
+  // Стейт для текста сообщения
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue.trim() !== "") {
+      handleSendMessage();
+    }
+  };
 
   useEffect(() => {
     if (chat?.messages && student?.id && token) {
@@ -126,6 +145,111 @@ export const ChatComponent = ({
     }
   }
 
+  const handleSendMessage = async () => {
+    const messageResponse = inputValue.trim();
+
+    if (
+      chat &&
+      chat.tutor?.id &&
+      orderById?.studentId &&
+      orderById?.id &&
+      token &&
+      messageResponse
+    ) {
+      const subjectForRequest = data.find(
+        (item) => item.id_p === orderById?.subject
+      )?.for_request;
+      const themeOrder = `${orderById.goal} по ${subjectForRequest}`;
+
+      const tempId = "temp-" + Date.now();
+
+      const tempMessage: TempMessage = {
+        id: tempId,
+        chatId: chat.id,
+        senderId: chat.studentId,
+        text: messageResponse,
+        createdAt: new Date().toISOString(),
+        isRead: false,
+        pending: true, // это ты можешь пометить как дополнительное поле
+      };
+
+      // Показываем сообщение сразу в UI
+      const updatedMessages = [...chat.messages, tempMessage];
+      dispatch(
+        setChat({
+          ...chat,
+          messages: updatedMessages,
+        })
+      );
+
+      // Обновляем чат в заказе тоже сразу
+      dispatch(
+        updateChatInOrder({
+          chatId: chat.id,
+          updatedChat: {
+            ...chat,
+            messages: updatedMessages,
+          },
+        })
+      );
+
+      setInputValue(""); // Очищаем инпут сразу
+
+      try {
+        const actionResult = await dispatch(
+          sendMessage({
+            chatId: chat.id,
+            senderId: chat.studentId,
+            orderId: orderById.id,
+            themeOrder,
+            text: messageResponse,
+            token,
+          })
+        );
+
+        const newMessage = unwrapResult(actionResult);
+
+        // Заменяем временное сообщение на настоящее
+        const finalMessages = updatedMessages.map((msg) =>
+          msg.id === tempId ? newMessage : msg
+        );
+
+        dispatch(
+          setChat({
+            ...chat,
+            messages: finalMessages,
+          })
+        );
+
+        dispatch(
+          updateChatInOrder({
+            chatId: chat.id,
+            updatedChat: {
+              ...chat,
+              messages: finalMessages,
+            },
+          })
+        );
+      } catch (error) {
+        console.error("Ошибка при отправке сообщения:", error);
+
+        // Обновим временное сообщение как неудачное (например, для отображения красного текста)
+        const failedMessages = updatedMessages.map((msg) =>
+          msg.id === tempId
+            ? { ...msg, error: true } // или можно просто оставить как есть
+            : msg
+        );
+
+        dispatch(
+          setChat({
+            ...chat,
+            messages: failedMessages,
+          })
+        );
+      }
+    }
+  };
+
   return (
     <>
       <div
@@ -195,59 +319,82 @@ export const ChatComponent = ({
             chatStyles.padng18
           )}
         >
-          {chat?.messages.map((message) =>
-            message.senderId === student?.id ? (
-              <div
-                key={message.id}
-                className={clsx(
-                  chatStyles.chat__message,
-                  chatStyles.chat__message__right
-                )}
-              >
-                {message.text}
+          {/* Сортировка сообщений по времени (по возрастанию) */}
+          {chat?.messages
+            .slice() // Создаем копию массива, чтобы не изменять оригинал
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            ) // старые сообщения снизу
+            .map((message) =>
+              message.senderId === student?.id ? (
                 <div
-                  className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
+                  key={message.id}
+                  className={clsx(
+                    chatStyles.chat__message,
+                    chatStyles.chat__message__right
+                  )}
                 >
-                  <span>22:34</span>
-                  <img src="/media/img_static/check_read.svg" width="18" />
+                  {message.text}
+                  <div
+                    className={clsx(
+                      chatStyles.flxRow,
+                      chatStyles.jstContFlxEnd
+                    )}
+                  >
+                    <span>
+                      {new Date(message.createdAt).toLocaleTimeString()}
+                    </span>{" "}
+                    {/* Отображение времени сообщения */}
+                    {message.isRead ? (
+                      <Image
+                        className={styles.studentChatIcon}
+                        src={"/../img/icon/isRead.svg"}
+                        width={18}
+                        height={18}
+                        alt=""
+                      />
+                    ) : (
+                      <Image
+                        className={styles.studentChatIcon}
+                        src={"/../img/icon/noRead.svg"}
+                        width={18}
+                        height={18}
+                        alt=""
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div
-                key={message.id}
-                className={clsx(
-                  chatStyles.chat__message,
-                  chatStyles.chat__message__left
-                )}
-              >
-                {message.text}
+              ) : (
                 <div
-                  className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
+                  key={message.id}
+                  className={clsx(
+                    chatStyles.chat__message,
+                    chatStyles.chat__message__left
+                  )}
                 >
-                  <span>22:34</span>
+                  {message.text}
+                  <div
+                    className={clsx(
+                      chatStyles.flxRow,
+                      chatStyles.jstContFlxEnd
+                    )}
+                  >
+                    <span>
+                      {new Date(message.createdAt).toLocaleTimeString()}
+                    </span>{" "}
+                    {/* Отображение времени сообщения */}
+                  </div>
                 </div>
-              </div>
-            )
-          )}
-
-          {/* <div className={clsx(chatStyles.chat__date)}>Запрос закрыт</div> */}
-
-          {/* <div className={clsx(chatStyles.chat__date)}>Вчера</div> */}
-
-          {/* <div className={clsx(chatStyles.chat__date)}>Четверг, 7 марта</div> */}
-
-          {/* <div className={clsx(chatStyles.chat__date)}>
-            Оператор Анастасия взяла ваш запрос в работу
-          </div> */}
-
-          {/* <div className={clsx(chatStyles.chat__date)}>
-            Вы создали запрос #234-344 с темой "Как выглядит моя анкета для
-            ученика?"
-          </div> */}
-          {/* <div className={clsx(chatStyles.chat__date)}>Среда, 6 марта</div> */}
+              )
+            )}
         </div>
         <div className={clsx(chatStyles.inputMessageBlock)}>
           <input
+            value={inputValue}
+            onChange={handleInputValue}
+            onKeyDown={handleKeyDown}
             className={clsx(
               chatStyles.inputQuestion,
               chatStyles.mrgnTp10,
