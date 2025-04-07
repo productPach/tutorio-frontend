@@ -8,11 +8,16 @@ import { data } from "@/utils/listSubjects";
 import { City, Order, Student } from "@/types/types";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setComponentMenu } from "@/store/features/orderSlice";
+import {
+  setComponentMenu,
+  setOrderById,
+  updateChatInOrder,
+} from "@/store/features/orderSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
+import { updateMessage } from "@/store/features/chatSlice";
 
 type OrderProps = {
   loading?: boolean;
@@ -24,7 +29,6 @@ type OrderProps = {
 
 export const ChatComponent = ({
   loading,
-  student,
   orderById,
   error,
   locations,
@@ -36,8 +40,55 @@ export const ChatComponent = ({
   }, []);
 
   const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
   const chat = useAppSelector((state) => state.chat.chat);
+
+  useEffect(() => {
+    if (chat?.messages && student?.id && token) {
+      const noReadMessagesFromOther = chat.messages.filter(
+        (message) => !message.isRead && message.senderId !== student.id
+      );
+
+      if (noReadMessagesFromOther.length === 0) return;
+
+      Promise.all(
+        noReadMessagesFromOther.map((message) =>
+          dispatch(
+            updateMessage({
+              messageId: message.id,
+              studentId: student.id,
+              isRead: true,
+              token,
+            })
+          ).unwrap()
+        )
+      )
+        .then(() => {
+          // После успешного обновления сообщений обновляем чат в заказе
+          const updatedMessages = chat.messages.map((message) =>
+            noReadMessagesFromOther.some((m) => m.id === message.id)
+              ? { ...message, isRead: true }
+              : message
+          );
+
+          dispatch(
+            updateChatInOrder({
+              chatId: chat.id,
+              updatedChat: {
+                ...chat,
+                messages: updatedMessages,
+              },
+            })
+          );
+        })
+        .catch((error) => {
+          console.error("Ошибка при обновлении сообщений:", error);
+        });
+    }
+  }, [chat]);
+
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
@@ -102,8 +153,8 @@ export const ChatComponent = ({
               <Image
                 className={styles.tutorImg}
                 src={tutorAvatar ? tutorAvatar : ""}
-                width={40}
-                height={40}
+                width={34}
+                height={34}
                 alt=""
               />
             </Link>

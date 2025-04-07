@@ -31,7 +31,7 @@ export const fetchCreateChat = async (
     return data;
   };
 
-  // Отправка сообщения
+// Отправка сообщения
 export const fetchSendMessage = async (
     chatId: string,
     senderId: string,
@@ -63,4 +63,39 @@ export const fetchSendMessage = async (
     const data = await response.json();
     return data;
   };
+
+// Обновление сообщения
+export const fetchUpdateMessage = async (
+  messageId: string,
+  text?: string,
+  studentId?: string,
+  tutorId?: string,
+  isRead?: boolean,
+  token?: string
+) => {
+  const response = await fetch(`${baseUrl}message`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      messageId,
+      ...(text !== undefined ? { text } : {}),
+      ...(isRead !== undefined ? { isRead } : {}),
+      studentId,
+      tutorId,
+    }),
+    
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Ошибка при обновлении сообщения");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
   

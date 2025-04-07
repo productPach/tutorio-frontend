@@ -18,7 +18,7 @@ import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
 import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
 import { setComponentMenu, updateOrder } from "@/store/features/orderSlice";
-import { Tutor } from "@/types/types";
+import { Message, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
@@ -112,7 +112,7 @@ export const ResponseSidbar = ({
           )}
           {(orderById?.status === "Pending" ||
             orderById?.status === "Sending") && (
-            <div className={generalStyles.sidebar_filter}>
+            <div className={styles.sidebar_filter}>
               <div className={generalStyles.studentSidebarOrderNoResponse}>
                 {/* <Image
                   className={styles.studentResponseImg}
@@ -137,7 +137,7 @@ export const ResponseSidbar = ({
           )}
 
           {orderById?.status === "Active" && orderById.chats.length < 1 && (
-            <div className={generalStyles.sidebar_filter}>
+            <div className={styles.sidebar_filter}>
               <div className={generalStyles.studentSidebarOrderNoResponse}>
                 <Player
                   autoplay
@@ -169,7 +169,7 @@ export const ResponseSidbar = ({
 
           {(orderById?.status === "Active" ||
             orderById?.status === "Hidden") && (
-            <div className={generalStyles.sidebar_filter}>
+            <div className={styles.sidebar_filter}>
               <div className={stylesStudent.containerEntityShowEnd}>
                 <div className={stylesStudent.containerEntityTitleDescription}>
                   <div>Получать новые отклики</div>
@@ -189,7 +189,7 @@ export const ResponseSidbar = ({
           )}
 
           {orderById && orderById.chats.length > 0 && (
-            <div className={generalStyles.sidebar_filterForChat}>
+            <div className={styles.sidebar_filterForChat}>
               <div className={styles.studentChatWrap}>
                 {[...orderById.chats]
                   .sort((a, b) => {
@@ -218,6 +218,13 @@ export const ResponseSidbar = ({
 
                     const isFirst = index === 0;
                     const isLast = index === array.length - 1;
+
+                    const noReadMessagesFromOther =
+                      student &&
+                      chat.messages.filter(
+                        (message) =>
+                          !message.isRead && message.senderId !== student.id
+                      );
 
                     return (
                       <div
