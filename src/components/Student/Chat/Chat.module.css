@@ -48,8 +48,8 @@
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column-reverse;
-  min-height: 260px;
-  max-height: calc(
+
+  min-height: calc(
     100vh - 340px
   ); /* Максимальная высота блока чата - высота экрана */
   overflow: auto;
