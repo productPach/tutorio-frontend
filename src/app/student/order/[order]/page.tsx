@@ -16,6 +16,7 @@ import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
 import { getAllTutors } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
+import { ChatComponent } from "@/components/Student/Chat/Chat";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -127,6 +128,7 @@ const OrderPage: React.FC = () => {
               error={error}
             />
           )}
+          {component === 5 && <ChatComponent />}
         </div>
         <ResponseSidbar />
       </section>

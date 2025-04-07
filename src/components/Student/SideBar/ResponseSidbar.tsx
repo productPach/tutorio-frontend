@@ -17,14 +17,15 @@ import Image from "next/image";
 import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
 import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
-import { updateOrder } from "@/store/features/orderSlice";
+import { setComponentMenu, updateOrder } from "@/store/features/orderSlice";
 import { Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
+import { setChat } from "@/store/features/chatSlice";
 
 type ResponseSidbarProps = {
-  tutor: Tutor | null; // добавляем tutorId как пропс
+  tutor?: Tutor | null; // добавляем tutorId как пропс
 };
 
 export const ResponseSidbar = ({
@@ -32,6 +33,7 @@ export const ResponseSidbar = ({
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
+  const student = useAppSelector((state) => state.student.student);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
@@ -81,7 +83,6 @@ export const ResponseSidbar = ({
 
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
-  console.log(tutor);
 
   return (
     <>
@@ -187,15 +188,27 @@ export const ResponseSidbar = ({
             </div>
           )}
 
-          {orderById?.status === "Active" && orderById.chats.length > 0 && (
+          {orderById && orderById.chats.length > 0 && (
             <div className={generalStyles.sidebar_filterForChat}>
               <div className={styles.studentChatWrap}>
                 {[...orderById.chats]
-                  .sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  )
+                  .sort((a, b) => {
+                    const lastMsgA = [...a.messages].sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    )[0];
+                    const lastMsgB = [...b.messages].sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    )[0];
+
+                    return (
+                      new Date(lastMsgB?.createdAt || 0).getTime() -
+                      new Date(lastMsgA?.createdAt || 0).getTime()
+                    );
+                  })
                   .map((chat, index, array) => {
                     const lastMessage = [...chat.messages].sort(
                       (a, b) =>
@@ -203,16 +216,26 @@ export const ResponseSidbar = ({
                         new Date(a.createdAt).getTime()
                     )[0];
 
-                    const isFirst = index === 0; // Проверка для первого элемента
-                    const isLast = index === array.length - 1; // Проверка для последнего элемента
+                    const isFirst = index === 0;
+                    const isLast = index === array.length - 1;
 
                     return (
                       <div
+                        onClick={() => {
+                          dispatch(setComponentMenu(5));
+                          dispatch(setChat(chat));
+                        }}
                         className={clsx(
                           styles.studentChatContainerImgAndMessage,
                           {
                             [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
                             [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
+                            [styles.isNotReadTutorsMessageContainerBg]:
+                              lastMessage?.senderId !== student?.id &&
+                              chat.messages.some(
+                                (msg) =>
+                                  !msg.isRead && msg.senderId !== student?.id
+                              ),
                           }
                         )}
                         key={chat.id}
@@ -232,22 +255,38 @@ export const ResponseSidbar = ({
                             <div className={styles.studentChatMessageText}>
                               {lastMessage?.text}
                             </div>
-                            {lastMessage.isRead ? (
-                              <Image
-                                className={styles.studentChatIcon}
-                                src={"/../img/icon/isRead.svg"}
-                                width={18}
-                                height={18}
-                                alt=""
-                              />
+                            {lastMessage.senderId === student?.id ? (
+                              lastMessage.isRead ? (
+                                <Image
+                                  className={styles.studentChatIcon}
+                                  src={"/../img/icon/isRead.svg"}
+                                  width={18}
+                                  height={18}
+                                  alt=""
+                                />
+                              ) : (
+                                <Image
+                                  className={styles.studentChatIcon}
+                                  src={"/../img/icon/noRead.svg"}
+                                  width={18}
+                                  height={18}
+                                  alt=""
+                                />
+                              )
                             ) : (
-                              <Image
-                                className={styles.studentChatIcon}
-                                src={"/../img/icon/noRead.svg"}
-                                width={18}
-                                height={18}
-                                alt=""
-                              />
+                              !lastMessage.isRead && (
+                                <div
+                                  className={styles.isNotReadTutorsMessageCount}
+                                >
+                                  {
+                                    chat.messages.filter(
+                                      (msg) =>
+                                        !msg.isRead &&
+                                        msg.senderId !== student?.id
+                                    ).length
+                                  }
+                                </div>
+                              )
                             )}
                           </div>
 

@@ -82,3 +82,25 @@
   color: #777;
   font-size: 13px;
 }
+.isNotReadTutorsMessageContainerBg {
+  background: linear-gradient(
+    90deg,
+    rgba(250, 217, 73, 0.2),
+    rgba(241, 193, 64, 0.1)
+  );
+}
+.isNotReadTutorsMessageCount {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(69, 72, 77, 1) 100%
+  );
+  color: #dddddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
