@@ -3,27 +3,31 @@ import { ru } from "date-fns/locale";
 
 // Функция для правильного склонения времени (минут, часов и дней)
 const getTimeDeclension = (count: number, unit: string): string => {
+  const getDeclension = (n: number, forms: [string, string, string]) => {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+
+    if (mod10 === 1 && mod100 !== 11) return forms[0];      // 1 минута
+    if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return forms[1]; // 2-4 минуты
+    return forms[2]; // 5+ минут
+  };
+
   if (unit === "minute") {
-    if (count === 0) return "только что"; // Если 0 минут — показываем "только что"
-    if (count === 1) return "минуту назад";
-    if ([2, 3, 4].includes(count)) return `${count} минуты назад`;
-    return `${count} минут назад`;
+    if (count === 0) return "только что";
+    return `${count} ${getDeclension(count, ["минута", "минуты", "минут"])} назад`;
   }
 
   if (unit === "hour") {
-    if (count === 1) return "час назад";
-    if ([2, 3, 4].includes(count)) return `${count} часа назад`;
-    return `${count} часов назад`;
+    return `${count} ${getDeclension(count, ["час", "часа", "часов"])} назад`;
   }
 
   if (unit === "day") {
-    if (count === 1) return "день назад";
-    if ([2, 3, 4].includes(count)) return `${count} дня назад`;
-    return `${count} дней назад`;
+    return `${count} ${getDeclension(count, ["день", "дня", "дней"])} назад`;
   }
 
   return "";
 };
+
 
 export const formatTimeAgo = (date: string | Date): string => {
   const dateString = typeof date === "string" ? new Date(date) : date;
