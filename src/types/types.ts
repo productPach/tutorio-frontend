@@ -308,6 +308,6 @@ export type Message = {
   chatId: string;
   senderId: string;
   text: string;
-  createdAt: Date;
+  createdAt: string;
   isRead: boolean;
 }
