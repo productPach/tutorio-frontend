@@ -119,7 +119,7 @@ export const ResponseSidbar = ({
                   generalStyles.buttonYlw
                 )}
               >
-                Предложить заказ репетитору
+                Предложить заказ репетитор
               </button>
             </>
           )}
