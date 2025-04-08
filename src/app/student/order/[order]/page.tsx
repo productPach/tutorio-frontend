@@ -32,6 +32,8 @@ const OrderPage: React.FC = () => {
   const locations = useAppSelector((state) => state.locations.city);
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
+  // Стейт для эмодзи в чате
+  const [visibleEmoji, setVisibleEmoji] = useState(false);
 
   const [student, setStudent] = useState<Student | null>(null);
 
@@ -129,10 +131,17 @@ const OrderPage: React.FC = () => {
             />
           )}
           {component === 5 || component === 6 ? (
-            <ChatComponent orderById={orderById} />
+            <ChatComponent
+              orderById={orderById}
+              visibleEmoji={visibleEmoji}
+              setVisibleEmoji={setVisibleEmoji}
+            />
           ) : null}
         </div>
-        <ResponseSidbar />
+        <ResponseSidbar
+          visibleEmoji={visibleEmoji}
+          setVisibleEmoji={setVisibleEmoji}
+        />
       </section>
       <Modal
         titleModal={"Предложить заказ репетитору"}

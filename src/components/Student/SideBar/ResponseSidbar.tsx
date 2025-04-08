@@ -3,7 +3,7 @@ import generalStyles from "../../../app/student/layout.module.css";
 import styles from "./ResponseSidbar.module.css";
 
 import stylesStudent from "../Student.module.css";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import {
@@ -26,11 +26,15 @@ import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 
 type ResponseSidbarProps = {
+  visibleEmoji?: boolean;
+  setVisibleEmoji?: Dispatch<SetStateAction<boolean>>;
   tutor?: Tutor | null; // добавляем tutorId как пропс
   page?: string;
 };
 
 export const ResponseSidbar = ({
+  visibleEmoji,
+  setVisibleEmoji,
   tutor, // принимаем tutorId
   page,
 }: ResponseSidbarProps) => {
@@ -228,7 +232,8 @@ export const ResponseSidbar = ({
                         onClick={() => {
                           dispatch(setComponentMenu(5));
                           dispatch(setChat(chat));
-
+                          // Закрываем блок с эмодзи
+                          setVisibleEmoji && setVisibleEmoji(false);
                           if (page && page === "Tutor") {
                             route.push("../");
                           }
