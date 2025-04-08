@@ -242,6 +242,7 @@
     10px
   ); /* Применяет размытие к содержимому, которое находится позади элемента */
   -webkit-backdrop-filter: blur(10px); /* Для Webkit-браузеров */
+  user-select: none; /* Запрещает выделение */
 }
 
 .emojiPopup.visible {
