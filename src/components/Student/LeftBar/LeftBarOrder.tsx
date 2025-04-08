@@ -37,13 +37,14 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
   const handleBack = () => {
     router.back(); // Возврат на предыдущую страницу
   };
+  console.log(component);
 
   return (
     <div
       className={styles.leftbar}
       style={isSafari ? undefined : { top: `${scrollYForLeftBar}px` }}
     >
-      {component === 4 ? (
+      {component === 4 || component === 6 ? (
         <div onClick={() => handleBack()} className={styles.left_menu}>
           <ul>
             <li>

@@ -6,7 +6,7 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
 import { City, Message, Order, Student } from "@/types/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setComponentMenu,
@@ -23,6 +23,7 @@ import {
   updateMessage,
 } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import GroupedMessages from "./GroupedMessages";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -54,15 +55,39 @@ export const ChatComponent = ({
 
   // Стейт для текста сообщения
   const [inputValue, setInputValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Обработчик ввода текста в textarea
+  const handleInputValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
   };
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && inputValue.trim() !== "") {
-      handleSendMessage();
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // предотвращаем обычный перенос строки
+      if (inputValue.trim() !== "") {
+        handleSendMessage();
+      }
     }
   };
+
+  useEffect(() => {
+    if (textareaRef.current && wrapperRef.current) {
+      textareaRef.current.style.height = "auto";
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const newHeight = Math.min(scrollHeight, 150);
+      textareaRef.current.style.height = `${newHeight}px`;
+      wrapperRef.current.style.height = `${newHeight}px`;
+
+      // Добавляем паддинг в wrapper, если scrollHeight > 100
+      if (scrollHeight > 150) {
+        wrapperRef.current.style.padding = "0px 0px 10px 0px";
+      } else {
+        wrapperRef.current.style.padding = "0"; // сбрасываем
+      }
+    }
+  }, [inputValue]);
 
   useEffect(() => {
     if (chat?.messages && student?.id && token) {
@@ -107,6 +132,10 @@ export const ChatComponent = ({
         });
     }
   }, [chat]);
+
+  useEffect(() => {
+    dispatch(setComponentMenu(5));
+  }, [dispatch]);
 
   if (loading && !student?.name)
     return (
@@ -271,7 +300,7 @@ export const ChatComponent = ({
             <Link
               href={`./${chat?.orderId}/tutor/${chat?.tutor.id}`}
               onClick={() => {
-                dispatch(setComponentMenu(4));
+                dispatch(setComponentMenu(6));
               }}
             >
               <Image
@@ -288,7 +317,7 @@ export const ChatComponent = ({
               <Link
                 href={`./${orderById?.id}/tutor/${chat && chat.tutor.id}`}
                 onClick={() => {
-                  dispatch(setComponentMenu(4));
+                  dispatch(setComponentMenu(6));
                 }} // Сохраняем скролл при клике
               >
                 <span>{chat && chat.tutor.name}</span>
@@ -319,90 +348,26 @@ export const ChatComponent = ({
             chatStyles.padng18
           )}
         >
+          {/* <div className={chatStyles.chat__date}>Четверг, 7 марта</div> */}
           {/* Сортировка сообщений по времени (по возрастанию) */}
-          {chat?.messages
-            .slice() // Создаем копию массива, чтобы не изменять оригинал
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            ) // старые сообщения снизу
-            .map((message) =>
-              message.senderId === student?.id ? (
-                <div
-                  key={message.id}
-                  className={clsx(
-                    chatStyles.chat__message,
-                    chatStyles.chat__message__right
-                  )}
-                >
-                  {message.text}
-                  <div
-                    className={clsx(
-                      chatStyles.flxRow,
-                      chatStyles.jstContFlxEnd
-                    )}
-                  >
-                    <span>
-                      {new Date(message.createdAt).toLocaleTimeString()}
-                    </span>{" "}
-                    {/* Отображение времени сообщения */}
-                    {message.isRead ? (
-                      <Image
-                        className={styles.studentChatIcon}
-                        src={"/../img/icon/isRead.svg"}
-                        width={18}
-                        height={18}
-                        alt=""
-                      />
-                    ) : (
-                      <Image
-                        className={styles.studentChatIcon}
-                        src={"/../img/icon/noRead.svg"}
-                        width={18}
-                        height={18}
-                        alt=""
-                      />
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div
-                  key={message.id}
-                  className={clsx(
-                    chatStyles.chat__message,
-                    chatStyles.chat__message__left
-                  )}
-                >
-                  {message.text}
-                  <div
-                    className={clsx(
-                      chatStyles.flxRow,
-                      chatStyles.jstContFlxEnd
-                    )}
-                  >
-                    <span>
-                      {new Date(message.createdAt).toLocaleTimeString()}
-                    </span>{" "}
-                    {/* Отображение времени сообщения */}
-                  </div>
-                </div>
-              )
-            )}
+          <GroupedMessages
+            messages={chat?.messages || []}
+            studentId={student?.id || ""}
+          />
         </div>
         <div className={clsx(chatStyles.inputMessageBlock)}>
-          <input
-            value={inputValue}
-            onChange={handleInputValue}
-            onKeyDown={handleKeyDown}
-            className={clsx(
-              chatStyles.inputQuestion,
-              chatStyles.mrgnTp10,
-              chatStyles.mrgnBt10
-            )}
-            type="text"
-            placeholder="Начните вводить сообщение"
-          />
+          {/* Родительский блок с границами */}
+          <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+            <textarea
+              ref={textareaRef}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Начните вводить сообщение"
+              rows={1}
+              className={chatStyles.textarea}
+            />
+          </div>
         </div>
       </div>
     </>

@@ -13,6 +13,7 @@ import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { getCurrentStudent } from "@/store/features/studentSlice";
+import Link from "next/link";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -62,14 +63,14 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </Head>
           <header>
             <div className={clsx(styles.header, styles.center)}>
-              <a href="#">
+              <Link href="/student/orders">
                 <div className={styles.header__logo}>
                   tutorio
                   <span className={styles.header__underLogo}>
                     Онлайн-сервис подбора репетиторов
                   </span>
                 </div>
-              </a>
+              </Link>
               <div className={styles.header__menu}>
                 {student && (
                   <>
