@@ -24,6 +24,7 @@ import {
 } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import GroupedMessages from "./GroupedMessages";
+import { EmojiPicker } from "./EmojiPicker";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -57,6 +58,11 @@ export const ChatComponent = ({
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+    setInputValue("");
+  }, [chat]);
 
   // Обработчик ввода текста в textarea
   const handleInputValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -368,6 +374,10 @@ export const ChatComponent = ({
               className={chatStyles.textarea}
             />
           </div>
+          <EmojiPicker
+            onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
+            textareaRef={textareaRef}
+          />
         </div>
       </div>
     </>
