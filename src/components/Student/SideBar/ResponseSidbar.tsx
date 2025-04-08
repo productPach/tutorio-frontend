@@ -23,23 +23,27 @@ import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
 import { setChat } from "@/store/features/chatSlice";
+import { useRouter } from "next/navigation";
 
 type ResponseSidbarProps = {
   tutor?: Tutor | null; // добавляем tutorId как пропс
+  page?: string;
 };
 
 export const ResponseSidbar = ({
   tutor, // принимаем tutorId
+  page,
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
+  const selectChat = useAppSelector((state) => state.chat.chat);
   const student = useAppSelector((state) => state.student.student);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
   );
   const [isSafari, setIsSafari] = useState(false);
-
+  const route = useRouter();
   // Определяем, используется ли Safari
   useEffect(() => {
     const ua = navigator.userAgent.toLowerCase();
@@ -114,13 +118,6 @@ export const ResponseSidbar = ({
             orderById?.status === "Sending") && (
             <div className={styles.sidebar_filter}>
               <div className={generalStyles.studentSidebarOrderNoResponse}>
-                {/* <Image
-                  className={styles.studentResponseImg}
-                  src={"/img/icon/student/icons8-alarm.gif"}
-                  width={30}
-                  height={30}
-                  alt=""
-                /> */}
                 <Player
                   autoplay
                   loop
@@ -231,6 +228,10 @@ export const ResponseSidbar = ({
                         onClick={() => {
                           dispatch(setComponentMenu(5));
                           dispatch(setChat(chat));
+
+                          if (page && page === "Tutor") {
+                            route.push("../");
+                          }
                         }}
                         className={clsx(
                           styles.studentChatContainerImgAndMessage,
@@ -243,6 +244,8 @@ export const ResponseSidbar = ({
                                 (msg) =>
                                   !msg.isRead && msg.senderId !== student?.id
                               ),
+                            [styles.selectStudentChatContainerImgAndMessage]:
+                              chat.id === selectChat?.id,
                           }
                         )}
                         key={chat.id}

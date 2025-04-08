@@ -56,7 +56,7 @@ const TutorPage: React.FC = () => {
             tutor={tutorData}
           />
         </div>
-        <ResponseSidbar tutor={tutorData} />
+        <ResponseSidbar tutor={tutorData} page={page} />
       </section>
       <Modal
         titleModal={"Предложить заказ репетитору"}

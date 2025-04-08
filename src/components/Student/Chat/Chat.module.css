@@ -15,6 +15,9 @@
   margin-bottom: 10px;
 }
 .content__chat {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 196px); /* Учитываем высоту шапки */
   margin-bottom: 0px;
 }
 .flx1 {
@@ -49,11 +52,9 @@
   flex-wrap: nowrap;
   flex-direction: column-reverse;
 
-  min-height: calc(
-    100vh - 340px
-  ); /* Максимальная высота блока чата - высота экрана */
-  overflow: auto;
   row-gap: 18px;
+  flex-grow: 1; /* Блок сообщений будет занимать всё доступное пространство */
+  overflow-y: auto; /* Позволяет прокрутку, если сообщений больше, чем помещается */
 }
 .chat__block::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
@@ -78,6 +79,7 @@
 .chat__message__left {
   background-color: #efebe6;
   align-self: flex-start;
+  white-space: pre-line;
 }
 .chat__message__left svg {
   width: 22px;
@@ -91,6 +93,7 @@
 .chat__message__right {
   background-color: #e7e9f0;
   align-self: flex-end;
+  white-space: pre-line;
 }
 .chat__message__right svg {
   width: 22px;
@@ -110,6 +113,7 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   border-top: 1px solid #e9e9e9;
+  flex-shrink: 0; /* Блок с инпутом не сжимается */
 }
 .inputMessageBlock button {
   padding: 18px 20px;
@@ -122,13 +126,18 @@
 }
 .inputQuestion {
   width: 100%;
-  height: 43px;
+  min-height: 54px; /* Минимальная высота */
+  max-height: 100px; /* Ограничиваем максимальную высоту */
   border: 1px solid #e9e9e9;
   border-radius: 10px;
   font-size: 16px;
-  padding: 0 20px 0 20px;
+  padding: 16px 20px; /* Постоянные паддинги сверху и снизу */
   box-sizing: border-box;
   font-family: "Source Sans 3", sans-serif;
+  line-height: 1.2;
+  overflow-y: auto; /* Позволяет прокрутку, если текст выходит за пределы */
+  white-space: pre-wrap; /* Для правильного отображения текстов с переносами строк */
+  word-wrap: break-word; /* Для разбиения длинных слов на несколько строк */
 }
 
 .inputQuestion::-moz-placeholder {
@@ -143,3 +152,44 @@
   outline: none;
   border: 1px solid #fad949;
 }
+
+.textarea {
+  width: 100%;
+  min-height: 42px;
+  max-height: 150px;
+  border: none;
+  border-radius: 10px;
+  resize: none;
+  outline: none;
+  font-size: 16px;
+  padding: 11px 16px;
+  box-sizing: border-box;
+  background-color: transparent;
+  font-family: "Source Sans 3", sans-serif;
+  color: #000;
+  line-height: 1.2;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.textarea::-moz-placeholder {
+  color: #c1c1c1;
+}
+
+.textarea::placeholder {
+  color: #c1c1c1;
+}
+.wrapperRef {
+  /* border: 1px solid #e9e9e9; */
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: height 0.1s ease-in-out;
+}
+/* .wrapperRef:focus-within {
+  border: 1px solid #fad949;
+} */
