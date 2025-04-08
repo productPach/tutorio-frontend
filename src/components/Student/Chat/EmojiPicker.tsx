@@ -191,9 +191,9 @@ export const EmojiPicker = ({
       <div
         className={`${chatStyle.emojiPopup} ${visibleEmoji ? chatStyle.visible : ""}`}
       >
-        {emojis.map((emoji) => (
+        {emojis.map((emoji, index) => (
           <span
-            key={emoji}
+            key={index}
             className={chatStyle.emojiItem}
             onClick={() => {
               onSelect(emoji);

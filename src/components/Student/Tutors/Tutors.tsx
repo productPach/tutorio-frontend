@@ -20,6 +20,7 @@ import {
   setComponentMenu,
   updateScrollPosition,
 } from "@/store/features/orderSlice";
+import { setChat } from "@/store/features/chatSlice";
 
 type OrderProps = {
   tutorsForOrder: Tutor[];
@@ -168,6 +169,14 @@ export const TutorsComponent = ({
           // Фильтруем цены по предмету заказа
           const relevantPrices = tutor.subjectPrices.filter(
             (price) => price.subjectId === orderById?.subject
+          );
+
+          // Проверяем есть ли чат с этим репетитором
+          const hasChatWithTutor = orderById?.chats.some(
+            (chat) => chat.tutorId === tutor.id
+          );
+          const chat = orderById?.chats.find(
+            (chat) => chat.tutorId === tutor.id
           );
 
           return (
@@ -349,16 +358,31 @@ export const TutorsComponent = ({
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  dispatch(setIsModalResponseStudentToTutor(true));
-                  dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+
+                  // Если чат с репетитором существует
+                  if (hasChatWithTutor && chat) {
+                    // Логика для существующего чата
+                    dispatch(setComponentMenu(5));
+                    dispatch(setChat(chat));
+                    // Можно добавить другие действия, если чат уже существует
+                  } else {
+                    // Логика для нового чата (если чата нет)
+                    dispatch(setIsModalResponseStudentToTutor(true));
+                    dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+                    // Можно добавить другие действия для нового чата
+                  }
                 }}
                 className={clsx(
                   generalStyles.content_block_button,
-                  generalStyles.buttonYlw,
-                  generalStyles.buttonWthCnt
+                  {
+                    [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
+                    [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
+                  },
+                  generalStyles.buttonWthCnt, // Этот класс всегда применяется
+                  generalStyles.agnCntr
                 )}
               >
-                Предложить заказ
+                {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
               </button>
             </div>
           );

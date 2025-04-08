@@ -273,7 +273,9 @@
 .buttonWthCnt {
   width: fit-content;
 }
-
+/* .agnCntr {
+  align-self: anchor-center;
+} */
 .order_block {
   position: relative;
 }

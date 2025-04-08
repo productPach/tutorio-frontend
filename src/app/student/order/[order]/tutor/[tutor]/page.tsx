@@ -11,10 +11,13 @@ import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
 import { getTutorById } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { TutorComponent } from "@/components/Student/Tutor/Tutor";
+import { getOrderById } from "@/store/features/orderSlice";
 
 const TutorPage: React.FC = () => {
   const page = "Tutor";
   const { tutor } = useParams<{ tutor: string }>(); // Явно указываем тип
+  const { order } = useParams<{ order: string }>(); // Явно указываем тип
+
   const isModalResponseStudentToTutor = useAppSelector(
     (state) => state.modal.isModalResponseStudentToTutor
   );
@@ -33,6 +36,7 @@ const TutorPage: React.FC = () => {
   useEffect(() => {
     if (token && typeof tutor === "string") {
       dispatch(getTutorById({ id: tutor, token }));
+      dispatch(getOrderById({ id: order, token }));
     }
   }, [dispatch, tutor]);
 
