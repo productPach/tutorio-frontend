@@ -10,6 +10,7 @@ import {
   updateScrollPosition,
 } from "@/store/features/orderSlice";
 import { useRouter } from "next/navigation";
+import { setChat } from "@/store/features/chatSlice";
 
 interface LeftBarOrderProps {
   page?: string; // Строковый пропс для указания страницы, если нужно
@@ -61,7 +62,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
           </ul>
         </div>
       ) : (
-        <Link href={"../orders"}>
+        <Link onClick={() => dispatch(setChat(null))} href={"../orders"}>
           <div className={styles.left_menu}>
             <ul>
               <li>
@@ -89,6 +90,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                   dispatch(
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );
+                  dispatch(setChat(null));
                   route.push("../");
                 }}
               >
@@ -112,6 +114,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                   dispatch(
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );
+                  dispatch(setChat(null));
                   route.push("../");
                 }}
               >
@@ -135,6 +138,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                   dispatch(
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );
+                  dispatch(setChat(null));
                   route.push("../");
                 }}
               >
@@ -155,7 +159,12 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
             </>
           ) : (
             <>
-              <li onClick={() => dispatch(setComponentMenu(1))}>
+              <li
+                onClick={() => {
+                  dispatch(setComponentMenu(1));
+                  dispatch(setChat(null));
+                }}
+              >
                 <Image
                   src="/../img/icon/tutor/orders.svg"
                   alt="Заказы"
@@ -170,7 +179,12 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                   Условия заказа
                 </span>
               </li>
-              <li onClick={() => dispatch(setComponentMenu(2))}>
+              <li
+                onClick={() => {
+                  dispatch(setComponentMenu(2));
+                  dispatch(setChat(null));
+                }}
+              >
                 <Image
                   src="/../img/icon/tutor/settings.svg"
                   alt="Настройки"
@@ -185,7 +199,12 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                   Репетиторы
                 </span>
               </li>
-              <li onClick={() => dispatch(setComponentMenu(3))}>
+              <li
+                onClick={() => {
+                  dispatch(setComponentMenu(3));
+                  dispatch(setChat(null));
+                }}
+              >
                 <Image
                   src="/../img/icon/tutor/base.svg"
                   alt="Настройки"

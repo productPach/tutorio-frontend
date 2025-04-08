@@ -1,12 +1,16 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import chatStyle from "./Chat.module.css";
 
 export const EmojiPicker = ({
   onSelect,
   textareaRef,
+  visibleEmoji,
+  setVisibleEmoji,
 }: {
   onSelect: (emoji: string) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
+  visibleEmoji: boolean;
+  setVisibleEmoji: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -104,7 +108,6 @@ export const EmojiPicker = ({
     "👻",
     "👽",
     "🤖",
-    "💩",
     "🔥",
     "✨",
     "🌟",
@@ -145,7 +148,6 @@ export const EmojiPicker = ({
     "👈",
     "👉",
     "👆",
-    "🖕",
     "👇",
     "☝️",
     "👍",
@@ -166,18 +168,17 @@ export const EmojiPicker = ({
     "💪",
   ];
 
-  const [visible, setVisible] = useState(false);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = () => {
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
-    setVisible(true);
+    setVisibleEmoji(true);
   };
 
   const handleMouseLeave = () => {
     hideTimeout.current = setTimeout(() => {
-      setVisible(false);
-    }, 1500);
+      setVisibleEmoji(false);
+    }, 800);
   };
 
   return (
@@ -188,7 +189,7 @@ export const EmojiPicker = ({
     >
       <button className={chatStyle.emojiButton}>😊</button>
       <div
-        className={`${chatStyle.emojiPopup} ${visible ? chatStyle.visible : ""}`}
+        className={`${chatStyle.emojiPopup} ${visibleEmoji ? chatStyle.visible : ""}`}
       >
         {emojis.map((emoji) => (
           <span

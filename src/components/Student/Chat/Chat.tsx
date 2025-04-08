@@ -6,7 +6,7 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
 import { City, Message, Order, Student } from "@/types/types";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setComponentMenu,
@@ -29,6 +29,8 @@ import { EmojiPicker } from "./EmojiPicker";
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
 type OrderProps = {
+  visibleEmoji: boolean;
+  setVisibleEmoji: Dispatch<SetStateAction<boolean>>;
   loading?: boolean;
   student?: Student | null;
   orderById?: Order | null;
@@ -37,6 +39,8 @@ type OrderProps = {
 };
 
 export const ChatComponent = ({
+  visibleEmoji,
+  setVisibleEmoji,
   loading,
   orderById,
   error,
@@ -207,7 +211,8 @@ export const ChatComponent = ({
         isRead: false,
         pending: true, // это ты можешь пометить как дополнительное поле
       };
-
+      // Закрываем блок с эмодзи
+      setVisibleEmoji(false);
       // Показываем сообщение сразу в UI
       const updatedMessages = [...chat.messages, tempMessage];
       dispatch(
@@ -377,6 +382,8 @@ export const ChatComponent = ({
           <EmojiPicker
             onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
             textareaRef={textareaRef}
+            visibleEmoji={visibleEmoji}
+            setVisibleEmoji={setVisibleEmoji}
           />
         </div>
       </div>
