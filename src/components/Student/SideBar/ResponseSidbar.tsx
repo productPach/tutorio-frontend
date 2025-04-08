@@ -92,6 +92,11 @@ export const ResponseSidbar = ({
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
 
+  // Проверяем есть ли чат с этим репетитором
+  const hasChatWithTutor = orderById?.chats.some(
+    (chat) => chat.tutorId === tutor?.id
+  );
+
   return (
     <>
       {!loading && (
@@ -101,7 +106,7 @@ export const ResponseSidbar = ({
             isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
           }
         >
-          {component === 4 && tutor && (
+          {component === 4 && tutor && !hasChatWithTutor && (
             <>
               <button
                 onClick={(e) => {

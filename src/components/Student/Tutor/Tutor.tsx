@@ -16,6 +16,8 @@ import {
   findLocTitleByIdWithDistrict,
   findLocTitlesByIds,
 } from "@/utils/locations/getTitleLocationById";
+import { setComponentMenu } from "@/store/features/orderSlice";
+import { useAppDispatch } from "@/store/store";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -34,7 +36,9 @@ export const TutorComponent = ({
   locations,
   tutor, // принимаем tutorId
 }: OrderProps) => {
+  const dispatch = useAppDispatch();
   useEffect(() => {
+    dispatch(setComponentMenu(4));
     window.scrollTo({
       top: 0,
     });

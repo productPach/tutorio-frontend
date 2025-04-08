@@ -38,7 +38,6 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
   const handleBack = () => {
     router.back(); // Возврат на предыдущую страницу
   };
-  console.log(component);
 
   return (
     <div
