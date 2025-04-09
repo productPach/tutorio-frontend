@@ -47,7 +47,7 @@ export const EmailModal = () => {
     const email = inputValue;
     const isVerifedEmail = false;
 
-    if (token && id && status) {
+    if (token && id) {
       // sendEmail({
       //   to: email,
       //   subject: "Подтверждение почты",

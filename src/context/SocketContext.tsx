@@ -11,6 +11,7 @@ import { io, Socket } from "socket.io-client";
 import { host, port } from "@/api/server/configApi";
 import { useAppSelector, useAppDispatch } from "@/store/store";
 import { getCurrentStudent } from "@/store/features/studentSlice";
+import { getCurrentTutor } from "@/store/features/tutorSlice"; // Получаем экшен для репетитора
 
 type SocketContextType = {
   socket: Socket | null;
@@ -25,11 +26,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [initialized, setInitialized] = useState(false);
 
   const student = useAppSelector((state) => state.student.student);
+  const tutor = useAppSelector((state) => state.tutor.tutor); // Получаем данные репетитора
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!initialized && token && student?.id) {
+    if (!initialized && token && (student?.id || tutor?.id)) {
       const socket = io(`${host}${port}`, {
         auth: { token },
         transports: ["websocket"], // 🧠 важно
@@ -37,29 +39,38 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
       socket.on("connect", () => {
         console.log("✅ Socket connected:", socket.id);
-        socket.emit("setUser", { studentId: student.id });
+
+        // Проверка на роль и настройка сокета
+        if (student?.id) {
+          socket.emit("setUser", { studentId: student.id });
+        } else if (tutor?.id) {
+          socket.emit("setUser", { tutorId: tutor.id });
+        }
       });
 
       socket.on("disconnect", () => {
         console.log("❌ Socket disconnected");
       });
 
-      socket.on("emailVerified", ({ studentId }) => {
-        console.log("📩 Email verified for:", studentId);
-        dispatch(getCurrentStudent(token));
+      // Логика обработки события emailVerified
+      socket.on("emailVerified", ({ studentId, tutorId }) => {
+        console.log("📩 Email verified:", studentId || tutorId);
+
+        if (studentId) {
+          dispatch(getCurrentStudent(token)); // Диспатчим для студента
+        } else if (tutorId) {
+          dispatch(getCurrentTutor(token)); // Диспатчим для репетитора
+        }
       });
 
       socketRef.current = socket;
       setInitialized(true);
     }
 
-    // !!! Не отключаем сокет при размонтировании, если не нужно
-    // Только если хочешь жёстко закрывать при выходе пользователя
-
     return () => {
-      // socketRef.current?.disconnect(); // <- если нужно вручную отключать
+      // socketRef.current?.disconnect(); // Если нужно вручную отключать
     };
-  }, [token, student?.id, initialized]);
+  }, [token, student?.id, tutor?.id, initialized, dispatch]);
 
   return (
     <SocketContext.Provider value={{ socket: socketRef.current }}>
