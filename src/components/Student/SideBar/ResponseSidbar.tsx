@@ -18,7 +18,7 @@ import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
 import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
 import { setComponentMenu, updateOrder } from "@/store/features/orderSlice";
-import { Message, Tutor } from "@/types/types";
+import { Message, Order, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
@@ -26,15 +26,23 @@ import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 
 type ResponseSidbarProps = {
+  orderById: Order | null;
+  loading: boolean;
   visibleEmoji?: boolean;
   setVisibleEmoji?: Dispatch<SetStateAction<boolean>>;
+  isChecked: boolean;
+  setIsChecked: Dispatch<SetStateAction<boolean>>;
   tutor?: Tutor | null; // добавляем tutorId как пропс
   page?: string;
 };
 
 export const ResponseSidbar = ({
+  orderById,
+  loading,
   visibleEmoji,
   setVisibleEmoji,
+  isChecked,
+  setIsChecked,
   tutor, // принимаем tutorId
   page,
 }: ResponseSidbarProps) => {
@@ -55,17 +63,6 @@ export const ResponseSidbar = ({
       setIsSafari(true);
     }
   }, []);
-
-  const { orderById, loading } = useSelector(
-    (state: RootState) => state.orders
-  );
-
-  // Состояние для свитча
-  const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
-
-  useEffect(() => {
-    setIsChecked(orderById?.status === "Active");
-  }, [orderById]);
 
   const toggleSwitch = () => {
     setIsChecked((prev) => {

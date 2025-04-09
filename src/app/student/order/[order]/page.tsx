@@ -17,6 +17,10 @@ import { getAllTutors } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
 import { ChatComponent } from "@/components/Student/Chat/Chat";
+import { host, port } from "@/api/server/configApi";
+import { io } from "socket.io-client";
+import { getChatsByOrderId } from "@/store/features/chatSlice";
+import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -37,9 +41,8 @@ const OrderPage: React.FC = () => {
 
   const [student, setStudent] = useState<Student | null>(null);
 
-  const { orderById, loading, error } = useSelector(
-    (state: RootState) => state.orders
-  );
+  const { orderById, loading, error } = useAppSelector((state) => state.orders);
+
   // Получаем всех репетиторов (фильтровать будем на клиенте)
   const tutorsForOrderNotFilter = useAppSelector((state) => state.tutor.tutors);
   const placeMapping: Record<string, string> = {
@@ -81,13 +84,16 @@ const OrderPage: React.FC = () => {
     token && dispatch(getAllTutors(token));
   }, [dispatch, token]);
 
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // флаг для загрузки данны
   useEffect(() => {
     const fetchStudent = async () => {
-      if (orderById?.studentId) {
+      if (orderById?.studentId && !isDataLoaded) {
+        // Проверяем, был ли уже выполнен запрос
         try {
           if (token) {
             const data = await fetchStudentById(token, orderById.studentId);
             setStudent(data);
+            setIsDataLoaded(true); // После успешной загрузки данных ставим флаг в true
           }
         } catch (error) {
           console.error("Ошибка при загрузке данных студента:", error);
@@ -95,10 +101,36 @@ const OrderPage: React.FC = () => {
       }
     };
 
-    fetchStudent();
-  }, [orderById, token]);
+    if (orderById && token && !isDataLoaded) {
+      fetchStudent();
+      dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
+      setIsChecked(orderById.status === "Active");
+    }
+  }, [orderById, token, dispatch, isDataLoaded]);
 
-  console.log(component);
+  const chats = useAppSelector((state) => state.chat.chats);
+
+  // useEffect(() => {
+  //   // Предположим, что student и chat приходят как пропсы или через глобальное состояние (например, Redux)
+  //   const userId = student?.userId;
+  //   const chatIds = chat ? [chat.id] : [];
+
+  //   if (userId && chatIds.length > 0) {
+  //     // Отправляем событие "joinChat" при загрузке страницы чатов
+  //     socket.emit("joinChat", { userId, chatIds });
+  //   }
+
+  //   // Очистка при размонтировании компонента
+  //   return () => {
+  //     // Закрытие сокет-соединения или отписка от чатов, если необходимо
+  //     chatIds.forEach((chatId) => {
+  //       socket.emit("leaveChat", { userId, chatId });
+  //     });
+  //   };
+  // }, [student, chat]);
+
+  // Состояние для свитча
+  const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
 
   return (
     <>
@@ -143,6 +175,10 @@ const OrderPage: React.FC = () => {
         <ResponseSidbar
           visibleEmoji={visibleEmoji}
           setVisibleEmoji={setVisibleEmoji}
+          isChecked={isChecked}
+          setIsChecked={setIsChecked}
+          orderById={orderById}
+          loading={loading}
         />
       </section>
       <Modal

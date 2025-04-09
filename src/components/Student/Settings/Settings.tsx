@@ -13,7 +13,7 @@ import {
 } from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import "dotenv/config";
 import { host, port } from "@/api/server/configApi";
 import {
@@ -33,34 +33,6 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
 
   const student2 = useAppSelector((state) => state.student.student); // Получаем tutor из Redux
   const isVerifiedEmail = student?.isVerifedEmail;
-
-  useEffect(() => {
-    //console.log("Connecting to socket...");
-    const socket = io(`${host}${port}`);
-
-    socket.on("connect", () => {
-      //console.log("Socket connected:", socket.id);
-
-      // Если есть tutorId (или token), отправляем его на сервер для связывания с сокетом
-      if (student2?.id) {
-        socket.emit("setUser", { studentId: student2.id });
-        //console.log("Sent tutorId to server:", tutor2.id);
-      }
-    });
-
-    socket.on("emailVerified", ({ studentId }) => {
-      //console.log("Received emailVerified event", tutorId);
-      if (token) {
-        dispatch(getCurrentStudent(token));
-        //console.log("Email verified, updating tutor data.");
-      }
-    });
-
-    return () => {
-      //console.log("Disconnecting socket...");
-      socket.disconnect();
-    };
-  }, [dispatch, token, student2]);
 
   // Состояние для свитча получения уведомлений
   const [isCheckedNotifications, setIsCheckedNotifications] = useState(

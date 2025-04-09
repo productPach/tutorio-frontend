@@ -18,6 +18,7 @@ import Link from "next/link";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
+  getChatById,
   sendMessage,
   setChat,
   updateMessage,
@@ -63,10 +64,11 @@ export const ChatComponent = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    textareaRef.current?.focus();
-    setInputValue("");
-  }, [chat]);
+  // useEffect(() => {
+  //   chat && token && dispatch(getChatById({ chatId: chat?.id, token }));
+  //   textareaRef.current?.focus();
+  //   setInputValue("");
+  // }, [chat?.id, token, dispatch]);
 
   // Обработчик ввода текста в textarea
   const handleInputValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -99,53 +101,55 @@ export const ChatComponent = ({
     }
   }, [inputValue]);
 
-  useEffect(() => {
-    if (chat?.messages && student?.id && token) {
-      const noReadMessagesFromOther = chat.messages.filter(
-        (message) => !message.isRead && message.senderId !== student.id
-      );
+  // useEffect(() => {
+  //   if (chat?.messages && student?.id && token) {
+  //     const noReadMessagesFromOther = chat.messages.filter(
+  //       (message) => !message.isRead && message.senderId !== student.id
+  //     );
 
-      if (noReadMessagesFromOther.length === 0) return;
+  //     if (noReadMessagesFromOther.length === 0) return;
 
-      Promise.all(
-        noReadMessagesFromOther.map((message) =>
-          dispatch(
-            updateMessage({
-              messageId: message.id,
-              studentId: student.id,
-              isRead: true,
-              token,
-            })
-          ).unwrap()
-        )
-      )
-        .then(() => {
-          // После успешного обновления сообщений обновляем чат в заказе
-          const updatedMessages = chat.messages.map((message) =>
-            noReadMessagesFromOther.some((m) => m.id === message.id)
-              ? { ...message, isRead: true }
-              : message
-          );
+  //     Promise.all(
+  //       noReadMessagesFromOther.map((message) =>
+  //         dispatch(
+  //           updateMessage({
+  //             messageId: message.id,
+  //             studentId: student.id,
+  //             isRead: true,
+  //             token,
+  //           })
+  //         ).unwrap()
+  //       )
+  //     )
+  //       .then(() => {
+  //         // После успешного обновления сообщений обновляем чат в заказе
+  //         const updatedMessages = chat.messages.map((message) =>
+  //           noReadMessagesFromOther.some((m) => m.id === message.id)
+  //             ? { ...message, isRead: true }
+  //             : message
+  //         );
 
-          dispatch(
-            updateChatInOrder({
-              chatId: chat.id,
-              updatedChat: {
-                ...chat,
-                messages: updatedMessages,
-              },
-            })
-          );
-        })
-        .catch((error) => {
-          console.error("Ошибка при обновлении сообщений:", error);
-        });
-    }
-  }, [chat]);
+  //         dispatch(
+  //           updateChatInOrder({
+  //             chatId: chat.id,
+  //             updatedChat: {
+  //               ...chat,
+  //               messages: updatedMessages,
+  //             },
+  //           })
+  //         );
+  //       })
+  //       .catch((error) => {
+  //         console.error("Ошибка при обновлении сообщений:", error);
+  //       });
+  //   }
+  // }, [chat]);
 
   useEffect(() => {
     dispatch(setComponentMenu(5));
-  }, [dispatch]);
+    textareaRef.current?.focus();
+    setInputValue("");
+  }, [dispatch, chat?.id]);
 
   if (loading && !student?.name)
     return (

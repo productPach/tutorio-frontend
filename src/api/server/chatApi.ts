@@ -98,4 +98,38 @@ export const fetchUpdateMessage = async (
   return data;
 };
 
-  
+// Получение всех чатов по заказу
+export const fetchGetChatsByOrderId = async (orderId: string, token?: string) => {
+  const response = await fetch(`${baseUrl}order/${orderId}/chats`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Ошибка при получении чатов по заказу");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+// Получение чата по ID
+export const fetchGetChatById = async (chatId: string, token?: string) => {
+  const response = await fetch(`${baseUrl}chat/${chatId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Ошибка при получении чата");
+  }
+
+  const data = await response.json();
+  return data;
+};
