@@ -38,7 +38,7 @@ export const TutorComponent = ({
 }: OrderProps) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(setComponentMenu(4));
+    //dispatch(setComponentMenu(4));
     window.scrollTo({
       top: 0,
     });
