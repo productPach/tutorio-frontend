@@ -1,0 +1,302 @@
+.tutorImgContainer {
+  height: 34px;
+}
+.alnItmCntr {
+  align-items: center;
+}
+.gap14 {
+  gap: 14px;
+}
+.mrgnTp10 {
+  margin-top: 10px;
+}
+
+.mrgnBt10 {
+  margin-bottom: 10px;
+}
+.content__chat {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 196px); /* Учитываем высоту шапки */
+  margin-bottom: 0px;
+}
+.flx1 {
+  flex: 1;
+}
+.flxClmn {
+  display: flex;
+  flex-direction: column;
+}
+.flxRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.jstContSpcBtwn {
+  justify-content: space-between;
+}
+.jstContFlxEnd {
+  justify-content: flex-end;
+}
+.chat__block {
+  background-color: #ffffff;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */ /* Internet Explorer/Edge */
+  user-select: none;
+  background: url(/img/static/chat-fon.jpg) repeat center;
+  background-size: 600px auto;
+  background-repeat: repeat;
+  background-position: center;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column-reverse;
+
+  row-gap: 18px;
+  flex-grow: 1; /* Блок сообщений будет занимать всё доступное пространство */
+  overflow-y: auto; /* Позволяет прокрутку, если сообщений больше, чем помещается */
+}
+.chat__block::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.chat__date {
+  width: -moz-fit-content;
+  width: fit-content;
+  align-self: center;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f1f2f4;
+  font-size: 14px;
+  color: #888888;
+}
+.chat__message {
+  max-width: 78%;
+  border-radius: 10px;
+  padding: 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.chat__message__left {
+  background-color: #efebe6;
+  align-self: flex-start;
+  white-space: pre-line;
+}
+.chat__message__left svg {
+  width: 22px;
+  height: 20px;
+}
+.chat__message__left span {
+  font-size: 13px;
+  color: #888888;
+  margin-right: 2px;
+}
+.chat__message__right {
+  background-color: #e7e9f0;
+  align-self: flex-end;
+  white-space: pre-line;
+}
+.chat__message__right svg {
+  width: 22px;
+  height: 20px;
+}
+.chat__message__right span {
+  font-size: 13px;
+  color: #888888;
+  margin-right: 2px;
+}
+.padng18 {
+  padding: 18px;
+}
+.inputMessageBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  background-color: #fcfcfc;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-top: 1px solid #e9e9e9;
+  flex-shrink: 0; /* Блок с инпутом не сжимается */
+}
+.inputMessageBlock button {
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.inputQuestion {
+  width: 100%;
+  min-height: 54px; /* Минимальная высота */
+  max-height: 100px; /* Ограничиваем максимальную высоту */
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 16px 20px; /* Постоянные паддинги сверху и снизу */
+  box-sizing: border-box;
+  font-family: "Source Sans 3", sans-serif;
+  line-height: 1.2;
+  overflow-y: auto; /* Позволяет прокрутку, если текст выходит за пределы */
+  white-space: pre-wrap; /* Для правильного отображения текстов с переносами строк */
+  word-wrap: break-word; /* Для разбиения длинных слов на несколько строк */
+}
+
+.inputQuestion::-moz-placeholder {
+  color: #c1c1c1;
+}
+
+.inputQuestion::placeholder {
+  color: #c1c1c1;
+}
+
+.inputQuestion:focus {
+  outline: none;
+  border: 1px solid #fad949;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 42px;
+  max-height: 150px;
+  border: none;
+  border-radius: 10px;
+  resize: none;
+  outline: none;
+  font-size: 16px;
+  padding: 11px 16px;
+  box-sizing: border-box;
+  background-color: transparent;
+  font-family: "Source Sans 3", sans-serif;
+  color: #000;
+  line-height: 1.2;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.textarea::-moz-placeholder {
+  color: #c1c1c1;
+}
+
+.textarea::placeholder {
+  color: #c1c1c1;
+}
+.wrapperRef {
+  /* border: 1px solid #e9e9e9; */
+  flex: 1;
+  border-radius: 10px;
+  position: relative;
+  align-self: center;
+  overflow: hidden;
+  transition: height 0.1s ease-in-out;
+}
+/* .wrapperRef:focus-within {
+    border: 1px solid #fad949;
+  } */
+
+.emojiWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.emojiButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.emojiPopup {
+  position: absolute;
+  bottom: 57px;
+  right: 0px;
+  width: 312px;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 247, 247, 0.3),
+    rgba(247, 247, 247, 0.2)
+  );
+  border: 1px solid #eee;
+  border-radius: 10px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  backdrop-filter: blur(
+    10px
+  ); /* Применяет размытие к содержимому, которое находится позади элемента */
+  -webkit-backdrop-filter: blur(10px); /* Для Webkit-браузеров */
+  user-select: none; /* Запрещает выделение */
+}
+
+.emojiPopup.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.emojiPopup::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.emojiItem {
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.emojiItem:hover {
+  transform: scale(1.2);
+}
+.order_gap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.tutorImgFioContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.tutorImg {
+  border-radius: 10px;
+}
+.flex4 {
+  flex: 4;
+}
+.containerFlxRw {
+  display: flex;
+  flex-direction: row;
+}
+.jtfCntSpBtwn {
+  justify-content: space-between;
+}
+.containerIsOnline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.isOnline {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #66bb6a;
+}

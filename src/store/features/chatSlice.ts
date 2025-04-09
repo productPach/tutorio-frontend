@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Chat, Message } from "@/types/types"; // Подставь нужные типы
-import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchSendMessage, fetchUpdateMessage } from "@/api/server/chatApi";
+import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchGetChatsByUserIdAndRole, fetchSendMessage, fetchUpdateMessage } from "@/api/server/chatApi";
 
 type ChatStateType = {
   chat: Chat | null;
@@ -76,6 +76,16 @@ export const getChatById = createAsyncThunk<
   const response = await fetchGetChatById(chatId, token);
   return response;
 });
+
+// Получение всех чатов для пользователя (студента или репетитора)
+export const getChatsByUserId = createAsyncThunk<
+  Chat[], // что возвращаем
+  { userId: string; role: "student" | "tutor"; token: string } // что принимаем
+>("chat/getByUserId", async ({ userId, role, token }) => {
+  const response = await fetchGetChatsByUserIdAndRole(userId, role, token);
+  return response;
+});
+
 
 const initialState: ChatStateType = {
   chat: null,
@@ -195,7 +205,22 @@ const chatSlice = createSlice({
       .addCase(getChatsByOrderId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Ошибка при загрузке списка чатов";
+      })
+      
+      // --- getChatsByUserId ---
+      .addCase(getChatsByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getChatsByUserId.fulfilled, (state, action) => {
+        state.chats = action.payload;
+        state.loading = false;
+      })
+      .addCase(getChatsByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Ошибка при загрузке списка чатов";
       });
+      
   },
 });
 

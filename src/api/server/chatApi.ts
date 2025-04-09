@@ -133,3 +133,26 @@ export const fetchGetChatById = async (chatId: string, token?: string) => {
   const data = await response.json();
   return data;
 };
+
+// Получение всех чатов для пользователя (студента или репетитора)
+export const fetchGetChatsByUserIdAndRole = async (
+  userId: string,
+  role: "student" | "tutor",
+  token?: string
+) => {
+  const response = await fetch(`${baseUrl}user/${userId}/role/${role}/chats`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Ошибка при получении чатов для пользователя");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
