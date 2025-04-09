@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Chat, Message } from "@/types/types"; // Подставь нужные типы
-import { fetchCreateChat, fetchSendMessage, fetchUpdateMessage } from "@/api/server/chatApi";
+import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchGetChatsByUserIdAndRole, fetchSendMessage, fetchUpdateMessage } from "@/api/server/chatApi";
 
 type ChatStateType = {
   chat: Chat | null;
+  chats: Chat[];
   messages: Message[];
   loading: boolean;
   error: string | null;
@@ -57,8 +58,38 @@ export const updateMessage = createAsyncThunk<
   return response;
 });
 
+// Получение всех чатов по заказу
+export const getChatsByOrderId = createAsyncThunk<
+  Chat[], // что возвращаем
+  { orderId: string; token: string } // что принимаем
+>("chat/getByOrderId", async ({ orderId, token }) => {
+  const response = await fetchGetChatsByOrderId(orderId, token);
+  return response;
+});
+
+
+// Получение чата по ID
+export const getChatById = createAsyncThunk<
+  Chat, // что возвращаем
+  { chatId: string; token: string } // что принимаем
+>("chat/getById", async ({ chatId, token }) => {
+  const response = await fetchGetChatById(chatId, token);
+  return response;
+});
+
+// Получение всех чатов для пользователя (студента или репетитора)
+export const getChatsByUserId = createAsyncThunk<
+  Chat[], // что возвращаем
+  { userId: string; role: "student" | "tutor"; token: string } // что принимаем
+>("chat/getByUserId", async ({ userId, role, token }) => {
+  const response = await fetchGetChatsByUserIdAndRole(userId, role, token);
+  return response;
+});
+
+
 const initialState: ChatStateType = {
   chat: null,
+  chats: [],
   messages: [],
   loading: false,
   error: null,
@@ -142,12 +173,54 @@ const chatSlice = createSlice({
       
         state.loading = false;
       })
-      
       .addCase(updateMessage.rejected, (state, action) => {
         state.loading = false;
         state.error = "Не удалось обновить сообщение";
         console.error(action.error);
+      })
+
+      // --- getChatById ---
+      .addCase(getChatById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getChatById.fulfilled, (state, action) => {
+        state.chat = action.payload;
+        state.loading = false;
+      })
+      .addCase(getChatById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Ошибка при загрузке чата";
+      })
+
+      // --- getChatsByOrderId ---
+      .addCase(getChatsByOrderId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getChatsByOrderId.fulfilled, (state, action) => {
+        state.chats = action.payload;
+        state.loading = false;
+      })
+      .addCase(getChatsByOrderId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Ошибка при загрузке списка чатов";
+      })
+      
+      // --- getChatsByUserId ---
+      .addCase(getChatsByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getChatsByUserId.fulfilled, (state, action) => {
+        state.chats = action.payload;
+        state.loading = false;
+      })
+      .addCase(getChatsByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Ошибка при загрузке списка чатов";
       });
+      
   },
 });
 

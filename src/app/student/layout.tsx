@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import Head from "next/head";
@@ -14,6 +14,8 @@ import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { getCurrentStudent } from "@/store/features/studentSlice";
 import Link from "next/link";
+import { io, Socket } from "socket.io-client";
+import { useSocket } from "@/context/SocketContext";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -24,10 +26,10 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const student = useAppSelector((state) => state.student.student);
+  const token = useAppSelector((state) => state.auth.token);
 
-  // Получаем токен из куки
-  // Если токен в куки есть, тогда добавляем токен в Redux
-  // Если токена в куках нет, тогда делаем редирект на главную
+  const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
     const token = getTokenFromCookie();
     if (token) {
@@ -43,6 +45,22 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   useEffect(() => {
     dispatch(getAllLocations());
   }, [dispatch]);
+
+  const { socket } = useSocket();
+
+  // useEffect(() => {
+  //   if (!socket) return;
+
+  //   socket.emit("myEvent", { foo: "bar" });
+
+  //   socket.on("something", (data) => {
+  //     console.log("Получено:", data);
+  //   });
+
+  //   return () => {
+  //     socket.off("something");
+  //   };
+  // }, [socket]);
 
   return (
     <>
@@ -95,7 +113,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           {student && <main>{children}</main>}
           <footer className={clsx(styles.center)}>
             <p></p>
-            {/* Добавьте здесь другие элементы подвала */}
           </footer>
         </>
       )}

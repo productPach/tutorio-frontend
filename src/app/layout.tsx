@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ReduxProvider from "@/store/ReduxProvider";
 import VerboxChat from "@/components/Vendor/Verbox/VerboxChat";
+import { SocketProvider } from "@/context/SocketContext";
 
 export const metadata: Metadata = {
   title: "Tutorio — место, где встречаются ученики и репетиторы",
@@ -28,7 +29,10 @@ export default function RootLayout({
         {/* <script src="//code.jivo.ru/widget/b6FSfh54M9" async></script> */}
       </head>
       <body>
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <SocketProvider>{children}</SocketProvider>
+        </ReduxProvider>
+
         <VerboxChat />
       </body>
     </html>

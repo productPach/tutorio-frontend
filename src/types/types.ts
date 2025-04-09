@@ -294,14 +294,25 @@ export type Theme = {
 
 export type Chat = {
   id: string;
-  studentId: string;
   tutorId: string;
-  tutor: Tutor;
+  studentId: string;
   orderId: string;
-  messages: Message[];
-  tutorHasAccess: Boolean;
+  tutorHasAccess: boolean;
   createdAt: Date;
-}
+  messages: Message[];
+  tutor: {
+    id: string;
+    name: string;
+    avatarUrl: string;
+    lastOnline: string | null;
+  };
+  student: {
+    id: string;
+    name: string;
+    avatarUrl: string;
+    lastOnline: string | null;
+  };
+};
 
 export type Message = {
   id: string;

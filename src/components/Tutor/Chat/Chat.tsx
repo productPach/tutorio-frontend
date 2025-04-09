@@ -5,7 +5,7 @@ import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
-import { City, Message, Order, Student } from "@/types/types";
+import { Chat, City, Message, Order, Student } from "@/types/types";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
@@ -24,8 +24,8 @@ import {
   updateMessage,
 } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { EmojiPicker } from "@/components/Student/Chat/EmojiPicker";
 import GroupedMessages from "./GroupedMessages";
-import { EmojiPicker } from "./EmojiPicker";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -34,7 +34,7 @@ type OrderProps = {
   setVisibleEmoji: Dispatch<SetStateAction<boolean>>;
   loading?: boolean;
   student?: Student | null;
-  orderById?: Order | null;
+
   error?: string | null;
   locations?: City[];
 };
@@ -43,7 +43,6 @@ export const ChatComponent = ({
   visibleEmoji,
   setVisibleEmoji,
   loading,
-  orderById,
   error,
   locations,
 }: OrderProps) => {
@@ -162,10 +161,10 @@ export const ChatComponent = ({
 
   if (error) return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
 
-  const subjectArr = data.find(
-    (subject) => subject.id_p === orderById?.subject
-  );
-  const subjectName = subjectArr?.title;
+  // const subjectArr = data.find(
+  //   (subject) => subject.id_p === orderById?.subject
+  // );
+  // const subjectName = subjectArr?.title;
 
   const tutorAvatar = chat && `${host}${port}${chat.tutor.avatarUrl}`;
 
@@ -191,25 +190,18 @@ export const ChatComponent = ({
   const handleSendMessage = async () => {
     const messageResponse = inputValue.trim();
 
-    if (
-      chat &&
-      chat.tutor?.id &&
-      orderById?.studentId &&
-      orderById?.id &&
-      token &&
-      messageResponse
-    ) {
-      const subjectForRequest = data.find(
-        (item) => item.id_p === orderById?.subject
-      )?.for_request;
-      const themeOrder = `${orderById.goal} по ${subjectForRequest}`;
+    if (chat && chat.tutor?.id && chat?.studentId && token && messageResponse) {
+      // const subjectForRequest = data.find(
+      //   (item) => item.id_p === orderById?.subject
+      // )?.for_request;
+      // const themeOrder = `${orderById.goal} по ${subjectForRequest}`;
 
       const tempId = "temp-" + Date.now();
 
       const tempMessage: TempMessage = {
         id: tempId,
         chatId: chat.id,
-        senderId: chat.studentId,
+        senderId: chat.tutorId,
         text: messageResponse,
         createdAt: new Date().toISOString(),
         isRead: false,
@@ -243,9 +235,9 @@ export const ChatComponent = ({
         const actionResult = await dispatch(
           sendMessage({
             chatId: chat.id,
-            senderId: chat.studentId,
-            orderId: orderById.id,
-            themeOrder,
+            senderId: chat.tutorId,
+            orderId: "какой то айди",
+            themeOrder: "какая то тема",
             text: messageResponse,
             token,
           })
@@ -301,12 +293,12 @@ export const ChatComponent = ({
           generalStyles.content_block,
           generalStyles.order_block,
           generalStyles.crsr_pntr,
-          styles.order_gap
+          chatStyles.order_gap
         )}
       >
         <div
           className={clsx(
-            styles.tutorImgFioContainer,
+            chatStyles.tutorImgFioContainer,
             chatStyles.alnItmCntr,
             chatStyles.gap14
           )}
@@ -319,7 +311,7 @@ export const ChatComponent = ({
               }}
             >
               <Image
-                className={styles.tutorImg}
+                className={chatStyles.tutorImg}
                 src={tutorAvatar ? tutorAvatar : "/img/tutor/avatarBasic.png"}
                 width={34}
                 height={34}
@@ -327,19 +319,18 @@ export const ChatComponent = ({
               />
             </Link>
           </div>
-          <div className={styles.flex4}>
-            <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
-              <Link
-                href={`./${orderById?.id}/tutor/${chat && chat.tutor.id}`}
-                onClick={() => {
-                  dispatch(setComponentMenu(6));
-                }} // Сохраняем скролл при клике
-              >
-                <span>{chat && chat.tutor.name}</span>
-              </Link>
+          <div className={chatStyles.flex4}>
+            <div
+              className={clsx(
+                chatStyles.containerFlxRw,
+                chatStyles.jtfCntSpBtwn
+              )}
+            >
+              <span>{chat && chat.student.name}</span>
+
               {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                <div className={styles.containerIsOnline}>
-                  <div className={styles.isOnline}></div>
+                <div className={chatStyles.containerIsOnline}>
+                  <div className={chatStyles.isOnline}></div>
                   <span>{onlineStatus}</span>
                 </div>
               )}
@@ -367,7 +358,7 @@ export const ChatComponent = ({
           {/* Сортировка сообщений по времени (по возрастанию) */}
           <GroupedMessages
             messages={chat?.messages || []}
-            studentId={student?.id || ""}
+            tutorId={chat?.tutorId || ""}
           />
         </div>
         <div className={clsx(chatStyles.inputMessageBlock)}>

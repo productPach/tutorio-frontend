@@ -126,46 +126,46 @@ export const ResponseSidbar = () => {
           )}
 
           {/* Предложение заказа от ученика */}
-          {/* <div className={generalStyles.sidebar_filter}>
-        <div>
-          <h3>Ученик предложил вам заказ</h3>
-          <span>
-            Ваша анкета заинтересовала ученика
-            <br />
-            <br />
-            Примите заказ, чтобы обсудить детали занятий и обменяться
-            контактами
-          </span>
-          <div className={styles.button}>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(setIsModalBalanceBoost(true));
-                orderById?.responseCost &&
-                  dispatch(
-                    setValueModalBalanceBoost(orderById?.responseCost)
-                  );
-              }}
-              type="button"
-            >
-              <span className={styles.textButton}>Принять заказ</span>
-              <span className={styles.priceButton}>
-                {loading ? (
-                  <div className={generalStyles.container__spinner}>
-                    <div className={generalStyles.spinner}>
-                      <SpinnerSingleOrange />
-                    </div>
-                  </div>
-                ) : orderById?.responseCost ? (
-                  `${orderById?.responseCost} руб.`
-                ) : (
-                  "Цена не доступна"
-                )}
+          <div className={generalStyles.sidebar_filter}>
+            <div>
+              <h3>Ученик предложил вам заказ</h3>
+              <span>
+                Ваша анкета заинтересовала ученика
+                <br />
+                <br />
+                Примите заказ, чтобы обсудить детали занятий и обменяться
+                контактами
               </span>
-            </button>
+              <div className={styles.button}>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(setIsModalBalanceBoost(true));
+                    orderById?.responseCost &&
+                      dispatch(
+                        setValueModalBalanceBoost(orderById?.responseCost)
+                      );
+                  }}
+                  type="button"
+                >
+                  <span className={styles.textButton}>Принять заказ</span>
+                  <span className={styles.priceButton}>
+                    {loading ? (
+                      <div className={generalStyles.container__spinner}>
+                        <div className={generalStyles.spinner}>
+                          <SpinnerSingleOrange />
+                        </div>
+                      </div>
+                    ) : orderById?.responseCost ? (
+                      `${orderById?.responseCost} руб.`
+                    ) : (
+                      "Цена не доступна"
+                    )}
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div> */}
         </div>
       )}
     </>

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
 import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
@@ -36,15 +36,27 @@ const TutorPage: React.FC = () => {
   useEffect(() => {
     if (token && typeof tutor === "string") {
       dispatch(getTutorById({ id: tutor, token }));
-      dispatch(getOrderById({ id: order, token }));
     }
-  }, [dispatch, tutor]);
+  }, [dispatch, tutor, token]);
+
+  useEffect(() => {
+    if (token && typeof order === "string") {
+      dispatch(getOrderById({ token, id: order }));
+    }
+  }, [dispatch, token, order]);
+
+  useEffect(() => {
+    orderById && setIsChecked(orderById.status === "Active");
+  }, [orderById]);
 
   const {
     tutor: tutorData,
     loading,
     error,
   } = useSelector((state: RootState) => state.tutor);
+
+  // Состояние для свитча
+  const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
 
   return (
     <>
@@ -60,7 +72,14 @@ const TutorPage: React.FC = () => {
             tutor={tutorData}
           />
         </div>
-        <ResponseSidbar tutor={tutorData} page={page} />
+        <ResponseSidbar
+          tutor={tutorData}
+          page={page}
+          orderById={orderById}
+          loading={loading}
+          isChecked={isChecked}
+          setIsChecked={setIsChecked}
+        />
       </section>
       <Modal
         titleModal={"Предложить заказ репетитору"}
