@@ -18,6 +18,7 @@ import Image from "next/image";
 import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
 import { getDeclension } from "@/utils/words/getDeclension";
 import { host, port } from "@/api/server/configApi";
+import { setChat } from "@/store/features/chatSlice";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -194,7 +195,10 @@ const Orders = () => {
                   }
                 )}
               >
-                <Link href={`order/${order.id}`}>
+                <Link
+                  onClick={() => dispatch(setChat(null))}
+                  href={`order/${order.id}`}
+                >
                   <div className={styles.order_block_flx_rw_spbtw}>
                     <h3>{subject?.title}</h3>
                     {/* <span className={styles.order_block_flx_rw_spbtw_price}>

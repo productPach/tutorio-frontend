@@ -72,7 +72,7 @@ export const TutorsComponent = ({
   );
 
   useEffect(() => {
-    dispatch(setComponentMenu(2));
+    // dispatch(setComponentMenu(2));
     setTimeout(() => {
       window.scrollTo({
         top: scrollPosition,

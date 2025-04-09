@@ -46,8 +46,10 @@
   -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
   -moz-user-select: none; /* Old versions of Firefox */ /* Internet Explorer/Edge */
   user-select: none;
-  background: url(/img/static/chat-fon.jpg) no-repeat center;
-  background-size: cover;
+  background: url(/img/static/chat-fon.jpg) repeat center;
+  background-size: 600px auto;
+  background-repeat: repeat;
+  background-position: center;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column-reverse;
@@ -110,7 +112,7 @@
 .inputMessageBlock {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   background-color: #fcfcfc;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -190,6 +192,7 @@
   flex: 1;
   border-radius: 10px;
   position: relative;
+  align-self: center;
   overflow: hidden;
   transition: height 0.1s ease-in-out;
 }

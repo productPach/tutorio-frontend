@@ -98,6 +98,8 @@ const OrderPage: React.FC = () => {
     fetchStudent();
   }, [orderById, token]);
 
+  console.log(component);
+
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
