@@ -26,6 +26,7 @@ import {
 import { unwrapResult } from "@reduxjs/toolkit";
 import GroupedMessages from "./GroupedMessages";
 import { EmojiPicker } from "./EmojiPicker";
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -63,6 +64,10 @@ export const ChatComponent = ({
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Подписка на чат для получения новых сообщений через useChatSocket
+  const { messages, unreadCount, sendMessageSocket, markAsRead } =
+    useChatSocket(chat?.id ? chat.id : "");
 
   // useEffect(() => {
   //   chat && token && dispatch(getChatById({ chatId: chat?.id, token }));
@@ -252,6 +257,8 @@ export const ChatComponent = ({
         );
 
         const newMessage = unwrapResult(actionResult);
+        // После успешного сохранения отправляем реальное сообщение через сокет
+        sendMessageSocket(newMessage); // передаем реальное сообщение с id
 
         // Заменяем временное сообщение на настоящее
         const finalMessages = updatedMessages.map((msg) =>

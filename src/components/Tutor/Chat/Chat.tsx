@@ -1,16 +1,13 @@
 "use client";
 import generalStyles from "../../../app/tutor/layout.module.css";
-import styles from "../Order/Order.module.css";
 import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { data } from "@/utils/listSubjects";
-import { Chat, City, Message, Order, Student } from "@/types/types";
+import { City, Message, Student } from "@/types/types";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setComponentMenu,
-  setOrderById,
   updateChatInOrder,
 } from "@/store/features/orderSlice";
 import Image from "next/image";
@@ -18,14 +15,15 @@ import Link from "next/link";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
-  getChatById,
+  addMessageToChat,
   sendMessage,
   setChat,
-  updateMessage,
 } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { EmojiPicker } from "@/components/Student/Chat/EmojiPicker";
 import GroupedMessages from "./GroupedMessages";
+import { useSocket } from "@/context/SocketContext";
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -34,7 +32,6 @@ type OrderProps = {
   setVisibleEmoji: Dispatch<SetStateAction<boolean>>;
   loading?: boolean;
   student?: Student | null;
-
   error?: string | null;
   locations?: City[];
 };
@@ -53,6 +50,7 @@ export const ChatComponent = ({
   }, []);
 
   const dispatch = useAppDispatch();
+  const { socket } = useSocket();
   const token = useAppSelector((state) => state.auth.token);
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
@@ -62,6 +60,23 @@ export const ChatComponent = ({
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Подписка на чат для получения новых сообщений через useChatSocket
+  const { messages, unreadCount, sendMessageSocket, markAsRead } =
+    useChatSocket(chat?.id ? chat.id : "");
+  //console.log(chat?.id);
+
+  // const handleSendMessageComp2 = async () => {
+  //   const messageResponse = inputValue.trim();
+  //   sendMessageSocket(messageResponse); // отправляем сообщение в сокет
+  //   }
+
+  useEffect(() => {
+    // Отправляем все сообщения как прочитанные, когда чат загружен
+    if (messages.length > 0) {
+      markAsRead(); // Отмечаем как прочитанные все сообщения, когда новый чат загружен
+    }
+  }, [messages, markAsRead]);
 
   // useEffect(() => {
   //   chat && token && dispatch(getChatById({ chatId: chat?.id, token }));
@@ -78,7 +93,7 @@ export const ChatComponent = ({
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // предотвращаем обычный перенос строки
       if (inputValue.trim() !== "") {
-        handleSendMessage();
+        handleSendMessageComp();
       }
     }
   };
@@ -99,50 +114,6 @@ export const ChatComponent = ({
       }
     }
   }, [inputValue]);
-
-  // useEffect(() => {
-  //   if (chat?.messages && student?.id && token) {
-  //     const noReadMessagesFromOther = chat.messages.filter(
-  //       (message) => !message.isRead && message.senderId !== student.id
-  //     );
-
-  //     if (noReadMessagesFromOther.length === 0) return;
-
-  //     Promise.all(
-  //       noReadMessagesFromOther.map((message) =>
-  //         dispatch(
-  //           updateMessage({
-  //             messageId: message.id,
-  //             studentId: student.id,
-  //             isRead: true,
-  //             token,
-  //           })
-  //         ).unwrap()
-  //       )
-  //     )
-  //       .then(() => {
-  //         // После успешного обновления сообщений обновляем чат в заказе
-  //         const updatedMessages = chat.messages.map((message) =>
-  //           noReadMessagesFromOther.some((m) => m.id === message.id)
-  //             ? { ...message, isRead: true }
-  //             : message
-  //         );
-
-  //         dispatch(
-  //           updateChatInOrder({
-  //             chatId: chat.id,
-  //             updatedChat: {
-  //               ...chat,
-  //               messages: updatedMessages,
-  //             },
-  //           })
-  //         );
-  //       })
-  //       .catch((error) => {
-  //         console.error("Ошибка при обновлении сообщений:", error);
-  //       });
-  //   }
-  // }, [chat]);
 
   useEffect(() => {
     dispatch(setComponentMenu(5));
@@ -187,7 +158,7 @@ export const ChatComponent = ({
     }
   }
 
-  const handleSendMessage = async () => {
+  const handleSendMessageComp = async () => {
     const messageResponse = inputValue.trim();
 
     if (chat && chat.tutor?.id && chat?.studentId && token && messageResponse) {
@@ -244,6 +215,8 @@ export const ChatComponent = ({
         );
 
         const newMessage = unwrapResult(actionResult);
+        // После успешного сохранения отправляем реальное сообщение через сокет
+        sendMessageSocket(newMessage); // передаем реальное сообщение с id
 
         // Заменяем временное сообщение на настоящее
         const finalMessages = updatedMessages.map((msg) =>
@@ -286,6 +259,8 @@ export const ChatComponent = ({
     }
   };
 
+  //console.log(messages);
+
   return (
     <>
       <div
@@ -312,7 +287,9 @@ export const ChatComponent = ({
             >
               <Image
                 className={chatStyles.tutorImg}
-                src={tutorAvatar ? tutorAvatar : "/img/tutor/avatarBasic.png"}
+                src={
+                  chat ? chat.student.avatarUrl : "/img/tutor/avatarBasic.png"
+                }
                 width={34}
                 height={34}
                 alt=""

@@ -8,6 +8,8 @@ import { ChatSidbar } from "@/components/Tutor/SideBar/ChatSidebar/ChatSideBar";
 import { useEffect, useState } from "react";
 import { getChatsByUserId } from "@/store/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useChat } from "@/context/ChatContext";
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 const ResponsesPage: React.FC = () => {
   const page = "Responses";
@@ -27,7 +29,6 @@ const ResponsesPage: React.FC = () => {
         getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
       );
   }, [tutor, token]);
-  console.log(chats);
 
   return (
     <>
