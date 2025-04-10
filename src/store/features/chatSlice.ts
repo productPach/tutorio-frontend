@@ -105,6 +105,13 @@ const chatSlice = createSlice({
     setMessages: (state, action: PayloadAction<Message[]>) => {
       state.messages = action.payload;
     },
+    // Новый экшен для добавления сообщения в выбранный чат
+    addMessageToChat: (state, action: PayloadAction<Message>) => {
+      if (state.chat) {
+        // Вместо push используем новый массив
+        state.chat.messages = [...state.chat.messages, action.payload];
+      }
+    },
     resetChat: (state) => {
       state.chat = null;
       state.messages = [];
@@ -224,5 +231,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChat, setMessages, resetChat } = chatSlice.actions;
+export const { setChat, setMessages, addMessageToChat, resetChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;
