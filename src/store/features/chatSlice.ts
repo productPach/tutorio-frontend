@@ -112,6 +112,14 @@ const chatSlice = createSlice({
         state.chat.messages = [...state.chat.messages, action.payload];
       }
     },
+    markMessagesAsRead: (state, action) => {
+      const { chatId, messageIds } = action.payload;
+      if (state.chat && state.chat.id === chatId) {
+        state.chat.messages = state.chat.messages.map((msg) =>
+          messageIds.includes(msg.id) ? { ...msg, isRead: true } : msg
+        );
+      }
+    },
     resetChat: (state) => {
       state.chat = null;
       state.messages = [];
@@ -231,5 +239,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChat, setMessages, addMessageToChat, resetChat } = chatSlice.actions;
+export const { setChat, setMessages, addMessageToChat, markMessagesAsRead, resetChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;
