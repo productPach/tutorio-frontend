@@ -38,11 +38,9 @@ export const useChatSocket = (chatId: string) => {
     const fetchChat = async () => {
         try {
           // Подписываемся на чат через Redux
-          await dispatch(getChatById({ chatId, token: token || "" }));
-  
-          if (chat && chat.messages) {
-            setMessages(chat.messages); // Если чат уже есть в Redux, заполняем сообщения
-          }
+          const response = await dispatch(getChatById({ chatId, token: token || "" })).unwrap();
+          setMessages(response.messages); // <-- напрямую из payload
+          markAsRead(response.messages);
         } catch (error) {
           console.error("Ошибка загрузки чата:", error);
         }
@@ -90,6 +88,8 @@ export const useChatSocket = (chatId: string) => {
       socket.emit("leaveChat", { chatId });
     };
   }, [socket, chatId, studentId, tutorUserId]); // Обновляем зависимости
+
+
 
   const sendMessageSocket = (message: Message) => {
     if (!socket || !(studentId || tutorUserId)) return;
