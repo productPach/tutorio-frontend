@@ -30,10 +30,27 @@ const ResponsesPage: React.FC = () => {
       );
   }, [tutor, token]);
 
+  useEffect(() => {
+    tutor &&
+      token &&
+      dispatch(
+        getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
+      );
+  }, [chats]);
+
+  const currentUserId = tutor?.userId;
+
+  const unreadCount = chats.reduce((total, chat) => {
+    const unreadMessages = chat.messages?.filter(
+      (msg) => !msg.isRead && msg.senderId !== currentUserId
+    );
+    return unreadMessages?.length;
+  }, 0);
+
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
+        <LeftBar page={page} countNoReadMsg={unreadCount} />
         <div className={clsx(styles.contentChat)}>
           <ChatComponent
             visibleEmoji={visibleEmoji}

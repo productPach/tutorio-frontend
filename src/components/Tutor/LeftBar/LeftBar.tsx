@@ -9,10 +9,11 @@ import { AppDispatch, useAppSelector } from "@/store/store";
 import { setSupportMenu } from "@/store/features/tutorSlice";
 import { useRouter } from "next/navigation";
 
-const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
-  page,
-  pageName,
-}) => {
+const LeftBar: React.FC<{
+  page: string;
+  pageName?: string;
+  countNoReadMsg?: number;
+}> = ({ page, pageName, countNoReadMsg }) => {
   const dispatch = useDispatch<AppDispatch>();
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
@@ -99,7 +100,13 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
               >
                 Отклики
               </span>
-              <span className={styles.count_block}>9</span>
+              {countNoReadMsg ? (
+                <span className={styles.count_block}>
+                  {countNoReadMsg > 0 && countNoReadMsg}
+                </span>
+              ) : (
+                ""
+              )}
             </li>
           </Link>
           <Link href={"/tutor/profile"} prefetch={true}>
