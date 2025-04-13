@@ -71,13 +71,6 @@ export const ChatComponent = ({
   //   sendMessageSocket(messageResponse); // отправляем сообщение в сокет
   //   }
 
-  useEffect(() => {
-    // Отправляем все сообщения как прочитанные, когда чат загружен
-    if (messages.length > 0) {
-      markAsRead(); // Отмечаем как прочитанные все сообщения, когда новый чат загружен
-    }
-  }, [messages, markAsRead]);
-
   // useEffect(() => {
   //   chat && token && dispatch(getChatById({ chatId: chat?.id, token }));
   //   textareaRef.current?.focus();

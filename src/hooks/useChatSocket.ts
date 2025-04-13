@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "@/context/SocketContext";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { addMessageToChat, getChatById } from "@/store/features/chatSlice";
+import { addMessageToChat, getChatById, markMessagesAsRead } from "@/store/features/chatSlice";
 
 type Message = {
   id: string;
@@ -52,20 +52,23 @@ export const useChatSocket = (chatId: string) => {
 
     const handleNewMessage = (message: Message) => {
       if (message.chatId === chatId) {
-        console.log("Новое сообщение");
         
-        setMessages((prev) => [...prev, message]); // Обновляем локальный стейт
+        setMessages((prev) => {
+          const updated = [...prev, message];
+          // после обновления вызываем markAsRead с новым списком
+          setTimeout(() => markAsRead(updated), 0); // небольшой хак
+          return updated;
+        });
         dispatch(addMessageToChat(message)); // Добавляем новое сообщение в состояние
+
       }
     };
 
     const handleMessagesRead = (data: { chatId: string; messageIds: string[] }) => {
+      
       if (data.chatId === chatId) {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            data.messageIds.includes(msg.id) ? { ...msg, isRead: true } : msg
-          )
-        );
+        console.log("🔥 messagesRead пришел:", data);
+        dispatch(markMessagesAsRead({ chatId: data.chatId, messageIds: data.messageIds }));
       }
     };
 
@@ -92,7 +95,6 @@ export const useChatSocket = (chatId: string) => {
     if (!socket || !(studentId || tutorUserId)) return;
 
     const userId = studentId || tutorUserId;
-    console.log("Отправили сообщение:"+message);
     
     socket.emit("sendMessage", {
       chatId,
@@ -100,23 +102,35 @@ export const useChatSocket = (chatId: string) => {
     });
   };
 
-  const markAsRead = () => {
+  const markAsRead = (msgs: Message[]) => {
     if (!socket || !(studentId || tutorUserId)) return;
-
+  
     const userId = studentId || tutorUserId;
+    console.log("отправка о прочтении");
 
-    const unreadMessageIds = messages
-      .filter((msg) => !msg.isRead && msg.senderId !== userId)
+  
+  
+    const unreadMessageIds = msgs
+      .filter(
+        (msg) =>
+          !msg.isRead &&
+          msg.senderId !== userId &&
+          !msg.id.startsWith("temp-") // фильтруем временные ID
+      )
       .map((msg) => msg.id);
 
+      console.log(unreadMessageIds);
+      
+  
     if (unreadMessageIds.length === 0) return;
-
+  
     socket.emit("markAsRead", {
       chatId,
       messageIds: unreadMessageIds,
       userId,
     });
   };
+  
 
   return {
     messages,
