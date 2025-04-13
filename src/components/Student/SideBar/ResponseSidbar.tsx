@@ -22,7 +22,7 @@ import { Message, Order, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
-import { setChat } from "@/store/features/chatSlice";
+import { getChatsByOrderId, setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 
 type ResponseSidbarProps = {
@@ -48,6 +48,7 @@ export const ResponseSidbar = ({
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
+  const chats = useAppSelector((state) => state.chat.chats);
   const selectChat = useAppSelector((state) => state.chat.chat);
   const student = useAppSelector((state) => state.student.student);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
@@ -63,6 +64,12 @@ export const ResponseSidbar = ({
       setIsSafari(true);
     }
   }, []);
+
+  useEffect(() => {
+    orderById &&
+      token &&
+      dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
+  }, [chats]);
 
   const toggleSwitch = () => {
     setIsChecked((prev) => {
@@ -191,10 +198,10 @@ export const ResponseSidbar = ({
             </div>
           )}
 
-          {orderById && orderById.chats.length > 0 && (
+          {orderById && orderById.chats.length > 0 && chats && (
             <div className={styles.sidebar_filterForChat}>
               <div className={styles.studentChatWrap}>
-                {[...orderById.chats]
+                {[...chats]
                   .sort((a, b) => {
                     const lastMsgA = [...a.messages].sort(
                       (a, b) =>
