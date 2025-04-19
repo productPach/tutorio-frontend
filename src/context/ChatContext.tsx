@@ -106,7 +106,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       setChats((prev) =>
         prev.map((chat) =>
           chat.id === message.chatId
-            ? { ...chat, messages: [...chat.messages, message] }
+            ? {
+                ...chat,
+                messages: [...chat.messages, message],
+                lastMessage: message, // Обновляем последнее сообщение
+                unreadCount:
+                  chat.messages.filter(
+                    (msg) => !msg.isRead && msg.senderId !== message.senderId
+                  ).length + 1, // Добавляем к числу непрочитанных
+              }
             : chat
         )
       );
