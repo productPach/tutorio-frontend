@@ -48,7 +48,7 @@ const ResponsesPage: React.FC = () => {
             setVisibleEmoji={setVisibleEmoji}
           />
         </div>
-        <ChatSidbar chats={chats} />
+        <ChatSidbar />
       </section>
     </>
   );
