@@ -1,4 +1,5 @@
-"use client";
+"use client"; // Указание компонента как клиентского
+
 import {
   createContext,
   useContext,
@@ -7,36 +8,37 @@ import {
   useCallback,
 } from "react";
 import { useSocket } from "./SocketContext";
-import { useAppSelector } from "@/store/store";
+import { useAppSelector, useAppDispatch } from "@/store/store";
 
 import { Chat, Message } from "@/types/types";
 import {
   fetchGetChatsByOrderId,
   fetchGetChatsByUserIdAndRole,
 } from "@/api/server/chatApi";
+import { setChats } from "@/store/features/chatSlice";
 
 type ChatContextType = {
   chats: Chat[];
   sendMessage: (chatId: string, text: string) => void;
   markAsRead: (chatId: string) => void;
-  handleReadMessages: (data: { chatId: string; userId: string }) => void;
+  setChatsState: (newChats: Chat[]) => void;
 };
 
 const ChatContext = createContext<ChatContextType | null>(null);
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
-  const { socket } = useSocket(); // Используем сокет из контекста
+  const { socket } = useSocket();
   const token = useAppSelector((state) => state.auth.token);
-
   const studentId = useAppSelector(
     (state) => state.student.student?.id ?? null
   );
   const tutorUserId = useAppSelector(
     (state) => state.tutor.tutor?.userId ?? null
   );
-  const orderId = useAppSelector((state) => state.orders.orderById); // если хранишь orderId
+  const orderId = useAppSelector((state) => state.orders.orderById);
+  const dispatch = useAppDispatch();
 
-  const [chats, setChats] = useState<Chat[]>([]);
+  const [chats, setChatsState] = useState<Chat[]>([]);
 
   const loadChats = useCallback(async () => {
     if (!token) return;
@@ -44,13 +46,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       let combinedChats: Chat[] = [];
 
-      // Загружаем чаты как студент
       if (studentId && orderId) {
         const studentChats = await fetchGetChatsByOrderId(orderId.id, token);
         combinedChats = [...combinedChats, ...studentChats];
       }
 
-      // Загружаем чаты как репетитор
       if (tutorUserId) {
         const tutorChats = await fetchGetChatsByUserIdAndRole(
           tutorUserId,
@@ -60,20 +60,20 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         combinedChats = [...combinedChats, ...tutorChats];
       }
 
-      setChats(combinedChats);
+      setChatsState(combinedChats);
+      dispatch(setChats(combinedChats));
 
       const chatIds = combinedChats.map((chat) => chat.id);
       socket?.emit("joinChat", { userId: studentId || tutorUserId, chatIds });
     } catch (err) {
       console.error("Ошибка загрузки чатов:", err);
     }
-  }, [studentId, tutorUserId, token, socket, orderId]);
+  }, [studentId, tutorUserId, token, socket, orderId, dispatch]);
 
   useEffect(() => {
     loadChats();
   }, [loadChats]);
 
-  // Функция для воспроизведения звука нового сообщения
   const playNotificationSound = () => {
     const audio = new Audio("/sounds/intuition-561.mp3");
     audio
@@ -81,45 +81,47 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       .catch((e) => console.warn("Не удалось воспроизвести звук:", e));
   };
 
-  const handleReadMessages = useCallback(
-    (data: { chatId: string; userId: string }) => {
-      setChats((prev) =>
-        prev.map((chat) =>
-          chat.id === data.chatId
-            ? {
-                ...chat,
-                messages: chat.messages.map((msg) =>
-                  msg.senderId !== data.userId ? { ...msg, isRead: true } : msg
-                ),
-              }
-            : chat
-        )
-      );
-    },
-    []
-  );
-
   useEffect(() => {
     if (!socket) return;
 
     const handleNewMessage = (message: Message) => {
-      setChats((prev) =>
-        prev.map((chat) =>
-          chat.id === message.chatId
-            ? {
-                ...chat,
-                messages: [...chat.messages, message],
-                lastMessage: message, // Обновляем последнее сообщение
-                unreadCount:
-                  chat.messages.filter(
-                    (msg) => !msg.isRead && msg.senderId !== message.senderId
-                  ).length + 1, // Добавляем к числу непрочитанных
-              }
-            : chat
-        )
-      );
-      // ✅ Воспроизводим звук
+      setTimeout(() => {
+        setChatsState((prev) => {
+          const updatedChats = prev.map((chat) =>
+            chat.id === message.chatId
+              ? {
+                  ...chat,
+                  messages: [...chat.messages, message],
+                  lastMessage: message,
+                }
+              : chat
+          );
+          dispatch(setChats(updatedChats));
+          return updatedChats;
+        });
+      }, 0);
       playNotificationSound();
+    };
+
+    const handleReadMessages = (data: { chatId: string; userId: string }) => {
+      setTimeout(() => {
+        setChatsState((prev) => {
+          const updatedChats = prev.map((chat) =>
+            chat.id === data.chatId
+              ? {
+                  ...chat,
+                  messages: chat.messages.map((msg) =>
+                    msg.senderId !== data.userId
+                      ? { ...msg, isRead: true }
+                      : msg
+                  ),
+                }
+              : chat
+          );
+          dispatch(setChats(updatedChats));
+          return updatedChats;
+        });
+      }, 0);
     };
 
     socket.on("newMessage", handleNewMessage);
@@ -134,7 +136,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         socket.emit("leaveChat", { userId: studentId || tutorUserId, chatIds });
       }
     };
-  }, [socket, chats, studentId, tutorUserId, handleReadMessages]);
+  }, [socket, chats, studentId, tutorUserId, dispatch]);
 
   const sendMessage = (chatId: string, text: string) => {
     if (!socket || (!studentId && !tutorUserId)) return;
@@ -166,7 +168,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ChatContext.Provider
-      value={{ chats, sendMessage, markAsRead, handleReadMessages }}
+      value={{ chats, sendMessage, markAsRead, setChatsState }}
     >
       {children}
     </ChatContext.Provider>

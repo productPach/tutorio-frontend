@@ -6,7 +6,7 @@ import SideBar from "@/components/Tutor/SideBar/SideBar";
 import { ChatComponent } from "@/components/Tutor/Chat/Chat";
 import { ChatSidbar } from "@/components/Tutor/SideBar/ChatSidebar/ChatSideBar";
 import { useEffect, useState } from "react";
-import { getChatsByUserId } from "@/store/features/chatSlice";
+import { getChatsByUserId, setChats } from "@/store/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useChat } from "@/context/ChatContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
@@ -16,7 +16,7 @@ const ResponsesPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
-  const chats = useAppSelector((state) => state.chat.chats);
+  //const chats = useAppSelector((state) => state.chat.chats);
   const tutor = useAppSelector((state) => state.tutor.tutor);
   // Стейт для эмодзи в чате
   const [visibleEmoji, setVisibleEmoji] = useState(false);
@@ -28,6 +28,16 @@ const ResponsesPage: React.FC = () => {
         getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
       );
   }, [tutor?.userId, token]);
+
+  const { chats } = useChat();
+
+  useEffect(() => {
+    if (chats) {
+      // Обновляем чаты в Redux, чтобы синхронизировать их
+      dispatch(setChats(chats));
+      console.log("обновляем");
+    }
+  }, [chats, dispatch]);
 
   const currentUserId = tutor?.userId;
 
@@ -48,7 +58,7 @@ const ResponsesPage: React.FC = () => {
             setVisibleEmoji={setVisibleEmoji}
           />
         </div>
-        <ChatSidbar />
+        <ChatSidbar chats={chats} />
       </section>
     </>
   );

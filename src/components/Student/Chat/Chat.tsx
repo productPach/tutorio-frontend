@@ -27,6 +27,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import GroupedMessages from "./GroupedMessages";
 import { EmojiPicker } from "./EmojiPicker";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { useChat } from "@/context/ChatContext";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -64,6 +65,8 @@ export const ChatComponent = ({
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const { chats, setChatsState } = useChat();
 
   // Подписка на чат для получения новых сообщений через useChatSocket
   const { messages, unreadCount, sendMessageSocket, markAsRead } =
@@ -218,12 +221,16 @@ export const ChatComponent = ({
         text: messageResponse,
         createdAt: new Date().toISOString(),
         isRead: false,
-        pending: true, // это ты можешь пометить как дополнительное поле
+        pending: true, // Это временное поле
       };
+
       // Закрываем блок с эмодзи
       setVisibleEmoji(false);
+
       // Показываем сообщение сразу в UI
       const updatedMessages = [...chat.messages, tempMessage];
+
+      // Обновляем чат в Redux (setChat)
       dispatch(
         setChat({
           ...chat,
@@ -231,7 +238,7 @@ export const ChatComponent = ({
         })
       );
 
-      // Обновляем чат в заказе тоже сразу
+      // Обновляем чат в заказе
       dispatch(
         updateChatInOrder({
           chatId: chat.id,
@@ -242,7 +249,7 @@ export const ChatComponent = ({
         })
       );
 
-      setInputValue(""); // Очищаем инпут сразу
+      setInputValue(""); // Очищаем инпут
 
       try {
         const actionResult = await dispatch(
@@ -258,13 +265,28 @@ export const ChatComponent = ({
 
         const newMessage = unwrapResult(actionResult);
         // После успешного сохранения отправляем реальное сообщение через сокет
-        sendMessageSocket(newMessage); // передаем реальное сообщение с id
+        sendMessageSocket(newMessage); // Передаем реальное сообщение с ID
 
         // Заменяем временное сообщение на настоящее
         const finalMessages = updatedMessages.map((msg) =>
           msg.id === tempId ? newMessage : msg
         );
 
+        // Обновляем чаты в контексте
+        const updatedChatsWithFinal = chats.map((existingChat) =>
+          existingChat.id === chat.id
+            ? { ...existingChat, messages: finalMessages }
+            : existingChat
+        );
+
+        // Здесь обновление состояния чатов в контексте можно отложить с использованием setTimeout
+        setTimeout(() => {
+          // Отложенное обновление состояния чатов в контексте
+          // Обновляем состояние с новыми чатами в контексте
+          setChatsState(updatedChatsWithFinal);
+        }, 0);
+
+        // Обновляем чат в Redux с финальными сообщениями
         dispatch(
           setChat({
             ...chat,
@@ -272,6 +294,7 @@ export const ChatComponent = ({
           })
         );
 
+        // Обновляем чат в заказе с финальными сообщениями
         dispatch(
           updateChatInOrder({
             chatId: chat.id,
@@ -287,10 +310,23 @@ export const ChatComponent = ({
         // Обновим временное сообщение как неудачное (например, для отображения красного текста)
         const failedMessages = updatedMessages.map((msg) =>
           msg.id === tempId
-            ? { ...msg, error: true } // или можно просто оставить как есть
+            ? { ...msg, error: true } // или оставить как есть
             : msg
         );
 
+        // Обновляем чаты в контексте с ошибкой
+        const updatedChatsWithError = chats.map((existingChat) =>
+          existingChat.id === chat.id
+            ? { ...existingChat, messages: failedMessages }
+            : existingChat
+        );
+        // Здесь обновление состояния чатов в контексте можно отложить с использованием setTimeout
+        setTimeout(() => {
+          // Обновляем состояние с новыми чатами с ошибкой в контексте
+          setChatsState(updatedChatsWithError);
+        }, 0);
+
+        // Обновляем чат в Redux с ошибкой
         dispatch(
           setChat({
             ...chat,

@@ -107,23 +107,9 @@ const chatSlice = createSlice({
     },
     // Новый экшен для добавления сообщения в выбранный чат
     addMessageToChat: (state, action: PayloadAction<Message>) => {
-      const message = action.payload;
-    
-      // Обновляем текущий чат
       if (state.chat) {
-        state.chat.messages = [...state.chat.messages, message];
-      }
-    
-      // Обновляем соответствующий чат в списке всех чатов
-      const chatIndex = state.chats.findIndex((chat) => chat.id === message.chatId);
-      if (chatIndex !== -1) {
-        state.chats[chatIndex].messages = [
-          ...state.chats[chatIndex].messages,
-          message,
-        ];
-    
-        // Обновляем последнее сообщение в чате
-        state.chats[chatIndex].lastMessage = message;
+        // Вместо push используем новый массив
+        state.chat.messages = [...state.chat.messages, action.payload];
       }
     },
     markMessagesAsRead: (state, action) => {
@@ -133,24 +119,9 @@ const chatSlice = createSlice({
           messageIds.includes(msg.id) ? { ...msg, isRead: true } : msg
         );
       }
-      const chat = state.chats.find((chat) => chat.id === chatId);
-      if (chat) {
-        chat.messages = chat.messages.map((msg) =>
-          messageIds.includes(msg.id) ? { ...msg, isRead: true } : msg
-        );
-    
-        // Обновляем lastMessage, если он был среди прочитанных
-        if (chat.lastMessage && messageIds.includes(chat.lastMessage.id)) {
-          chat.lastMessage = { ...chat.lastMessage, isRead: true };
-        }
-      }
     },
-    updateChatInSidebar: (state, action: PayloadAction<{ chatId: string, lastMessage: Message }>) => {
-      const { chatId, lastMessage } = action.payload;
-      const chat = state.chats.find((c) => c.id === chatId);
-      if (chat) {
-        chat.lastMessage = lastMessage;
-      }
+    setChats: (state, action: PayloadAction<Chat[]>) => {
+      state.chats = action.payload;
     },
     resetChat: (state) => {
       state.chat = null;
@@ -186,7 +157,17 @@ const chatSlice = createSlice({
         state.error = null;
       })
       .addCase(sendMessage.fulfilled, (state, action: PayloadAction<Message>) => {
-        state.messages.push(action.payload); // добавляем новое сообщение
+        // Обновляем чаты, добавляя новое сообщение и обновляя поле lastMessage
+        const updatedChats = state.chats.map((chat) =>
+          chat.id === action.payload.chatId
+            ? {
+                ...chat,
+                messages: [...chat.messages, action.payload],
+                lastMessage: action.payload,  // Обновляем поле lastMessage
+              }
+            : chat
+        );
+        state.chats = updatedChats; // Обновляем список чатов
         state.loading = false;
       })
       .addCase(sendMessage.rejected, (state, action) => {
@@ -260,16 +241,7 @@ const chatSlice = createSlice({
         state.error = null;
       })
       .addCase(getChatsByUserId.fulfilled, (state, action) => {
-        const chats = action.payload;
-      
-        chats.forEach(chat => {
-          const sortedMessages = [...chat.messages].sort(
-            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-          chat.lastMessage = sortedMessages[0];
-        });
-      
-        state.chats = chats;
+        state.chats = action.payload;
         state.loading = false;
       })
       .addCase(getChatsByUserId.rejected, (state, action) => {
@@ -280,5 +252,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChat, setMessages, addMessageToChat, markMessagesAsRead, updateChatInSidebar, resetChat } = chatSlice.actions;
+export const { setChat, setMessages, addMessageToChat, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;

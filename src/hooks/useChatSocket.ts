@@ -18,21 +18,21 @@ export const useChatSocket = (chatId: string) => {
   const dispatch = useAppDispatch();
     const token = useAppSelector((state) => state.auth.token);
   const studentId = useAppSelector((state) => state.student.student?.id);
-  const tutorId: string | null = useAppSelector(
-    (state) => state.tutor.tutor?.id ?? null
+  const tutorUserId: string | null = useAppSelector(
+    (state) => state.tutor.tutor?.userId ?? null
   );
   const [messages, setMessages] = useState<Message[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const chat = useAppSelector((state) => state.chat.chat);
 
-  const { handleReadMessages } = useChat();
+  const { markAsRead: markAsReadContext } = useChat();
 
   useEffect(() => {
-    if (!socket || !chatId || !(studentId || tutorId)) return;
+    if (!socket || !chatId || !(studentId || tutorUserId)) return;
 
-    const userId = studentId || tutorId; // Выбираем правильный userId в зависимости от роли
+    const userId = studentId || tutorUserId; // Выбираем правильный userId в зависимости от роли
 
-    console.log("Подключаемся к чату", chatId);
+    //console.log("Подключаемся к чату", chatId);
 
     // Присоединяемся к чату
     socket.emit("joinChat", { userId, chatIds: [chatId] });
@@ -44,6 +44,7 @@ export const useChatSocket = (chatId: string) => {
           const response = await dispatch(getChatById({ chatId, token: token || "" })).unwrap();
           setMessages(response.messages); // <-- напрямую из payload
           markAsRead(response.messages);
+          markAsReadContext(chatId);
         } catch (error) {
           console.error("Ошибка загрузки чата:", error);
         }
@@ -70,9 +71,6 @@ export const useChatSocket = (chatId: string) => {
       if (data.chatId === chatId) {
         //console.log("🔥 messagesRead пришел:", data);
         dispatch(markMessagesAsRead({ chatId: data.chatId, messageIds: data.messageIds }));
-        if (userId) {
-          handleReadMessages({ chatId: data.chatId, userId });
-        }
       }
     };
 
@@ -93,14 +91,14 @@ export const useChatSocket = (chatId: string) => {
       socket.off("updateUnreadCount", handleUnreadCount);
       //socket.emit("leaveChat", { chatId });
     };
-  }, [socket, chatId, studentId, tutorId]); // Обновляем зависимости
+  }, [socket, chatId, studentId, tutorUserId]); // Обновляем зависимости
 
 
 
   const sendMessageSocket = (message: Message) => {
-    if (!socket || !(studentId || tutorId)) return;
+    if (!socket || !(studentId || tutorUserId)) return;
 
-    const userId = studentId || tutorId;
+    const userId = studentId || tutorUserId;
     
     socket.emit("sendMessage", {
       chatId,
@@ -109,9 +107,9 @@ export const useChatSocket = (chatId: string) => {
   };
 
   const markAsRead = (msgs: Message[]) => {
-    if (!socket || !(studentId || tutorId)) return;
+    if (!socket || !(studentId || tutorUserId)) return;
   
-    const userId = studentId || tutorId;
+    const userId = studentId || tutorUserId;
     //console.log("отправка о прочтении");
 
   

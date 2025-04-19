@@ -108,7 +108,7 @@ const OrderPage: React.FC = () => {
     }
   }, [orderById, token, dispatch, isDataLoaded]);
 
-  const chats = useAppSelector((state) => state.chat.chats);
+  //const chats = useAppSelector((state) => state.chat.chats);
 
   // useEffect(() => {
   //   // Предположим, что student и chat приходят как пропсы или через глобальное состояние (например, Redux)

@@ -22,8 +22,13 @@ import { Message, Order, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
-import { getChatsByOrderId, setChat } from "@/store/features/chatSlice";
+import {
+  getChatsByOrderId,
+  setChat,
+  setChats,
+} from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
+import { useChat } from "@/context/ChatContext";
 
 type ResponseSidbarProps = {
   orderById: Order | null;
@@ -48,7 +53,7 @@ export const ResponseSidbar = ({
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
-  const chats = useAppSelector((state) => state.chat.chats);
+  //const chats = useAppSelector((state) => state.chat.chats);
   const selectChat = useAppSelector((state) => state.chat.chat);
   const student = useAppSelector((state) => state.student.student);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
@@ -65,10 +70,19 @@ export const ResponseSidbar = ({
     }
   }, []);
 
+  const { chats, setChatsState } = useChat();
+
   useEffect(() => {
-    orderById &&
-      token &&
-      dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
+    if (chats.length) {
+      setChatsState(chats); // Обновляем состояние чатов в контексте
+    }
+  }, [chats]); // Отслеживаем изменения чатов
+
+  useEffect(() => {
+    // если нужно при первом монтировании что-то загрузить
+    if (orderById && token) {
+      dispatch(getChatsByOrderId({ orderId: orderById.id, token }));
+    }
   }, [orderById?.id, token]);
 
   const toggleSwitch = () => {

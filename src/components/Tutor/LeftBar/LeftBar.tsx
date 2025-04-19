@@ -46,14 +46,9 @@ const LeftBar: React.FC<{
     }
   };
 
-  const chats = useAppSelector((state) => state.chat.chats);
-  const chat = useAppSelector((state) => state.chat.chat);
-
   const clearChat = () => {
     dispatch(setChat(null));
   };
-
-  console.log(chat);
 
   return (
     <div

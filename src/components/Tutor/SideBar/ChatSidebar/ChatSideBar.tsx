@@ -15,11 +15,11 @@ import { setComponentMenu } from "@/store/features/orderSlice";
 import { Chat, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { formatTimeAgo } from "@/utils/date/date";
-import { useRouter } from "next/navigation";
-import { useChat } from "@/context/ChatContext"; // Подключаем ChatContext
 import { setChat } from "@/store/features/chatSlice";
+import { useRouter } from "next/navigation";
 
 type ResponseSidbarProps = {
+  chats: Chat[];
   loading?: boolean;
   visibleEmoji?: boolean;
   setVisibleEmoji?: Dispatch<SetStateAction<boolean>>;
@@ -30,24 +30,24 @@ type ResponseSidbarProps = {
 };
 
 export const ChatSidbar = ({
+  chats,
   loading,
   visibleEmoji,
   setVisibleEmoji,
   isChecked,
   setIsChecked,
+  tutor, // принимаем tutorId
   page,
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { chats, sendMessage, markAsRead } = useChat(); // Используем ChatContext для получения чатов
+  const token = useAppSelector((state) => state.auth.token);
   const selectChat = useAppSelector((state) => state.chat.chat);
-  const tutor = useAppSelector((state) => state.tutor.tutor);
-  const [isSafari, setIsSafari] = useState(false);
-  const route = useRouter();
+  const student = useAppSelector((state) => state.student.student);
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
   );
-
-  // Определяем, используется ли Safari
+  const [isSafari, setIsSafari] = useState(false);
+  const route = useRouter();
   useEffect(() => {
     const ua = navigator.userAgent.toLowerCase();
     if (ua.includes("safari") && !ua.includes("chrome")) {
@@ -55,12 +55,28 @@ export const ChatSidbar = ({
     }
   }, []);
 
-  // Сортировка чатов по дате последнего сообщения
+  useEffect(() => {
+    console.log("Chats state after message send:", chats);
+  }, [chats]);
+
   const sortedChats = useMemo(() => {
     return [...chats].sort((a, b) => {
+      const lastA = a.messages
+        .filter((m) => m.createdAt)
+        .sort(
+          (x, y) =>
+            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+        )[0];
+      const lastB = b.messages
+        .filter((m) => m.createdAt)
+        .sort(
+          (x, y) =>
+            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+        )[0];
+
       return (
-        new Date(b.lastMessage?.createdAt || 0).getTime() -
-        new Date(a.lastMessage?.createdAt || 0).getTime()
+        new Date(lastB?.createdAt || 0).getTime() -
+        new Date(lastA?.createdAt || 0).getTime()
       );
     });
   }, [chats]);
@@ -78,15 +94,21 @@ export const ChatSidbar = ({
             <div className={styles.sidebar_filterForChat}>
               <div className={styles.studentChatWrap}>
                 {sortedChats.map((chat, index, array) => {
-                  const { lastMessage } = chat;
+                  const lastMessage = [...chat.messages].sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime()
+                  )[0];
 
                   const isFirst = index === 0;
                   const isLast = index === array.length - 1;
 
-                  // Подсчитываем количество непрочитанных сообщений
-                  const unreadCount = chat.messages.filter(
-                    (msg) => !msg.isRead && msg.senderId !== tutor?.id
-                  ).length;
+                  const noReadMessagesFromOther =
+                    tutor &&
+                    chat.messages.filter(
+                      (message) =>
+                        !message.isRead && message.senderId !== tutor.id
+                    );
 
                   return (
                     <div
@@ -101,11 +123,11 @@ export const ChatSidbar = ({
                       className={clsx(
                         styles.studentChatContainerImgAndMessage,
                         {
-                          [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
-                          [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
+                          [styles.firstChat]: isFirst,
+                          [styles.lastChat]: isLast,
                           [styles.isNotReadTutorsMessageContainerBg]:
                             lastMessage?.senderId !== tutor?.id &&
-                            unreadCount > 0,
+                            !lastMessage?.isRead,
                           [styles.selectStudentChatContainerImgAndMessage]:
                             chat.id === selectChat?.id,
                         }
@@ -125,20 +147,10 @@ export const ChatSidbar = ({
                         </div>
                         <div className={styles.studentChatMessageFlx}>
                           <div className={styles.studentChatMessageText}>
-                            {/* Отображаем последнее сообщение */}
                             {lastMessage?.text}
                           </div>
-                          {/* Отображаем количество непрочитанных сообщений, если оно больше 0 */}
-                          {unreadCount > 0 &&
-                            lastMessage.senderId !== tutor?.id && (
-                              <div
-                                className={styles.isNotReadTutorsMessageCount}
-                              >
-                                {unreadCount}
-                              </div>
-                            )}
-                          {/* Иконка для прочтённых сообщений */}
-                          {lastMessage.senderId === tutor?.id ? (
+
+                          {lastMessage?.senderId === tutor?.id ? (
                             lastMessage.isRead ? (
                               <Image
                                 className={styles.studentChatIcon}
