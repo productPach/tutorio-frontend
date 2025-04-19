@@ -300,6 +300,7 @@ export type Chat = {
   tutorHasAccess: boolean;
   createdAt: Date;
   messages: Message[];
+  lastMessage: Message;
   tutor: {
     id: string;
     name: string;

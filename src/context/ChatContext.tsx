@@ -19,6 +19,7 @@ type ChatContextType = {
   chats: Chat[];
   sendMessage: (chatId: string, text: string) => void;
   markAsRead: (chatId: string) => void;
+  handleReadMessages: (data: { chatId: string; userId: string }) => void;
 };
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -72,20 +73,16 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     loadChats();
   }, [loadChats]);
 
-  useEffect(() => {
-    if (!socket) return;
+  // Функция для воспроизведения звука нового сообщения
+  const playNotificationSound = () => {
+    const audio = new Audio("/sounds/intuition-561.mp3");
+    audio
+      .play()
+      .catch((e) => console.warn("Не удалось воспроизвести звук:", e));
+  };
 
-    const handleNewMessage = (message: Message) => {
-      setChats((prev) =>
-        prev.map((chat) =>
-          chat.id === message.chatId
-            ? { ...chat, messages: [...chat.messages, message] }
-            : chat
-        )
-      );
-    };
-
-    const handleReadMessages = (data: { chatId: string; userId: string }) => {
+  const handleReadMessages = useCallback(
+    (data: { chatId: string; userId: string }) => {
       setChats((prev) =>
         prev.map((chat) =>
           chat.id === data.chatId
@@ -98,6 +95,23 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             : chat
         )
       );
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNewMessage = (message: Message) => {
+      setChats((prev) =>
+        prev.map((chat) =>
+          chat.id === message.chatId
+            ? { ...chat, messages: [...chat.messages, message] }
+            : chat
+        )
+      );
+      // ✅ Воспроизводим звук
+      playNotificationSound();
     };
 
     socket.on("newMessage", handleNewMessage);
@@ -112,7 +126,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         socket.emit("leaveChat", { userId: studentId || tutorUserId, chatIds });
       }
     };
-  }, [socket, chats, studentId, tutorUserId]);
+  }, [socket, chats, studentId, tutorUserId, handleReadMessages]);
 
   const sendMessage = (chatId: string, text: string) => {
     if (!socket || (!studentId && !tutorUserId)) return;
@@ -143,7 +157,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <ChatContext.Provider value={{ chats, sendMessage, markAsRead }}>
+    <ChatContext.Provider
+      value={{ chats, sendMessage, markAsRead, handleReadMessages }}
+    >
       {children}
     </ChatContext.Provider>
   );

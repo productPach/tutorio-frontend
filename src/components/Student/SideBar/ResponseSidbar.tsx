@@ -69,7 +69,7 @@ export const ResponseSidbar = ({
     orderById &&
       token &&
       dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
-  }, [chats]);
+  }, [orderById?.id, token]);
 
   const toggleSwitch = () => {
     setIsChecked((prev) => {

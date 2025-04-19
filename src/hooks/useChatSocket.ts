@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "@/context/SocketContext";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { addMessageToChat, getChatById, markMessagesAsRead } from "@/store/features/chatSlice";
+import { useChat } from "@/context/ChatContext";
 
 type Message = {
   id: string;
@@ -17,17 +18,19 @@ export const useChatSocket = (chatId: string) => {
   const dispatch = useAppDispatch();
     const token = useAppSelector((state) => state.auth.token);
   const studentId = useAppSelector((state) => state.student.student?.id);
-  const tutorUserId: string | null = useAppSelector(
-    (state) => state.tutor.tutor?.userId ?? null
+  const tutorId: string | null = useAppSelector(
+    (state) => state.tutor.tutor?.id ?? null
   );
   const [messages, setMessages] = useState<Message[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const chat = useAppSelector((state) => state.chat.chat);
 
-  useEffect(() => {
-    if (!socket || !chatId || !(studentId || tutorUserId)) return;
+  const { handleReadMessages } = useChat();
 
-    const userId = studentId || tutorUserId; // Выбираем правильный userId в зависимости от роли
+  useEffect(() => {
+    if (!socket || !chatId || !(studentId || tutorId)) return;
+
+    const userId = studentId || tutorId; // Выбираем правильный userId в зависимости от роли
 
     console.log("Подключаемся к чату", chatId);
 
@@ -65,8 +68,11 @@ export const useChatSocket = (chatId: string) => {
     const handleMessagesRead = (data: { chatId: string; messageIds: string[] }) => {
       
       if (data.chatId === chatId) {
-        console.log("🔥 messagesRead пришел:", data);
+        //console.log("🔥 messagesRead пришел:", data);
         dispatch(markMessagesAsRead({ chatId: data.chatId, messageIds: data.messageIds }));
+        if (userId) {
+          handleReadMessages({ chatId: data.chatId, userId });
+        }
       }
     };
 
@@ -85,16 +91,16 @@ export const useChatSocket = (chatId: string) => {
       socket.off("newMessage", handleNewMessage);
       socket.off("messagesRead", handleMessagesRead);
       socket.off("updateUnreadCount", handleUnreadCount);
-      socket.emit("leaveChat", { chatId });
+      //socket.emit("leaveChat", { chatId });
     };
-  }, [socket, chatId, studentId, tutorUserId]); // Обновляем зависимости
+  }, [socket, chatId, studentId, tutorId]); // Обновляем зависимости
 
 
 
   const sendMessageSocket = (message: Message) => {
-    if (!socket || !(studentId || tutorUserId)) return;
+    if (!socket || !(studentId || tutorId)) return;
 
-    const userId = studentId || tutorUserId;
+    const userId = studentId || tutorId;
     
     socket.emit("sendMessage", {
       chatId,
@@ -103,10 +109,10 @@ export const useChatSocket = (chatId: string) => {
   };
 
   const markAsRead = (msgs: Message[]) => {
-    if (!socket || !(studentId || tutorUserId)) return;
+    if (!socket || !(studentId || tutorId)) return;
   
-    const userId = studentId || tutorUserId;
-    console.log("отправка о прочтении");
+    const userId = studentId || tutorId;
+    //console.log("отправка о прочтении");
 
   
   
@@ -119,7 +125,7 @@ export const useChatSocket = (chatId: string) => {
       )
       .map((msg) => msg.id);
 
-      console.log(unreadMessageIds);
+      //console.log(unreadMessageIds);
       
   
     if (unreadMessageIds.length === 0) return;

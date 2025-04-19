@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import chatStyles from "./Chat.module.css"; // путь к стилям поправь под себя
@@ -51,80 +51,83 @@ const formatChatDate = (dateString: string) => {
 };
 
 const GroupedMessages: React.FC<Props> = ({ messages, studentId }) => {
-  const sorted = messages
-    .slice()
-    .sort(
-      (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    );
+  // Мемоизация отсортированных сообщений
+  const sortedMessages = useMemo(() => {
+    return messages
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+  }, [messages]);
 
-  return (
-    <>
-      {sorted
-        .reduce((acc: JSX.Element[], message, index, allMessages) => {
-          const currentDate = new Date(message.createdAt).toDateString();
-          const prevDate =
-            index > 0
-              ? new Date(allMessages[index - 1].createdAt).toDateString()
-              : null;
+  // Мемоизация обработки сообщений для отображения
+  const groupedMessages = useMemo(() => {
+    return sortedMessages.reduceRight(
+      (acc: JSX.Element[], message, index, allMessages) => {
+        const currentDate = new Date(message.createdAt).toDateString();
+        const nextDate =
+          index < allMessages.length - 1
+            ? new Date(allMessages[index + 1].createdAt).toDateString()
+            : null;
 
-          const shouldShowDate = currentDate !== prevDate;
+        const shouldShowDate = currentDate !== nextDate;
 
-          if (shouldShowDate) {
-            acc.push(
-              <div
-                key={`date-${message.createdAt}`}
-                className={chatStyles.chat__date}
-              >
-                {formatChatDate(message.createdAt)}
-              </div>
-            );
-          }
+        const isFromStudent = message.senderId === studentId;
 
-          const isFromStudent = message.senderId === studentId;
-
-          acc.push(
-            <div
-              key={message.id}
-              className={clsx(
-                chatStyles.chat__message,
-                isFromStudent
-                  ? chatStyles.chat__message__right
-                  : chatStyles.chat__message__left
+        acc.unshift(
+          <div
+            key={message.id}
+            className={clsx(
+              chatStyles.chat__message,
+              isFromStudent
+                ? chatStyles.chat__message__right
+                : chatStyles.chat__message__left
+            )}
+          >
+            {message.text}
+            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
+              <span>
+                {new Date(message.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+              {isFromStudent && (
+                <Image
+                  className={styles.studentChatIcon}
+                  src={
+                    message.isRead
+                      ? "/../img/icon/isRead.svg"
+                      : "/../img/icon/noRead.svg"
+                  }
+                  width={18}
+                  height={18}
+                  alt=""
+                />
               )}
+            </div>
+          </div>
+        );
+
+        if (shouldShowDate) {
+          acc.unshift(
+            <div
+              key={`date-${message.createdAt}`}
+              className={chatStyles.chat__date}
             >
-              {message.text}
-              <div
-                className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
-              >
-                <span>
-                  {new Date(message.createdAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-                {isFromStudent && (
-                  <Image
-                    className={styles.studentChatIcon}
-                    src={
-                      message.isRead
-                        ? "/../img/icon/isRead.svg"
-                        : "/../img/icon/noRead.svg"
-                    }
-                    width={18}
-                    height={18}
-                    alt=""
-                  />
-                )}
-              </div>
+              {formatChatDate(message.createdAt)}
             </div>
           );
+        }
 
-          return acc;
-        }, [])
-        .reverse()}
-    </>
-  );
+        return acc;
+      },
+      []
+    );
+  }, [sortedMessages, studentId]);
+
+  return <>{groupedMessages}</>;
 };
 
-export default GroupedMessages;
+export default React.memo(GroupedMessages);
