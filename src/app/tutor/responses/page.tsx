@@ -17,7 +17,6 @@ const ResponsesPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const chats = useAppSelector((state) => state.chat.chats);
-  const selectChat = useAppSelector((state) => state.chat.chat);
   const tutor = useAppSelector((state) => state.tutor.tutor);
   // Стейт для эмодзи в чате
   const [visibleEmoji, setVisibleEmoji] = useState(false);
@@ -28,15 +27,7 @@ const ResponsesPage: React.FC = () => {
       dispatch(
         getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
       );
-  }, [tutor, token]);
-
-  useEffect(() => {
-    tutor &&
-      token &&
-      dispatch(
-        getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
-      );
-  }, [chats]);
+  }, [tutor?.userId, token]);
 
   const currentUserId = tutor?.userId;
 
@@ -50,7 +41,7 @@ const ResponsesPage: React.FC = () => {
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} countNoReadMsg={unreadCount} />
+        <LeftBar page={page} />
         <div className={clsx(styles.contentChat)}>
           <ChatComponent
             visibleEmoji={visibleEmoji}

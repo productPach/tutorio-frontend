@@ -30,19 +30,19 @@ type ResponseSidbarProps = {
 };
 
 export const ChatSidbar = ({
-  chats,
   loading,
   visibleEmoji,
   setVisibleEmoji,
   isChecked,
   setIsChecked,
-  tutor, // принимаем tutorId
   page,
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const selectChat = useAppSelector((state) => state.chat.chat);
-  const student = useAppSelector((state) => state.student.student);
+  const chats = useAppSelector((state) => state.chat.chats);
+  const chat = useAppSelector((state) => state.chat.chat);
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
@@ -59,22 +59,9 @@ export const ChatSidbar = ({
 
   const sortedChats = useMemo(() => {
     return [...chats].sort((a, b) => {
-      const lastA = a.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
-      const lastB = b.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
-
       return (
-        new Date(lastB?.createdAt || 0).getTime() -
-        new Date(lastA?.createdAt || 0).getTime()
+        new Date(b.lastMessage?.createdAt || 0).getTime() -
+        new Date(a.lastMessage?.createdAt || 0).getTime()
       );
     });
   }, [chats]);
@@ -92,28 +79,17 @@ export const ChatSidbar = ({
             <div className={styles.sidebar_filterForChat}>
               <div className={styles.studentChatWrap}>
                 {sortedChats.map((chat, index, array) => {
-                  const lastMessage = [...chat.messages].sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  )[0];
+                  const { lastMessage } = chat;
 
                   const isFirst = index === 0;
                   const isLast = index === array.length - 1;
 
-                  console.log(lastMessage);
-
-                  const noReadMessagesFromOther =
-                    tutor &&
-                    chat.messages.filter(
-                      (message) =>
-                        !message.isRead && message.senderId !== tutor.id
-                    );
                   return (
                     <div
                       onClick={() => {
                         dispatch(setComponentMenu(5));
                         dispatch(setChat(chat));
+                        // Закрываем блок с эмодзи
                         setVisibleEmoji && setVisibleEmoji(false);
                         if (page && page === "Tutor") {
                           route.push("../");
@@ -122,11 +98,13 @@ export const ChatSidbar = ({
                       className={clsx(
                         styles.studentChatContainerImgAndMessage,
                         {
-                          [styles.firstChat]: isFirst,
-                          [styles.lastChat]: isLast,
+                          [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
+                          [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
                           [styles.isNotReadTutorsMessageContainerBg]:
                             lastMessage?.senderId !== tutor?.id &&
-                            !lastMessage?.isRead,
+                            chat.messages.some(
+                              (msg) => !msg.isRead && msg.senderId !== tutor?.id
+                            ),
                           [styles.selectStudentChatContainerImgAndMessage]:
                             chat.id === selectChat?.id,
                         }
@@ -148,8 +126,7 @@ export const ChatSidbar = ({
                           <div className={styles.studentChatMessageText}>
                             {lastMessage?.text}
                           </div>
-
-                          {lastMessage?.senderId === tutor?.id ? (
+                          {lastMessage.senderId === tutor?.id ? (
                             lastMessage.isRead ? (
                               <Image
                                 className={styles.studentChatIcon}
@@ -167,7 +144,20 @@ export const ChatSidbar = ({
                                 alt=""
                               />
                             )
-                          ) : null}
+                          ) : (
+                            !lastMessage.isRead && (
+                              <div
+                                className={styles.isNotReadTutorsMessageCount}
+                              >
+                                {
+                                  chat.messages.filter(
+                                    (msg) =>
+                                      !msg.isRead && msg.senderId !== tutor?.id
+                                  ).length
+                                }
+                              </div>
+                            )
+                          )}
                         </div>
 
                         <div className={styles.studentChatMessageDate}>

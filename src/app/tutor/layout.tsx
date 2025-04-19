@@ -13,6 +13,7 @@ import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { usePathname } from "next/navigation"; // Правильный импорт для использования пути
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 type LayoutComponent = {
   children: ReactNode;

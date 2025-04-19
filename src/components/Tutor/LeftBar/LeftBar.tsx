@@ -8,16 +8,19 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/store/store";
 import { setSupportMenu } from "@/store/features/tutorSlice";
 import { useRouter } from "next/navigation";
+import { useTotalUnreadCount } from "@/hooks/useTotalUnreadCount";
+import { setChat } from "@/store/features/chatSlice";
 
 const LeftBar: React.FC<{
   page: string;
   pageName?: string;
-  countNoReadMsg?: number;
-}> = ({ page, pageName, countNoReadMsg }) => {
+}> = ({ page, pageName }) => {
   const dispatch = useDispatch<AppDispatch>();
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
   const [isSafari, setIsSafari] = useState(false);
+
+  const unreadCount = useTotalUnreadCount();
 
   // Определяем, используется ли Safari
   useEffect(() => {
@@ -42,6 +45,15 @@ const LeftBar: React.FC<{
       router.back(); // Возврат на предыдущую страницу
     }
   };
+
+  const chats = useAppSelector((state) => state.chat.chats);
+  const chat = useAppSelector((state) => state.chat.chat);
+
+  const clearChat = () => {
+    dispatch(setChat(null));
+  };
+
+  console.log(chat);
 
   return (
     <div
@@ -69,7 +81,7 @@ const LeftBar: React.FC<{
       <div className={styles.left_menu}>
         <ul>
           <Link href={"/tutor/orders"} prefetch={true}>
-            <li>
+            <li onClick={clearChat}>
               <Image
                 src="/../img/icon/tutor/orders.svg"
                 alt="Заказы"
@@ -100,9 +112,9 @@ const LeftBar: React.FC<{
               >
                 Отклики
               </span>
-              {countNoReadMsg ? (
+              {unreadCount ? (
                 <span className={styles.count_block}>
-                  {countNoReadMsg > 0 && countNoReadMsg}
+                  {unreadCount > 0 && unreadCount}
                 </span>
               ) : (
                 ""
