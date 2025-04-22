@@ -32,6 +32,7 @@ import GroupedMessages from "./GroupedMessages";
 import { useSocket } from "@/context/SocketContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useChat } from "@/context/ChatContext";
+import { sortMessages } from "@/utils/chat/sortMessages";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -130,8 +131,6 @@ export const ChatComponent = React.memo(
     // );
     // const subjectName = subjectArr?.title;
 
-    const tutorAvatar = chat && `${host}${port}${chat.tutor.avatarUrl}`;
-
     // Получаем текущее время
     const currentTime = new Date();
 
@@ -222,8 +221,8 @@ export const ChatComponent = React.memo(
           sendMessageSocket(newMessage); // передаем реальное сообщение с id
 
           // Заменяем временное сообщение на настоящее
-          const finalMessages = updatedMessages.map((msg) =>
-            msg.id === tempId ? newMessage : msg
+          const finalMessages = sortMessages(
+            updatedMessages.map((msg) => (msg.id === tempId ? newMessage : msg))
           );
 
           // Обновляем чаты в контексте
@@ -269,10 +268,10 @@ export const ChatComponent = React.memo(
           console.error("Ошибка при отправке сообщения:", error);
 
           // Обновим временное сообщение как неудачное (например, для отображения красного текста)
-          const failedMessages = updatedMessages.map((msg) =>
-            msg.id === tempId
-              ? { ...msg, error: true } // или можно просто оставить как есть
-              : msg
+          const failedMessages = sortMessages(
+            updatedMessages.map((msg) =>
+              msg.id === tempId ? { ...msg, error: true } : msg
+            )
           );
 
           // Обновляем чаты в контексте с ошибкой
@@ -323,7 +322,9 @@ export const ChatComponent = React.memo(
                 <Image
                   className={chatStyles.tutorImg}
                   src={
-                    chat ? chat.student.avatarUrl : "/img/tutor/avatarBasic.png"
+                    chat && chat.student.avatarUrl
+                      ? chat.student.avatarUrl
+                      : "/img/tutor/avatarBasic.png"
                   }
                   width={34}
                   height={34}

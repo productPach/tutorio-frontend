@@ -6,6 +6,7 @@ export const fetchCreateChat = async (
     studentId: string,
     orderId: string,
     initiatorRole: "student" | "tutor",
+    themeOrder: string,
     token: string
   ) => {
     const response = await fetch(`${baseUrl}chat`, {
@@ -18,6 +19,7 @@ export const fetchCreateChat = async (
         tutorId,
         studentId,
         orderId,
+        themeOrder,
         initiatorRole,
       }),
     });
