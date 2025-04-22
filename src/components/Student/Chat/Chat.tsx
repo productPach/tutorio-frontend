@@ -21,6 +21,7 @@ import {
   getChatById,
   sendMessage,
   setChat,
+  setChats,
   updateMessage,
 } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -66,7 +67,7 @@ export const ChatComponent = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const { chats, setChatsState } = useChat();
+  const { chats } = useChat();
 
   // Подписка на чат для получения новых сообщений через useChatSocket
   const { messages, unreadCount, sendMessageSocket, markAsRead } =
@@ -280,11 +281,11 @@ export const ChatComponent = ({
         );
 
         // Здесь обновление состояния чатов в контексте можно отложить с использованием setTimeout
-        setTimeout(() => {
-          // Отложенное обновление состояния чатов в контексте
-          // Обновляем состояние с новыми чатами в контексте
-          setChatsState(updatedChatsWithFinal);
-        }, 0);
+        // setTimeout(() => {
+        //   // Отложенное обновление состояния чатов в контексте
+        //   // Обновляем состояние с новыми чатами в контексте
+        //   setChatsState(updatedChatsWithFinal);
+        // }, 0);
 
         // Обновляем чат в Redux с финальными сообщениями
         dispatch(
@@ -303,6 +304,17 @@ export const ChatComponent = ({
               messages: finalMessages,
             },
           })
+        );
+
+        // Теперь обновляем чаты в Redux
+        dispatch(
+          setChats(
+            chats.map((existingChat) =>
+              existingChat.id === newMessage.chatId
+                ? { ...existingChat, messages: finalMessages }
+                : existingChat
+            )
+          )
         );
       } catch (error) {
         console.error("Ошибка при отправке сообщения:", error);
@@ -323,7 +335,7 @@ export const ChatComponent = ({
         // Здесь обновление состояния чатов в контексте можно отложить с использованием setTimeout
         setTimeout(() => {
           // Обновляем состояние с новыми чатами с ошибкой в контексте
-          setChatsState(updatedChatsWithError);
+          //setChatsState(updatedChatsWithError);
         }, 0);
 
         // Обновляем чат в Redux с ошибкой

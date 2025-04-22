@@ -16,6 +16,7 @@ import {
   fetchGetChatsByUserIdAndRole,
 } from "@/api/server/chatApi";
 import { setChats } from "@/store/features/chatSlice";
+import { useIsMounted } from "@/utils/chat/useIsMounted";
 
 type ChatContextType = {
   chats: Chat[];
@@ -39,7 +40,16 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const orderId = useAppSelector((state) => state.orders.orderById);
   const dispatch = useAppDispatch();
 
-  const [chats, setChatsState] = useState<Chat[]>([]);
+  const [chats, _setChatsState] = useState<Chat[]>([]);
+
+  const setChatsState = (newChats: Chat[] | ((prev: Chat[]) => Chat[])) => {
+    queueMicrotask(() => {
+      //console.trace("❗ setChatsState вызван через microtask");
+      _setChatsState(newChats);
+    });
+  };
+
+  const isMountedRef = useIsMounted();
 
   const loadChats = useCallback(async () => {
     if (!token) return;
@@ -61,8 +71,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         combinedChats = [...combinedChats, ...tutorChats];
       }
 
-      setChatsState(combinedChats);
-      dispatch(setChats(combinedChats));
+      setTimeout(() => {
+        if (!isMountedRef.current) return;
+        setChatsState(combinedChats);
+        //console.trace("setChatsState called 1");
+        dispatch(setChats(combinedChats));
+      }, 0);
 
       const chatIds = combinedChats.map((chat) => chat.id);
       socket?.emit("joinChat", { userId: studentId || tutorId, chatIds });
@@ -87,7 +101,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleNewMessage = (message: Message) => {
       setTimeout(() => {
+        if (!isMountedRef.current) return;
         setChatsState((prev) => {
+          //console.trace("setChatsState called 2");
           const updatedChats = prev.map((chat) =>
             chat.id === message.chatId
               ? {
@@ -106,7 +122,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleReadMessages = (data: { chatId: string; userId: string }) => {
       setTimeout(() => {
+        if (!isMountedRef.current) return;
         setChatsState((prev) => {
+          //console.trace("setChatsState called 3");
           const updatedChats = prev.map((chat) =>
             chat.id === data.chatId
               ? {
@@ -138,7 +156,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         socket.emit("leaveChat", { userId: studentId || tutorId, chatIds });
       }
     };
-  }, [socket, chats, studentId, tutorId, dispatch]);
+  }, [socket, studentId, tutorId, dispatch]);
 
   const sendMessage = (chatId: string, text: string) => {
     if (!socket || (!studentId && !tutorId)) return;
