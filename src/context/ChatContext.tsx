@@ -120,7 +120,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
               : chat
           );
 
-          dispatch(setChats(updatedChats));
+          //dispatch(setChats(updatedChats));
           return updatedChats;
         });
       }, 0);
