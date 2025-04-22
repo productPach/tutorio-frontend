@@ -2,14 +2,12 @@
 import styles from "../layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import SideBar from "@/components/Tutor/SideBar/SideBar";
 import { ChatComponent } from "@/components/Tutor/Chat/Chat";
 import { ChatSidbar } from "@/components/Tutor/SideBar/ChatSidebar/ChatSideBar";
 import { useEffect, useState } from "react";
-import { getChatsByUserId, setChats } from "@/store/features/chatSlice";
+import { getChatsByUserId } from "@/store/features/chatSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useChat } from "@/context/ChatContext";
-import { useChatSocket } from "@/hooks/useChatSocket";
 
 const ResponsesPage: React.FC = () => {
   const page = "Responses";
@@ -31,23 +29,6 @@ const ResponsesPage: React.FC = () => {
 
   const { chats } = useChat();
 
-  useEffect(() => {
-    if (chats) {
-      // Обновляем чаты в Redux, чтобы синхронизировать их
-      dispatch(setChats(chats));
-      console.log("обновляем");
-    }
-  }, [chats, dispatch]);
-
-  const currentUserId = tutor?.userId;
-
-  const unreadCount = chats.reduce((total, chat) => {
-    const unreadMessages = chat.messages?.filter(
-      (msg) => !msg.isRead && msg.senderId !== currentUserId
-    );
-    return unreadMessages?.length;
-  }, 0);
-
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
@@ -58,7 +39,7 @@ const ResponsesPage: React.FC = () => {
             setVisibleEmoji={setVisibleEmoji}
           />
         </div>
-        <ChatSidbar chats={chats} />
+        <ChatSidbar chats={chats} tutor={tutor} />
       </section>
     </>
   );

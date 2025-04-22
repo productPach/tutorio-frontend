@@ -35,6 +35,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const tutorUserId = useAppSelector(
     (state) => state.tutor.tutor?.userId ?? null
   );
+  const tutorId = useAppSelector((state) => state.tutor.tutor?.id ?? null);
   const orderId = useAppSelector((state) => state.orders.orderById);
   const dispatch = useAppDispatch();
 
@@ -64,11 +65,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       dispatch(setChats(combinedChats));
 
       const chatIds = combinedChats.map((chat) => chat.id);
-      socket?.emit("joinChat", { userId: studentId || tutorUserId, chatIds });
+      socket?.emit("joinChat", { userId: studentId || tutorId, chatIds });
     } catch (err) {
       console.error("Ошибка загрузки чатов:", err);
     }
-  }, [studentId, tutorUserId, token, socket, orderId, dispatch]);
+  }, [studentId, tutorUserId, tutorId, token, socket, orderId, dispatch]);
 
   useEffect(() => {
     loadChats();
@@ -118,6 +119,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                 }
               : chat
           );
+
           dispatch(setChats(updatedChats));
           return updatedChats;
         });
@@ -125,43 +127,46 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     socket.on("newMessage", handleNewMessage);
-    socket.on("readMessages", handleReadMessages);
+    socket.on("messagesRead", handleReadMessages);
 
     return () => {
       socket.off("newMessage", handleNewMessage);
-      socket.off("readMessages", handleReadMessages);
+      socket.off("messagesRead", handleReadMessages);
 
       const chatIds = chats.map((c) => c.id);
-      if (studentId || tutorUserId) {
-        socket.emit("leaveChat", { userId: studentId || tutorUserId, chatIds });
+      if (studentId || tutorId) {
+        socket.emit("leaveChat", { userId: studentId || tutorId, chatIds });
       }
     };
-  }, [socket, chats, studentId, tutorUserId, dispatch]);
+  }, [socket, chats, studentId, tutorId, dispatch]);
 
   const sendMessage = (chatId: string, text: string) => {
-    if (!socket || (!studentId && !tutorUserId)) return;
+    if (!socket || (!studentId && !tutorId)) return;
 
     socket.emit("sendMessage", {
       chatId,
-      senderId: studentId || tutorUserId,
+      senderId: studentId || tutorId,
       text,
     });
   };
 
   const markAsRead = (chatId: string) => {
-    if (!socket || (!studentId && !tutorUserId)) return;
+    if (!socket || (!studentId && !tutorId)) return;
 
     const chat = chats.find((c) => c.id === chatId);
     if (!chat) return;
 
     const unreadMessages = chat.messages.filter(
-      (m) => !m.isRead && m.senderId !== studentId && m.senderId !== tutorUserId
+      (m) => !m.isRead && m.senderId !== studentId && m.senderId !== tutorId
     );
 
-    if (unreadMessages.length > 0) {
-      socket.emit("markMessagesAsRead", {
+    const unreadIds = unreadMessages.map((m) => m.id);
+
+    if (unreadIds.length > 0) {
+      socket.emit("markAsRead", {
         chatId,
-        userId: studentId || tutorUserId,
+        userId: studentId || tutorId,
+        messageIds: unreadIds,
       });
     }
   };

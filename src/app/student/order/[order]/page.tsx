@@ -108,27 +108,6 @@ const OrderPage: React.FC = () => {
     }
   }, [orderById, token, dispatch, isDataLoaded]);
 
-  //const chats = useAppSelector((state) => state.chat.chats);
-
-  // useEffect(() => {
-  //   // Предположим, что student и chat приходят как пропсы или через глобальное состояние (например, Redux)
-  //   const userId = student?.userId;
-  //   const chatIds = chat ? [chat.id] : [];
-
-  //   if (userId && chatIds.length > 0) {
-  //     // Отправляем событие "joinChat" при загрузке страницы чатов
-  //     socket.emit("joinChat", { userId, chatIds });
-  //   }
-
-  //   // Очистка при размонтировании компонента
-  //   return () => {
-  //     // Закрытие сокет-соединения или отписка от чатов, если необходимо
-  //     chatIds.forEach((chatId) => {
-  //       socket.emit("leaveChat", { userId, chatId });
-  //     });
-  //   };
-  // }, [student, chat]);
-
   // Состояние для свитча
   const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
 

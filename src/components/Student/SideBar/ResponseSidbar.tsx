@@ -70,13 +70,7 @@ export const ResponseSidbar = ({
     }
   }, []);
 
-  const { chats, setChatsState } = useChat();
-
-  useEffect(() => {
-    if (chats.length) {
-      setChatsState(chats); // Обновляем состояние чатов в контексте
-    }
-  }, [chats]); // Отслеживаем изменения чатов
+  const { chats } = useChat();
 
   useEffect(() => {
     // если нужно при первом монтировании что-то загрузить

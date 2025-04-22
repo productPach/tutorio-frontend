@@ -55,10 +55,6 @@ export const ChatSidbar = ({
     }
   }, []);
 
-  useEffect(() => {
-    console.log("Chats state after message send:", chats);
-  }, [chats]);
-
   const sortedChats = useMemo(() => {
     return [...chats].sort((a, b) => {
       const lastA = a.messages
@@ -150,7 +146,7 @@ export const ChatSidbar = ({
                             {lastMessage?.text}
                           </div>
 
-                          {lastMessage?.senderId === tutor?.id ? (
+                          {lastMessage.senderId === tutor?.id ? (
                             lastMessage.isRead ? (
                               <Image
                                 className={styles.studentChatIcon}
@@ -168,7 +164,21 @@ export const ChatSidbar = ({
                                 alt=""
                               />
                             )
-                          ) : null}
+                          ) : (
+                            !lastMessage.isRead && (
+                              <div
+                                className={styles.isNotReadTutorsMessageCount}
+                              >
+                                {
+                                  chat.messages.filter(
+                                    (msg) =>
+                                      !msg.isRead &&
+                                      msg.senderId !== student?.id
+                                  ).length
+                                }
+                              </div>
+                            )
+                          )}
                         </div>
 
                         <div className={styles.studentChatMessageDate}>

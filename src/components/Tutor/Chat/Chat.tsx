@@ -75,18 +75,6 @@ export const ChatComponent = React.memo(
     // Подписка на чат для получения новых сообщений через useChatSocket
     const { messages, unreadCount, sendMessageSocket, markAsRead } =
       useChatSocket(chat?.id ? chat.id : "");
-    //console.log(chat?.id);
-
-    // const handleSendMessageComp2 = async () => {
-    //   const messageResponse = inputValue.trim();
-    //   sendMessageSocket(messageResponse); // отправляем сообщение в сокет
-    //   }
-
-    // useEffect(() => {
-    //   chat && token && dispatch(getChatById({ chatId: chat?.id, token }));
-    //   textareaRef.current?.focus();
-    //   setInputValue("");
-    // }, [chat?.id, token, dispatch]);
 
     // Обработчик ввода текста в textarea
     const handleInputValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
