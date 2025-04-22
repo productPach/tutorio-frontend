@@ -132,7 +132,11 @@ export const ChatSidbar = ({
                     >
                       <Image
                         className={styles.studentChatImg}
-                        src={`${chat.student.avatarUrl}`}
+                        src={
+                          chat.student.avatarUrl
+                            ? `${chat.student.avatarUrl}`
+                            : `/img/tutor/avatarBasic.png`
+                        }
                         width={45}
                         height={45}
                         alt=""

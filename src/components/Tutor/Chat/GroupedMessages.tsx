@@ -75,6 +75,17 @@ const GroupedMessages: React.FC<Props> = ({ messages, tutorId }) => {
 
         const isFromStudent = message.senderId === tutorId;
 
+        if (shouldShowDate) {
+          acc.unshift(
+            <div
+              key={`date-${message.createdAt}`}
+              className={chatStyles.chat__date}
+            >
+              {formatChatDate(message.createdAt)}
+            </div>
+          );
+        }
+
         acc.unshift(
           <div
             key={message.id}
@@ -109,17 +120,6 @@ const GroupedMessages: React.FC<Props> = ({ messages, tutorId }) => {
             </div>
           </div>
         );
-
-        if (shouldShowDate) {
-          acc.unshift(
-            <div
-              key={`date-${message.createdAt}`}
-              className={chatStyles.chat__date}
-            >
-              {formatChatDate(message.createdAt)}
-            </div>
-          );
-        }
 
         return acc;
       },

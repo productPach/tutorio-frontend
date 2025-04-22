@@ -19,10 +19,11 @@ export const createChat = createAsyncThunk<
     studentId: string;
     orderId: string;
     initiatorRole: "student" | "tutor";
+    themeOrder: string;
     token: string;
   }
->("chat/create", async ({ tutorId, studentId, orderId, initiatorRole, token }) => {
-  const response = await fetchCreateChat(tutorId, studentId, orderId, initiatorRole, token);
+>("chat/create", async ({ tutorId, studentId, orderId, initiatorRole, themeOrder, token }) => {
+  const response = await fetchCreateChat(tutorId, studentId, orderId, initiatorRole, themeOrder, token);
   return response;
 });
 

@@ -49,18 +49,19 @@ export const ResponseTutorToStudentModal = () => {
       messageResponse
     ) {
       try {
+        const themeOrder = `${order.goal} по ${subjectForRequest}`;
         const chat = await dispatch(
           createChat({
             tutorId: tutor.id,
             studentId: order.studentId,
             orderId: order.id,
             initiatorRole: "tutor",
+            themeOrder: themeOrder,
             token,
           })
         ).unwrap(); // Получаем результат из createChat
 
         if (chat?.id) {
-          const themeOrder = `${order.goal} по ${subjectForRequest}`;
           await dispatch(
             sendMessage({
               chatId: chat.id,
