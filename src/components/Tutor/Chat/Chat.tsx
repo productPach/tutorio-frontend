@@ -3,7 +3,7 @@ import generalStyles from "../../../app/tutor/layout.module.css";
 import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { City, Message, Student } from "@/types/types";
+import { Chat, City, Message, Student } from "@/types/types";
 import React, {
   Dispatch,
   SetStateAction,
@@ -24,13 +24,14 @@ import {
   addMessageToChat,
   sendMessage,
   setChat,
-  updateChatInSidebar,
+  setChats,
 } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { EmojiPicker } from "@/components/Student/Chat/EmojiPicker";
 import GroupedMessages from "./GroupedMessages";
 import { useSocket } from "@/context/SocketContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { useChat } from "@/context/ChatContext";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -64,6 +65,8 @@ export const ChatComponent = React.memo(
     // Получаем чат из редакса
     const chat = useAppSelector((state) => state.chat.chat);
 
+    const { chats, setChatsState } = useChat();
+
     // Стейт для текста сообщения
     const [inputValue, setInputValue] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -72,18 +75,6 @@ export const ChatComponent = React.memo(
     // Подписка на чат для получения новых сообщений через useChatSocket
     const { messages, unreadCount, sendMessageSocket, markAsRead } =
       useChatSocket(chat?.id ? chat.id : "");
-    //console.log(chat?.id);
-
-    // const handleSendMessageComp2 = async () => {
-    //   const messageResponse = inputValue.trim();
-    //   sendMessageSocket(messageResponse); // отправляем сообщение в сокет
-    //   }
-
-    // useEffect(() => {
-    //   chat && token && dispatch(getChatById({ chatId: chat?.id, token }));
-    //   textareaRef.current?.focus();
-    //   setInputValue("");
-    // }, [chat?.id, token, dispatch]);
 
     // Обработчик ввода текста в textarea
     const handleInputValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -173,12 +164,26 @@ export const ChatComponent = React.memo(
           text: messageResponse,
           createdAt: new Date().toISOString(),
           isRead: false,
-          pending: true, // это ты можешь пометить как дополнительное поле
+          pending: true, // Это помечаем как дополнительное поле
         };
+
         // Закрываем блок с эмодзи
         setVisibleEmoji(false);
+
         // Показываем сообщение сразу в UI
         const updatedMessages = [...chat.messages, tempMessage];
+
+        // Обновляем чаты в контексте
+        const updatedChats = chats.map((existingChat) =>
+          existingChat.id === chat.id
+            ? { ...existingChat, messages: updatedMessages }
+            : existingChat
+        );
+
+        // Обновляем состояние с новыми чатами в контексте
+        setChatsState(updatedChats);
+
+        // Обновляем чат в Redux
         dispatch(
           setChat({
             ...chat,
@@ -186,7 +191,7 @@ export const ChatComponent = React.memo(
           })
         );
 
-        // Обновляем чат в заказе тоже сразу
+        // Обновляем чат в заказе
         dispatch(
           updateChatInOrder({
             chatId: chat.id,
@@ -204,14 +209,15 @@ export const ChatComponent = React.memo(
             sendMessage({
               chatId: chat.id,
               senderId: chat.tutorId,
-              orderId: "какой то айди",
-              themeOrder: "какая то тема",
+              orderId: "какой-то айди",
+              themeOrder: "какая-то тема",
               text: messageResponse,
               token,
             })
           );
 
           const newMessage = unwrapResult(actionResult);
+
           // После успешного сохранения отправляем реальное сообщение через сокет
           sendMessageSocket(newMessage); // передаем реальное сообщение с id
 
@@ -220,6 +226,17 @@ export const ChatComponent = React.memo(
             msg.id === tempId ? newMessage : msg
           );
 
+          // Обновляем чаты в контексте
+          const updatedChatsWithFinal = chats.map((existingChat) =>
+            existingChat.id === chat.id
+              ? { ...existingChat, messages: finalMessages }
+              : existingChat
+          );
+
+          // Обновляем состояние с новыми чатами в контексте
+          setChatsState(updatedChatsWithFinal);
+
+          // Обновляем чаты в Redux
           dispatch(
             setChat({
               ...chat,
@@ -227,6 +244,7 @@ export const ChatComponent = React.memo(
             })
           );
 
+          // Обновляем чаты в заказе
           dispatch(
             updateChatInOrder({
               chatId: chat.id,
@@ -237,13 +255,16 @@ export const ChatComponent = React.memo(
             })
           );
 
-          // Когда отправляешь сообщение
-          finalMessages.forEach((msg) => {
-            // Обновление последнего сообщения в чате
-            dispatch(
-              updateChatInSidebar({ chatId: msg.chatId, lastMessage: msg })
-            );
-          });
+          // Теперь обновляем чаты в Redux
+          dispatch(
+            setChats(
+              chats.map((existingChat) =>
+                existingChat.id === newMessage.chatId
+                  ? { ...existingChat, messages: finalMessages }
+                  : existingChat
+              )
+            )
+          );
         } catch (error) {
           console.error("Ошибка при отправке сообщения:", error);
 
@@ -254,6 +275,17 @@ export const ChatComponent = React.memo(
               : msg
           );
 
+          // Обновляем чаты в контексте с ошибкой
+          const updatedChatsWithError = chats.map((existingChat) =>
+            existingChat.id === chat.id
+              ? { ...existingChat, messages: failedMessages }
+              : existingChat
+          );
+
+          // Обновляем состояние с новыми чатами с ошибкой в контексте
+          setChatsState(updatedChatsWithError);
+
+          // Обновляем чаты в Redux с ошибкой
           dispatch(
             setChat({
               ...chat,
