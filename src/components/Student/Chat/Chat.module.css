@@ -52,7 +52,7 @@
   background-position: center;
   display: flex;
   flex-wrap: nowrap;
-  flex-direction: column-reverse;
+  flex-direction: column;
 
   row-gap: 18px;
   flex-grow: 1; /* Блок сообщений будет занимать всё доступное пространство */
