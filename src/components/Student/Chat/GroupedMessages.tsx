@@ -64,6 +64,9 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const prevChatId = useRef<string | null>(null);
 
+  const prevScrollHeightRef = useRef<number>(0);
+  const prevScrollTopRef = useRef<number>(0);
+
   const sortedMessages = useMemo(() => {
     return messages
       .slice()
@@ -164,22 +167,24 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
     const container = containerRef.current;
     if (!container || container.scrollTop > 200) return;
 
-    const previousScrollHeight = container.scrollHeight;
+    prevScrollHeightRef.current = container.scrollHeight;
+    prevScrollTopRef.current = container.scrollTop;
 
     setVisibleCount((prev) => {
       if (prev >= messages.length) return prev;
       return prev + 50;
     });
-
-    // После увеличения visibleCount подождем рендер и восстановим позицию скролла
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const newScrollHeight = container.scrollHeight;
-        const diff = newScrollHeight - previousScrollHeight;
-        container.scrollTop = container.scrollTop + diff;
-      });
-    });
   };
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const newScrollHeight = container.scrollHeight;
+    const heightDiff = newScrollHeight - prevScrollHeightRef.current;
+
+    // Восстанавливаем скролл
+    container.scrollTop = prevScrollTopRef.current + heightDiff;
+  }, [visibleMessages.length]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -199,7 +204,8 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
     // Тут нужно добавить проверка на сообщение. Если это сообщение текущего пользователя, то скроллить вниз. Если нет, то не скроллить
 
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      //lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      lastMessageRef.current.scrollIntoView();
     }
   }, [messages.length]);
 
