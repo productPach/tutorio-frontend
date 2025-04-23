@@ -411,20 +411,15 @@ export const ChatComponent = ({
           chatStyles.jstContSpcBtwn
         )}
       >
-        <div
-          className={clsx(
-            chatStyles.chat__block,
-            chatStyles.flx1,
-            chatStyles.padng18
-          )}
-        >
-          {/* <div className={chatStyles.chat__date}>Четверг, 7 марта</div> */}
-          {/* Сортировка сообщений по времени (по возрастанию) */}
+        {/* <div className={chatStyles.chat__date}>Четверг, 7 марта</div> */}
+        {/* Сортировка сообщений по времени (по возрастанию) */}
+        {chat && (
           <GroupedMessages
+            chatId={chat?.id}
             messages={chat?.messages || []}
             studentId={student?.id || ""}
           />
-        </div>
+        )}
         <div className={clsx(chatStyles.inputMessageBlock)}>
           {/* Родительский блок с границами */}
           <div ref={wrapperRef} className={chatStyles.wrapperRef}>

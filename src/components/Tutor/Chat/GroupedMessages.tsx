@@ -1,4 +1,10 @@
-import React, { useMemo } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import chatStyles from "./Chat.module.css"; // путь к стилям поправь под себя
@@ -13,6 +19,7 @@ type Message = {
 };
 
 type Props = {
+  chatId: string;
   messages: Message[];
   tutorId: string;
 };
@@ -50,33 +57,57 @@ const formatChatDate = (dateString: string) => {
   return `${dayOfWeek}, ${formattedDate}`;
 };
 
-const GroupedMessages: React.FC<Props> = ({ messages, tutorId }) => {
-  // Мемоизация отсортированных сообщений
+const GroupedMessages: React.FC<Props> = ({ chatId, messages, tutorId }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleCount, setVisibleCount] = useState(50);
+  const isInitialScrollDone = useRef(false);
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const prevChatId = useRef<string | null>(null);
+
   const sortedMessages = useMemo(() => {
     return messages
       .slice()
       .sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
   }, [messages]);
 
-  // Мемоизация обработки сообщений для отображения
+  const visibleMessages = useMemo(() => {
+    return sortedMessages.slice(
+      Math.max(0, sortedMessages.length - visibleCount)
+    );
+  }, [sortedMessages, visibleCount]);
+
+  // Скроллим вниз при первой загрузке после рендера сообщений
+  useEffect(() => {
+    if (chatId !== prevChatId.current) {
+      isInitialScrollDone.current = false;
+      prevChatId.current = chatId;
+    }
+  }, [chatId]);
+
+  useEffect(() => {
+    if (!isInitialScrollDone.current && lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "auto" });
+      isInitialScrollDone.current = true;
+    }
+  }, [visibleMessages.length]);
+
   const groupedMessages = useMemo(() => {
-    return sortedMessages.reduceRight(
+    return visibleMessages.reduce(
       (acc: JSX.Element[], message, index, allMessages) => {
         const currentDate = new Date(message.createdAt).toDateString();
-        const nextDate =
-          index < allMessages.length - 1
-            ? new Date(allMessages[index + 1].createdAt).toDateString()
+        const prevDate =
+          index > 0
+            ? new Date(allMessages[index - 1].createdAt).toDateString()
             : null;
 
-        const shouldShowDate = currentDate !== nextDate;
-
+        const shouldShowDate = currentDate !== prevDate;
         const isFromStudent = message.senderId === tutorId;
 
         if (shouldShowDate) {
-          acc.unshift(
+          acc.push(
             <div
               key={`date-${message.createdAt}`}
               className={chatStyles.chat__date}
@@ -86,9 +117,10 @@ const GroupedMessages: React.FC<Props> = ({ messages, tutorId }) => {
           );
         }
 
-        acc.unshift(
+        acc.push(
           <div
             key={message.id}
+            ref={index === allMessages.length - 1 ? lastMessageRef : null}
             className={clsx(
               chatStyles.chat__message,
               isFromStudent
@@ -125,9 +157,81 @@ const GroupedMessages: React.FC<Props> = ({ messages, tutorId }) => {
       },
       []
     );
-  }, [sortedMessages, tutorId]);
+  }, [visibleMessages, tutorId]);
 
-  return <>{groupedMessages}</>;
+  // Подгрузка старых сообщений без прыжков
+  const handleScroll = () => {
+    const container = containerRef.current;
+    if (!container || container.scrollTop > 200) return;
+
+    const previousScrollHeight = container.scrollHeight;
+
+    setVisibleCount((prev) => {
+      if (prev >= messages.length) return prev;
+      return prev + 50;
+    });
+
+    // После увеличения visibleCount подождем рендер и восстановим позицию скролла
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const newScrollHeight = container.scrollHeight;
+        const diff = newScrollHeight - previousScrollHeight;
+        container.scrollTop = container.scrollTop + diff;
+      });
+    });
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [messages]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // const isUserAtBottom =
+    //   container.scrollHeight - container.scrollTop - container.clientHeight <
+    //   100;
+
+    // Тут нужно добавить проверка на сообщение. Если это сообщение текущего пользователя, то скроллить вниз. Если нет, то не скроллить
+
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages.length]);
+
+  // ВОТ ВАРИАНТ СО СКРОЛЛОМ ТОЛЬКО ОТ ТЕКУЩЕГО ПОЛЬЗАКА, НО ТУТ НУЖНО ДОБАВЛЯТЬ ХИТРУЮ ЛОГИ С ЧТЕНИЕМ СООБЩЕНИЯ, ЧТОБЫ СОКЕТ О ЧТЕНИИ УЛЕТАЛ ТОЛЬКО ЕСЛИ ПОЛЬЗАК РЕАЛЬНО ДОШЕЛ СКРОЛЛОМ ДО СООБЩЕНИЯ, А НЕ СИДЕЛ ГДЕ ТО ВЫШЕ
+
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   if (!container) return;
+
+  //   // Получаем последнее сообщение
+  //   const lastMessage = messages[messages.length - 1];
+
+  //   // Проверяем, если последнее сообщение отправлено текущим пользователем
+  //   const isLastMessageFromUser = lastMessage?.senderId === tutorId;
+
+  //   if (isLastMessageFromUser && lastMessageRef.current) {
+  //     lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [messages.length, tutorId, messages]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={clsx(
+        chatStyles.chat__block,
+        chatStyles.flx1,
+        chatStyles.padng18
+      )}
+    >
+      {groupedMessages}
+    </div>
+  );
 };
 
 export default React.memo(GroupedMessages);
