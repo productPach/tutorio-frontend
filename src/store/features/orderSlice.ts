@@ -165,6 +165,9 @@ const ordersSlice = createSlice({
     setOrderById(state, action: PayloadAction<Order>) {
       state.orderById = action.payload;
     },
+    clearOrderById(state) {
+      state.orderById = null;
+    },
     updateChatInOrder(state, action) {
       const { chatId, updatedChat } = action.payload;
       if (state.orderById) {
@@ -225,5 +228,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById, updateChatInOrder } = ordersSlice.actions;
+export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById, clearOrderById, updateChatInOrder } = ordersSlice.actions;
 export const ordersReducer = ordersSlice.reducer;

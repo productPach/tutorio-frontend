@@ -23,6 +23,7 @@ type ChatContextType = {
   sendMessage: (chatId: string, text: string) => void;
   markAsRead: (chatId: string) => void;
   setChatsState: (newChats: Chat[]) => void;
+  clearChats: () => void;
 };
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -41,6 +42,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
 
   const [chats, _setChatsState] = useState<Chat[]>([]);
+
+  const clearChats = () => _setChatsState([]);
 
   const setChatsState = (newChats: Chat[] | ((prev: Chat[]) => Chat[])) => {
     queueMicrotask(() => {
@@ -191,7 +194,13 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ChatContext.Provider
-      value={{ chats, sendMessage, markAsRead, setChatsState }}
+      value={{
+        chats,
+        sendMessage,
+        markAsRead,
+        setChatsState,
+        clearChats,
+      }}
     >
       {children}
     </ChatContext.Provider>

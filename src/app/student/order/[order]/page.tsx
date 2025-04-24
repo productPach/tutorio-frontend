@@ -7,7 +7,7 @@ import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
 import { Student } from "@/types/types";
 import { useSelector } from "react-redux";
-import { getOrderById } from "@/store/features/orderSlice";
+import { clearOrderById, getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
 import { OrderComponent } from "@/components/Student/Order/Order";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
@@ -50,6 +50,12 @@ const OrderPage: React.FC = () => {
     "У репетитора": "2",
     "У меня дома": "3",
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearOrderById());
+    };
+  }, []);
 
   // Фильтруем репетиторов по условиям заказа
   const tutorsForOrder = tutorsForOrderNotFilter

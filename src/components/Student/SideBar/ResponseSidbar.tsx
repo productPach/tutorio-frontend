@@ -35,6 +35,9 @@ import {
 } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
+import { Spinner } from "@/components/Spinner/Spinner";
+import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
+import { SpinnerChats } from "@/components/Spinner/SpinnerChats";
 
 type ResponseSidbarProps = {
   orderById: Order | null;
@@ -76,9 +79,16 @@ export const ResponseSidbar = ({
     }
   }, []);
 
-  const { chats } = useChat();
+  const { chats, clearChats } = useChat();
 
   useEffect(() => {
+    return () => {
+      clearChats(); // Очистка при размонтировании
+    };
+  }, []);
+
+  useEffect(() => {
+    clearChats(); // Очистка перед подгрузкой чатов нового заказа
     // если нужно при первом монтировании что-то загрузить
     if (orderById && token) {
       dispatch(getChatsByOrderId({ orderId: orderById.id, token }));
@@ -131,213 +141,220 @@ export const ResponseSidbar = ({
 
   return (
     <>
-      {!loading && (
-        <div
-          className={generalStyles.sidebarResponse}
-          style={
-            isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
-          }
-        >
-          {component === 4 && tutor && !hasChatWithTutor && (
-            <>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(setIsModalResponseStudentToTutor(true));
-                  dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
-                }}
-                className={clsx(
-                  generalStyles.content_block_button,
-                  generalStyles.buttonYlw
-                )}
-              >
-                Предложить заказ репетитору
-              </button>
-            </>
-          )}
-          {(orderById?.status === "Pending" ||
-            orderById?.status === "Sending") && (
-            <div className={styles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderNoResponse}>
-                <Player
-                  autoplay
-                  loop
-                  animationData={Notification}
-                  style={{ height: "30px", width: "30px" }}
-                />
-                <div>
-                  Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
-                  <br></br>
-                  Скоро тут появятся отклики ..
-                </div>
+      <div
+        className={generalStyles.sidebarResponse}
+        style={isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }}
+      >
+        {component === 4 && tutor && !hasChatWithTutor && (
+          <>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(setIsModalResponseStudentToTutor(true));
+                dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+              }}
+              className={clsx(
+                generalStyles.content_block_button,
+                generalStyles.buttonYlw
+              )}
+            >
+              Предложить заказ репетитору
+            </button>
+          </>
+        )}
+        {(orderById?.status === "Pending" ||
+          orderById?.status === "Sending") && (
+          <div className={styles.sidebar_filter}>
+            <div className={generalStyles.studentSidebarOrderNoResponse}>
+              <Player
+                autoplay
+                loop
+                animationData={Notification}
+                style={{ height: "30px", width: "30px" }}
+              />
+              <div>
+                Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
+                <br></br>
+                Скоро тут появятся отклики ..
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {orderById?.status === "Active" && orderById.chats.length < 1 && (
-            <div className={styles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderNoResponse}>
-                <Player
-                  autoplay
-                  loop
-                  animationData={Chat}
-                  style={{ height: "30px", width: "30px" }}
-                />
-                <div>
-                  Ждем отклики репетиторов!&nbsp;⏳ <br></br>
-                  <br></br>
-                  Как только появится первый отклик, вы сразу увидите его
-                  здесь&nbsp;📬
-                </div>
+        {orderById?.status === "Active" && orderById.chats.length < 1 && (
+          <div className={styles.sidebar_filter}>
+            <div className={generalStyles.studentSidebarOrderNoResponse}>
+              <Player
+                autoplay
+                loop
+                animationData={Chat}
+                style={{ height: "30px", width: "30px" }}
+              />
+              <div>
+                Ждем отклики репетиторов!&nbsp;⏳ <br></br>
+                <br></br>
+                Как только появится первый отклик, вы сразу увидите его
+                здесь&nbsp;📬
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {orderById?.status === "Hidden" && orderById.chats.length < 1 && (
-            <div className={generalStyles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderNoResponse}>
-                <div>
-                  Отклики на заказ отключены!&nbsp;🚫<br></br>
-                  <br></br>К сожалению, на данный момент нет ни одного
-                  отклика&nbsp;😔
-                </div>
+        {orderById?.status === "Hidden" && orderById.chats.length < 1 && (
+          <div className={generalStyles.sidebar_filter}>
+            <div className={generalStyles.studentSidebarOrderNoResponse}>
+              <div>
+                Отклики на заказ отключены!&nbsp;🚫<br></br>
+                <br></br>К сожалению, на данный момент нет ни одного
+                отклика&nbsp;😔
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {(orderById?.status === "Active" ||
-            orderById?.status === "Hidden") && (
-            <div className={styles.sidebar_filter}>
-              <div className={stylesStudent.containerEntityShowEnd}>
-                <div className={stylesStudent.containerEntityTitleDescription}>
-                  <div>Получать новые отклики</div>
-                </div>
-                <div className={stylesStudent.inputContainer}>
-                  <label className={stylesStudent.iosSwitch}>
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={toggleSwitch}
-                    />
-                    <span className={stylesStudent.slider}></span>
-                  </label>
-                </div>
+        {(orderById?.status === "Active" || orderById?.status === "Hidden") && (
+          <div className={styles.sidebar_filter}>
+            <div className={stylesStudent.containerEntityShowEnd}>
+              <div className={stylesStudent.containerEntityTitleDescription}>
+                <div>Получать новые отклики</div>
+              </div>
+              <div className={stylesStudent.inputContainer}>
+                <label className={stylesStudent.iosSwitch}>
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={toggleSwitch}
+                  />
+                  <span className={stylesStudent.slider}></span>
+                </label>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {orderById && orderById.chats.length > 0 && chats && (
-            <div className={styles.sidebar_filterForChat}>
-              <div className={styles.studentChatWrap}>
-                {sortedChats.map((chat, index, array) => {
-                  // Мемоизируем сортировку сообщений для каждого чата
-                  const sortedMessages = [...chat.messages].sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  );
-
-                  const lastMessage = sortedMessages[0];
-                  const isFirst = index === 0;
-                  const isLast = index === array.length - 1;
-
-                  const noReadMessagesFromOther =
-                    student &&
-                    chat.messages.filter(
-                      (message) =>
-                        !message.isRead && message.senderId !== student.id
+        {orderById && orderById.chats.length > 0 && (
+          <>
+            {chats && chats.length > 0 ? (
+              <div className={styles.sidebar_filterForChat}>
+                <div className={styles.studentChatWrap}>
+                  {sortedChats.map((chat, index, array) => {
+                    // Мемоизируем сортировку сообщений для каждого чата
+                    const sortedMessages = [...chat.messages].sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
                     );
 
-                  return (
-                    <div
-                      onClick={() => {
-                        dispatch(setComponentMenu(5));
-                        dispatch(setChat(chat));
-                        // Закрываем блок с эмодзи
-                        setVisibleEmoji && setVisibleEmoji(false);
-                        if (page && page === "Tutor") {
-                          route.push("../");
-                        }
-                      }}
-                      className={clsx(
-                        styles.studentChatContainerImgAndMessage,
-                        {
-                          [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
-                          [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
-                          [styles.isNotReadTutorsMessageContainerBg]:
-                            lastMessage?.senderId !== student?.id &&
-                            chat.messages.some(
-                              (msg) =>
-                                !msg.isRead && msg.senderId !== student?.id
-                            ),
-                          [styles.selectStudentChatContainerImgAndMessage]:
-                            chat.id === selectChat?.id,
-                        }
-                      )}
-                      key={chat.id}
-                    >
-                      <Image
-                        className={styles.studentChatImg}
-                        src={`${host}${port}${chat.tutor.avatarUrl}`}
-                        width={66}
-                        height={66}
-                        alt=""
-                      />
-                      <div className={styles.studentChatMessage}>
-                        <div className={styles.studentChatMessageFio}>
-                          {chat.tutor.name}
-                        </div>
-                        <div className={styles.studentChatMessageFlx}>
-                          <div className={styles.studentChatMessageText}>
-                            {lastMessage?.text}
-                          </div>
-                          {lastMessage.senderId === student?.id ? (
-                            lastMessage.isRead ? (
-                              <Image
-                                className={styles.studentChatIcon}
-                                src={"/../img/icon/isRead.svg"}
-                                width={18}
-                                height={18}
-                                alt=""
-                              />
-                            ) : (
-                              <Image
-                                className={styles.studentChatIcon}
-                                src={"/../img/icon/noRead.svg"}
-                                width={18}
-                                height={18}
-                                alt=""
-                              />
-                            )
-                          ) : (
-                            !lastMessage.isRead && (
-                              <div
-                                className={styles.isNotReadTutorsMessageCount}
-                              >
-                                {
-                                  chat.messages.filter(
-                                    (msg) =>
-                                      !msg.isRead &&
-                                      msg.senderId !== student?.id
-                                  ).length
-                                }
-                              </div>
-                            )
-                          )}
-                        </div>
+                    const lastMessage = sortedMessages[0];
+                    const isFirst = index === 0;
+                    const isLast = index === array.length - 1;
 
-                        <div className={styles.studentChatMessageDate}>
-                          {formatTimeAgo(lastMessage?.createdAt)}
+                    const noReadMessagesFromOther =
+                      student &&
+                      chat.messages.filter(
+                        (message) =>
+                          !message.isRead && message.senderId !== student.id
+                      );
+
+                    return (
+                      <div
+                        onClick={() => {
+                          dispatch(setComponentMenu(5));
+                          dispatch(setChat(chat));
+                          // Закрываем блок с эмодзи
+                          setVisibleEmoji && setVisibleEmoji(false);
+                          if (page && page === "Tutor") {
+                            route.push("../");
+                          }
+                        }}
+                        className={clsx(
+                          styles.studentChatContainerImgAndMessage,
+                          {
+                            [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
+                            [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
+                            [styles.isNotReadTutorsMessageContainerBg]:
+                              lastMessage?.senderId !== student?.id &&
+                              chat.messages.some(
+                                (msg) =>
+                                  !msg.isRead && msg.senderId !== student?.id
+                              ),
+                            [styles.selectStudentChatContainerImgAndMessage]:
+                              chat.id === selectChat?.id,
+                          }
+                        )}
+                        key={chat.id}
+                      >
+                        <Image
+                          className={styles.studentChatImg}
+                          src={`${host}${port}${chat.tutor.avatarUrl}`}
+                          width={66}
+                          height={66}
+                          alt=""
+                        />
+                        <div className={styles.studentChatMessage}>
+                          <div className={styles.studentChatMessageFio}>
+                            {chat.tutor.name}
+                          </div>
+                          <div className={styles.studentChatMessageFlx}>
+                            <div className={styles.studentChatMessageText}>
+                              {lastMessage?.text}
+                            </div>
+                            {lastMessage.senderId === student?.id ? (
+                              lastMessage.isRead ? (
+                                <Image
+                                  className={styles.studentChatIcon}
+                                  src={"/../img/icon/isRead.svg"}
+                                  width={18}
+                                  height={18}
+                                  alt=""
+                                />
+                              ) : (
+                                <Image
+                                  className={styles.studentChatIcon}
+                                  src={"/../img/icon/noRead.svg"}
+                                  width={18}
+                                  height={18}
+                                  alt=""
+                                />
+                              )
+                            ) : (
+                              !lastMessage.isRead && (
+                                <div
+                                  className={styles.isNotReadTutorsMessageCount}
+                                >
+                                  {
+                                    chat.messages.filter(
+                                      (msg) =>
+                                        !msg.isRead &&
+                                        msg.senderId !== student?.id
+                                    ).length
+                                  }
+                                </div>
+                              )
+                            )}
+                          </div>
+
+                          <div className={styles.studentChatMessageDate}>
+                            {formatTimeAgo(lastMessage?.createdAt)}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <>
+                <div className={generalStyles.container__spinner}>
+                  <div className={generalStyles.spinner}>
+                    <SpinnerChats />
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 };

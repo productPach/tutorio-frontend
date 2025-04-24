@@ -24,7 +24,19 @@
 .studentChatWrap {
   display: flex;
   flex-direction: column;
+  opacity: 0; /* Начальная прозрачность */
+  animation: fadeIn 0.6s forwards; /* Анимация появления */
 }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .studentChatContainerImgAndMessage {
   background-color: #ffffff;
   display: flex;
