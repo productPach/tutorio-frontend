@@ -127,17 +127,26 @@ export const ResponseSidbar = ({
 
   // Мемоизация сортировки чатов
   const sortedChats = useMemo(() => {
-    // Сортируем чаты по последнему сообщению
     return [...chats].sort((a, b) => {
-      const lastMsgA = a.messages[0]; // Предположим, что сортировка уже сделана по времени
-      const lastMsgB = b.messages[0];
+      const lastA = a.messages
+        .filter((m) => m.createdAt)
+        .sort(
+          (x, y) =>
+            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+        )[0];
+      const lastB = b.messages
+        .filter((m) => m.createdAt)
+        .sort(
+          (x, y) =>
+            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+        )[0];
 
       return (
-        new Date(lastMsgB?.createdAt || 0).getTime() -
-        new Date(lastMsgA?.createdAt || 0).getTime()
+        new Date(lastB?.createdAt || 0).getTime() -
+        new Date(lastA?.createdAt || 0).getTime()
       );
     });
-  }, [chats]); // Мемоизируем сортировку чатов, когда изменяются сами чаты
+  }, [chats]);
 
   return (
     <>
