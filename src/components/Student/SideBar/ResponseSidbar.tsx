@@ -3,7 +3,13 @@ import generalStyles from "../../../app/student/layout.module.css";
 import styles from "./ResponseSidbar.module.css";
 
 import stylesStudent from "../Student.module.css";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import {
@@ -29,6 +35,9 @@ import {
 } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
+import { Spinner } from "@/components/Spinner/Spinner";
+import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
+import { SpinnerChats } from "@/components/Spinner/SpinnerChats";
 
 type ResponseSidbarProps = {
   orderById: Order | null;
@@ -70,9 +79,16 @@ export const ResponseSidbar = ({
     }
   }, []);
 
-  const { chats } = useChat();
+  const { chats, clearChats } = useChat();
 
   useEffect(() => {
+    return () => {
+      clearChats(); // Очистка при размонтировании
+    };
+  }, []);
+
+  useEffect(() => {
+    clearChats(); // Очистка перед подгрузкой чатов нового заказа
     // если нужно при первом монтировании что-то загрузить
     if (orderById && token) {
       dispatch(getChatsByOrderId({ orderId: orderById.id, token }));
@@ -109,131 +125,127 @@ export const ResponseSidbar = ({
     (chat) => chat.tutorId === tutor?.id
   );
 
+  // Мемоизация сортировки чатов
+  const sortedChats = useMemo(() => {
+    // Сортируем чаты по последнему сообщению
+    return [...chats].sort((a, b) => {
+      const lastMsgA = a.messages[0]; // Предположим, что сортировка уже сделана по времени
+      const lastMsgB = b.messages[0];
+
+      return (
+        new Date(lastMsgB?.createdAt || 0).getTime() -
+        new Date(lastMsgA?.createdAt || 0).getTime()
+      );
+    });
+  }, [chats]); // Мемоизируем сортировку чатов, когда изменяются сами чаты
+
   return (
     <>
-      {!loading && (
-        <div
-          className={generalStyles.sidebarResponse}
-          style={
-            isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
-          }
-        >
-          {component === 4 && tutor && !hasChatWithTutor && (
-            <>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  dispatch(setIsModalResponseStudentToTutor(true));
-                  dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
-                }}
-                className={clsx(
-                  generalStyles.content_block_button,
-                  generalStyles.buttonYlw
-                )}
-              >
-                Предложить заказ репетитору
-              </button>
-            </>
-          )}
-          {(orderById?.status === "Pending" ||
-            orderById?.status === "Sending") && (
-            <div className={styles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderNoResponse}>
-                <Player
-                  autoplay
-                  loop
-                  animationData={Notification}
-                  style={{ height: "30px", width: "30px" }}
-                />
-                <div>
-                  Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
-                  <br></br>
-                  Скоро тут появятся отклики ..
-                </div>
+      <div
+        className={generalStyles.sidebarResponse}
+        style={isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }}
+      >
+        {component === 4 && tutor && !hasChatWithTutor && (
+          <>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(setIsModalResponseStudentToTutor(true));
+                dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+              }}
+              className={clsx(
+                generalStyles.content_block_button,
+                generalStyles.buttonYlw
+              )}
+            >
+              Предложить заказ репетитору
+            </button>
+          </>
+        )}
+        {(orderById?.status === "Pending" ||
+          orderById?.status === "Sending") && (
+          <div className={styles.sidebar_filter}>
+            <div className={generalStyles.studentSidebarOrderNoResponse}>
+              <Player
+                autoplay
+                loop
+                animationData={Notification}
+                style={{ height: "30px", width: "30px" }}
+              />
+              <div>
+                Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
+                <br></br>
+                Скоро тут появятся отклики ..
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {orderById?.status === "Active" && orderById.chats.length < 1 && (
-            <div className={styles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderNoResponse}>
-                <Player
-                  autoplay
-                  loop
-                  animationData={Chat}
-                  style={{ height: "30px", width: "30px" }}
-                />
-                <div>
-                  Ждем отклики репетиторов!&nbsp;⏳ <br></br>
-                  <br></br>
-                  Как только появится первый отклик, вы сразу увидите его
-                  здесь&nbsp;📬
-                </div>
+        {orderById?.status === "Active" && orderById.chats.length < 1 && (
+          <div className={styles.sidebar_filter}>
+            <div className={generalStyles.studentSidebarOrderNoResponse}>
+              <Player
+                autoplay
+                loop
+                animationData={Chat}
+                style={{ height: "30px", width: "30px" }}
+              />
+              <div>
+                Ждем отклики репетиторов!&nbsp;⏳ <br></br>
+                <br></br>
+                Как только появится первый отклик, вы сразу увидите его
+                здесь&nbsp;📬
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {orderById?.status === "Hidden" && orderById.chats.length < 1 && (
-            <div className={generalStyles.sidebar_filter}>
-              <div className={generalStyles.studentSidebarOrderNoResponse}>
-                <div>
-                  Отклики на заказ отключены!&nbsp;🚫<br></br>
-                  <br></br>К сожалению, на данный момент нет ни одного
-                  отклика&nbsp;😔
-                </div>
+        {orderById?.status === "Hidden" && orderById.chats.length < 1 && (
+          <div className={generalStyles.sidebar_filter}>
+            <div className={generalStyles.studentSidebarOrderNoResponse}>
+              <div>
+                Отклики на заказ отключены!&nbsp;🚫<br></br>
+                <br></br>К сожалению, на данный момент нет ни одного
+                отклика&nbsp;😔
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {(orderById?.status === "Active" ||
-            orderById?.status === "Hidden") && (
-            <div className={styles.sidebar_filter}>
-              <div className={stylesStudent.containerEntityShowEnd}>
-                <div className={stylesStudent.containerEntityTitleDescription}>
-                  <div>Получать новые отклики</div>
-                </div>
-                <div className={stylesStudent.inputContainer}>
-                  <label className={stylesStudent.iosSwitch}>
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={toggleSwitch}
-                    />
-                    <span className={stylesStudent.slider}></span>
-                  </label>
-                </div>
+        {(orderById?.status === "Active" || orderById?.status === "Hidden") && (
+          <div className={styles.sidebar_filter}>
+            <div className={stylesStudent.containerEntityShowEnd}>
+              <div className={stylesStudent.containerEntityTitleDescription}>
+                <div>Получать новые отклики</div>
+              </div>
+              <div className={stylesStudent.inputContainer}>
+                <label className={stylesStudent.iosSwitch}>
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={toggleSwitch}
+                  />
+                  <span className={stylesStudent.slider}></span>
+                </label>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {orderById && orderById.chats.length > 0 && chats && (
-            <div className={styles.sidebar_filterForChat}>
-              <div className={styles.studentChatWrap}>
-                {[...chats]
-                  .sort((a, b) => {
-                    const lastMsgA = [...a.messages].sort(
+        {orderById && orderById.chats.length > 0 && (
+          <>
+            {chats && chats.length > 0 ? (
+              <div className={styles.sidebar_filterForChat}>
+                <div className={styles.studentChatWrap}>
+                  {sortedChats.map((chat, index, array) => {
+                    // Мемоизируем сортировку сообщений для каждого чата
+                    const sortedMessages = [...chat.messages].sort(
                       (a, b) =>
                         new Date(b.createdAt).getTime() -
                         new Date(a.createdAt).getTime()
-                    )[0];
-                    const lastMsgB = [...b.messages].sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime()
-                    )[0];
-
-                    return (
-                      new Date(lastMsgB?.createdAt || 0).getTime() -
-                      new Date(lastMsgA?.createdAt || 0).getTime()
                     );
-                  })
-                  .map((chat, index, array) => {
-                    const lastMessage = [...chat.messages].sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime()
-                    )[0];
 
+                    const lastMessage = sortedMessages[0];
                     const isFirst = index === 0;
                     const isLast = index === array.length - 1;
 
@@ -329,11 +341,20 @@ export const ResponseSidbar = ({
                       </div>
                     );
                   })}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <>
+                <div className={generalStyles.container__spinner}>
+                  <div className={generalStyles.spinner}>
+                    <SpinnerChats />
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 };

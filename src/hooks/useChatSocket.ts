@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "@/context/SocketContext";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { addMessageToChat, getChatById, markMessagesAsRead } from "@/store/features/chatSlice";
+import { fetchGetChatById } from "@/api/server/chatApi";
 
 type Message = {
   id: string;
@@ -34,8 +35,9 @@ export const useChatSocket = (chatId: string) => {
     // Загружаем чат с сервера через Redux
     const fetchChat = async () => {
         try {
+          if (!token) return;
           // Подписываемся на чат через Redux
-          const response = await dispatch(getChatById({ chatId, token: token || "" })).unwrap();
+          const response = await fetchGetChatById(chatId, token);
           setMessages(response.messages); // <-- напрямую из payload
           markAsRead(response.messages);
         } catch (error) {
@@ -82,7 +84,7 @@ export const useChatSocket = (chatId: string) => {
       socket.off("messagesRead", handleMessagesRead);
       socket.off("updateUnreadCount", handleUnreadCount);
     };
-  }, [socket, chatId, studentId, tutorUserId]); // Обновляем зависимости
+  }, [socket, chatId, studentId, tutorUserId, dispatch, token]); // Обновляем зависимости
 
   const sendMessageSocket = (message: Message) => {
     if (!socket || !(studentId || tutorUserId)) return;
