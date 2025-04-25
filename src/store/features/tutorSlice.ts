@@ -401,6 +401,7 @@ export const deleteTutorRequest = createAsyncThunk<
 
 type TutorStateType = {
   tutor: null | Tutor;
+  tutorById: null | Tutor;
   tutors: Tutor[];
   loading: boolean;
   error: null | string;
@@ -418,6 +419,7 @@ const initialTutor = getTutorFromLocalStorage();
 
 const initialState: TutorStateType = {
   tutor: initialTutor,
+  tutorById: initialTutor, 
   tutors: [] as Tutor[],
   loading: false,
   error: null as string | null,
@@ -501,7 +503,7 @@ const tutorSlice = createSlice({
       })
       .addCase(getTutorById.fulfilled, (state, action: PayloadAction<Tutor>) => {
         state.loading = false;
-        state.tutor = action.payload; // Сохраняем полученного репетитора
+        state.tutorById = action.payload; // Сохраняем полученного репетитора
       })
       .addCase(getTutorById.rejected, (state, action) => {
         state.loading = false;

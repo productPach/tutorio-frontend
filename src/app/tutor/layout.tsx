@@ -14,6 +14,8 @@ import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { usePathname } from "next/navigation"; // Правильный импорт для использования пути
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { getChatsByUserId } from "@/store/features/chatSlice";
+import { useChat } from "@/context/ChatContext";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -25,6 +27,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const pathname = usePathname(); // Получаем текущий путь
   const dispatch = useAppDispatch();
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const token = useAppSelector((state) => state.auth.token);
 
   // Получаем токен из куки
   // Если токен в куки есть, тогда добавляем токен в Redux
@@ -83,6 +86,15 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     // Сохраняем текущее время в localStorage
     localStorage.setItem("lastOnline", new Date().toISOString());
   }, [pathname, dispatch, tutor]); // Используем pathname для отслеживания изменений
+
+  // Получаем чаты репетитора
+  useEffect(() => {
+    tutor &&
+      token &&
+      dispatch(
+        getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
+      );
+  }, [tutor?.userId, token]);
 
   return (
     <>
