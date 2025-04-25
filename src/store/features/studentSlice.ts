@@ -73,6 +73,7 @@ export const updateStudent = createAsyncThunk<
     isNotificationsEmail?: boolean;
     isNotificationsTelegram?: boolean;
     isNotificationsVk?: boolean;
+    lastOnline?: Date;
   }
 >("student/update", async ({ id, token, status, ...optionalFields }) => {
   try {

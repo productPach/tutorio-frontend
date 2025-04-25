@@ -5,14 +5,17 @@ import clsx from "clsx";
 import Head from "next/head";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setToken } from "@/store/features/authSlice";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getCurrentTutor } from "@/store/features/tutorSlice";
 import Image from "next/image";
 import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
-import { getCurrentStudent } from "@/store/features/studentSlice";
+import {
+  getCurrentStudent,
+  updateStudent,
+} from "@/store/features/studentSlice";
 import Link from "next/link";
 import { io, Socket } from "socket.io-client";
 import { useSocket } from "@/context/SocketContext";
@@ -25,6 +28,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const [isLoadedPage, setIsLoadedPage] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const pathname = usePathname(); // Получаем текущий путь
   const student = useAppSelector((state) => state.student.student);
   const token = useAppSelector((state) => state.auth.token);
 
@@ -48,19 +52,46 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
 
   const { socket } = useSocket();
 
-  // useEffect(() => {
-  //   if (!socket) return;
+  useEffect(() => {
+    const currentTime = new Date().getTime();
+    const lastOnlineTime = student?.lastOnline
+      ? new Date(student.lastOnline).getTime()
+      : null;
 
-  //   socket.emit("myEvent", { foo: "bar" });
+    const token = getTokenFromCookie();
 
-  //   socket.on("something", (data) => {
-  //     console.log("Получено:", data);
-  //   });
+    // Если lastOnline существует, проверяем, прошло ли больше 5 минут
+    if (lastOnlineTime && currentTime - lastOnlineTime > 5 * 60 * 1000) {
+      if (token && student) {
+        // Отправляем данные на сервер, если прошло больше 5 минут
+        dispatch(
+          updateStudent({
+            id: student.id,
+            token,
+            status: student.status,
+            lastOnline: new Date(), // Обновляем дату последнего посещения
+          })
+        );
+      }
+    } else if (!lastOnlineTime) {
+      // Если lastOnline нет, считаем, что это первый вход
+      if (token && student) {
+        dispatch(
+          updateStudent({
+            id: student.id,
+            token,
+            status: student.status,
+            lastOnline: new Date(), // Устанавливаем время первого входа
+          })
+        );
+      }
+    } else {
+      // Если lastOnline есть и прошло менее 5 минут, обновление не требуется
+    }
 
-  //   return () => {
-  //     socket.off("something");
-  //   };
-  // }, [socket]);
+    // Сохраняем текущее время в localStorage
+    localStorage.setItem("lastOnline", new Date().toISOString());
+  }, [pathname, dispatch, student]); // Используем pathname для отслеживания изменений
 
   return (
     <>

@@ -6,6 +6,8 @@ import {
   useEffect,
   useState,
   useCallback,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { useSocket } from "./SocketContext";
 import { useAppSelector, useAppDispatch } from "@/store/store";
@@ -23,6 +25,9 @@ type ChatContextType = {
   sendMessage: (chatId: string, text: string) => void;
   markAsRead: (chatId: string) => void;
   setChatsState: (newChats: Chat[]) => void;
+  loadChats: () => Promise<void>;
+  chatsLoading: boolean;
+  setChatsLoaded: Dispatch<SetStateAction<boolean>>;
   clearChats: () => void;
 };
 
@@ -42,7 +47,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
 
   const [chats, _setChatsState] = useState<Chat[]>([]);
-
+  const [chatsLoading, setChatsLoading] = useState(true);
+  const [chatsLoaded, setChatsLoaded] = useState(false);
   const clearChats = () => _setChatsState([]);
 
   const setChatsState = (newChats: Chat[] | ((prev: Chat[]) => Chat[])) => {
@@ -55,8 +61,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const isMountedRef = useIsMounted();
 
   const loadChats = useCallback(async () => {
-    if (!token) return;
-
+    if (!token || chatsLoaded) return; // Если чаты уже загружены, не запускаем загрузку
+    setChatsLoading(true); // 👈 устанавливаем загрузку
     try {
       let combinedChats: Chat[] = [];
 
@@ -79,12 +85,14 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setChatsState(combinedChats);
         //console.trace("setChatsState called 1");
         dispatch(setChats(combinedChats));
+        setChatsLoading(false); // 👈 когда всё готово — снимаем флаг
       }, 0);
 
       const chatIds = combinedChats.map((chat) => chat.id);
       socket?.emit("joinChat", { userId: studentId || tutorId, chatIds });
     } catch (err) {
       console.error("Ошибка загрузки чатов:", err);
+      setChatsLoading(false); // 👈 даже при ошибке — снимаем флаг
     }
   }, [studentId, tutorUserId, tutorId, token, socket, orderId, dispatch]);
 
@@ -199,6 +207,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         sendMessage,
         markAsRead,
         setChatsState,
+        loadChats,
+        chatsLoading,
+        setChatsLoaded,
         clearChats,
       }}
     >

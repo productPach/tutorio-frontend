@@ -5,7 +5,7 @@ import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { data } from "@/utils/listSubjects";
-import { City, Message, Order, Student } from "@/types/types";
+import { Chat, City, Message, Order, Student } from "@/types/types";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
@@ -33,6 +33,7 @@ import { useChat } from "@/context/ChatContext";
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
 type OrderProps = {
+  chats: Chat[];
   visibleEmoji: boolean;
   setVisibleEmoji: Dispatch<SetStateAction<boolean>>;
   loading?: boolean;
@@ -43,6 +44,7 @@ type OrderProps = {
 };
 
 export const ChatComponent = ({
+  chats,
   visibleEmoji,
   setVisibleEmoji,
   loading,
@@ -66,8 +68,6 @@ export const ChatComponent = ({
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const { chats } = useChat();
 
   // Подписка на чат для получения новых сообщений через useChatSocket
   const { messages, unreadCount, sendMessageSocket, markAsRead } =

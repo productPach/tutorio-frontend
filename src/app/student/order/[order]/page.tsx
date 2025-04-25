@@ -21,6 +21,7 @@ import { host, port } from "@/api/server/configApi";
 import { io } from "socket.io-client";
 import { getChatsByOrderId } from "@/store/features/chatSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
+import { useChat } from "@/context/ChatContext";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -40,6 +41,7 @@ const OrderPage: React.FC = () => {
   const [visibleEmoji, setVisibleEmoji] = useState(false);
 
   const [student, setStudent] = useState<Student | null>(null);
+  const { chats, clearChats } = useChat();
 
   const { orderById, loading, error } = useAppSelector((state) => state.orders);
 
@@ -151,6 +153,7 @@ const OrderPage: React.FC = () => {
           )}
           {component === 5 || component === 6 ? (
             <ChatComponent
+              chats={chats}
               orderById={orderById}
               visibleEmoji={visibleEmoji}
               setVisibleEmoji={setVisibleEmoji}
@@ -158,6 +161,8 @@ const OrderPage: React.FC = () => {
           ) : null}
         </div>
         <ResponseSidbar
+          chats={chats}
+          clearChats={clearChats}
           visibleEmoji={visibleEmoji}
           setVisibleEmoji={setVisibleEmoji}
           isChecked={isChecked}

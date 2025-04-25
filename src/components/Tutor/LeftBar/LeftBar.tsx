@@ -46,10 +46,6 @@ const LeftBar: React.FC<{
     }
   };
 
-  const clearChat = () => {
-    dispatch(setChat(null));
-  };
-
   return (
     <div
       className={styles.leftbar}
@@ -76,7 +72,7 @@ const LeftBar: React.FC<{
       <div className={styles.left_menu}>
         <ul>
           <Link href={"/tutor/orders"} prefetch={true}>
-            <li onClick={clearChat}>
+            <li>
               <Image
                 src="/../img/icon/tutor/orders.svg"
                 alt="Заказы"

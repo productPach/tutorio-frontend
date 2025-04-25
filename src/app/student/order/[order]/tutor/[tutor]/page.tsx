@@ -12,6 +12,7 @@ import { getTutorById } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { TutorComponent } from "@/components/Student/Tutor/Tutor";
 import { getOrderById } from "@/store/features/orderSlice";
+import { useChat } from "@/context/ChatContext";
 
 const TutorPage: React.FC = () => {
   const page = "Tutor";
@@ -27,7 +28,7 @@ const TutorPage: React.FC = () => {
   const token = useAppSelector((state) => state.auth.token);
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
-
+  const { chats, clearChats } = useChat();
   const { orderById } = useSelector((state: RootState) => state.orders);
 
   // Получаем список регионов
@@ -39,6 +40,12 @@ const TutorPage: React.FC = () => {
     }
   }, [dispatch, tutor, token]);
 
+  const {
+    tutorById: tutorData,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.tutor);
+
   useEffect(() => {
     if (token && typeof order === "string") {
       dispatch(getOrderById({ token, id: order }));
@@ -48,12 +55,6 @@ const TutorPage: React.FC = () => {
   useEffect(() => {
     orderById && setIsChecked(orderById.status === "Active");
   }, [orderById]);
-
-  const {
-    tutor: tutorData,
-    loading,
-    error,
-  } = useSelector((state: RootState) => state.tutor);
 
   // Состояние для свитча
   const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
@@ -73,6 +74,8 @@ const TutorPage: React.FC = () => {
           />
         </div>
         <ResponseSidbar
+          chats={chats}
+          clearChats={clearChats}
           tutor={tutorData}
           page={page}
           orderById={orderById}

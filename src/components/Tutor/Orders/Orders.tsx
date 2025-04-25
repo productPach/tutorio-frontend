@@ -19,8 +19,12 @@ import {
   setIsModalResponseTutorToStudent,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
+import { useChat } from "@/context/ChatContext";
+import { setChat } from "@/store/features/chatSlice";
+import { useRouter } from "next/navigation";
 
 const Orders = () => {
+  const route = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
@@ -32,6 +36,8 @@ const Orders = () => {
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
 
   const { selectedPlaceFilters, selectedGoalFilters } = filters;
+
+  const { chats, chatsLoading, setChatsLoaded } = useChat();
 
   useEffect(() => {
     if (token) {
@@ -95,7 +101,7 @@ const Orders = () => {
     );
   }, [orders, selectedPlaceFilters, selectedGoalFilters]);
 
-  if (loading)
+  if (loading || chatsLoading) {
     return (
       <div className={styles.container__spinner}>
         <div className={styles.spinner}>
@@ -103,6 +109,7 @@ const Orders = () => {
         </div>
       </div>
     );
+  }
 
   if (error) return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
 
@@ -226,6 +233,10 @@ const Orders = () => {
             const studentWishes = order.studentWishes
               ? order.studentWishes
               : null;
+
+            const existingChat = chats.find(
+              (chat) => chat.orderId === order.id
+            );
 
             return (
               <div
@@ -437,25 +448,31 @@ const Orders = () => {
                       <button
                         className={clsx(
                           styles.content_block_button,
-                          styles.buttonYlw
+                          existingChat ? styles.buttonBlc : styles.buttonYlw
                         )}
                         onClick={(e) => {
-                          e.preventDefault();
-                          //dispatch(setIsModalBalanceBoost(true));
-                          // dispatch(
-                          //   setValueModalBalanceBoost(order.responseCost)
-                          // );
-                          dispatch(setIsModalResponseTutorToStudent(true));
-                          dispatch(setOrderById(order));
+                          if (existingChat) {
+                            e.preventDefault();
+                            // Если чат есть — редиректим на страницу чата
+                            route.push(`responses`);
+                            dispatch(setChat(existingChat));
+                          } else {
+                            e.preventDefault();
+                            dispatch(setIsModalResponseTutorToStudent(true));
+                            dispatch(setOrderById(order));
+                            setChatsLoaded(true);
+                          }
                         }}
                         type="button"
                       >
-                        {order.autoContactsOnResponse
-                          ? "Получить контакты"
-                          : "Откликнуться"}
+                        {chats.find((chat) => chat.orderId === order.id)
+                          ? "Перейти в чат"
+                          : order.autoContactsOnResponse
+                            ? "Получить контакты"
+                            : "Откликнуться"}
                       </button>
 
-                      {order.autoContactsOnResponse && (
+                      {order.autoContactsOnResponse && !existingChat && (
                         <div className={styles.blockAutoContakts}>
                           <div className={styles.fireIcon}>🔥</div>
                           <div>доступ к контактам после отклика</div>

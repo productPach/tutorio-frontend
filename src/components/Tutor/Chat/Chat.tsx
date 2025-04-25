@@ -106,7 +106,7 @@ export const ChatComponent = React.memo(
           wrapperRef.current.style.padding = "0"; // сбрасываем
         }
       }
-    }, [inputValue]);
+    }, [inputValue, chat]);
 
     useEffect(() => {
       dispatch(setComponentMenu(5));
@@ -136,7 +136,9 @@ export const ChatComponent = React.memo(
 
     // Проверяем, был ли репетитор онлайн в последние 5 минут
     const lastOnlineTime =
-      chat && chat.tutor.lastOnline ? new Date(chat.tutor.lastOnline) : null;
+      chat && chat.student.lastOnline
+        ? new Date(chat.student.lastOnline)
+        : null;
 
     let onlineStatus = "";
     let timeDifference = 0;
@@ -297,100 +299,113 @@ export const ChatComponent = React.memo(
 
     return (
       <>
-        <div
-          className={clsx(
-            generalStyles.content_block,
-            generalStyles.order_block,
-            generalStyles.crsr_pntr,
-            chatStyles.order_gap
-          )}
-        >
-          <div
-            className={clsx(
-              chatStyles.tutorImgFioContainer,
-              chatStyles.alnItmCntr,
-              chatStyles.gap14
-            )}
-          >
-            <div className={chatStyles.tutorImgContainer}>
-              <Link
-                href={`./${chat?.orderId}/tutor/${chat?.tutor.id}`}
-                onClick={() => {
-                  dispatch(setComponentMenu(6));
-                }}
-              >
-                <Image
-                  className={chatStyles.tutorImg}
-                  src={
-                    chat && chat.student.avatarUrl
-                      ? chat.student.avatarUrl
-                      : "/img/tutor/avatarBasic.png"
-                  }
-                  width={34}
-                  height={34}
-                  alt=""
-                />
-              </Link>
-            </div>
-            <div className={chatStyles.flex4}>
+        {chat ? (
+          <>
+            <div
+              className={clsx(
+                generalStyles.content_block,
+                generalStyles.order_block,
+                generalStyles.crsr_pntr,
+                chatStyles.order_gap
+              )}
+            >
               <div
                 className={clsx(
-                  chatStyles.containerFlxRw,
-                  chatStyles.jtfCntSpBtwn
+                  chatStyles.tutorImgFioContainer,
+                  chatStyles.alnItmCntr,
+                  chatStyles.gap14
                 )}
               >
-                <span>{chat && chat.student.name}</span>
+                <div className={chatStyles.tutorImgContainer}>
+                  <Image
+                    className={chatStyles.tutorImg}
+                    src={
+                      chat && chat.student.avatarUrl
+                        ? chat.student.avatarUrl
+                        : "/img/tutor/avatarBasic.png"
+                    }
+                    width={34}
+                    height={34}
+                    alt=""
+                  />
+                </div>
+                <div className={chatStyles.flex4}>
+                  <div
+                    className={clsx(
+                      chatStyles.containerFlxRw,
+                      chatStyles.jtfCntSpBtwn
+                    )}
+                  >
+                    <span>{chat && chat.student.name}</span>
 
-                {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                  <div className={chatStyles.containerIsOnline}>
-                    <div className={chatStyles.isOnline}></div>
-                    <span>{onlineStatus}</span>
+                    {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
+                      <div className={chatStyles.containerIsOnline}>
+                        <div className={chatStyles.isOnline}></div>
+                        <span>{onlineStatus}</span>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div
-          className={clsx(
-            chatStyles.content__chat,
-            chatStyles.flx1,
-            chatStyles.flxClmn,
-            chatStyles.jstContSpcBtwn
-          )}
-        >
-          {/* <div className={chatStyles.chat__date}>Четверг, 7 марта</div> */}
-          {/* Сортировка сообщений по времени (по возрастанию) */}
-          {chat && (
-            <GroupedMessages
-              chatId={chat?.id}
-              messages={chat?.messages || []}
-              tutorId={chat?.tutorId || ""}
-            />
-          )}
+            <div
+              className={clsx(
+                chatStyles.content__chat,
+                chatStyles.flx1,
+                chatStyles.flxClmn,
+                chatStyles.jstContSpcBtwn
+              )}
+            >
+              {/* <div className={chatStyles.chat__date}>Четверг, 7 марта</div> */}
+              {/* Сортировка сообщений по времени (по возрастанию) */}
+              {chat && (
+                <GroupedMessages
+                  chatId={chat?.id}
+                  messages={chat?.messages || []}
+                  tutorId={chat?.tutorId || ""}
+                />
+              )}
 
-          <div className={clsx(chatStyles.inputMessageBlock)}>
-            {/* Родительский блок с границами */}
-            <div ref={wrapperRef} className={chatStyles.wrapperRef}>
-              <textarea
-                ref={textareaRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Начните вводить сообщение"
-                rows={1}
-                className={chatStyles.textarea}
-              />
+              <div className={clsx(chatStyles.inputMessageBlock)}>
+                {/* Родительский блок с границами */}
+                <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+                  <textarea
+                    ref={textareaRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Начните вводить сообщение"
+                    rows={1}
+                    className={chatStyles.textarea}
+                  />
+                </div>
+                <EmojiPicker
+                  onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
+                  textareaRef={textareaRef}
+                  visibleEmoji={visibleEmoji}
+                  setVisibleEmoji={setVisibleEmoji}
+                />
+              </div>
             </div>
-            <EmojiPicker
-              onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
-              textareaRef={textareaRef}
-              visibleEmoji={visibleEmoji}
-              setVisibleEmoji={setVisibleEmoji}
-            />
-          </div>
-        </div>
+          </>
+        ) : (
+          <>
+            <div
+              className={clsx(
+                generalStyles.content_block,
+                generalStyles.order_block,
+                generalStyles.crsr_pntr,
+                chatStyles.order_gap,
+                chatStyles.defaultChatBlock
+              )}
+            >
+              <div className={chatStyles.defaultChatText}>
+                📬 Выберите чат, чтобы продолжить диалог с учеником
+              </div>
+            </div>
+          </>
+        )}
       </>
     );
   }

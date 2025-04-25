@@ -50,6 +50,7 @@ export type Student = {
   skype: string;
   status: string;
   orders: Order[];
+  lastOnline: Date | null;
 };
 
 export type Tutor = {
@@ -313,6 +314,7 @@ export type Chat = {
     avatarUrl: string;
     lastOnline: string | null;
   };
+  themeOrder: string;
 };
 
 export type Message = {

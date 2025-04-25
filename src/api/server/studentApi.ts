@@ -72,6 +72,7 @@ export const fetchUpdateStudent = async (data: {
   email?: string;
   phone?: string;
   region?: string;
+  lastOnline?: Date;
 }) => {
   const { id, token, ...fields } = data;
 

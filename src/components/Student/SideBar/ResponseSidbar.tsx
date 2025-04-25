@@ -22,9 +22,9 @@ import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 import Image from "next/image";
 import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
-import Chat from "../../../../public/lottie/Chat.json"; // JSON-анимация
+import ChatAnimation from "../../../../public/lottie/Chat.json"; // JSON-анимация
 import { setComponentMenu, updateOrder } from "@/store/features/orderSlice";
-import { Message, Order, Tutor } from "@/types/types";
+import { Chat, Message, Order, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
@@ -40,6 +40,8 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { SpinnerChats } from "@/components/Spinner/SpinnerChats";
 
 type ResponseSidbarProps = {
+  chats: Chat[];
+  clearChats: () => void;
   orderById: Order | null;
   loading: boolean;
   visibleEmoji?: boolean;
@@ -51,6 +53,8 @@ type ResponseSidbarProps = {
 };
 
 export const ResponseSidbar = ({
+  chats,
+  clearChats,
   orderById,
   loading,
   visibleEmoji,
@@ -78,8 +82,6 @@ export const ResponseSidbar = ({
       setIsSafari(true);
     }
   }, []);
-
-  const { chats, clearChats } = useChat();
 
   useEffect(() => {
     return () => {
@@ -196,7 +198,7 @@ export const ResponseSidbar = ({
               <Player
                 autoplay
                 loop
-                animationData={Chat}
+                animationData={ChatAnimation}
                 style={{ height: "30px", width: "30px" }}
               />
               <div>

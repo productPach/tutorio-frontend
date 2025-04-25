@@ -21,6 +21,9 @@ export const useChatSocket = (chatId: string) => {
   const tutorUserId: string | null = useAppSelector(
     (state) => state.tutor.tutor?.userId ?? null
   );
+  const tutorId: string | null = useAppSelector(
+    (state) => state.tutor.tutor?.id ?? null
+  );
   const [messages, setMessages] = useState<Message[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
@@ -96,9 +99,10 @@ export const useChatSocket = (chatId: string) => {
   };
 
   const markAsRead = (msgs: Message[]) => {
-    if (!socket || !(studentId || tutorUserId)) return;
+
+    if (!socket || !(studentId || tutorId)) return;
   
-    const userId = studentId || tutorUserId;
+    const userId = studentId || tutorId;
 
     const unreadMessageIds = msgs
       .filter(
@@ -108,7 +112,7 @@ export const useChatSocket = (chatId: string) => {
           !msg.id.startsWith("temp-") // фильтруем временные ID
       )
       .map((msg) => msg.id);      
-  
+      
     if (unreadMessageIds.length === 0) return;
   
     socket.emit("markAsRead", {
