@@ -12,7 +12,7 @@ import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
 import { useEffect, useState } from "react";
 import { Student } from "@/types/types";
 import { useSelector } from "react-redux";
-import { getOrderById } from "@/store/features/orderSlice";
+import { clearOrderById, getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
 
 const OrderPage: React.FC = () => {
@@ -39,6 +39,12 @@ const OrderPage: React.FC = () => {
       dispatch(getOrderById({ token, id: order }));
     }
   }, [dispatch, token, order]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearOrderById());
+    };
+  }, []);
 
   useEffect(() => {
     const fetchStudent = async () => {

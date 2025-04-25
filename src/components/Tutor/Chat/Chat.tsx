@@ -33,6 +33,7 @@ import { useSocket } from "@/context/SocketContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useChat } from "@/context/ChatContext";
 import { sortMessages } from "@/utils/chat/sortMessages";
+import { orderBy } from "lodash";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -336,14 +337,16 @@ export const ChatComponent = React.memo(
                       chatStyles.jtfCntSpBtwn
                     )}
                   >
-                    <span>{chat && chat.student.name}</span>
-
-                    {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                      <div className={chatStyles.containerIsOnline}>
-                        <div className={chatStyles.isOnline}></div>
-                        <span>{onlineStatus}</span>
-                      </div>
-                    )}
+                    <div className={chatStyles.containerIsOnline}>
+                      <span>{chat && chat.student.name}</span>
+                      {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
+                        <div className={chatStyles.containerIsOnline}>
+                          <div className={chatStyles.isOnline}></div>
+                          {/* <span>{onlineStatus}</span> */}
+                        </div>
+                      )}
+                    </div>
+                    <Link href={`/tutor/${chat.orderId}`}>Детали заказа</Link>
                   </div>
                 </div>
               </div>
