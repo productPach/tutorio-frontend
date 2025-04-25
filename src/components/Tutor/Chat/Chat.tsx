@@ -69,6 +69,8 @@ export const ChatComponent = React.memo(
 
     const { chats, setChatsState } = useChat();
 
+    //console.log(chat);
+
     // Стейт для текста сообщения
     const [inputValue, setInputValue] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -136,10 +138,9 @@ export const ChatComponent = React.memo(
     const currentTime = new Date();
 
     // Проверяем, был ли репетитор онлайн в последние 5 минут
-    const lastOnlineTime =
-      chat && chat.student.lastOnline
-        ? new Date(chat.student.lastOnline)
-        : null;
+    const lastOnlineTime = chat?.student?.lastOnline
+      ? new Date(chat.student.lastOnline)
+      : null;
 
     let onlineStatus = "";
     let timeDifference = 0;

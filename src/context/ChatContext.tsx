@@ -27,6 +27,7 @@ type ChatContextType = {
   setChatsState: (newChats: Chat[]) => void;
   loadChats: () => Promise<void>;
   chatsLoading: boolean;
+  chatsLoaded: boolean;
   setChatsLoaded: Dispatch<SetStateAction<boolean>>;
   clearChats: () => void;
 };
@@ -49,7 +50,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [chats, _setChatsState] = useState<Chat[]>([]);
   const [chatsLoading, setChatsLoading] = useState(true);
   const [chatsLoaded, setChatsLoaded] = useState(false);
-  const clearChats = () => _setChatsState([]);
+  const clearChats = () => {
+    setChatsLoaded(false);
+    _setChatsState([]);
+  };
 
   const setChatsState = (newChats: Chat[] | ((prev: Chat[]) => Chat[])) => {
     queueMicrotask(() => {
@@ -61,8 +65,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const isMountedRef = useIsMounted();
 
   const loadChats = useCallback(async () => {
-    if (!token || chatsLoaded) return; // Если чаты уже загружены, не запускаем загрузку
+    if (!token) return; // Если чаты уже загружены, не запускаем загрузку
     setChatsLoading(true); // 👈 устанавливаем загрузку
+    console.log("load!!");
+
     try {
       let combinedChats: Chat[] = [];
 
@@ -85,6 +91,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setChatsState(combinedChats);
         //console.trace("setChatsState called 1");
         dispatch(setChats(combinedChats));
+        //console.log(combinedChats);
+
         setChatsLoading(false); // 👈 когда всё готово — снимаем флаг
       }, 0);
 
@@ -97,6 +105,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [studentId, tutorUserId, tutorId, token, socket, orderId, dispatch]);
 
   useEffect(() => {
+    //console.log("Chats are loading... Calling loadChats");
     loadChats();
   }, [loadChats]);
 
@@ -111,6 +120,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (!socket) return;
 
     const handleNewMessage = (message: Message) => {
+      //loadChats();
       setTimeout(() => {
         if (!isMountedRef.current) return;
         setChatsState((prev) => {
@@ -209,6 +219,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setChatsState,
         loadChats,
         chatsLoading,
+        chatsLoaded,
         setChatsLoaded,
         clearChats,
       }}

@@ -118,6 +118,7 @@ type OrdersStateType =  {
       selectedGoalFilters: string[];
     };
     orderById: null | Order;
+    orderByIdDefault: null | Order;
     componentMenu: number;
     scrollPosition: number; // Положение скролла
   scrollHeight: number;   // Общая высота страницы
@@ -135,6 +136,7 @@ const initialState: OrdersStateType = {
       selectedGoalFilters: initialFilters.goalFilters?.length > 0 ? initialFilters.goalFilters : [],
     },
     orderById: null,
+    orderByIdDefault: null,
     componentMenu: 1,
     scrollPosition: 0, // Начальное положение скролла
   scrollHeight: 0,   // Начальная высота страницы
@@ -165,8 +167,12 @@ const ordersSlice = createSlice({
     setOrderById(state, action: PayloadAction<Order>) {
       state.orderById = action.payload;
     },
+    setOrderByIdDefault(state, action: PayloadAction<Order>) {
+      state.orderByIdDefault = action.payload;
+    },
     clearOrderById(state) {
       state.orderById = null;
+      state.orderByIdDefault = null;
     },
     updateChatInOrder(state, action) {
       const { chatId, updatedChat } = action.payload;
@@ -228,5 +234,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById, clearOrderById, updateChatInOrder } = ordersSlice.actions;
+export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById, setOrderByIdDefault, clearOrderById, updateChatInOrder } = ordersSlice.actions;
 export const ordersReducer = ordersSlice.reducer;
