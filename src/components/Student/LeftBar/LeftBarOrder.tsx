@@ -61,7 +61,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
           </ul>
         </div>
       ) : (
-        <Link onClick={() => dispatch(setChat(null))} href={"../orders"}>
+        <Link onClick={() => dispatch(setChat(null))} href={"/student/orders"}>
           <div className={styles.left_menu}>
             <ul>
               <li>
