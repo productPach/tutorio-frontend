@@ -10,16 +10,25 @@ import {
   setIsModalResponseStudentToTutor,
   setIsModalResponseTutorToStudent,
 } from "@/store/features/modalSlice";
-import { createChat, sendMessage } from "@/store/features/chatSlice";
+import {
+  createChat,
+  getChatsByUserId,
+  sendMessage,
+  setChat,
+} from "@/store/features/chatSlice";
 import { data } from "@/utils/listSubjects";
+import { useRouter } from "next/navigation";
+import { useChat } from "@/context/ChatContext";
 
 export const ResponseTutorToStudentModal = () => {
   const dispatch = useAppDispatch();
+  const route = useRouter();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const student = useAppSelector((state) => state.student.student);
-  const order = useAppSelector((state) => state.orders.orderById);
+  const order = useAppSelector((state) => state.orders.orderByIdDefault);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const { sendMessage: sendMessageContext, newChat } = useChat();
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState("");
   const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -71,7 +80,28 @@ export const ResponseTutorToStudentModal = () => {
               text: messageResponse,
               token,
             })
-          );
+          ).unwrap();
+
+          // Даем рендеру отработать — и только потом пуш и сет
+          setTimeout(async () => {
+            try {
+              //sendMessageContext(chat.id, messageResponse);
+              const data = await dispatch(
+                getChatsByUserId({ userId: tutor.userId, role: "tutor", token })
+              ).unwrap(); // Ждем ответа и получаем результат
+
+              // Найдем нужный чат
+              const chatToSet = data.find((c) => c.id === chat.id); // замените условие на нужное
+
+              if (chatToSet) {
+                dispatch(setChat(chatToSet)); // Добавляем чат в store
+                newChat(chat.id);
+              }
+              route.push(`/tutor/responses?chatUpdateData=true`);
+            } catch (error) {
+              console.error("Ошибка при загрузке чатов:", error);
+            }
+          }, 0);
         }
       } catch (error) {
         console.error(
@@ -80,7 +110,6 @@ export const ResponseTutorToStudentModal = () => {
         );
       }
     }
-
     dispatch(setIsModalResponseTutorToStudent(false));
   };
 

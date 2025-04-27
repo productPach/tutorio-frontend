@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
-import { getAllOrders, setOrderById } from "@/store/features/orderSlice";
+import { getAllOrders, setOrderByIdDefault } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
@@ -459,7 +459,7 @@ const Orders = () => {
                           } else {
                             e.preventDefault();
                             dispatch(setIsModalResponseTutorToStudent(true));
-                            dispatch(setOrderById(order));
+                            dispatch(setOrderByIdDefault(order));
                             setChatsLoaded(true);
                           }
                         }}

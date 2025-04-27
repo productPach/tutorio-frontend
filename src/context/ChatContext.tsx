@@ -24,9 +24,11 @@ type ChatContextType = {
   chats: Chat[];
   sendMessage: (chatId: string, text: string) => void;
   markAsRead: (chatId: string) => void;
+  newChat: (chatId: string) => void;
   setChatsState: (newChats: Chat[]) => void;
   loadChats: () => Promise<void>;
   chatsLoading: boolean;
+  chatsLoaded: boolean;
   setChatsLoaded: Dispatch<SetStateAction<boolean>>;
   clearChats: () => void;
 };
@@ -49,7 +51,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [chats, _setChatsState] = useState<Chat[]>([]);
   const [chatsLoading, setChatsLoading] = useState(true);
   const [chatsLoaded, setChatsLoaded] = useState(false);
-  const clearChats = () => _setChatsState([]);
+  const clearChats = () => {
+    setChatsLoaded(false);
+    _setChatsState([]);
+  };
 
   const setChatsState = (newChats: Chat[] | ((prev: Chat[]) => Chat[])) => {
     queueMicrotask(() => {
@@ -61,8 +66,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const isMountedRef = useIsMounted();
 
   const loadChats = useCallback(async () => {
-    if (!token || chatsLoaded) return; // Если чаты уже загружены, не запускаем загрузку
+    if (!token) return; // Если чаты уже загружены, не запускаем загрузку
     setChatsLoading(true); // 👈 устанавливаем загрузку
+    console.log("load!!");
+
     try {
       let combinedChats: Chat[] = [];
 
@@ -85,6 +92,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setChatsState(combinedChats);
         //console.trace("setChatsState called 1");
         dispatch(setChats(combinedChats));
+        //console.log(combinedChats);
+
         setChatsLoading(false); // 👈 когда всё готово — снимаем флаг
       }, 0);
 
@@ -97,6 +106,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [studentId, tutorUserId, tutorId, token, socket, orderId, dispatch]);
 
   useEffect(() => {
+    //console.log("Chats are loading... Calling loadChats");
     loadChats();
   }, [loadChats]);
 
@@ -111,6 +121,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (!socket) return;
 
     const handleNewMessage = (message: Message) => {
+      console.log("Получили сообщение");
+
+      //loadChats();
       setTimeout(() => {
         if (!isMountedRef.current) return;
         setChatsState((prev) => {
@@ -155,22 +168,56 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }, 0);
     };
 
+    const handleNewChat = (data: Chat) => {
+      console.log("Новый чат получен", data);
+
+      if (!isMountedRef.current) return;
+
+      setChatsState((prev) => {
+        const chatExists = prev.some((chat) => chat.id === data.id); // Проверка, существует ли уже чат
+        if (chatExists) {
+          // Обновляем существующий чат, если он есть
+          const updatedChats = prev.map((chat) =>
+            chat.id === data.id
+              ? {
+                  ...chat,
+                  messages: chat.messages.map((msg) =>
+                    msg.senderId !== data.tutorId
+                      ? { ...msg, isRead: true }
+                      : msg
+                  ),
+                }
+              : chat
+          );
+          return updatedChats;
+        } else {
+          // Если чат не найден, добавляем его в начало списка
+          const updatedChats = [data, ...prev];
+          return updatedChats;
+        }
+      });
+      playNotificationSound();
+    };
+
     socket.on("newMessage", handleNewMessage);
     socket.on("messagesRead", handleReadMessages);
+    socket.on("newChatCreated", handleNewChat);
 
     return () => {
       socket.off("newMessage", handleNewMessage);
       socket.off("messagesRead", handleReadMessages);
+      socket.off("newChatCreated", handleNewChat);
 
       const chatIds = chats.map((c) => c.id);
       if (studentId || tutorId) {
         socket.emit("leaveChat", { userId: studentId || tutorId, chatIds });
       }
     };
-  }, [socket, studentId, tutorId, dispatch]);
+  }, [socket, studentId, tutorId, dispatch, chats]);
 
   const sendMessage = (chatId: string, text: string) => {
     if (!socket || (!studentId && !tutorId)) return;
+    console.log("Отправка сокета");
 
     socket.emit("sendMessage", {
       chatId,
@@ -200,15 +247,26 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const newChat = (chatId: string) => {
+    if (!socket || (!studentId && !tutorId)) return;
+    console.log("Отправка нового чата");
+
+    socket.emit("createChat", {
+      chatId,
+    });
+  };
+
   return (
     <ChatContext.Provider
       value={{
         chats,
         sendMessage,
         markAsRead,
+        newChat,
         setChatsState,
         loadChats,
         chatsLoading,
+        chatsLoaded,
         setChatsLoaded,
         clearChats,
       }}
