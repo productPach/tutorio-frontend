@@ -89,13 +89,13 @@ export const ResponseSidbar = ({
     };
   }, []);
 
-  useEffect(() => {
-    clearChats(); // Очистка перед подгрузкой чатов нового заказа
-    // если нужно при первом монтировании что-то загрузить
-    if (orderById && token) {
-      dispatch(getChatsByOrderId({ orderId: orderById.id, token }));
-    }
-  }, [orderById?.id, token]);
+  // useEffect(() => {
+  //   clearChats(); // Очистка перед подгрузкой чатов нового заказа
+  //   // если нужно при первом монтировании что-то загрузить
+  //   if (orderById && token) {
+  //     dispatch(getChatsByOrderId({ orderId: orderById.id, token }));
+  //   }
+  // }, [orderById?.id, token]);
 
   const toggleSwitch = () => {
     setIsChecked((prev) => {
@@ -124,7 +124,7 @@ export const ResponseSidbar = ({
 
   // Проверяем есть ли чат с этим репетитором
   const hasChatWithTutor = orderById?.chats.some(
-    (chat) => chat.tutorId === tutor?.id
+    (chat) => chat.tutorId === tutor?.id && chat.tutor !== undefined
   );
 
   // Мемоизация сортировки чатов
@@ -148,6 +148,10 @@ export const ResponseSidbar = ({
         new Date(lastA?.createdAt || 0).getTime()
       );
     });
+  }, [chats]);
+
+  useEffect(() => {
+    console.log(sortedChats);
   }, [chats]);
 
   return (
@@ -295,16 +299,18 @@ export const ResponseSidbar = ({
                         )}
                         key={chat.id}
                       >
-                        <Image
-                          className={styles.studentChatImg}
-                          src={`${host}${port}${chat.tutor.avatarUrl}`}
-                          width={66}
-                          height={66}
-                          alt=""
-                        />
+                        {chat.tutor && (
+                          <Image
+                            className={styles.studentChatImg}
+                            src={`${host}${port}${chat?.tutor.avatarUrl}`}
+                            width={66}
+                            height={66}
+                            alt=""
+                          />
+                        )}
                         <div className={styles.studentChatMessage}>
                           <div className={styles.studentChatMessageFio}>
-                            {chat.tutor.name}
+                            {chat?.tutor.name}
                           </div>
                           <div className={styles.studentChatMessageFlx}>
                             <div className={styles.studentChatMessageText}>

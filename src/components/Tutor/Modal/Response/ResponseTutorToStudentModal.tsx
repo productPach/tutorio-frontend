@@ -28,7 +28,7 @@ export const ResponseTutorToStudentModal = () => {
   const student = useAppSelector((state) => state.student.student);
   const order = useAppSelector((state) => state.orders.orderByIdDefault);
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const { loadChats, setChatsLoaded } = useChat();
+  const { sendMessage: sendMessageContext, newChat } = useChat();
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState("");
   const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -85,6 +85,7 @@ export const ResponseTutorToStudentModal = () => {
           // Даем рендеру отработать — и только потом пуш и сет
           setTimeout(async () => {
             try {
+              //sendMessageContext(chat.id, messageResponse);
               const data = await dispatch(
                 getChatsByUserId({ userId: tutor.userId, role: "tutor", token })
               ).unwrap(); // Ждем ответа и получаем результат
@@ -94,6 +95,7 @@ export const ResponseTutorToStudentModal = () => {
 
               if (chatToSet) {
                 dispatch(setChat(chatToSet)); // Добавляем чат в store
+                newChat(chat.id);
               }
               route.push(`/tutor/responses?chatUpdateData=true`);
             } catch (error) {

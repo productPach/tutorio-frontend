@@ -24,6 +24,7 @@ type ChatContextType = {
   chats: Chat[];
   sendMessage: (chatId: string, text: string) => void;
   markAsRead: (chatId: string) => void;
+  newChat: (chatId: string) => void;
   setChatsState: (newChats: Chat[]) => void;
   loadChats: () => Promise<void>;
   chatsLoading: boolean;
@@ -120,6 +121,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (!socket) return;
 
     const handleNewMessage = (message: Message) => {
+      console.log("Получили сообщение");
+
       //loadChats();
       setTimeout(() => {
         if (!isMountedRef.current) return;
@@ -165,22 +168,56 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }, 0);
     };
 
+    const handleNewChat = (data: Chat) => {
+      console.log("Новый чат получен", data);
+
+      if (!isMountedRef.current) return;
+
+      setChatsState((prev) => {
+        const chatExists = prev.some((chat) => chat.id === data.id); // Проверка, существует ли уже чат
+        if (chatExists) {
+          // Обновляем существующий чат, если он есть
+          const updatedChats = prev.map((chat) =>
+            chat.id === data.id
+              ? {
+                  ...chat,
+                  messages: chat.messages.map((msg) =>
+                    msg.senderId !== data.tutorId
+                      ? { ...msg, isRead: true }
+                      : msg
+                  ),
+                }
+              : chat
+          );
+          return updatedChats;
+        } else {
+          // Если чат не найден, добавляем его в начало списка
+          const updatedChats = [data, ...prev];
+          return updatedChats;
+        }
+      });
+      playNotificationSound();
+    };
+
     socket.on("newMessage", handleNewMessage);
     socket.on("messagesRead", handleReadMessages);
+    socket.on("newChatCreated", handleNewChat);
 
     return () => {
       socket.off("newMessage", handleNewMessage);
       socket.off("messagesRead", handleReadMessages);
+      socket.off("newChatCreated", handleNewChat);
 
       const chatIds = chats.map((c) => c.id);
       if (studentId || tutorId) {
         socket.emit("leaveChat", { userId: studentId || tutorId, chatIds });
       }
     };
-  }, [socket, studentId, tutorId, dispatch]);
+  }, [socket, studentId, tutorId, dispatch, chats]);
 
   const sendMessage = (chatId: string, text: string) => {
     if (!socket || (!studentId && !tutorId)) return;
+    console.log("Отправка сокета");
 
     socket.emit("sendMessage", {
       chatId,
@@ -210,12 +247,22 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const newChat = (chatId: string) => {
+    if (!socket || (!studentId && !tutorId)) return;
+    console.log("Отправка нового чата");
+
+    socket.emit("createChat", {
+      chatId,
+    });
+  };
+
   return (
     <ChatContext.Provider
       value={{
         chats,
         sendMessage,
         markAsRead,
+        newChat,
         setChatsState,
         loadChats,
         chatsLoading,
