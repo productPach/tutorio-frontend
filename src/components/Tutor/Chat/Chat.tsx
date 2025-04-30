@@ -3,7 +3,7 @@ import generalStyles from "../../../app/tutor/layout.module.css";
 import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { Chat, City, Message, Student } from "@/types/types";
+import { City, Message, Student } from "@/types/types";
 import React, {
   Dispatch,
   SetStateAction,
@@ -18,22 +18,14 @@ import {
 } from "@/store/features/orderSlice";
 import Image from "next/image";
 import Link from "next/link";
-import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
-import {
-  addMessageToChat,
-  sendMessage,
-  setChat,
-  setChats,
-} from "@/store/features/chatSlice";
+import { sendMessage, setChat, setChats } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { EmojiPicker } from "@/components/Student/Chat/EmojiPicker";
 import GroupedMessages from "./GroupedMessages";
-import { useSocket } from "@/context/SocketContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useChat } from "@/context/ChatContext";
 import { sortMessages } from "@/utils/chat/sortMessages";
-import { orderBy } from "lodash";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -47,13 +39,7 @@ type OrderProps = {
 };
 
 export const ChatComponent = React.memo(
-  ({
-    visibleEmoji,
-    setVisibleEmoji,
-    loading,
-    error,
-    locations,
-  }: OrderProps) => {
+  ({ visibleEmoji, setVisibleEmoji, loading, error }: OrderProps) => {
     useEffect(() => {
       window.scrollTo({
         top: 0,
@@ -61,7 +47,6 @@ export const ChatComponent = React.memo(
     }, []);
 
     const dispatch = useAppDispatch();
-    const { socket } = useSocket();
     const token = useAppSelector((state) => state.auth.token);
     const tutor = useAppSelector((state) => state.tutor.tutor);
     // Получаем чат из редакса
@@ -69,7 +54,11 @@ export const ChatComponent = React.memo(
 
     const { chats, setChatsState } = useChat();
 
-    //console.log(chat);
+    const selectChat = chats.find((c) => c.id === chat?.id);
+    // Обновляем чат при заходе в компонент, чтобы получить актуальные сообщения чата
+    useEffect(() => {
+      selectChat && dispatch(setChat(selectChat));
+    }, [selectChat, dispatch]);
 
     // Стейт для текста сообщения
     const [inputValue, setInputValue] = useState("");
@@ -77,13 +66,7 @@ export const ChatComponent = React.memo(
     const wrapperRef = useRef<HTMLDivElement>(null);
 
     // Подписка на чат для получения новых сообщений через useChatSocket
-    const { messages, unreadCount, sendMessageSocket, markAsRead } =
-      useChatSocket(chat?.id ? chat.id : "");
-
-    // Обработчик ввода текста в textarea
-    const handleInputValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setInputValue(e.target.value);
-    };
+    const { sendMessageSocket } = useChatSocket(chat?.id ? chat.id : "");
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -128,11 +111,6 @@ export const ChatComponent = React.memo(
 
     if (error)
       return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
-
-    // const subjectArr = data.find(
-    //   (subject) => subject.id_p === orderById?.subject
-    // );
-    // const subjectName = subjectArr?.title;
 
     // Получаем текущее время
     const currentTime = new Date();

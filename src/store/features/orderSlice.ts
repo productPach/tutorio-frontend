@@ -1,7 +1,8 @@
 import { fetchGetAllOrders, fetchGetOrderById, fetchOrdersByStudentId, fetchUpdateOrder } from "@/api/server/orderApi";
-import { Order } from "@/types/types";
+import { Chat, Order } from "@/types/types";
 import { getFiltersOrdersForTutorFromLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export const getAllOrders = createAsyncThunk<
   Order[], // Тип возвращаемых данных - массив заказов
@@ -104,6 +105,19 @@ export const updateOrder = createAsyncThunk<
   }
 });
 
+
+export const checkHasChatWithTutor = createAsyncThunk<
+  boolean,
+  string, // tutorId
+  { state: RootState }
+>("orders/checkHasChatWithTutor", async (tutorId, { getState }) => {
+  const order = getState().orders.orderById;
+  if (!order) return false;
+
+  const hasChat = order.chats.some(chat => chat.tutorId === tutorId && chat.tutor !== undefined);
+  return hasChat;
+});
+
 interface ScrollPayload {
   scrollPosition: number;
   scrollHeight: number;
@@ -122,6 +136,7 @@ type OrdersStateType =  {
     componentMenu: number;
     scrollPosition: number; // Положение скролла
   scrollHeight: number;   // Общая высота страницы
+  hasChatWithTutor: boolean | null;
 }
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -140,6 +155,7 @@ const initialState: OrdersStateType = {
     componentMenu: 1,
     scrollPosition: 0, // Начальное положение скролла
   scrollHeight: 0,   // Начальная высота страницы
+  hasChatWithTutor: null,
 };
 
 const ordersSlice = createSlice({
@@ -174,6 +190,14 @@ const ordersSlice = createSlice({
       state.orderById = null;
       state.orderByIdDefault = null;
     },
+    addChatToOrder(state, action: PayloadAction<Chat>) {
+      if (state.orderById) {
+        const chatExists = state.orderById.chats.some(chat => chat.id === action.payload.id);
+        if (!chatExists) {
+          state.orderById.chats.unshift(action.payload); // Добавляем в начало
+        }
+      }
+    },
     updateChatInOrder(state, action) {
       const { chatId, updatedChat } = action.payload;
       if (state.orderById) {
@@ -183,6 +207,9 @@ const ordersSlice = createSlice({
         }
       }
     },
+    resetHasChatWithTutor(state) {
+      state.hasChatWithTutor = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -228,11 +255,13 @@ const ordersSlice = createSlice({
                 if (state.orderById) {
                   state.orderById = action.payload;
                 }
-              }
-            )
+      })
+      .addCase(checkHasChatWithTutor.fulfilled, (state, action) => {
+        state.hasChatWithTutor = action.payload;
+      })
             ;
   },
 });
 
-export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById, setOrderByIdDefault, clearOrderById, updateChatInOrder } = ordersSlice.actions;
+export const { setOrderFilters, clearFilters, setComponentMenu, updateScrollPosition, setOrderById, setOrderByIdDefault, clearOrderById, addChatToOrder, updateChatInOrder, resetHasChatWithTutor } = ordersSlice.actions;
 export const ordersReducer = ordersSlice.reducer;

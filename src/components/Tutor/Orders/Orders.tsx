@@ -15,9 +15,8 @@ import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
-  setIsModalBalanceBoost,
   setIsModalResponseTutorToStudent,
-  setValueModalBalanceBoost,
+  setIsModalResponseTutorToStudentWithContakt,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
@@ -458,7 +457,16 @@ const Orders = () => {
                             dispatch(setChat(existingChat));
                           } else {
                             e.preventDefault();
-                            dispatch(setIsModalResponseTutorToStudent(true));
+                            order.autoContactsOnResponse
+                              ? dispatch(
+                                  setIsModalResponseTutorToStudentWithContakt(
+                                    true
+                                  )
+                                )
+                              : dispatch(
+                                  setIsModalResponseTutorToStudent(true)
+                                );
+
                             dispatch(setOrderByIdDefault(order));
                             setChatsLoaded(true);
                           }

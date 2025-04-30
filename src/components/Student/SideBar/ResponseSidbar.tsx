@@ -1,7 +1,6 @@
 "use client";
 import generalStyles from "../../../app/student/layout.module.css";
 import styles from "./ResponseSidbar.module.css";
-
 import stylesStudent from "../Student.module.css";
 import React, {
   Dispatch,
@@ -10,33 +9,23 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState, useAppSelector } from "@/store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/store/store";
 import {
-  setIsModalBalanceBoost,
   setIsModalResponseStudentToTutor,
   setTutorIdForResponseStudentToTutor,
-  setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
-import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 import Image from "next/image";
 import Player from "lottie-react";
 import Notification from "../../../../public/lottie/Notification.json"; // JSON-анимация
 import ChatAnimation from "../../../../public/lottie/Chat.json"; // JSON-анимация
 import { setComponentMenu, updateOrder } from "@/store/features/orderSlice";
-import { Chat, Message, Order, Tutor } from "@/types/types";
+import { Chat, Order, Tutor } from "@/types/types";
 import clsx from "clsx";
 import { host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
-import {
-  getChatsByOrderId,
-  setChat,
-  setChats,
-} from "@/store/features/chatSlice";
+import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
-import { useChat } from "@/context/ChatContext";
-import { Spinner } from "@/components/Spinner/Spinner";
-import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { SpinnerChats } from "@/components/Spinner/SpinnerChats";
 
 type ResponseSidbarProps = {
@@ -50,6 +39,7 @@ type ResponseSidbarProps = {
   setIsChecked: Dispatch<SetStateAction<boolean>>;
   tutor?: Tutor | null; // добавляем tutorId как пропс
   page?: string;
+  isChatWithTutor?: boolean | null;
 };
 
 export const ResponseSidbar = ({
@@ -63,6 +53,7 @@ export const ResponseSidbar = ({
   setIsChecked,
   tutor, // принимаем tutorId
   page,
+  isChatWithTutor,
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
@@ -85,17 +76,9 @@ export const ResponseSidbar = ({
 
   useEffect(() => {
     return () => {
-      clearChats(); // Очистка при размонтировании
+      clearChats();
     };
   }, []);
-
-  // useEffect(() => {
-  //   clearChats(); // Очистка перед подгрузкой чатов нового заказа
-  //   // если нужно при первом монтировании что-то загрузить
-  //   if (orderById && token) {
-  //     dispatch(getChatsByOrderId({ orderId: orderById.id, token }));
-  //   }
-  // }, [orderById?.id, token]);
 
   const toggleSwitch = () => {
     setIsChecked((prev) => {
@@ -118,14 +101,6 @@ export const ResponseSidbar = ({
       ).unwrap();
     }
   };
-
-  // Получаем стейт храниения компонента для отображения
-  const component = useAppSelector((state) => state.orders.componentMenu);
-
-  // Проверяем есть ли чат с этим репетитором
-  const hasChatWithTutor = orderById?.chats.some(
-    (chat) => chat.tutorId === tutor?.id && chat.tutor !== undefined
-  );
 
   // Мемоизация сортировки чатов
   const sortedChats = useMemo(() => {
@@ -150,9 +125,8 @@ export const ResponseSidbar = ({
     });
   }, [chats]);
 
-  useEffect(() => {
-    console.log(sortedChats);
-  }, [chats]);
+  // Получаем стейт храниения компонента для отображения
+  const component = useAppSelector((state) => state.orders.componentMenu);
 
   return (
     <>
@@ -160,7 +134,7 @@ export const ResponseSidbar = ({
         className={generalStyles.sidebarResponse}
         style={isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }}
       >
-        {component === 4 && tutor && !hasChatWithTutor && (
+        {isChatWithTutor === false && component === 4 && tutor && (
           <>
             <button
               onClick={(e) => {

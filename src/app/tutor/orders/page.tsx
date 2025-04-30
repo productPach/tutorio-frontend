@@ -7,10 +7,13 @@ import Orders from "@/components/Tutor/Orders/Orders";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
 import { Modal } from "@/components/Modal/Modal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
 import { useRouter } from "next/navigation";
 import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
+import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal";
+import { setLoadingPage, setScrollY } from "@/store/features/modalSlice";
+import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
 
 const TutorOrders: React.FC = () => {
   const page = "Orders";
@@ -20,6 +23,10 @@ const TutorOrders: React.FC = () => {
   const isModalResponseTutorToStudent = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudent
   );
+  const isModalResponseTutorToStudentWithContakt = useAppSelector(
+    (state) => state.modal.isModalResponseTutorToStudentWithContakt
+  );
+  const isModalLoadingPage = useAppSelector((state) => state.modal.loadingPage);
 
   useEffect(() => {
     localStorage.removeItem("confirm-code");
@@ -38,6 +45,15 @@ const TutorOrders: React.FC = () => {
     router.prefetch("/wallet");
     router.prefetch("/settings");
   }, [router]);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    return () => {
+      dispatch(setLoadingPage(false));
+      dispatch(setScrollY(0));
+    };
+  }, []);
 
   return (
     <>
@@ -60,6 +76,18 @@ const TutorOrders: React.FC = () => {
         contentModal={<ResponseTutorToStudentModal />}
         isModal={isModalResponseTutorToStudent}
         modalId={"responseTutorToStudentModal"}
+      ></Modal>
+      <Modal
+        titleModal={"Получить контакты"}
+        contentModal={<ResponseTutorToStudentWithContaktModal />}
+        isModal={isModalResponseTutorToStudentWithContakt}
+        modalId={"responseTutorToStudentWithContaktModal"}
+      ></Modal>
+      <Modal
+        titleModal={""}
+        contentModal={<LoadingPageModal />}
+        isModal={isModalLoadingPage}
+        modalId={"loadingPageModal"}
       ></Modal>
     </>
   );

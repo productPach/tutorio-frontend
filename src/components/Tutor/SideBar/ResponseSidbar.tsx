@@ -6,12 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import {
   setIsModalBalanceBoost,
+  setIsModalResponseTutorToStudent,
+  setIsModalResponseTutorToStudentWithContakt,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
+import { setOrderByIdDefault } from "@/store/features/orderSlice";
 
 export const ResponseSidbar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -65,11 +68,17 @@ export const ResponseSidbar = () => {
                       <button
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalBalanceBoost(true));
-                          orderById?.responseCost &&
-                            dispatch(
-                              setValueModalBalanceBoost(orderById?.responseCost)
-                            );
+                          // Если не достаточно средств, то должна быть оплата
+                          //dispatch(setIsModalBalanceBoost(true));
+                          //orderById?.responseCost &&
+                          //dispatch(
+                          //</div>setValueModalBalanceBoost(orderById?.responseCost)
+                          //);
+                          dispatch(
+                            setIsModalResponseTutorToStudentWithContakt(true)
+                          );
+                          orderById && dispatch(setOrderByIdDefault(orderById));
+                          setChatsLoaded(true);
                         }}
                         type="button"
                       >
@@ -109,11 +118,15 @@ export const ResponseSidbar = () => {
                       <button
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalBalanceBoost(true));
-                          orderById?.responseCost &&
-                            dispatch(
-                              setValueModalBalanceBoost(orderById?.responseCost)
-                            );
+                          // Если не достаточно средств, то должна быть оплата
+                          //dispatch(setIsModalBalanceBoost(true));
+                          //orderById?.responseCost &&
+                          //dispatch(
+                          //</div>setValueModalBalanceBoost(orderById?.responseCost)
+                          //);
+                          dispatch(setIsModalResponseTutorToStudent(true));
+                          orderById && dispatch(setOrderByIdDefault(orderById));
+                          setChatsLoaded(true);
                         }}
                         type="button"
                       >

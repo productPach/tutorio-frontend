@@ -19,6 +19,7 @@ import {
 } from "@/api/server/chatApi";
 import { setChats } from "@/store/features/chatSlice";
 import { useIsMounted } from "@/utils/chat/useIsMounted";
+import { addChatToOrder } from "@/store/features/orderSlice";
 
 type ChatContextType = {
   chats: Chat[];
@@ -58,7 +59,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setChatsState = (newChats: Chat[] | ((prev: Chat[]) => Chat[])) => {
     queueMicrotask(() => {
-      //console.trace("❗ setChatsState вызван через microtask");
       _setChatsState(newChats);
     });
   };
@@ -68,7 +68,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const loadChats = useCallback(async () => {
     if (!token) return; // Если чаты уже загружены, не запускаем загрузку
     setChatsLoading(true); // 👈 устанавливаем загрузку
-    console.log("load!!");
 
     try {
       let combinedChats: Chat[] = [];
@@ -90,9 +89,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       setTimeout(() => {
         if (!isMountedRef.current) return;
         setChatsState(combinedChats);
-        //console.trace("setChatsState called 1");
         dispatch(setChats(combinedChats));
-        //console.log(combinedChats);
 
         setChatsLoading(false); // 👈 когда всё готово — снимаем флаг
       }, 0);
@@ -106,7 +103,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [studentId, tutorUserId, tutorId, token, socket, orderId, dispatch]);
 
   useEffect(() => {
-    //console.log("Chats are loading... Calling loadChats");
     loadChats();
   }, [loadChats]);
 
@@ -121,13 +117,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (!socket) return;
 
     const handleNewMessage = (message: Message) => {
-      console.log("Получили сообщение");
-
       //loadChats();
       setTimeout(() => {
         if (!isMountedRef.current) return;
         setChatsState((prev) => {
-          //console.trace("setChatsState called 2");
           const updatedChats = prev.map((chat) =>
             chat.id === message.chatId
               ? {
@@ -148,7 +141,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       setTimeout(() => {
         if (!isMountedRef.current) return;
         setChatsState((prev) => {
-          //console.trace("setChatsState called 3");
           const updatedChats = prev.map((chat) =>
             chat.id === data.chatId
               ? {
@@ -169,9 +161,16 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleNewChat = (data: Chat) => {
-      console.log("Новый чат получен", data);
-
+      if (orderId?.id !== data.orderId) return;
       if (!isMountedRef.current) return;
+
+      // Добавить в orderId.chats, если его нет
+      const chatExistsInOrder = orderId?.chats?.some(
+        (chat) => chat.id === data.id
+      );
+      if (!chatExistsInOrder) {
+        dispatch(addChatToOrder(data));
+      }
 
       setChatsState((prev) => {
         const chatExists = prev.some((chat) => chat.id === data.id); // Проверка, существует ли уже чат
@@ -193,6 +192,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           // Если чат не найден, добавляем его в начало списка
           const updatedChats = [data, ...prev];
+          //dispatch(setChats(updatedChats));
           return updatedChats;
         }
       });
@@ -217,7 +217,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const sendMessage = (chatId: string, text: string) => {
     if (!socket || (!studentId && !tutorId)) return;
-    console.log("Отправка сокета");
 
     socket.emit("sendMessage", {
       chatId,
@@ -249,7 +248,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   const newChat = (chatId: string) => {
     if (!socket || (!studentId && !tutorId)) return;
-    console.log("Отправка нового чата");
 
     socket.emit("createChat", {
       chatId,

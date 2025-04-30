@@ -34,6 +34,7 @@ type TempMessage = Message & { pending?: boolean; error?: boolean };
 
 type OrderProps = {
   chats: Chat[];
+  setChatsState: (newChats: Chat[]) => void;
   visibleEmoji: boolean;
   setVisibleEmoji: Dispatch<SetStateAction<boolean>>;
   loading?: boolean;
@@ -45,6 +46,7 @@ type OrderProps = {
 
 export const ChatComponent = ({
   chats,
+  setChatsState,
   visibleEmoji,
   setVisibleEmoji,
   loading,
@@ -314,6 +316,14 @@ export const ChatComponent = ({
                 ? { ...existingChat, messages: finalMessages }
                 : existingChat
             )
+          )
+        );
+
+        setChatsState(
+          chats.map((existingChat) =>
+            existingChat.id === newMessage.chatId
+              ? { ...existingChat, messages: finalMessages }
+              : existingChat
           )
         );
       } catch (error) {

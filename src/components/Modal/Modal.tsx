@@ -23,8 +23,10 @@ import {
   setIsModalProfileInfo,
   setIsModalResponseStudentToTutor,
   setIsModalResponseTutorToStudent,
+  setIsModalResponseTutorToStudentWithContakt,
   setIsModalSkype,
   setIsModalTelegram,
+  setLoadingPage,
   setModalSelectCity,
   setScrollY,
 } from "@/store/features/modalSlice";
@@ -132,6 +134,16 @@ export const Modal: React.FC<ModalProps> = ({
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
+    if (modalId === "responseTutorToStudentWithContaktModal") {
+      dispatch(setIsModalResponseTutorToStudentWithContakt(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "loadingPageModal") {
+      dispatch(setLoadingPage(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
   };
 
   useEffect(() => {
@@ -172,17 +184,23 @@ export const Modal: React.FC<ModalProps> = ({
                   leaveFrom={styles.leaveFrom}
                   leaveTo={styles.leaveTo}
                 >
-                  <DialogPanel className={styles.popup}>
+                  <DialogPanel
+                    className={
+                      modalId !== "loadingPageModal" ? styles.popup : ""
+                    }
+                  >
                     <DialogTitle className={styles.title}>
                       {titleModal}
                     </DialogTitle>
                     {contentModal}
-                    <button
-                      className={styles.closeButton}
-                      onClick={() => closeModal()}
-                    >
-                      ✕
-                    </button>
+                    {modalId !== "loadingPageModal" && (
+                      <button
+                        className={styles.closeButton}
+                        onClick={() => closeModal()}
+                      >
+                        ✕
+                      </button>
+                    )}
                   </DialogPanel>
                 </TransitionChild>
               </div>

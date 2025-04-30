@@ -11,7 +11,10 @@ import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
 import { getTutorById } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { TutorComponent } from "@/components/Student/Tutor/Tutor";
-import { getOrderById } from "@/store/features/orderSlice";
+import {
+  checkHasChatWithTutor,
+  getOrderById,
+} from "@/store/features/orderSlice";
 import { useChat } from "@/context/ChatContext";
 
 const TutorPage: React.FC = () => {
@@ -34,6 +37,9 @@ const TutorPage: React.FC = () => {
   // Получаем список регионов
   const citiesAndRegions = useAppSelector((state) => state.locations.city);
 
+  const hasChatWithTutor = useAppSelector(
+    (state) => state.orders.hasChatWithTutor
+  );
   useEffect(() => {
     if (token && typeof tutor === "string") {
       dispatch(getTutorById({ id: tutor, token }));
@@ -47,10 +53,19 @@ const TutorPage: React.FC = () => {
   } = useSelector((state: RootState) => state.tutor);
 
   useEffect(() => {
+    dispatch({ type: "orders/resetHasChatWithTutor" });
+
     if (token && typeof order === "string") {
-      dispatch(getOrderById({ token, id: order }));
+      dispatch(getOrderById({ token, id: order }))
+        .unwrap()
+        .then(() => {
+          // Только после загрузки заказа проверяем наличие чата
+          if (tutor) {
+            dispatch(checkHasChatWithTutor(tutor));
+          }
+        });
     }
-  }, [dispatch, token, order]);
+  }, [dispatch, token, order, tutor]);
 
   useEffect(() => {
     orderById && setIsChecked(orderById.status === "Active");
@@ -82,6 +97,7 @@ const TutorPage: React.FC = () => {
           loading={loading}
           isChecked={isChecked}
           setIsChecked={setIsChecked}
+          isChatWithTutor={hasChatWithTutor}
         />
       </section>
       <Modal
