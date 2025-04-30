@@ -411,7 +411,7 @@ type TutorStateType = {
   supportMenu: boolean;
   welcomeScreens: null | WelcomeScreen[];
   hiddenScreens: string[]; // Добавляем скрытые экраны
-  deleteRequest: boolean,
+  deleteRequest: boolean;
 };
 
 // Получаем данные репетитора из localStorage, если они есть

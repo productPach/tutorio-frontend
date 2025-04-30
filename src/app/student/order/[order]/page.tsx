@@ -41,7 +41,7 @@ const OrderPage: React.FC = () => {
   const [visibleEmoji, setVisibleEmoji] = useState(false);
 
   const [student, setStudent] = useState<Student | null>(null);
-  const { chats, clearChats } = useChat();
+  const { chats, setChatsState, clearChats } = useChat();
 
   const { orderById, loading, error } = useAppSelector((state) => state.orders);
 
@@ -154,6 +154,7 @@ const OrderPage: React.FC = () => {
           {component === 5 || component === 6 ? (
             <ChatComponent
               chats={chats}
+              setChatsState={setChatsState}
               orderById={orderById}
               visibleEmoji={visibleEmoji}
               setVisibleEmoji={setVisibleEmoji}

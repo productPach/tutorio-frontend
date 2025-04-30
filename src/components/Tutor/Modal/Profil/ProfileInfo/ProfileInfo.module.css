@@ -86,3 +86,17 @@
   background-color: black;
   color: white;
 }
+.buttonYlSpinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 198px;
+}
+.buttonYlSpinner2 {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  right: 160px;
+}

@@ -3,12 +3,9 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "../Profil/ProfileInfo/ProfileInfo.module.css";
-import stylesStudent from "../../../Student/Student.module.css";
-import generalStyles from "../../../../app/student/layout.module.css";
 import { ChangeEvent, useState } from "react";
 import {
-  setIsModalResponseStudentToTutor,
-  setIsModalResponseTutorToStudent,
+  setIsModalResponseTutorToStudentWithContakt,
   setLoadingPage,
 } from "@/store/features/modalSlice";
 import {
@@ -22,15 +19,14 @@ import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
 import { Spinner } from "@/components/Spinner/Spinner";
 
-export const ResponseTutorToStudentModal = () => {
+export const ResponseTutorToStudentWithContaktModal = () => {
   const dispatch = useAppDispatch();
   const route = useRouter();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
-  const student = useAppSelector((state) => state.student.student);
   const order = useAppSelector((state) => state.orders.orderByIdDefault);
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const { sendMessage: sendMessageContext, newChat } = useChat();
+  const { newChat } = useChat();
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState("");
   const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -115,25 +111,15 @@ export const ResponseTutorToStudentModal = () => {
         );
       }
     }
-    dispatch(setIsModalResponseTutorToStudent(false));
+    dispatch(setIsModalResponseTutorToStudentWithContakt(false));
     dispatch(setLoadingPage(true));
-  };
-
-  // Состояние для свитча
-  const [isChecked, setIsChecked] = useState(true);
-
-  const toggleSwitch = () => {
-    setIsChecked((prev) => {
-      const newState = !prev;
-      return newState;
-    });
   };
 
   return (
     <>
       <div className={styles.description}>
-        Ученик получит уведомление и сможет откликнуться, если предложение его
-        заинтересует 📩
+        После отклика ученик сразу получит уведомление, а его контакты станут
+        вам доступны 📬
       </div>
       <div className={styles.inputContainer}>
         <textarea
@@ -151,38 +137,11 @@ export const ResponseTutorToStudentModal = () => {
         />
       </div>
 
-      <div
-        className={clsx(
-          stylesStudent.containerEntityShowEnd,
-          styles.description
-        )}
-      >
-        <div className={stylesStudent.containerEntityTitleDescription}>
-          <div className={generalStyles.textBlc}>
-            Отправить номер телефона ученику
-          </div>
-          <span className={generalStyles.textGr}>
-            Ученик получит ваш номер и сможет связаться с&nbsp;вами
-            напрямую&nbsp;☎️
-          </span>
-        </div>
-        <div className={stylesStudent.inputContainer}>
-          <label className={stylesStudent.iosSwitch}>
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={toggleSwitch}
-            />
-            <span className={stylesStudent.slider}></span>
-          </label>
-        </div>
-      </div>
-
       <div className={styles.button}>
         <button disabled={isLoading} onClick={update} type="button">
-          Отправить
+          Получить контакты
           {isLoading && (
-            <div className={styles.buttonYlSpinner}>
+            <div className={styles.buttonYlSpinner2}>
               <Spinner />
             </div>
           )}

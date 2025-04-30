@@ -14,6 +14,10 @@ import { Student } from "@/types/types";
 import { useSelector } from "react-redux";
 import { clearOrderById, getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
+import { setLoadingPage, setScrollY } from "@/store/features/modalSlice";
+import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal";
+import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
+import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
 
 const OrderPage: React.FC = () => {
   const page = "Order";
@@ -21,6 +25,13 @@ const OrderPage: React.FC = () => {
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
   );
+  const isModalResponseTutorToStudent = useAppSelector(
+    (state) => state.modal.isModalResponseTutorToStudent
+  );
+  const isModalResponseTutorToStudentWithContakt = useAppSelector(
+    (state) => state.modal.isModalResponseTutorToStudentWithContakt
+  );
+  const isModalLoadingPage = useAppSelector((state) => state.modal.loadingPage);
 
   const dispatch = useAppDispatch();
 
@@ -43,6 +54,8 @@ const OrderPage: React.FC = () => {
   useEffect(() => {
     return () => {
       dispatch(clearOrderById());
+      dispatch(setLoadingPage(false));
+      dispatch(setScrollY(0));
     };
   }, []);
 
@@ -84,6 +97,24 @@ const OrderPage: React.FC = () => {
         contentModal={<BalanceBoost />}
         isModal={isModalBalanceBoost}
         modalId={"balanceBoost"}
+      ></Modal>
+      <Modal
+        titleModal={"Отправить отклик"}
+        contentModal={<ResponseTutorToStudentModal />}
+        isModal={isModalResponseTutorToStudent}
+        modalId={"responseTutorToStudentModal"}
+      ></Modal>
+      <Modal
+        titleModal={"Получить контакты"}
+        contentModal={<ResponseTutorToStudentWithContaktModal />}
+        isModal={isModalResponseTutorToStudentWithContakt}
+        modalId={"responseTutorToStudentWithContaktModal"}
+      ></Modal>
+      <Modal
+        titleModal={""}
+        contentModal={<LoadingPageModal />}
+        isModal={isModalLoadingPage}
+        modalId={"loadingPageModal"}
       ></Modal>
     </>
   );
