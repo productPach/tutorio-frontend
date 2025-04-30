@@ -315,6 +315,7 @@ export type Chat = {
     lastOnline: string | null;
   };
   themeOrder: string;
+  initiatorRole: string;
 };
 
 export type Message = {

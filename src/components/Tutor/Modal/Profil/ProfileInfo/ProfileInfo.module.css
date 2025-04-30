@@ -2,6 +2,14 @@
   margin: 10px 0;
 }
 
+.mrTp10 {
+  margin-top: 10px;
+}
+
+.mrTp15 {
+  margin-top: 15px;
+}
+
 .inputContainer {
   position: relative;
 }

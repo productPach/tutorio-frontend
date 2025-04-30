@@ -77,6 +77,8 @@ export const ChatSidbar = ({
     });
   }, [chats]);
 
+  console.log(sortedChats);
+
   return (
     <>
       {!loading && (
@@ -180,8 +182,7 @@ export const ChatSidbar = ({
                                 {
                                   chat.messages.filter(
                                     (msg) =>
-                                      !msg.isRead &&
-                                      msg.senderId !== student?.id
+                                      !msg.isRead && msg.senderId !== tutor?.id
                                   ).length
                                 }
                               </div>

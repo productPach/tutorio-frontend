@@ -1,6 +1,7 @@
 "use client";
 import generalStyles from "../../../app/tutor/layout.module.css";
 import chatStyles from "./Chat.module.css";
+import chatNoAccessStyles from "./ChatNoAccess.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { City, Message, Student } from "@/types/types";
@@ -13,7 +14,9 @@ import React, {
 } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
+  getOrderById,
   setComponentMenu,
+  setOrderById,
   updateChatInOrder,
 } from "@/store/features/orderSlice";
 import Image from "next/image";
@@ -26,6 +29,11 @@ import GroupedMessages from "./GroupedMessages";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useChat } from "@/context/ChatContext";
 import { sortMessages } from "@/utils/chat/sortMessages";
+import {
+  setIsModalBalanceBoost,
+  setValueModalBalanceBoost,
+} from "@/store/features/modalSlice";
+import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -98,7 +106,10 @@ export const ChatComponent = React.memo(
       dispatch(setComponentMenu(5));
       textareaRef.current?.focus();
       setInputValue("");
-    }, [dispatch, chat?.id]);
+      token && chat && dispatch(getOrderById({ token, id: chat?.orderId }));
+    }, [dispatch, chat?.id, token]);
+
+    const { orderById } = useAppSelector((state) => state.orders);
 
     if (loading && !tutor?.name)
       return (
@@ -349,26 +360,88 @@ export const ChatComponent = React.memo(
                 />
               )}
 
-              <div className={clsx(chatStyles.inputMessageBlock)}>
-                {/* Родительский блок с границами */}
-                <div ref={wrapperRef} className={chatStyles.wrapperRef}>
-                  <textarea
-                    ref={textareaRef}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Начните вводить сообщение"
-                    rows={1}
-                    className={chatStyles.textarea}
+              {!chat.tutorHasAccess && (
+                <div className={clsx(chatNoAccessStyles.inputMessageBlock)}>
+                  <div className={chatNoAccessStyles.notAccessTextContainer}>
+                    <h3 className={chatNoAccessStyles.notAccessTitle}>
+                      Ученик предложил вам заказ 📩
+                    </h3>{" "}
+                    Ознакомьтесь с условиями — если заказ вам подходит,
+                    принимайте его. После этого сможете обсудить детали и
+                    обменяться контактами
+                    <div className={chatNoAccessStyles.containerButton}>
+                      <button
+                        className={chatNoAccessStyles.button}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(setIsModalBalanceBoost(true));
+                          orderById?.responseCost &&
+                            dispatch(
+                              setValueModalBalanceBoost(orderById?.responseCost)
+                            );
+                        }}
+                        type="button"
+                      >
+                        <span className={chatNoAccessStyles.textButton}>
+                          Принять заказ
+                        </span>
+                        {/* <span className={chatNoAccessStyles.priceButton}>
+                          {loading ? (
+                            <div className={generalStyles.container__spinner}>
+                              <div className={generalStyles.spinner}>
+                                <SpinnerSingleOrange />
+                              </div>
+                            </div>
+                          ) : orderById?.responseCost ? (
+                            `${orderById?.responseCost} руб.`
+                          ) : (
+                            "Цена не доступна"
+                          )}
+                        </span> */}
+                      </button>
+                      <button
+                        className={chatNoAccessStyles.buttonCancel}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(setIsModalBalanceBoost(true));
+                          orderById?.responseCost &&
+                            dispatch(
+                              setValueModalBalanceBoost(orderById?.responseCost)
+                            );
+                        }}
+                        type="button"
+                      >
+                        <span className={chatNoAccessStyles.textButton}>
+                          Отклонить заказ
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {chat.tutorHasAccess && (
+                <div className={clsx(chatStyles.inputMessageBlock)}>
+                  {/* Родительский блок с границами */}
+                  <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+                    <textarea
+                      ref={textareaRef}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Начните вводить сообщение"
+                      rows={1}
+                      className={chatStyles.textarea}
+                      disabled={!chat.tutorHasAccess}
+                    />
+                  </div>
+                  <EmojiPicker
+                    onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
+                    textareaRef={textareaRef}
+                    visibleEmoji={visibleEmoji}
+                    setVisibleEmoji={setVisibleEmoji}
                   />
                 </div>
-                <EmojiPicker
-                  onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
-                  textareaRef={textareaRef}
-                  visibleEmoji={visibleEmoji}
-                  setVisibleEmoji={setVisibleEmoji}
-                />
-              </div>
+              )}
             </div>
           </>
         ) : (

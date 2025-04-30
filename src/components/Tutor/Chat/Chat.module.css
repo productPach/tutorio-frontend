@@ -128,6 +128,7 @@
   cursor: pointer;
   transition: all 0.3s;
 }
+
 .inputQuestion {
   width: 100%;
   min-height: 54px; /* Минимальная высота */

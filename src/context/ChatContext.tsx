@@ -161,7 +161,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleNewChat = (data: Chat) => {
-      if (orderId?.id !== data.orderId) return;
+      if (data.initiatorRole === "tutor") {
+        if (orderId?.id !== data.orderId) return;
+      }
+      console.log("Новый чат");
       if (!isMountedRef.current) return;
 
       // Добавить в orderId.chats, если его нет
