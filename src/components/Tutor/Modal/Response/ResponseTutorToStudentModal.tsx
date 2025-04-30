@@ -152,10 +152,7 @@ export const ResponseTutorToStudentModal = () => {
       </div>
 
       <div
-        className={clsx(
-          stylesStudent.containerEntityShowEnd,
-          styles.description
-        )}
+        className={clsx(stylesStudent.containerEntityShowEnd, styles.mrTp10)}
       >
         <div className={stylesStudent.containerEntityTitleDescription}>
           <div className={generalStyles.textBlc}>

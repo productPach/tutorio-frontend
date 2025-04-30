@@ -6,16 +6,35 @@ import styles from "../../../Tutor/Modal/Profil/ProfileInfo/ProfileInfo.module.c
 import stylesStudent from "../../Student.module.css";
 import generalStyles from "../../../../app/student/layout.module.css";
 import { ChangeEvent, useState } from "react";
-import { setIsModalResponseStudentToTutor } from "@/store/features/modalSlice";
+import {
+  setIsModalResponseStudentToTutor,
+  setLoadingPage,
+  setScrollY,
+} from "@/store/features/modalSlice";
+import {
+  createChat,
+  getChatsByOrderId,
+  getChatsByUserId,
+  sendMessage,
+  setChat,
+} from "@/store/features/chatSlice";
+import { useChat } from "@/context/ChatContext";
+import { useRouter } from "next/navigation";
+import { data } from "@/utils/listSubjects";
+import { Spinner } from "@/components/Spinner/Spinner";
+import { getOrderById } from "@/store/features/orderSlice";
 
 export const ResponseStudentToTutorModal = () => {
   const dispatch = useAppDispatch();
+  const route = useRouter();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
+  const { newChat } = useChat();
   const student = useAppSelector((state) => state.student.student);
   const tutorId = useAppSelector(
     (state) => state.modal.tutorIdForResponseStudentToTutor
   );
+  const { orderById } = useAppSelector((state) => state.orders);
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState("");
   const handleInputValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -30,9 +49,62 @@ export const ResponseStudentToTutorModal = () => {
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
-  const update = () => {
+  // Состояние для лоадера
+  const [isLoading, setIsLoading] = useState(false);
+
+  const subjectForRequest = data.find(
+    (item) => item.id_p === orderById?.subject
+  )?.for_request;
+
+  const update = async () => {
+    setIsLoading(true);
     const messageResponse = inputValue;
+
+    if (tutorId && student && orderById && token && messageResponse) {
+      try {
+        const themeOrder = `${orderById.goal} по ${subjectForRequest}`;
+        const chat = await dispatch(
+          createChat({
+            tutorId: tutorId,
+            studentId: student.id,
+            orderId: orderById.id,
+            initiatorRole: "student",
+            themeOrder: themeOrder,
+            token,
+          })
+        ).unwrap(); // Получаем результат из createChat
+
+        if (chat?.id) {
+          await dispatch(
+            sendMessage({
+              chatId: chat.id,
+              senderId: student.id,
+              orderId: orderById.id,
+              themeOrder: themeOrder,
+              text: messageResponse,
+              token,
+            })
+          ).unwrap();
+
+          // Даем рендеру отработать — и только потом пуш и сет
+          setTimeout(async () => {
+            try {
+              dispatch(getOrderById({ token, id: orderById?.id }));
+              newChat(chat.id);
+            } catch (error) {
+              console.error("Ошибка при загрузке чатов:", error);
+            }
+          }, 0);
+        }
+      } catch (error) {
+        console.error(
+          "Ошибка при создании чата или отправке сообщения:",
+          error
+        );
+      }
+    }
     dispatch(setIsModalResponseStudentToTutor(false));
+    dispatch(setScrollY(0));
   };
 
   // Состояние для свитча
@@ -48,8 +120,8 @@ export const ResponseStudentToTutorModal = () => {
   return (
     <>
       <div className={styles.description}>
-        Он получит уведомление и сможет откликнуться, если предложение его
-        заинтересует 📩
+        Репетитор получит уведомление и сможет откликнуться, если предложение
+        его заинтересует 📩
       </div>
       <div className={styles.inputContainer}>
         <textarea
@@ -67,7 +139,9 @@ export const ResponseStudentToTutorModal = () => {
         />
       </div>
 
-      <div className={stylesStudent.containerEntityShowEnd}>
+      <div
+        className={clsx(stylesStudent.containerEntityShowEnd, styles.mrTp15)}
+      >
         <div className={stylesStudent.containerEntityTitleDescription}>
           <div className={generalStyles.textBlc}>
             Отправить мой номер телефона репетитору
@@ -90,8 +164,13 @@ export const ResponseStudentToTutorModal = () => {
       </div>
 
       <div className={styles.button}>
-        <button onClick={update} type="button">
+        <button disabled={isLoading} onClick={update} type="button">
           Отправить
+          {isLoading && (
+            <div className={styles.buttonYlSpinner}>
+              <Spinner />
+            </div>
+          )}
         </button>
       </div>
     </>

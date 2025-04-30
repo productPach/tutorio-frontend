@@ -93,6 +93,8 @@ const OrderPage: React.FC = () => {
   }, [dispatch, token]);
 
   const [isDataLoaded, setIsDataLoaded] = useState(false); // флаг для загрузки данны
+
+  // Нужно только для свитча, нужно переделать
   useEffect(() => {
     const fetchStudent = async () => {
       if (orderById?.studentId && !isDataLoaded) {
