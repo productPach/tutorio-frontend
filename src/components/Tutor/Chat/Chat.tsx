@@ -31,6 +31,7 @@ import { useChat } from "@/context/ChatContext";
 import { sortMessages } from "@/utils/chat/sortMessages";
 import {
   setIsModalBalanceBoost,
+  setIsModalRejectResponse,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
@@ -357,6 +358,8 @@ export const ChatComponent = React.memo(
                   chatId={chat?.id}
                   messages={chat?.messages || []}
                   tutorId={chat?.tutorId || ""}
+                  orderId={chat.orderId}
+                  tutorHasAccess={chat.tutorHasAccess}
                 />
               )}
 
@@ -403,11 +406,7 @@ export const ChatComponent = React.memo(
                         className={chatNoAccessStyles.buttonCancel}
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalBalanceBoost(true));
-                          orderById?.responseCost &&
-                            dispatch(
-                              setValueModalBalanceBoost(orderById?.responseCost)
-                            );
+                          dispatch(setIsModalRejectResponse(true));
                         }}
                         type="button"
                       >

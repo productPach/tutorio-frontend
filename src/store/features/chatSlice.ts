@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Chat, Message } from "@/types/types"; // Подставь нужные типы
-import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchGetChatsByUserIdAndRole, fetchSendMessage, fetchUpdateMessage } from "@/api/server/chatApi";
+import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchGetChatsByUserIdAndRole, fetchSendMessage, fetchUpdateChat, fetchUpdateMessage } from "@/api/server/chatApi";
 
 type ChatStateType = {
   chat: Chat | null;
@@ -20,12 +20,28 @@ export const createChat = createAsyncThunk<
     orderId: string;
     initiatorRole: "student" | "tutor";
     themeOrder: string;
+    status: string;
     token: string;
   }
->("chat/create", async ({ tutorId, studentId, orderId, initiatorRole, themeOrder, token }) => {
-  const response = await fetchCreateChat(tutorId, studentId, orderId, initiatorRole, themeOrder, token);
+>("chat/create", async ({ tutorId, studentId, orderId, initiatorRole, themeOrder, status, token }) => {
+  const response = await fetchCreateChat(tutorId, studentId, orderId, initiatorRole, themeOrder, status, token);
   return response;
 });
+
+// Обновление чата
+export const updateChat = createAsyncThunk<
+  Chat, // что возвращаем
+  {
+    chatId: string;
+    tutorHasAccess?: boolean;
+    status?: string;
+    token: string;
+  }
+>("chat/update", async ({ chatId, tutorHasAccess, status, token }) => {
+  const response = await fetchUpdateChat(chatId, tutorHasAccess, status, token);
+  return response;
+});
+
 
 // Отправка сообщения
 export const sendMessage = createAsyncThunk<
@@ -111,6 +127,9 @@ const chatSlice = createSlice({
       if (state.chat) {
         // Вместо push используем новый массив
         state.chat.messages = [...state.chat.messages, action.payload];
+        // Обновляем статус и доступ
+        state.chat.status = "Active";
+        state.chat.tutorHasAccess = true;
       }
     },
     markMessagesAsRead: (state, action) => {

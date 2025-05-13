@@ -1,6 +1,7 @@
 "use client";
 import generalStyles from "../../../app/tutor/layout.module.css";
 import styles from "../Order/Order.module.css";
+import chatNoAccessStyles from "../../Tutor/Chat/ChatNoAccess.module.css";
 import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
@@ -110,7 +111,7 @@ export const ChatComponent = ({
         wrapperRef.current.style.padding = "0"; // сбрасываем
       }
     }
-  }, [inputValue]);
+  }, [inputValue, chat]);
 
   // useEffect(() => {
   //   if (chat?.messages && student?.id && token) {
@@ -430,26 +431,55 @@ export const ChatComponent = ({
             studentId={student?.id || ""}
           />
         )}
-        <div className={clsx(chatStyles.inputMessageBlock)}>
-          {/* Родительский блок с границами */}
-          <div ref={wrapperRef} className={chatStyles.wrapperRef}>
-            <textarea
-              ref={textareaRef}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Начните вводить сообщение"
-              rows={1}
-              className={chatStyles.textarea}
+
+        {!chat?.tutorHasAccess &&
+          (chat?.status !== "Rejected" ? (
+            <div className={clsx(chatNoAccessStyles.inputMessageBlock)}>
+              <div className={chatNoAccessStyles.notAccessTextContainer}>
+                <h3 className={chatNoAccessStyles.notAccessTitle}>
+                  Вы предложили заказ репетитору 📩
+                </h3>{" "}
+                Если ваш заказ его заинтересует, он примет его. После этого вы
+                сможете обсудить детали занятий в этом чате
+                <div className={chatNoAccessStyles.containerButton}></div>
+              </div>
+            </div>
+          ) : (
+            <div className={clsx(chatNoAccessStyles.inputMessageBlock)}>
+              <div className={chatNoAccessStyles.notAccessTextContainer}>
+                <h3 className={chatNoAccessStyles.notAccessTitle}>
+                  Репетитор отклонил ваш заказ ❌
+                </h3>{" "}
+                К сожалению, этот заказ не подошёл репетитору. Вы можете выбрать
+                другого или подождать, пока кто-то из подходящих специалистов
+                откликнется
+                <div className={chatNoAccessStyles.containerButton}></div>
+              </div>
+            </div>
+          ))}
+
+        {chat?.tutorHasAccess && (
+          <div className={clsx(chatStyles.inputMessageBlock)}>
+            {/* Родительский блок с границами */}
+            <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+              <textarea
+                ref={textareaRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Начните вводить сообщение"
+                rows={1}
+                className={chatStyles.textarea}
+              />
+            </div>
+            <EmojiPicker
+              onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
+              textareaRef={textareaRef}
+              visibleEmoji={visibleEmoji}
+              setVisibleEmoji={setVisibleEmoji}
             />
           </div>
-          <EmojiPicker
-            onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
-            textareaRef={textareaRef}
-            visibleEmoji={visibleEmoji}
-            setVisibleEmoji={setVisibleEmoji}
-          />
-        </div>
+        )}
       </div>
     </>
   );

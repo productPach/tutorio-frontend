@@ -316,6 +316,7 @@ export type Chat = {
   };
   themeOrder: string;
   initiatorRole: string;
+  status: string;
 };
 
 export type Message = {

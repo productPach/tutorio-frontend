@@ -1,3 +1,4 @@
+import { Chat } from "@/types/types";
 import { baseUrl } from "./configApi";
 
 // Создание чата
@@ -7,6 +8,7 @@ export const fetchCreateChat = async (
     orderId: string,
     initiatorRole: "student" | "tutor",
     themeOrder: string,
+    status: string,
     token: string
   ) => {
     const response = await fetch(`${baseUrl}chat`, {
@@ -21,6 +23,7 @@ export const fetchCreateChat = async (
         orderId,
         themeOrder,
         initiatorRole,
+        status,
       }),
     });
   
@@ -32,6 +35,34 @@ export const fetchCreateChat = async (
     const data = await response.json();
     return data;
   };
+
+  // Обновление чата
+export const fetchUpdateChat = async (
+  chatId: string,
+  tutorHasAccess?: boolean,
+  status?: string,
+  token?: string
+): Promise<Chat> => {
+  const res = await fetch(`${baseUrl}/chat`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      chatId,
+      ...(tutorHasAccess !== undefined ? { tutorHasAccess } : {}),
+      ...(status !== undefined ? { status } : {}),
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Не удалось обновить чат");
+  }
+
+  return res.json();
+};
+
 
 // Отправка сообщения
 export const fetchSendMessage = async (

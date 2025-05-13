@@ -9,6 +9,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import chatStyles from "./Chat.module.css"; // путь к стилям поправь под себя
 import styles from "../Order/Order.module.css";
+import DOMPurify from "dompurify";
 
 type Message = {
   id: string;
@@ -22,6 +23,8 @@ type Props = {
   chatId: string;
   messages: Message[];
   tutorId: string;
+  orderId: string;
+  tutorHasAccess: boolean;
 };
 
 const formatChatDate = (dateString: string) => {
@@ -57,7 +60,13 @@ const formatChatDate = (dateString: string) => {
   return `${dayOfWeek}, ${formattedDate}`;
 };
 
-const GroupedMessages: React.FC<Props> = ({ chatId, messages, tutorId }) => {
+const GroupedMessages: React.FC<Props> = ({
+  chatId,
+  messages,
+  tutorId,
+  orderId,
+  tutorHasAccess,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(50);
   const isInitialScrollDone = useRef(false);
@@ -109,6 +118,30 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, tutorId }) => {
         const shouldShowDate = currentDate !== prevDate;
         const isFromStudent = message.senderId === tutorId;
 
+        // Функция для замены ссылок на <a> теги
+        const formatTextWithLinks = (text: string) => {
+          const urlRegex = /(https?:\/\/[^\s]+)/g;
+          const htmlText = text
+            .split(urlRegex)
+            .map((part, index) => {
+              if (part.match(urlRegex)) {
+                return `<a key=${index} style="color: blue; text-decoration: underline;" href="${part}" target="_blank" rel="noopener noreferrer">${part}</a>`;
+              }
+              return part;
+            })
+            .join("");
+
+          // Очищаем потенциально опасный HTML
+          return DOMPurify.sanitize(htmlText, {
+            ALLOWED_TAGS: ["a"],
+            ALLOWED_ATTR: ["href", "target", "rel", "style"],
+          });
+        };
+
+        const text = tutorHasAccess
+          ? message.text
+          : `Ученик заинтересовался вашим профилем и отправил предложение на занятия.\n\nС условиями можно ознакомиться на странице заказа: ${process.env.NEXT_PUBLIC_DOMAIN}/tutor/${orderId}\n\nЕсли всё подходит — примите заказ, если нет — отклоните.`;
+
         if (shouldShowDate) {
           acc.push(
             <div
@@ -131,7 +164,12 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, tutorId }) => {
                 : chatStyles.chat__message__left
             )}
           >
-            {message.text}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: formatTextWithLinks(text),
+              }}
+            />
+
             <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
               <span>
                 {new Date(message.createdAt).toLocaleTimeString([], {

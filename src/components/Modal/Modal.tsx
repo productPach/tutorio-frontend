@@ -21,6 +21,7 @@ import {
   setIsModalFio,
   setIsModalPhone,
   setIsModalProfileInfo,
+  setIsModalRejectResponse,
   setIsModalResponseStudentToTutor,
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
@@ -141,6 +142,11 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "loadingPageModal") {
       dispatch(setLoadingPage(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "rejectResponse") {
+      dispatch(setIsModalRejectResponse(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }

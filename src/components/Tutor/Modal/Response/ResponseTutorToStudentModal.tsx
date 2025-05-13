@@ -71,6 +71,7 @@ export const ResponseTutorToStudentModal = () => {
             orderId: order.id,
             initiatorRole: "tutor",
             themeOrder: themeOrder,
+            status: "Active",
             token,
           })
         ).unwrap(); // Получаем результат из createChat

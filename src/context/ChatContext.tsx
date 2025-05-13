@@ -83,7 +83,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           "tutor",
           token
         );
-        combinedChats = [...combinedChats, ...tutorChats];
+        // Фильтруем только те чаты, у которых статус НЕ "Rejected"
+        const filteredTutorChats = tutorChats.filter(
+          (chat: any) => chat.status !== "Rejected"
+        );
+
+        combinedChats = [...combinedChats, ...filteredTutorChats];
       }
 
       setTimeout(() => {
@@ -127,6 +132,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                   ...chat,
                   messages: [...chat.messages, message],
                   lastMessage: message,
+                  status: "Active",
+                  tutorHasAccess: true,
                 }
               : chat
           );
@@ -164,7 +171,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.initiatorRole === "tutor") {
         if (orderId?.id !== data.orderId) return;
       }
-      console.log("Новый чат");
+      //console.log("Новый чат");
       if (!isMountedRef.current) return;
 
       // Добавить в orderId.chats, если его нет
@@ -176,6 +183,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       setChatsState((prev) => {
+        playNotificationSound();
         const chatExists = prev.some((chat) => chat.id === data.id); // Проверка, существует ли уже чат
         if (chatExists) {
           // Обновляем существующий чат, если он есть
@@ -199,7 +207,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           return updatedChats;
         }
       });
-      playNotificationSound();
     };
 
     socket.on("newMessage", handleNewMessage);

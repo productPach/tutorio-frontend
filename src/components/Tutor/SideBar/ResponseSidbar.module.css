@@ -11,6 +11,18 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
+}
+
+.buttonBlc {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(69, 72, 77, 1) 100%
+  );
+  color: #dddddd;
+}
+
+.buttonYlw {
   background-color: #fad949;
   color: black;
 }

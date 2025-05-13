@@ -8,12 +8,22 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@/store/store";
 import { useChat } from "@/context/ChatContext";
 import { useSearchParams } from "next/navigation";
+import { Modal } from "@/components/Modal/Modal";
+import { RejectResponseModal } from "@/components/Tutor/Modal/Response/RejectResponseModal";
+import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 
 const ResponsesPage: React.FC = () => {
   const page = "Responses";
 
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  const token = useAppSelector((state) => state.auth.token);
+  const isModalBalanceBoost = useAppSelector(
+    (state) => state.modal.isModalBalanceBoost
+  );
+  const descriptionForModalBalanceBoost =
+    "Примите заказ — после этого вы сможете пообщаться с учеником и обменяться контактами";
+  const isModalRejectResponse = useAppSelector(
+    (state) => state.modal.isModalRejectResponse
+  );
   // Стейт для эмодзи в чате
   const [visibleEmoji, setVisibleEmoji] = useState(false);
 
@@ -43,6 +53,20 @@ const ResponsesPage: React.FC = () => {
         </div>
         <ChatSidbar chats={chats} tutor={tutor} />
       </section>
+      <Modal
+        titleModal={"Пополните баланс, чтобы принять заказ"}
+        contentModal={
+          <BalanceBoost description={descriptionForModalBalanceBoost} />
+        }
+        isModal={isModalBalanceBoost}
+        modalId={"balanceBoost"}
+      ></Modal>
+      <Modal
+        titleModal={"Отклонить заказ"}
+        contentModal={<RejectResponseModal />}
+        isModal={isModalRejectResponse}
+        modalId={"rejectResponse"}
+      ></Modal>
     </>
   );
 };

@@ -444,6 +444,15 @@ const Orders = () => {
                     )}
                   >
                     <div className={styles.header__menu}>
+                      {chats.find((chat) => chat.orderId === order.id) &&
+                        !chats.find((chat) => chat.orderId === order.id)
+                          ?.tutorHasAccess && (
+                          <div className={styles.blockResponseStudent}>
+                            <div className={styles.fireIcon}>🎓</div>
+                            <div>ученик предложил вам заказ</div>
+                          </div>
+                        )}
+
                       <button
                         className={clsx(
                           styles.content_block_button,

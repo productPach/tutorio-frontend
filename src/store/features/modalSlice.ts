@@ -24,6 +24,7 @@ type ModalStateType = {
   isModalResponseTutorToStudent: boolean;
   isModalResponseTutorToStudentWithContakt: boolean;
   loadingPage: boolean;
+  isModalRejectResponse: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -50,6 +51,7 @@ const initialState: ModalStateType = {
   isModalResponseTutorToStudent: false,
   isModalResponseTutorToStudentWithContakt: false,
   loadingPage: false,
+  isModalRejectResponse: false,
 };
 
 const modalSlice = createSlice({
@@ -125,6 +127,10 @@ const modalSlice = createSlice({
     setLoadingPage: (state, action: PayloadAction<boolean>) => {
       state.loadingPage = action.payload;
     },
+    setIsModalRejectResponse(state, action: PayloadAction<boolean>) {
+      state.isModalRejectResponse = action.payload;
+    },
+    
   },
 });
 
@@ -152,5 +158,6 @@ export const {
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
   setLoadingPage,
+  setIsModalRejectResponse,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

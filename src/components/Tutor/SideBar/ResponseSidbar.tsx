@@ -15,6 +15,7 @@ import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { setOrderByIdDefault } from "@/store/features/orderSlice";
+import clsx from "clsx";
 
 export const ResponseSidbar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -66,6 +67,7 @@ export const ResponseSidbar = () => {
                     </span>
                     <div className={styles.button}>
                       <button
+                        className={clsx(styles.jtfCntSpBtwn, styles.buttonYlw)}
                         onClick={(e) => {
                           e.preventDefault();
                           // Если не достаточно средств, то должна быть оплата
@@ -116,6 +118,7 @@ export const ResponseSidbar = () => {
                     </span>
                     <div className={styles.button}>
                       <button
+                        className={clsx(styles.jtfCntSpBtwn, styles.buttonYlw)}
                         onClick={(e) => {
                           e.preventDefault();
                           // Если не достаточно средств, то должна быть оплата
@@ -165,7 +168,10 @@ export const ResponseSidbar = () => {
                       </span>
                       <div className={styles.button}>
                         <button
-                          className={styles.jtfCntSpBtwn}
+                          className={clsx(
+                            styles.jtfCntSpBtwn,
+                            styles.buttonYlw
+                          )}
                           onClick={(e) => {
                             e.preventDefault();
                             route.push(`responses`);
@@ -195,6 +201,10 @@ export const ResponseSidbar = () => {
                       </span>
                       <div className={styles.button}>
                         <button
+                          className={clsx(
+                            styles.jtfCntSpBtwn,
+                            styles.buttonYlw
+                          )}
                           onClick={(e) => {
                             e.preventDefault();
                             dispatch(setIsModalBalanceBoost(true));
@@ -222,6 +232,22 @@ export const ResponseSidbar = () => {
                             ) : (
                               "Цена не доступна"
                             )}
+                          </span>
+                        </button>
+                        <button
+                          className={clsx(
+                            styles.jtfCntSpBtwn,
+                            styles.buttonBlc
+                          )}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            route.push(`responses`);
+                            dispatch(setChat(existingChat));
+                          }}
+                          type="button"
+                        >
+                          <span className={styles.textButton}>
+                            Перейти в чат
                           </span>
                         </button>
                       </div>
