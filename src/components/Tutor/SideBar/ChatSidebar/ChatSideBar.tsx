@@ -77,7 +77,7 @@ export const ChatSidbar = ({
     });
   }, [chats]);
 
-  console.log(sortedChats);
+  //console.log(sortedChats);
 
   return (
     <>
@@ -153,7 +153,9 @@ export const ChatSidbar = ({
 
                         <div className={styles.studentChatMessageFlx}>
                           <div className={styles.studentChatMessageText}>
-                            {lastMessage?.text}
+                            {chat.tutorHasAccess
+                              ? lastMessage?.text
+                              : "Ученик заинтересовался вашим профилем и отправил предложение на занятия"}
                           </div>
 
                           {lastMessage.senderId === tutor?.id ? (

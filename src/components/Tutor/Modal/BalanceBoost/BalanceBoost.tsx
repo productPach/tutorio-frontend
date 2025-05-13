@@ -5,7 +5,7 @@ import clsx from "clsx";
 import styles from "./BalanceBoost.module.css";
 import { ChangeEvent, useEffect, useState } from "react";
 
-export const BalanceBoost = () => {
+export const BalanceBoost = ({ description }: { description?: string }) => {
   // Вытаскиваем стоимость отклика на заказ из Redux
   const valueBoost = useAppSelector(
     (state) => state.modal.valueModalBalanceBoost
@@ -36,8 +36,9 @@ export const BalanceBoost = () => {
   return (
     <>
       <div className={styles.description}>
-        После добавления отклика вы сможете связаться с учеником и договориться
-        о занятиях
+        {description
+          ? description
+          : "После добавления отклика вы сможете связаться с учеником и договориться о занятиях"}
       </div>
       {/* <div>
         Вернем деньги за отклик, если ученик не посмотрит его в течение 5 дней

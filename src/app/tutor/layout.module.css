@@ -249,7 +249,8 @@
 } */
 
 .content_block_button {
-  padding: 20px 20px;
+  font-family: "Source Sans 3", sans-serif;
+  padding: 16px 20px;
   border: none;
   border-radius: 10px;
   font-weight: 700;
@@ -585,6 +586,24 @@
     to right,
     rgba(0, 0, 0, 1) 0%,
     rgba(69, 72, 77, 1) 100%
+  );
+}
+
+.blockResponseStudent {
+  color: #333333;
+  border-radius: 10px;
+  font-size: 13px;
+  padding: 0px 9px;
+  max-width: 136px;
+  height: 54px;
+  display: flex;
+  column-gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  background: linear-gradient(
+    90deg,
+    rgb(250, 217, 73) 18%,
+    rgb(241, 193, 64) 100%
   );
 }
 

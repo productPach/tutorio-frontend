@@ -25,6 +25,8 @@ const OrderPage: React.FC = () => {
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
   );
+  const descriptionForModalBalanceBoost =
+    "Примите заказ — после этого вы сможете пообщаться с учеником и обменяться контактами";
   const isModalResponseTutorToStudent = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudent
   );
@@ -94,7 +96,9 @@ const OrderPage: React.FC = () => {
       </section>
       <Modal
         titleModal={"Пополните баланс, чтобы откликнуться"}
-        contentModal={<BalanceBoost />}
+        contentModal={
+          <BalanceBoost description={descriptionForModalBalanceBoost} />
+        }
         isModal={isModalBalanceBoost}
         modalId={"balanceBoost"}
       ></Modal>
