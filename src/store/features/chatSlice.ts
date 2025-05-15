@@ -128,8 +128,16 @@ const chatSlice = createSlice({
         // Вместо push используем новый массив
         state.chat.messages = [...state.chat.messages, action.payload];
         // Обновляем статус и доступ
-        state.chat.status = "Active";
-        state.chat.tutorHasAccess = true;
+        //state.chat.status = "Active";
+        //state.chat.tutorHasAccess = true;
+      }
+    },
+    // Экшен для обновления чата для ученика, чтобы вывести уведомления об отказе репетитора от заказа
+    updateChatForReject: (state) => {
+      if (state.chat) {
+        // Обновляем статус и доступ
+        state.chat.status = "Rejected";
+        state.chat.tutorHasAccess = false;
       }
     },
     markMessagesAsRead: (state, action) => {
@@ -272,5 +280,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChat, setMessages, addMessageToChat, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
+export const { setChat, setMessages, addMessageToChat, updateChatForReject, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "@/context/SocketContext";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { addMessageToChat, getChatById, markMessagesAsRead } from "@/store/features/chatSlice";
+import { addMessageToChat, getChatById, markMessagesAsRead, updateChatForReject } from "@/store/features/chatSlice";
 import { fetchGetChatById } from "@/api/server/chatApi";
 
 type Message = {
@@ -60,7 +60,9 @@ export const useChatSocket = (chatId: string) => {
           return updated;
         });
         dispatch(addMessageToChat(message)); // Добавляем новое сообщение в состояние
-
+        if (message.text === "Репетитор отклонил ваш заказ (сообщение создано автоматически)") {
+          dispatch(updateChatForReject()); // Обновляем статус чата для ученика (репетитор отказался)
+        }
       }
     };
 

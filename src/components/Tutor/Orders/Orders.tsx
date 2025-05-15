@@ -116,6 +116,14 @@ const Orders = () => {
     <>
       {activeOrders.length > 0
         ? activeOrders.map((order) => {
+            const stat = chats.find((chat) => chat.orderId == order.id)?.status;
+            console.log(stat);
+
+            if (
+              chats.find((chat) => chat.orderId === order.id)?.status ===
+              "Rejected"
+            )
+              return null;
             const subject = data.find((item) => item.id_p === order.subject);
             const goal = order.goal ? order.goal + " // " : null;
             const deadline = order.deadline

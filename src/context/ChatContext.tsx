@@ -83,12 +83,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           "tutor",
           token
         );
-        // Фильтруем только те чаты, у которых статус НЕ "Rejected"
-        const filteredTutorChats = tutorChats.filter(
-          (chat: any) => chat.status !== "Rejected"
-        );
 
-        combinedChats = [...combinedChats, ...filteredTutorChats];
+        combinedChats = [...combinedChats, ...tutorChats];
       }
 
       setTimeout(() => {
@@ -132,8 +128,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                   ...chat,
                   messages: [...chat.messages, message],
                   lastMessage: message,
-                  status: "Active",
-                  tutorHasAccess: true,
+                  // status: "Active",
+                  // tutorHasAccess: true,
                 }
               : chat
           );

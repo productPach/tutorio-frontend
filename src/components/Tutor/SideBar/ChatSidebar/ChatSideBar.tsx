@@ -56,25 +56,27 @@ export const ChatSidbar = ({
   }, []);
 
   const sortedChats = useMemo(() => {
-    return [...chats].sort((a, b) => {
-      const lastA = a.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
-      const lastB = b.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
+    return [...chats]
+      .sort((a, b) => {
+        const lastA = a.messages
+          .filter((m) => m.createdAt)
+          .sort(
+            (x, y) =>
+              new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+          )[0];
+        const lastB = b.messages
+          .filter((m) => m.createdAt)
+          .sort(
+            (x, y) =>
+              new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+          )[0];
 
-      return (
-        new Date(lastB?.createdAt || 0).getTime() -
-        new Date(lastA?.createdAt || 0).getTime()
-      );
-    });
+        return (
+          new Date(lastB?.createdAt || 0).getTime() -
+          new Date(lastA?.createdAt || 0).getTime()
+        );
+      })
+      .filter((chats) => chats.status !== "Rejected");
   }, [chats]);
 
   //console.log(sortedChats);

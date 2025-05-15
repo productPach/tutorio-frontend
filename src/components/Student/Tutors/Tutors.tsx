@@ -355,35 +355,39 @@ export const TutorsComponent = ({
                 </div>
               )}
 
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
+              {chat?.status !== "Rejected" ? (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
 
-                  // Если чат с репетитором существует
-                  if (hasChatWithTutor && chat) {
-                    // Логика для существующего чата
-                    dispatch(setComponentMenu(5));
-                    dispatch(setChat(chat));
-                    // Можно добавить другие действия, если чат уже существует
-                  } else {
-                    // Логика для нового чата (если чата нет)
-                    dispatch(setIsModalResponseStudentToTutor(true));
-                    dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
-                    // Можно добавить другие действия для нового чата
-                  }
-                }}
-                className={clsx(
-                  generalStyles.content_block_button,
-                  {
-                    [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
-                    [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
-                  },
-                  generalStyles.buttonWthCnt, // Этот класс всегда применяется
-                  generalStyles.agnCntr
-                )}
-              >
-                {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
-              </button>
+                    // Если чат с репетитором существует
+                    if (hasChatWithTutor && chat) {
+                      // Логика для существующего чата
+                      dispatch(setComponentMenu(5));
+                      dispatch(setChat(chat));
+                      // Можно добавить другие действия, если чат уже существует
+                    } else {
+                      // Логика для нового чата (если чата нет)
+                      dispatch(setIsModalResponseStudentToTutor(true));
+                      dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+                      // Можно добавить другие действия для нового чата
+                    }
+                  }}
+                  className={clsx(
+                    generalStyles.content_block_button,
+                    {
+                      [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
+                      [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
+                    },
+                    generalStyles.buttonWthCnt, // Этот класс всегда применяется
+                    generalStyles.agnCntr
+                  )}
+                >
+                  {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
+                </button>
+              ) : (
+                <div>К сожалению, репетитор отклонил ваш заказ ❌</div>
+              )}
             </div>
           );
         })
