@@ -182,6 +182,10 @@ const Orders = () => {
               ? order.studentWishes
               : null;
 
+            const activeChats = order.chats.filter(
+              (chat) => chat.status === "Active"
+            );
+
             return (
               <div
                 key={order.id}
@@ -434,10 +438,10 @@ const Orders = () => {
                     начать обучение! 🏆
                   </div> */}
 
-                  {order.status === "Active" && order.chats.length > 0 && (
+                  {order.status === "Active" && activeChats.length > 0 && (
                     <div className={styles.studentBlockOrderWithResponse}>
                       <div className={styles.studentBlockOrderWithResponseImg}>
-                        {order.chats.slice(0, 3).map((chat) => (
+                        {activeChats.slice(0, 3).map((chat) => (
                           <Image
                             key={chat.id}
                             className={styles.studentResponseImg}
@@ -451,9 +455,9 @@ const Orders = () => {
                       <div
                         className={styles.studentBlockOrderWithResponseCount}
                       >
-                        {order.chats.length <= 3
-                          ? `${order.chats.length} ${getDeclension(order.chats.length)}`
-                          : `и ещё ${order.chats.length - 3} ${getDeclension(order.chats.length - 3)}`}
+                        {activeChats.length <= 3
+                          ? `${activeChats.length} ${getDeclension(activeChats.length)}`
+                          : `и ещё ${activeChats.length - 3} ${getDeclension(activeChats.length - 3)}`}
                       </div>
                     </div>
                   )}

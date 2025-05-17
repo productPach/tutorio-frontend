@@ -22,6 +22,7 @@ import { io } from "socket.io-client";
 import { getChatsByOrderId } from "@/store/features/chatSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 import { useChat } from "@/context/ChatContext";
+import { getThemesByTopic } from "@/store/features/wikiSlice";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -89,7 +90,12 @@ const OrderPage: React.FC = () => {
   }, [dispatch, token, order]);
 
   useEffect(() => {
-    token && dispatch(getAllTutors(token));
+    if (token) {
+      dispatch(getAllTutors(token));
+      dispatch(
+        getThemesByTopic({ topicId: "67d090b401144e8d6f4eba88", token })
+      );
+    }
   }, [dispatch, token]);
 
   const [isDataLoaded, setIsDataLoaded] = useState(false); // флаг для загрузки данны
@@ -121,6 +127,10 @@ const OrderPage: React.FC = () => {
   // Состояние для свитча
   const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
 
+  const themes = useAppSelector((state) => state.wiki.themes)
+    .filter((theme) => theme.visibleToRoles.includes("student"))
+    .filter((theme) => theme.topicId === "67d090b401144e8d6f4eba88");
+
   return (
     <>
       <section className={clsx(styles.container, styles.center)}>
@@ -148,9 +158,8 @@ const OrderPage: React.FC = () => {
           ) : null}
           {component === 3 && (
             <WikiForOrderComponent
-              loading={loading}
-              student={student}
-              error={error}
+              themes={themes}
+              topicTitle={"📢 Отклики и заказы"}
             />
           )}
           {component === 5 || component === 6 ? (

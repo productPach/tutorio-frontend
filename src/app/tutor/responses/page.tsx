@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
 import { RejectResponseModal } from "@/components/Tutor/Modal/Response/RejectResponseModal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
+import { AcceptResponseModal } from "@/components/Tutor/Modal/Response/AcceptResponseModal";
 
 const ResponsesPage: React.FC = () => {
   const page = "Responses";
@@ -21,6 +22,9 @@ const ResponsesPage: React.FC = () => {
   );
   const descriptionForModalBalanceBoost =
     "Примите заказ — после этого вы сможете пообщаться с учеником и обменяться контактами";
+  const isModalAcceptResponse = useAppSelector(
+    (state) => state.modal.isModalAcceptResponse
+  );
   const isModalRejectResponse = useAppSelector(
     (state) => state.modal.isModalRejectResponse
   );
@@ -60,6 +64,12 @@ const ResponsesPage: React.FC = () => {
         }
         isModal={isModalBalanceBoost}
         modalId={"balanceBoost"}
+      ></Modal>
+      <Modal
+        titleModal={"Принять заказ"}
+        contentModal={<AcceptResponseModal />}
+        isModal={isModalAcceptResponse}
+        modalId={"acceptResponse"}
       ></Modal>
       <Modal
         titleModal={"Отклонить заказ"}

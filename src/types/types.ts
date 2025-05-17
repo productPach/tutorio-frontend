@@ -279,6 +279,7 @@ export type Topic = {
   description: string;
   themes?: Theme[];
   order: number;
+  visibleToRoles: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -289,6 +290,7 @@ export type Theme = {
   title: string;
   content: string;
   order: number;
+  visibleToRoles: string[];
   createdAt: Date;
   updatedAt: Date;
 }

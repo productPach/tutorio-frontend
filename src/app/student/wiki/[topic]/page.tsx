@@ -1,8 +1,7 @@
 "use client";
 import styles from "../../layout.module.css";
 import clsx from "clsx";
-import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import { Topic } from "@/components/Tutor/Wiki/Topic";
+import LeftBar from "@/components/Student/LeftBar/LeftBar";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "@/store/store";
 import { useParams } from "next/navigation";
@@ -14,6 +13,7 @@ import {
 } from "@/store/features/wikiSlice";
 import { shallowEqual } from "react-redux";
 import { InviteSidebar } from "@/components/Tutor/SideBar/InviteSidbar/InviteSidebar";
+import { Topic } from "@/components/Student/Wiki/Topic";
 
 const TopicPage: React.FC = () => {
   const page = "Main";
@@ -25,11 +25,11 @@ const TopicPage: React.FC = () => {
   const topics = useAppSelector(
     (state) => state.wiki.topics,
     shallowEqual
-  ).filter((topic) => topic.visibleToRoles.includes("tutor"));
+  ).filter((topic) => topic.visibleToRoles.includes("student"));
   const themes = useAppSelector(
     (state) => state.wiki.themes,
     shallowEqual
-  ).filter((theme) => theme.visibleToRoles.includes("tutor"));
+  ).filter((theme) => theme.visibleToRoles.includes("student"));
   const { topic } = useParams<{ topic: string }>();
 
   // Находим топик в массиве

@@ -30,6 +30,7 @@ import { useChatSocket } from "@/hooks/useChatSocket";
 import { useChat } from "@/context/ChatContext";
 import { sortMessages } from "@/utils/chat/sortMessages";
 import {
+  setIsModalAcceptResponse,
   setIsModalBalanceBoost,
   setIsModalRejectResponse,
   setValueModalBalanceBoost,
@@ -377,11 +378,13 @@ export const ChatComponent = React.memo(
                         className={chatNoAccessStyles.button}
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalBalanceBoost(true));
-                          orderById?.responseCost &&
-                            dispatch(
-                              setValueModalBalanceBoost(orderById?.responseCost)
-                            );
+                          dispatch(setIsModalAcceptResponse(true));
+                          // Пополнение баланса
+                          // dispatch(setIsModalBalanceBoost(true));
+                          // orderById?.responseCost &&
+                          //   dispatch(
+                          //     setValueModalBalanceBoost(orderById?.responseCost)
+                          //   );
                         }}
                         type="button"
                       >
