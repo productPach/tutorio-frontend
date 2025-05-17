@@ -9,6 +9,7 @@ import { Fragment, useEffect } from "react";
 import styles from "../Modal/Modal.module.css";
 import { useAppDispatch } from "@/store/store";
 import {
+  setIsModalAcceptResponse,
   setIsModalBalanceBoost,
   setIsModalDelete,
   setIsModalEditEducation,
@@ -147,6 +148,11 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "rejectResponse") {
       dispatch(setIsModalRejectResponse(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "acceptResponse") {
+      dispatch(setIsModalAcceptResponse(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
