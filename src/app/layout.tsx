@@ -4,6 +4,7 @@ import ReduxProvider from "@/store/ReduxProvider";
 import VerboxChat from "@/components/Vendor/Verbox/VerboxChat";
 import { SocketProvider } from "@/context/SocketContext";
 import { ChatProvider } from "@/context/ChatContext";
+import CookieBanner from "@/components/Cookie/CookieBanner";
 
 export const metadata: Metadata = {
   title: "Tutorio — место, где встречаются ученики и репетиторы",
@@ -35,8 +36,8 @@ export default function RootLayout({
             <ChatProvider>{children}</ChatProvider>
           </SocketProvider>
         </ReduxProvider>
-
         <VerboxChat />
+        <CookieBanner />
       </body>
     </html>
   );

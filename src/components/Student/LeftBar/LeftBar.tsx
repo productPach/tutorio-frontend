@@ -1,5 +1,6 @@
 "use client";
 import styles from "../../../app/tutor/layout.module.css";
+import stylesStudent from "../../../app/student/layout.module.css";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -65,9 +66,18 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
             </ul>
           </div>
         ))}
-      <button className={clsx(styles.content_block_button, styles.buttonBlc)}>
-        Новый заказ
-      </button>
+      <Link href={"/"} prefetch={true}>
+        <button
+          className={clsx(
+            styles.content_block_button,
+            styles.buttonBlc,
+            stylesStudent.wdth100
+          )}
+        >
+          Новый заказ
+        </button>
+      </Link>
+
       <div className={styles.left_menu}>
         <ul>
           <Link href={"/student/orders"} prefetch={true}>

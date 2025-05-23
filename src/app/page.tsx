@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 import { HeaderMenu } from "@/components/HeaderMenu/HeaderMenu";
+import Link from "next/link";
 
 export default function Home() {
   return (

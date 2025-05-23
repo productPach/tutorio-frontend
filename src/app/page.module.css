@@ -444,3 +444,40 @@
   color: #d9dee8;
   cursor: pointer;
 } /*# sourceMappingURL=style.css.map */
+.cookie_container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  color: white;
+  padding: 16px;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
+}
+.cookie_link {
+  color: white;
+  text-decoration: underline;
+}
+.content_block_button {
+  padding: 18px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.buttonBlc {
+  background-color: black;
+  color: white;
+}
+.buttonYlw {
+  background-color: #fad949;
+  color: black;
+}

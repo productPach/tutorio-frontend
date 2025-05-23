@@ -116,9 +116,6 @@ const Orders = () => {
     <>
       {activeOrders.length > 0
         ? activeOrders.map((order) => {
-            const stat = chats.find((chat) => chat.orderId == order.id)?.status;
-            console.log(stat);
-
             if (
               chats.find((chat) => chat.orderId === order.id)?.status ===
               "Rejected"
