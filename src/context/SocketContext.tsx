@@ -38,7 +38,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       socket.on("connect", () => {
-        console.log("✅ Socket connected:", socket.id);
+        //console.log("✅ Socket connected:", socket.id);
 
         // Проверка на роль и настройка сокета
         if (student?.id) {
@@ -49,12 +49,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       socket.on("disconnect", () => {
-        console.log("❌ Socket disconnected");
+        //console.log("❌ Socket disconnected");
       });
 
       // Логика обработки события emailVerified
       socket.on("emailVerified", ({ studentId, tutorId }) => {
-        console.log("📩 Email verified:", studentId || tutorId);
+        //console.log("📩 Email verified:", studentId || tutorId);
 
         if (studentId) {
           dispatch(getCurrentStudent(token)); // Диспатчим для студента

@@ -159,8 +159,8 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
       const { width: canvasWidth, height: canvasHeight } =
         await getImageDimensions(preview);
 
-      console.log("Исходные размеры:", canvasWidth, canvasHeight);
-      console.log("Размеры обрезки:", croppedAreaPixels);
+      //console.log("Исходные размеры:", canvasWidth, canvasHeight);
+      //console.log("Размеры обрезки:", croppedAreaPixels);
 
       // Используем canvasWidth и canvasHeight для передачи в getCroppedImg
       const croppedImageBase64 = await getCroppedImg(
@@ -170,7 +170,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
         canvasWidth
       );
 
-      console.log("Полученное обрезанное изображение:", croppedImageBase64);
+      //console.log("Полученное обрезанное изображение:", croppedImageBase64);
       setPreview(croppedImageBase64); // Показываем превью
       setIsCropping(false);
     }
