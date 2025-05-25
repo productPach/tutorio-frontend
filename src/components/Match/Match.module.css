@@ -460,3 +460,14 @@
   border: none;
   cursor: pointer;
 }
+.forWrap {
+  gap: 20px;
+  align-items: center;
+}
+.policyPrivacyContainer {
+  font-size: 13px;
+  color: #777;
+}
+.positionInit {
+  position: initial;
+}

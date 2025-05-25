@@ -15,6 +15,7 @@ import {
   fetchUpdSecretUser,
 } from "@/api/server/userApi";
 import { performActionBasedOnUserExistence } from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
+import Link from "next/link";
 
 interface ComponentRenderProps {
   id: number;
@@ -302,7 +303,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             )}
           </div>
         </div>
-        <div className={styles.wrapButton}>
+        <div className={clsx(styles.wrapButton, styles.forWrap)}>
           <button
             type="button"
             onClick={onClickSms}
@@ -311,6 +312,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
           >
             Продолжить
           </button>
+          <div className={styles.policyPrivacyContainer}>
+            Нажимая на кнопку ты соглашаешься с условиями{" "}
+            <Link target="blank" href={"/docs/policy-privacy"}>
+              пользовательского соглашения
+            </Link>
+          </div>
         </div>
       </div>
     </>

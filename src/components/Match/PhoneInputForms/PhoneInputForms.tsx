@@ -11,6 +11,7 @@ import { sendSms } from "@/utils/sensSms/sendSms";
 import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerator";
 import { performActionBasedOnUserExistence } from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
 import { Spinner } from "@/components/Spinner/Spinner";
+import Link from "next/link";
 
 interface Answer {
   id: number;
@@ -305,11 +306,11 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             )}
           </div>
         </div>
-        <div className={styles.wrapButton}>
+        <div className={clsx(styles.wrapButton, styles.forWrap)}>
           <button
             type="button"
             onClick={onClickSms}
-            className={styles.continueButton}
+            className={clsx(styles.continueButton, styles.positionInit)}
             disabled={
               inputValue.length < 15 || errorInput || !verified || isLoading
             }
@@ -321,6 +322,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
               </div>
             )}
           </button>
+          <div className={styles.policyPrivacyContainer}>
+            Нажимая на кнопку ты соглашаешься с условиями{" "}
+            <Link target="blank" href={"/docs/policy-privacy"}>
+              пользовательского соглашения
+            </Link>
+          </div>
         </div>
       </div>
     </>
