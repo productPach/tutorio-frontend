@@ -49,6 +49,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const cookies = useAppSelector((state) => state.general.cookies);
   const status = "Rega: Locations";
 
   const [listSubjectChecked, setListSubjectChecked] = useState<string[]>([]);
@@ -224,7 +225,11 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
             })}
           </div>
         </div>
-        <div className={styles.wrapButton}>
+        <div
+          className={clsx(styles.wrapButton, {
+            [styles.wrapButtonWithCookieBanner]: !cookies,
+          })}
+        >
           <button
             type="button"
             onClick={() => updateDataTutor()}

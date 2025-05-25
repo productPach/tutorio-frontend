@@ -5,12 +5,14 @@ import clsx from "clsx";
 import Head from "next/head";
 import Link from "next/link";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
+import { useAppSelector } from "@/store/store";
 
 type LayoutComponent = {
   children: ReactNode;
 };
 
 const Layout: React.FC<LayoutComponent> = ({ children }) => {
+  const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   return (
     <>
       <Head>
@@ -34,12 +36,15 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         </div>
       </header>
 
-      <main>{children}</main>
+      <main
+        className={!cookiesAccepted ? styles.main_with_cookies : styles.main}
+      >
+        {children}
+      </main>
 
-      <footer className={clsx(styles.center)}>
+      {/* <footer className={clsx(styles.center)}>
         <p></p>
-        {/* Добавьте здесь другие элементы подвала */}
-      </footer>
+      </footer> */}
     </>
   );
 };

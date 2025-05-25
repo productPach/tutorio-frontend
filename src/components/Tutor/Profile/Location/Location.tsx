@@ -16,11 +16,13 @@ import { Adress } from "./Adress";
 import { CityMultiDropdownForms } from "./CityMultiDropdownForms";
 import { AreaMultiDropdownForms } from "./AreaMultiDropdownForms";
 import { Spinner } from "@/components/Spinner/Spinner";
+import clsx from "clsx";
 
 export const Location = () => {
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   // Получаем значение loading из Redux
   const isLoading = useAppSelector((state) => state.tutor.loading);
   const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
@@ -531,7 +533,13 @@ export const Location = () => {
             </React.Fragment>
           </div>
         </div>
-        <div className={componentLocationStyle.containerButton}>
+
+        <div
+          className={clsx(componentLocationStyle.containerButton, {
+            [componentLocationStyle.containerButton_with_cookies]:
+              !cookiesAccepted,
+          })}
+        >
           <button
             type="button"
             className={componentLocationStyle.saveButton}

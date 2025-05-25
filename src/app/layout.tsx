@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ReduxProvider from "@/store/ReduxProvider";
-import VerboxChat from "@/components/Vendor/Verbox/VerboxChat";
-import { SocketProvider } from "@/context/SocketContext";
-import { ChatProvider } from "@/context/ChatContext";
-import CookieBanner from "@/components/Cookie/CookieBanner";
+import BodyWithProviders from "@/components/Body/BodyWithProviders";
 
 export const metadata: Metadata = {
   title: "Tutorio — место, где встречаются ученики и репетиторы",
@@ -30,15 +27,9 @@ export default function RootLayout({
         />
         {/* <script src="//code.jivo.ru/widget/b6FSfh54M9" async></script> */}
       </head>
-      <body>
-        <ReduxProvider>
-          <SocketProvider>
-            <ChatProvider>{children}</ChatProvider>
-          </SocketProvider>
-        </ReduxProvider>
-        <VerboxChat />
-        <CookieBanner />
-      </body>
+      <ReduxProvider>
+        <BodyWithProviders>{children}</BodyWithProviders>
+      </ReduxProvider>
     </html>
   );
 }
