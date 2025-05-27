@@ -61,6 +61,7 @@ export const ChatComponent = React.memo(
     const tutor = useAppSelector((state) => state.tutor.tutor);
     // Получаем чат из редакса
     const chat = useAppSelector((state) => state.chat.chat);
+    const cookiesAccepted = useAppSelector((state) => state.general.cookies);
 
     const { chats, setChatsState } = useChat();
 
@@ -347,6 +348,7 @@ export const ChatComponent = React.memo(
             <div
               className={clsx(
                 chatStyles.content__chat,
+                { [chatStyles.content__chat_with_cookies]: !cookiesAccepted },
                 chatStyles.flx1,
                 chatStyles.flxClmn,
                 chatStyles.jstContSpcBtwn
@@ -454,11 +456,14 @@ export const ChatComponent = React.memo(
                 generalStyles.order_block,
                 generalStyles.crsr_pntr,
                 chatStyles.order_gap,
-                chatStyles.defaultChatBlock
+                chatStyles.defaultChatBlock,
+                { [chatStyles.defaultChatBlock_with_cookies]: !cookiesAccepted }
               )}
             >
               <div className={chatStyles.defaultChatText}>
-                📬 Выберите чат, чтобы продолжить диалог с учеником
+                {chats.length > 0
+                  ? "📬 Выберите чат, чтобы продолжить диалог с учеником"
+                  : "📬 Здесь появятся чаты с учениками после того, как вы оставите отклики на заказы"}
               </div>
             </div>
           </>

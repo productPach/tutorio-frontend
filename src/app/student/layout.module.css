@@ -11,6 +11,10 @@
   text-decoration: underline;
 }
 
+.wdth100 {
+  width: 100%;
+}
+
 .header {
   width: auto;
   height: 70px;

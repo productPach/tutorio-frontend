@@ -1,35 +1,14 @@
-"use client";
-import styles from "../../layout.module.css";
-import clsx from "clsx";
-import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import { Location } from "@/components/Tutor/Profile/Location/Location";
-import { Modal } from "@/components/Modal/Modal";
-import { SelectCity } from "@/components/SelectCity/SelectCity";
-import { useAppSelector } from "@/store/store";
+import LocationsPage from "@/components/Tutor/Profile/Location/LocationPage";
+import { Metadata } from "next";
 
-const LocationsPage: React.FC = () => {
-  const page = "Main";
-  // Получаем значение isModalSelectCity из Redux
-  const isModalSelectCity = useAppSelector(
-    (state) => state.modal.isModalSelectCity
-  );
-
-  return (
-    <>
-      <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
-        <div className={styles.content}>
-          <Location />
-        </div>
-      </section>
-      <Modal
-        titleModal={"Укажите местоположение"}
-        contentModal={<SelectCity />}
-        isModal={isModalSelectCity}
-        modalId={"selectCity"}
-      ></Modal>
-    </>
-  );
+export const metadata: Metadata = {
+  title: "Место занятий и локации репетитора — Tutorio",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
-export default LocationsPage;
+export default function LocationProfil() {
+  return <LocationsPage />;
+}

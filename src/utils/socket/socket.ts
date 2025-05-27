@@ -6,6 +6,6 @@ import "dotenv/config";
 const socket = io(
   `"http://${process.env.NEXT_PUBLIC_IP}:${process.env.NEXT_PUBLIC_PORT}"`
 );
-console.log("Socket URL:", `${host}${port}`); // Выведем URL в консоль
+//console.log("Socket URL:", `${host}${port}`); // Выведем URL в консоль
 
 export default socket;

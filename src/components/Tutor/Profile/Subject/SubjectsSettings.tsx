@@ -12,11 +12,13 @@ import { SelectSubjectItemProfile } from "./SelectSubjectItemProfile";
 import componentSubjectStyle from "./Subject.module.css";
 import { Subject } from "@/types/types";
 import { Spinner } from "@/components/Spinner/Spinner";
+import clsx from "clsx";
 
 export const SubjectsSettings = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   const [listSubjectChecked, setListSubjectChecked] = useState<string[]>([]);
   const [clickedCategory, setClickedCategory] = useState("");
   const [clickedSubject, setClickedSubject] = useState("");
@@ -201,29 +203,33 @@ export const SubjectsSettings = () => {
               )
           )}
         </div>
-
-        <div className={componentSubjectStyle.containerButton}>
-          <button
-            type="button"
-            className={componentSubjectStyle.saveButton}
-            disabled={!isFormValid() || isLoading || successUpdateTutor}
-            onClick={() => updateDataTutor()}
-          >
-            {successUpdateTutor && updateStatus === "success"
-              ? "Сохранено"
-              : "Сохранить"}
-            {isLoading && (
-              <div className={componentSubjectStyle.buttonYlSpinner}>
-                <Spinner />
-              </div>
-            )}
-          </button>
-          {/* <div>
+      </div>
+      <div
+        className={clsx(componentSubjectStyle.containerButton, {
+          [componentSubjectStyle.containerButton_with_cookies]:
+            !cookiesAccepted,
+        })}
+      >
+        <button
+          type="button"
+          className={componentSubjectStyle.saveButton}
+          disabled={!isFormValid() || isLoading || successUpdateTutor}
+          onClick={() => updateDataTutor()}
+        >
+          {successUpdateTutor && updateStatus === "success"
+            ? "Сохранено"
+            : "Сохранить"}
+          {isLoading && (
+            <div className={componentSubjectStyle.buttonYlSpinner}>
+              <Spinner />
+            </div>
+          )}
+        </button>
+        {/* <div>
             {successUpdateTutor &&
               updateStatus === "success" &&
               "Данные успешно обновлены"}
           </div> */}
-        </div>
       </div>
     </>
   );

@@ -66,6 +66,7 @@ export const ChatComponent = ({
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
   const chat = useAppSelector((state) => state.chat.chat);
+  const cookiesAccepted = useAppSelector((state) => state.general.cookies);
 
   // Стейт для текста сообщения
   const [inputValue, setInputValue] = useState("");
@@ -417,6 +418,7 @@ export const ChatComponent = ({
       <div
         className={clsx(
           chatStyles.content__chat,
+          { [chatStyles.content__chat_with_cookies]: !cookiesAccepted },
           chatStyles.flx1,
           chatStyles.flxClmn,
           chatStyles.jstContSpcBtwn

@@ -14,6 +14,7 @@ import { ordersReducer } from "./features/orderSlice";
 import { locationReducer } from "./features/locationSlice";
 import { wikiReducer } from "./features/wikiSlice";
 import { chatReducer } from "./features/chatSlice";
+import { generalReducer } from "./features/generalSlice";
 
 // Функция makeStore создает и возвращает хранилище Redux с помощью функции configureStore.
 export const makeStore = () => {
@@ -29,6 +30,7 @@ export const makeStore = () => {
       locations: locationReducer,
       wiki: wikiReducer,
       chat: chatReducer,
+      general: generalReducer,
     }),
   });
 };

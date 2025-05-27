@@ -1,124 +1,128 @@
-"use client";
-import { YearsInputForms } from "@/components/Match/YearsInputForm/YearsInputForms";
-import { RadioListForms } from "@/components/Match/RadioListForms/RadioListForms";
-import { listQuestionsAnswers } from "@/utils/listQuestionsAnswers";
-import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
-import { UniversityInputForms } from "@/components/Match/UniversityInputForm/UniversityInputForm";
-import { TextForms } from "@/components/Match/TextForms/TextForms";
-import { CheckboxListForms } from "@/components/Match/CheckboxListForms/CheckboxListForms";
-import { AdressInputForms } from "@/components/Match/AdressInputForms/AdressInputForms";
-import { PhoneInputForms } from "@/components/Match/PhoneInputForms/PhoneInputForms";
-import { ConfirmInputForm } from "@/components/Match/ConfirmInputForms/ConfirmInputForm";
-import { FioInputForms } from "@/components/Match/FioInputForm/FioInputForm";
-import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/store/store";
-import { getTokenFromCookie } from "@/utils/cookies/cookies";
-import { setToken } from "@/store/features/authSlice";
-import { setStudent } from "@/store/features/studentSlice";
-import { getStudentFromLocalStorage } from "@/utils/localStorage/localStorage";
-import { LocationMultiDropdownForm } from "@/components/Match/LocationMultiDropdownForm/LocationMultiDropdownForm";
+import Match from "@/components/Match/Match";
+import { Metadata } from "next";
 
-interface Answer {
-  id: number;
-  title: string;
-  nextPage: string;
-}
-
-interface ComponentRenderProps {
-  id: number;
-  question: string;
-  description: string;
-  typeForm: string;
-  answerArray: Answer[];
-}
-
-interface ComponentsList {
-  [key: string]: React.ComponentType<ComponentRenderProps>;
-}
-
-const MatchPage: React.FC = () => {
-  const route = useRouter();
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    // Получаем токен из куки
-    // Если токен в куки есть, тогда добавляем токен в Redux
-    const token = getTokenFromCookie();
-    if (token) {
-      dispatch(setToken(token));
-    }
-
-    const student = getStudentFromLocalStorage();
-    if (student) {
-      dispatch(setStudent(student));
-    }
-  }, [dispatch]);
-
-  // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
-  // Если в LS нет объекта с ключом currentMatch, делаем редирект на главную
-  useEffect(() => {
-    if (!getDataMatchLS) {
-      route.push("/");
-    }
-  }, [route]);
-
-  const { typeForm, componentRoute } = useParams<{
-    typeForm: string;
-    componentRoute: string;
-  }>();
-
-  const ComponentsList: ComponentsList = {
-    goal: RadioListForms,
-    class: RadioListForms,
-    studentType: RadioListForms,
-    studentCourse: RadioListForms,
-    deadline: RadioListForms,
-    studentLevel: RadioListForms,
-    tutorGender: RadioListForms,
-    internationalExam: RadioListForms,
-    studyMethods: RadioListForms,
-    studyProgramms: RadioListForms,
-    studentYears: YearsInputForms,
-    studentUniversity: UniversityInputForms,
-    timetable: TextForms,
-    studyPlace: CheckboxListForms,
-    studentAdress: AdressInputForms,
-    studentTrip: LocationMultiDropdownForm,
-    tutorType: RadioListForms,
-    autoContacts: RadioListForms,
-    info: TextForms,
-    fio: FioInputForms,
-    phone: PhoneInputForms,
-    confirmation: ConfirmInputForm,
-  };
-
-  const ComponentRender = ComponentsList[typeForm];
-
-  const questionObject = listQuestionsAnswers.find(
-    (item) => item.typeForm === typeForm
-  );
-  const question = questionObject?.question || "";
-  const description = questionObject?.description || "";
-  const id = questionObject?.id || 0;
-  const answerArray =
-    questionObject?.page.find((page) => page.type === componentRoute)
-      ?.answers || [];
-
-  return (
-    <>
-      {ComponentRender ? (
-        <ComponentRender
-          id={id}
-          question={question}
-          description={description}
-          typeForm={typeForm}
-          answerArray={answerArray}
-        />
-      ) : null}
-    </>
-  );
+const formMetaMap: { [key: string]: { title: string; description: string } } = {
+  goal: {
+    title: "Цель занятий — Tutorio",
+    description:
+      "Укажите, зачем вам репетитор: подтянуть знания, подготовиться к экзамену или освоить новый материал",
+  },
+  class: {
+    title: "В каком классе ученик — Tutorio",
+    description:
+      "Укажите класс ученика, чтобы мы подобрали подходящего репетитора",
+  },
+  studentType: {
+    title: "Кто будет заниматься — Tutorio",
+    description:
+      "Выберите, кто будет проходить обучение: дошкольник, школьник, студент или взрослый ученик",
+  },
+  studentCourse: {
+    title: "На каком курсе ученик — Tutorio",
+    description:
+      "Уточните курс, если вы студент, чтобы подобрать подходящего преподавателя",
+  },
+  deadline: {
+    title: "Срок подготовки — Tutorio",
+    description:
+      "Укажите, когда у вас экзамен или важная дата, чтобы репетитор мог спланировать обучение",
+  },
+  studentLevel: {
+    title: "Уровень знаний — Tutorio",
+    description: "Оцените текущий уровень знаний — от начального до высокого",
+  },
+  tutorGender: {
+    title: "Пол репетитора — Tutorio",
+    description: "Укажите, если есть предпочтения по полу репетитора",
+  },
+  internationalExam: {
+    title: "Международный экзамен — Tutorio",
+    description:
+      "Укажите, к какому экзамену готовитесь (например, IELTS, SAT, DELE)",
+  },
+  studyMethods: {
+    title: "Методика подготовки — Tutorio",
+    description: "Уточните методику, по которой хотите заниматься",
+  },
+  studyProgramms: {
+    title: "Образовательная программа — Tutorio",
+    description: "Укажите, по какой программе вы учитесь",
+  },
+  studentYears: {
+    title: "Возраст ученика — Tutorio",
+    description:
+      "Укажите возраст, чтобы мы подобрали наиболее подходящего репетитора",
+  },
+  studentUniversity: {
+    title: "ВУЗ ученика — Tutorio",
+    description:
+      "Напишите, в каком университете вы учитесь, это важно для подготовки",
+  },
+  timetable: {
+    title: "Удобное время занятий — Tutorio",
+    description: "Укажите, в какие дни и часы вам удобно заниматься",
+  },
+  studyPlace: {
+    title: "Место занятий — Tutorio",
+    description:
+      "Выберите, где вам удобно заниматься: онлайн, у вас дома или на выезде",
+  },
+  studentAdress: {
+    title: "Адрес ученика — Tutorio",
+    description: "Укажите домашний адрес, если готовы заниматься у себя дома",
+  },
+  studentTrip: {
+    title: "Локации для занятий — Tutorio",
+    description: "Укажите, куда вы готовы ездить на занятия",
+  },
+  tutorType: {
+    title: "Уровень репетитора — Tutorio",
+    description: "Выберите подходящий уровень и ценовой диапазон репетитора",
+  },
+  autoContacts: {
+    title: "Показ контактов — Tutorio",
+    description: "Разрешить репетиторам сразу видеть ваши контакты?",
+  },
+  info: {
+    title: "Дополнительная информация по заказу — Tutorio",
+    description:
+      "Укажите всё, что может помочь подобрать подходящего репетитора",
+  },
+  fio: {
+    title: "Ваше имя — Tutorio",
+    description:
+      "Укажите, как вас зовут — это поможет начать общение с репетитором",
+  },
+  phone: {
+    title: "Укажите номер телефона — Tutorio",
+    description:
+      "Номер будет показываться только выбранным репетиторам и использоваться для связи с вами",
+  },
+  confirmation: {
+    title: "Подтвердите номер телефона — Tutorio",
+    description: "Введите код из СМС, чтобы подтвердить номер телефона",
+  },
 };
 
-export default MatchPage;
+export async function generateMetadata({
+  params,
+}: {
+  params: { typeForm: string };
+}): Promise<Metadata> {
+  const meta = formMetaMap[params.typeForm];
+
+  return {
+    title: meta?.title || "Создание заказа на подбор репетитора — Tutorio",
+    description:
+      meta?.description ||
+      "Заполните форму заказа, чтобы мы нашли для вас подходящего репетитора с учётом ваших целей, уровня знаний и предпочтений",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
+
+export default function MatchPage() {
+  return <Match />;
+}

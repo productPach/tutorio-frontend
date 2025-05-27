@@ -17,6 +17,7 @@ import {
   updateTutor,
 } from "@/store/features/tutorSlice";
 import { getAllLocations } from "@/store/features/locationSlice";
+import clsx from "clsx";
 
 interface ComponentRenderProps {
   id: number;
@@ -67,6 +68,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   const status = "Rega: Email";
   const regionUser = useAppSelector((state) => state.auth.regionUser);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -642,7 +644,11 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
             </React.Fragment>
           </div>
         </div>
-        <div className={styles.wrapButtonStandart}>
+        <div
+          className={clsx(styles.wrapButtonStandart, {
+            [styles.wrapButtonStandart_with_cookies]: !cookiesAccepted,
+          })}
+        >
           <button
             type="button"
             disabled={!isFormValid()}

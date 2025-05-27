@@ -18,14 +18,14 @@ export const getCroppedImg = async (
   canvas.width = croppedAreaPixels.width;
   canvas.height = croppedAreaPixels.height;
 
-  console.log(canvas.width);
-  console.log(canvas.height);
+  //console.log(canvas.width);
+  //console.log(canvas.height);
 
   // Вычисление смещения (может потребоваться, если croppedAreaPixels - относительные координаты)
   const offsetX = croppedAreaPixels.x;
   const offsetY = croppedAreaPixels.y;
-  console.log(offsetX);
-  console.log(offsetY);
+  //console.log(offsetX);
+  //console.log(offsetY);
 
   // Рисуем изображение на канвасе с учетом смещения
   ctx.drawImage(

@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation"; // Правильный импо�
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { getChatsByUserId } from "@/store/features/chatSlice";
 import { useChat } from "@/context/ChatContext";
+import Link from "next/link";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -106,42 +107,37 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         </div>
       ) : (
         <>
-          <Head>
-            <title>Tutorio — вход для репетиторов</title>
-            <meta
-              name="description"
-              content="Бесплатно подберём репетитора под ваш запрос и бюджет. Проверенные репетиторы."
-            />
-          </Head>
           <header>
             <div className={clsx(styles.header, styles.center)}>
-              <a href="#">
+              <Link href="/tutor/orders">
                 <div className={styles.header__logo}>
                   tutorio
                   <span className={styles.header__underLogo}>
                     Онлайн-сервис подбора репетиторов
                   </span>
                 </div>
-              </a>
-              <div className={styles.header__menu}>
-                {tutor && (
-                  <>
-                    <span>{tutor.name}</span>
-                    <Image
-                      className={styles.header__menu_avatar}
-                      src={
-                        tutor?.avatarUrl
-                          ? `${host}${port}${tutor?.avatarUrl}`
-                          : `/img/tutor/avatarBasic.png`
-                      }
-                      alt={`${tutor?.name}`}
-                      width={42}
-                      height={42}
-                      priority
-                    />
-                  </>
-                )}
-              </div>
+              </Link>
+              <Link href="/tutor/orders">
+                <div className={styles.header__menu}>
+                  {tutor && (
+                    <>
+                      <span>{tutor.name}</span>
+                      <Image
+                        className={styles.header__menu_avatar}
+                        src={
+                          tutor?.avatarUrl
+                            ? `${host}${port}${tutor?.avatarUrl}`
+                            : `/img/tutor/avatarBasic.png`
+                        }
+                        alt={`${tutor?.name}`}
+                        width={42}
+                        height={42}
+                        priority
+                      />
+                    </>
+                  )}
+                </div>
+              </Link>
             </div>
           </header>
           {tutor && <main>{children}</main>}

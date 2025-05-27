@@ -38,8 +38,6 @@ export default function VerifyEmailPage() {
       const decodedToken = jwtDecode<DecodedToken>(token); // Декодируем токен
       const userType = decodedToken.userType; // Получаем userType из payload токена
 
-      console.log(userType);
-
       // Вызываем нужный метод в зависимости от userType
       const action = userType === "tutor" ? verifyEmail : verifyEmailStudent;
 

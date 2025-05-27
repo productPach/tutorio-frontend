@@ -115,7 +115,7 @@ export const PhoneModal = () => {
         const existUser = await userExistence(to, student.phone, confirmCode);
 
         if (!existUser) {
-          console.log("Номер телефона уже занят");
+          //console.log("Номер телефона уже занят");
           setError(true);
           setLoadingFormSms(false);
           return;

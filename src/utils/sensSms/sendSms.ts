@@ -12,7 +12,7 @@ export const sendSms = async (to: string, msg: string) => {
     if (!response.ok) {
       throw new Error(data.error || 'Failed to send SMS');
     }
-    console.log('Ответ от API:', data);
+    //console.log('Ответ от API:', data);
     //setMessage('SMS sent successfully');
   } catch (error) {
     //console.error('Ошибка при отправке SMS:', error);

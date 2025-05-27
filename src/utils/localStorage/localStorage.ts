@@ -6,6 +6,7 @@ export const setLocalStorage = (key: string, value: string | object) => {
   
   // Чтение значения из Local Storage
   export const getLocalStorage = (key: string): string | null => {
+    if (typeof window === "undefined") return null;
     return localStorage.getItem(key);
   };
   

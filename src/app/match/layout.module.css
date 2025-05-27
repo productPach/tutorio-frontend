@@ -74,3 +74,9 @@
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
 }
+.main_with_cookies {
+  margin-bottom: 174px;
+}
+.main {
+  margin-bottom: 88px;
+}

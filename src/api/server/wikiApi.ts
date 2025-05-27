@@ -43,7 +43,7 @@ export const fetchGetAllTopics = async (token: string): Promise<Topic[]> => {
 };
 
 // Получение топика по ID
-export const fetchGetTopicById = async (id: string, token:string): Promise<Topic> => {
+export const fetchGetTopicById = async (id: string, token?:string): Promise<Topic> => {
     try {
       const response = await fetch(`${baseUrl}topics/${id}`, {
         method: "GET",
@@ -127,7 +127,7 @@ export const fetchGetAllThemes = async (token: string): Promise<Theme[]> => {
   };
   
   // Получение тем для конкретного топика
-  export const fetchGetThemesByTopic = async (topicId: string, token: string): Promise<Theme[]> => {
+  export const fetchGetThemesByTopic = async (topicId: string, token?: string): Promise<Theme[]> => {
     try {
       const response = await fetch(`${baseUrl}topics/${topicId}/themes`, {
         method: "GET",

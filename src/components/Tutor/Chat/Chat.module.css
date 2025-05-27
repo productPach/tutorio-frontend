@@ -20,6 +20,9 @@
   height: calc(100vh - 196px); /* Учитываем высоту шапки */
   margin-bottom: 0px;
 }
+.content__chat_with_cookies {
+  height: calc(100vh - 283px);
+}
 .flx1 {
   flex: 1;
 }
@@ -314,6 +317,9 @@
   background-size: 600px auto;
   background-repeat: repeat;
   background-position: center;
+}
+.defaultChatBlock_with_cookies {
+  height: calc(100vh - 230px);
 }
 .defaultChatText {
   width: 225px;

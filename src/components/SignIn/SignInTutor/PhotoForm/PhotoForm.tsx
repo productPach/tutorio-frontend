@@ -14,6 +14,7 @@ import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/images/getCroppedImg";
 import { updateTutor, updateTutorAvatar } from "@/store/features/tutorSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import clsx from "clsx";
 
 interface ComponentRenderProps {
   id: number;
@@ -43,6 +44,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState("");
@@ -157,8 +159,8 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
       const { width: canvasWidth, height: canvasHeight } =
         await getImageDimensions(preview);
 
-      console.log("Исходные размеры:", canvasWidth, canvasHeight);
-      console.log("Размеры обрезки:", croppedAreaPixels);
+      //console.log("Исходные размеры:", canvasWidth, canvasHeight);
+      //console.log("Размеры обрезки:", croppedAreaPixels);
 
       // Используем canvasWidth и canvasHeight для передачи в getCroppedImg
       const croppedImageBase64 = await getCroppedImg(
@@ -168,7 +170,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
         canvasWidth
       );
 
-      console.log("Полученное обрезанное изображение:", croppedImageBase64);
+      //console.log("Полученное обрезанное изображение:", croppedImageBase64);
       setPreview(croppedImageBase64); // Показываем превью
       setIsCropping(false);
     }
@@ -289,7 +291,11 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
           )}
         </div>
 
-        <div className={styles.wrapButtonStandart}>
+        <div
+          className={clsx(styles.wrapButtonStandart, {
+            [styles.wrapButtonStandart_with_cookies]: !cookiesAccepted,
+          })}
+        >
           <button
             type="button"
             onClick={() => handleNextStep(nextPage)}

@@ -28,13 +28,19 @@
   background-color: #f1f2f4; /* добавлено */
   padding: 20px 0;
   box-shadow: 0 0 30px 30px #f1f2f4;
-  z-index: 99;
+  z-index: 9;
+}
+.wrapButtonWithCookieBanner {
+  bottom: 86px;
 }
 
 .wrapButtonStandart {
   display: flex;
   flex-direction: row;
   background-color: #f1f2f4;
+}
+.wrapButtonStandart_with_cookies {
+  margin-bottom: 20px;
 }
 
 .wrapButtonPhoto {
@@ -355,7 +361,7 @@
   position: relative;
   cursor: pointer;
   margin-top: -2px;
-  z-index: 10;
+  z-index: 9;
 
   &:after {
     content: "";
@@ -613,4 +619,12 @@
   font-family: "Source Sans 3", sans-serif;
   cursor: pointer;
   background-color: white;
+}
+.forWrap {
+  gap: 20px;
+  align-items: center;
+}
+.policyPrivacyContainer {
+  font-size: 13px;
+  color: #777;
 }

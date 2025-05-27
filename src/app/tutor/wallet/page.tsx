@@ -1,22 +1,14 @@
-"use client";
-import styles from "../layout.module.css";
-import clsx from "clsx";
-import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import { Wallet } from "@/components/Tutor/Wallet/Wallet";
+import WalletPage from "@/components/Tutor/Wallet/WalletPage";
+import { Metadata } from "next";
 
-const WalletPage: React.FC = () => {
-  const page = "Wallet";
-
-  return (
-    <>
-      <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
-        <div className={styles.content}>
-          <Wallet />
-        </div>
-      </section>
-    </>
-  );
+export const metadata: Metadata = {
+  title: "Баланс личного кабинета — Tutorio",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
-export default WalletPage;
+export default function WalletProfil() {
+  return <WalletPage />;
+}
