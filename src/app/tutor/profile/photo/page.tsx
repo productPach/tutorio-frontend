@@ -1,22 +1,14 @@
-"use client";
-import styles from "../../layout.module.css";
-import clsx from "clsx";
-import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import { Photo } from "@/components/Tutor/Profile/Photo/Photo";
+import PhotoPage from "@/components/Tutor/Profile/Photo/PhotoPage";
+import { Metadata } from "next";
 
-const PhotoPage: React.FC = () => {
-  const page = "Main";
-
-  return (
-    <>
-      <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
-        <div className={styles.content}>
-          <Photo />
-        </div>
-      </section>
-    </>
-  );
+export const metadata: Metadata = {
+  title: "Фотография анкеты репетитора — Tutorio",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
-export default PhotoPage;
+export default function PhotoProfil() {
+  return <PhotoPage />;
+}

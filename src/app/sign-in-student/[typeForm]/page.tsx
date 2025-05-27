@@ -18,14 +18,18 @@ export async function generateMetadata({
 }: {
   params: { typeForm: string };
 }): Promise<Metadata> {
-  return (
-    formMetaMap[params.typeForm] || {
-      title: "Авторизация ученика — Tutorio",
-      description: "Вход ученика в Tutorio",
-    }
-  );
+  const meta = formMetaMap[params.typeForm];
+
+  return {
+    title: meta?.title || "Авторизация ученика — Tutorio",
+    description: meta?.description || "Вход ученика в Tutorio",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
 }
 
-export default function SignInTutorPage() {
+export default function SignInStudentPage() {
   return <SignInStudent />;
 }

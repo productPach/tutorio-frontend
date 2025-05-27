@@ -1,34 +1,15 @@
-"use client";
-import styles from "../../../layout.module.css";
-import clsx from "clsx";
-import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
-import { SubjectsSettings } from "@/components/Tutor/Profile/Subject/SubjectsSettings";
-import { Modal } from "@/components/Modal/Modal";
-import { SubjectModal } from "@/components/Tutor/Modal/Profil/Subject/SubjectModal";
-import { useAppSelector } from "@/store/store";
+import SubjectsPage from "@/components/Tutor/Profile/Subject/SubjectPage";
+import SubjectsSettingsPage from "@/components/Tutor/Profile/Subject/SubjectSettingsPage";
+import { Metadata } from "next";
 
-const SubjectsSettingsPage: React.FC = () => {
-  const page = "Main";
-  const isModalEditSubjectPrices = useAppSelector(
-    (state) => state.modal.isModalEditSubjectPrices
-  );
-
-  return (
-    <>
-      <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
-        <div className={styles.content}>
-          <SubjectsSettings />
-        </div>
-      </section>
-      <Modal
-        titleModal={"Редактор предмета:"}
-        contentModal={<SubjectModal />}
-        isModal={isModalEditSubjectPrices}
-        modalId={"editSubjectPrices"}
-      ></Modal>
-    </>
-  );
+export const metadata: Metadata = {
+  title: "Редактор предметов, ставки по занятиям — Tutorio",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
-export default SubjectsSettingsPage;
+export default function SubjectSettingsProfil() {
+  return <SubjectsSettingsPage />;
+}

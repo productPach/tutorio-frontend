@@ -109,13 +109,18 @@ export async function generateMetadata({
 }: {
   params: { typeForm: string };
 }): Promise<Metadata> {
-  return (
-    formMetaMap[params.typeForm] || {
-      title: "Создание заказа на подбор репетитора — Tutorio",
-      description:
-        "Заполните форму заказа, чтобы мы нашли для вас подходящего репетитора с учётом ваших целей, уровня знаний и предпочтений",
-    }
-  );
+  const meta = formMetaMap[params.typeForm];
+
+  return {
+    title: meta?.title || "Создание заказа на подбор репетитора — Tutorio",
+    description:
+      meta?.description ||
+      "Заполните форму заказа, чтобы мы нашли для вас подходящего репетитора с учётом ваших целей, уровня знаний и предпочтений",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
 }
 
 export default function MatchPage() {

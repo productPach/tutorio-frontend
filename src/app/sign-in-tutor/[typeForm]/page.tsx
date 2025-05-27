@@ -43,12 +43,16 @@ export async function generateMetadata({
 }: {
   params: { typeForm: string };
 }): Promise<Metadata> {
-  return (
-    formMetaMap[params.typeForm] || {
-      title: "Регистрация репетитора — Tutorio",
-      description: "Создайте профиль и начните преподавать.",
-    }
-  );
+  const meta = formMetaMap[params.typeForm];
+
+  return {
+    title: meta?.title || "Регистрация репетитора — Tutorio",
+    description: meta?.description || "Создайте профиль и начните преподавать",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
 }
 
 export default function SignInTutorPage() {

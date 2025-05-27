@@ -107,13 +107,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         </div>
       ) : (
         <>
-          <Head>
-            <title>Tutorio — вход для репетиторов</title>
-            <meta
-              name="description"
-              content="Бесплатно подберём репетитора под ваш запрос и бюджет. Проверенные репетиторы."
-            />
-          </Head>
           <header>
             <div className={clsx(styles.header, styles.center)}>
               <Link href="/tutor/orders">
