@@ -324,7 +324,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
           </button>
           <div className={styles.policyPrivacyContainer}>
             Нажимая на кнопку ты соглашаешься с условиями{" "}
-            <Link target="blank" href={"/docs/policy-privacy"}>
+            <Link target="blank" href={"/docs/agreement"}>
               пользовательского соглашения
             </Link>
           </div>
