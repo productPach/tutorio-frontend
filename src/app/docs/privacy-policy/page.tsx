@@ -1,7 +1,5 @@
-import Image from "next/image";
 import styles from "../../page.module.css";
 import clsx from "clsx";
-import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 import { HeaderMenu } from "@/components/HeaderMenu/HeaderMenu";
 import Link from "next/link";
@@ -58,14 +56,14 @@ export default function PrivacyPolicy() {
     <>
       <header>
         <div className={clsx(styles.header, styles.center)}>
-          <a href="#">
+          <Link href="/">
             <div className={styles.header__logo}>
               tutorio
               <span className={styles.header__underLogo}>
                 Онлайн-сервис подбора репетиторов
               </span>
             </div>
-          </a>
+          </Link>
           <SelectCityModal />
           <HeaderMenu />
         </div>

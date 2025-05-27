@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import styles from "./layout.module.css";
 import clsx from "clsx";
-import Head from "next/head";
 import Link from "next/link";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 
@@ -12,13 +11,6 @@ type LayoutComponent = {
 const Layout: React.FC<LayoutComponent> = ({ children }) => {
   return (
     <>
-      <Head>
-        <title>Tutorio — вход для репетиторов</title>
-        <meta
-          name="description"
-          content="Бесплатно подберём репетитора под ваш запрос и бюджет. Проверенные репетиторы."
-        />
-      </Head>
       <header>
         <div className={clsx(styles.header, styles.center)}>
           <SelectCityModal />

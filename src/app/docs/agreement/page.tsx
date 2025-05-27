@@ -1,25 +1,49 @@
-"use client";
-import Image from "next/image";
 import styles from "../../page.module.css";
 import clsx from "clsx";
-import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 import { HeaderMenu } from "@/components/HeaderMenu/HeaderMenu";
 import Link from "next/link";
+
+export const metadata = {
+  title: "Пользовательское соглашение — Tutorio",
+  description:
+    "Пользовательское соглашение сервиса Tutorio — правила использования платформы для учеников и репетиторов",
+  keywords: [
+    "пользовательское соглашение",
+    "Tutorio",
+    "правила сервиса",
+    "условия использования",
+    "договор оферта",
+    "репетиторский сервис",
+    "онлайн обучение",
+    "поиск репетиторов",
+    "поиск учеников",
+    "платформа для репетиторов",
+    "услуги онлайн-обучения",
+    "обязанности пользователя",
+    "ответственность сторон",
+    "согласие с условиями",
+    "регистрация на платформе",
+    "использование сайта",
+    "дистанционное обучение",
+    "взаимодействие с учениками",
+    "взаимодействие с репетиторами",
+  ],
+};
 
 export default function Agreement() {
   return (
     <>
       <header>
         <div className={clsx(styles.header, styles.center)}>
-          <a href="#">
+          <Link href="/">
             <div className={styles.header__logo}>
               tutorio
               <span className={styles.header__underLogo}>
                 Онлайн-сервис подбора репетиторов
               </span>
             </div>
-          </a>
+          </Link>
           <SelectCityModal />
           <HeaderMenu />
         </div>
