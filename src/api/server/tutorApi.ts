@@ -1,4 +1,4 @@
-import { LessonDuration, TutorSubjectPriceInput } from "@/types/types";
+import { LessonDuration, Tutor, TutorSubjectPriceInput } from "@/types/types";
 import { baseUrl } from "./configApi";
 
 // Регистрация репетитора
@@ -419,4 +419,28 @@ export const fetchTutorById = async (id: string, token: string) => {
 
   const data = await response.json();
   return data;
+};
+
+// Получение репетитора по ID (Публичный)
+export const fetchTutorByIdPublic = async (id: string): Promise<Tutor> => {
+  try {
+    const response = await fetch(`${baseUrl}public/tutors/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store", // если ты хочешь отключить кэш
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.tutor;
+
+  } catch (error) {
+    console.error("Ошибка при получении репетитора:", error);
+    throw error;
+  }
 };

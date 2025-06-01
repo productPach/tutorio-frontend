@@ -1,54 +1,16 @@
-"use client";
-import styles from "../layout.module.css";
-import clsx from "clsx";
-import { useEffect } from "react";
-import { useAppDispatch } from "@/store/store";
-import { useRouter } from "next/navigation";
-import LeftBar from "@/components/Student/LeftBar/LeftBar";
-import Orders from "@/components/Student/Orders/Orders";
-import {
-  setComponentMenu,
-  updateScrollPosition,
-} from "@/store/features/orderSlice";
+import OrdersPage from "@/components/Student/Orders/OrdersPage";
+import { Metadata } from "next";
 
-const StudentOrder: React.FC = () => {
-  const page = "Orders";
-  const dispatch = useAppDispatch();
-  // Выполнение dispatch в useEffect, чтобы избежать выполнения в процессе рендеринга
-  useEffect(() => {
-    dispatch(setComponentMenu(1));
-    dispatch(updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 }));
-  }, [dispatch]);
-
-  useEffect(() => {
-    localStorage.removeItem("confirm-code");
-    localStorage.removeItem("current-user");
-    localStorage.removeItem("origin-phone");
-    localStorage.removeItem("confirm-time");
-    localStorage.removeItem("_cr-tripData");
-    localStorage.removeItem("currentMatch");
-  }, []);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    router.prefetch("/orders");
-    router.prefetch("/responses");
-    router.prefetch("/profile");
-    router.prefetch("/wallet");
-    router.prefetch("/settings");
-  }, [router]);
-
-  return (
-    <>
-      <section className={clsx(styles.container, styles.center)}>
-        <LeftBar page={page} />
-        <div className={clsx(styles.contentFull)}>
-          <Orders />
-        </div>
-      </section>
-    </>
-  );
+export const metadata: Metadata = {
+  title: "Заказы — Tutorio",
+  description:
+    "Следите за своими заказами, просматривайте статус и отклики репетиторов",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
-export default StudentOrder;
+export default function StudentOrdersPage() {
+  return <OrdersPage />;
+}
