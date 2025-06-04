@@ -43,14 +43,14 @@ export const HeaderMenu = () => {
     tutor?.status === "Active" ||
     tutor?.status === "Canceled delete"
   ) {
-    nextPage = "tutor/orders";
+    nextPage = "/tutor/orders";
   }
   if (
     student?.status === "Pending" ||
     student?.status === "Active" ||
     student?.status === "Canceled delete"
   ) {
-    nextPage = "student/orders";
+    nextPage = "/student/orders";
   }
 
   return (
