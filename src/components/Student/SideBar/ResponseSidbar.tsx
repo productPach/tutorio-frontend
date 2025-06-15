@@ -22,7 +22,7 @@ import ChatAnimation from "../../../../public/lottie/Chat.json"; // JSON-ани�
 import { setComponentMenu, updateOrder } from "@/store/features/orderSlice";
 import { Chat, Order, Tutor } from "@/types/types";
 import clsx from "clsx";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
@@ -276,7 +276,7 @@ export const ResponseSidbar = ({
                         {chat.tutor && (
                           <Image
                             className={styles.studentChatImg}
-                            src={`${host}${port}${chat?.tutor.avatarUrl}`}
+                            src={`${getBackendUrl()}${chat?.tutor.avatarUrl}`}
                             width={66}
                             height={66}
                             alt=""

@@ -2,7 +2,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
-import Head from "next/head";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
@@ -10,13 +9,11 @@ import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getCurrentTutor, updateTutor } from "@/store/features/tutorSlice";
 import Image from "next/image";
-import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { usePathname } from "next/navigation"; // Правильный импорт для использования пути
-import { useChatSocket } from "@/hooks/useChatSocket";
 import { getChatsByUserId } from "@/store/features/chatSlice";
-import { useChat } from "@/context/ChatContext";
 import Link from "next/link";
+import { getBackendUrl } from "@/api/server/configApi";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -97,6 +94,10 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       );
   }, [tutor?.userId, token]);
 
+  const avatarSrc = tutor?.avatarUrl
+    ? `${getBackendUrl()}${tutor.avatarUrl}`
+    : "/img/tutor/avatarBasic.png";
+
   return (
     <>
       {!isLoadedPage ? (
@@ -124,11 +125,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
                       <span>{tutor.name}</span>
                       <Image
                         className={styles.header__menu_avatar}
-                        src={
-                          tutor?.avatarUrl
-                            ? `${host}${port}${tutor?.avatarUrl}`
-                            : `/img/tutor/avatarBasic.png`
-                        }
+                        src={avatarSrc}
                         alt={`${tutor?.name}`}
                         width={42}
                         height={42}

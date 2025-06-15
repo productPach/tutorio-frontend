@@ -17,7 +17,7 @@ import { formatTimeAgo } from "@/utils/date/date";
 import Image from "next/image";
 import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
 import { getDeclension } from "@/utils/words/getDeclension";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
 import { setChat } from "@/store/features/chatSlice";
 
 const Orders = () => {
@@ -445,7 +445,7 @@ const Orders = () => {
                           <Image
                             key={chat.id}
                             className={styles.studentResponseImg}
-                            src={`${host}${port}${chat.tutor.avatarUrl}`}
+                            src={`${getBackendUrl()}${chat.tutor.avatarUrl}`}
                             width={36}
                             height={36}
                             alt=""

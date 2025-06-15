@@ -9,7 +9,7 @@ import { CroppedAreaPixels } from "@/types/types";
 import { useDropzone } from "react-dropzone";
 import Cropper from "react-easy-crop";
 import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
 
 export const Photo = () => {
   const dispatch = useAppDispatch();
@@ -174,6 +174,10 @@ export const Photo = () => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
 
+  const avatarSrc = tutor?.avatarUrl
+    ? `${getBackendUrl()}${tutor.avatarUrl}`
+    : "/img/tutor/avatarBasic.png";
+
   return (
     <>
       <div className={stylesTutor.content_block}>
@@ -197,11 +201,7 @@ export const Photo = () => {
         {!file && tutor?.avatarUrl && !isCropping ? (
           <div className={styles.imagePreview}>
             <Image
-              src={
-                tutor?.avatarUrl
-                  ? `${host}${port}${tutor?.avatarUrl}`
-                  : `/img/tutor/avatarBasic.png`
-              }
+              src={avatarSrc}
               alt="Аватар"
               width={200}
               height={200}

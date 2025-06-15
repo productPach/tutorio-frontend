@@ -1,19 +1,14 @@
-import { fetchGetPublicOrderById } from "@/api/server/orderApi";
 import { fetchTutorByIdPublic } from "@/api/server/tutorApi";
 import TutorPage from "@/components/Student/Tutor/TutorPage";
-import { data } from "@/utils/listSubjects";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
-type Props = {
-  params: {
-    order: string;
-    tutor: string;
-  };
-};
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // Вытянем из контекста params.tutor
+  const params = (context as { params: { order: string; tutor: string } })
+    .params;
+  const tutorId = params.tutor;
 
-// Динамическая генерация мета-тегов
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tutor = await fetchTutorByIdPublic(params.tutor);
+  const tutor = await fetchTutorByIdPublic(tutorId);
 
   if (!tutor) {
     return {

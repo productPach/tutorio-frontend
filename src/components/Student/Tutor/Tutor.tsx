@@ -5,7 +5,7 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { City, Order, Tutor } from "@/types/types";
 import Image from "next/image";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from "react";
@@ -73,7 +73,7 @@ export const TutorComponent = ({
   const slidesPerTutor: SlideImage[] = tutor.educations.flatMap((diplom) =>
     diplom.isShowDiplom
       ? diplom.educationDiplomUrl.map((imgDiplom) => ({
-          src: `${host}${port}${imgDiplom}`,
+          src: `${getBackendUrl()}${imgDiplom}`,
         }))
       : []
   );
@@ -99,7 +99,7 @@ export const TutorComponent = ({
 
   const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
   const tutorAvatar = tutor.avatarUrl
-    ? `${host}${port}${tutor.avatarUrl}`
+    ? `${getBackendUrl()}${tutor.avatarUrl}`
     : randomAvatar;
 
   const regionIndex = citiesAndRegions.findIndex(

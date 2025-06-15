@@ -43,7 +43,9 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const getDataMatchLS = localStorage.getItem("current-user");
-  const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
+  const dataMatch: Partial<Order>[] = getDataMatchLS
+    ? JSON.parse(getDataMatchLS)
+    : [];
 
   useEffect(() => {
     const regionUserJson = localStorage.getItem("region-user");
@@ -105,7 +107,7 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
 
   // При перезагрузке страницы высстанавилваемданные из LS
   useEffect(() => {
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
+    const currentDataMatch = dataMatch.find((obj) => Number(obj.id) === id);
     const valueProperty = currentDataMatch
       ? currentDataMatch.locationsTripCity
       : "";
@@ -162,8 +164,10 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
       return;
     }
 
-    const existingData = dataMatch.find((item) => item.id === id) || {
-      id,
+    const existingData: Partial<Order> = dataMatch.find(
+      (item) => Number(item.id) === id
+    ) || {
+      id: String(id),
       locationsTripArea: [],
       locationsTripCity: [],
       locations: [],
@@ -177,8 +181,8 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
     }));
 
     // Удаляем старую запись с тем же id и добавляем обновленную запись
-    const updatedDataMatch = dataMatch
-      .filter((item) => item.id !== id)
+    const updatedDataMatch: Partial<Order>[] = dataMatch
+      .filter((item) => Number(item.id) !== id)
       .concat(existingData);
     localStorage.setItem("current-user", JSON.stringify(updatedDataMatch));
   }, [dataMatch, isInitialLoad, id, selectedValuesCity]);

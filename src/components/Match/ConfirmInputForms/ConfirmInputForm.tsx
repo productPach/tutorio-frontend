@@ -45,6 +45,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   let region: string;
   regionUser && (region = regionUser?.city);
+  const regionTest = "Москва";
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -77,150 +78,195 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
-      if (phone) {
-        const token = await dispatch(getToken({ phone, secretCode })).unwrap();
-        setErrorInput(false);
-        if (token) {
-          setIsSuccess(true);
-          await dispatch(getCurrentStudent(token))
-            .unwrap()
-            .catch(() => {
-              const avatars = [
-                "/img/icon/student/avatar/animal1.svg",
-                "/img/icon/student/avatar/animal2.svg",
-                "/img/icon/student/avatar/animal3.svg",
-                "/img/icon/student/avatar/animal4.svg",
-                "/img/icon/student/avatar/animal5.svg",
-                "/img/icon/student/avatar/animal6.svg",
-                "/img/icon/student/avatar/animal7.svg",
-              ];
+      if (!phone) {
+        console.warn("Телефон не найден в localStorage");
+        setErrorInput(true);
+        return;
+      }
 
-              // Выбор случайной аватарки
-              const randomAvatar =
-                avatars[Math.floor(Math.random() * avatars.length)];
+      // Получаем токен
+      const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+      setErrorInput(false);
 
-              const fioDataMatch = dataMatch.find((obj) => obj.id === 19);
-              // Вытаскиваем значение данного объека из свойства fio
-              const fioValue = fioDataMatch ? fioDataMatch.fio : "";
-              fioValue &&
-                // Студента не существет, создаем нового
-                dispatch(
-                  createStudent({
-                    name: fioValue,
-                    phone: phone,
-                    avatarUrl: randomAvatar,
-                    region: region,
-                    token,
-                  })
-                );
-            })
-            .finally(() => {
-              const subjectDataMatch = dataMatch.find(
-                (obj) => obj.id === 0
-              )?.subject;
-              const goalDataMatch = dataMatch.find((obj) => obj.id === 1)?.goal;
-              const classDataMatch = dataMatch.find(
-                (obj) => obj.id === 2
-              )?.class;
-              const studentTypeDataMatch = dataMatch.find(
-                (obj) => obj.id === 3
-              )?.studentType;
-              const studentCourseDataMatch = dataMatch.find(
-                (obj) => obj.id === 4
-              )?.studentCourse;
-              const deadlineDataMatch = dataMatch.find(
-                (obj) => obj.id === 5
-              )?.deadline;
-              const studentLevelDataMatch = dataMatch.find(
-                (obj) => obj.id === 6
-              )?.studentLevel;
-              const studentYearsDataMatch = dataMatch.find(
-                (obj) => obj.id === 7
-              )?.studentYears;
-              const tutorGenderDataMatch = dataMatch.find(
-                (obj) => obj.id === 8
-              )?.tutorGender;
-              const studentUniversityDataMatch = dataMatch.find(
-                (obj) => obj.id === 9
-              )?.studentUniversity;
-              const internationalExamDataMatch = dataMatch.find(
-                (obj) => obj.id === 10
-              )?.internationalExam;
-              const studyMethodsDataMatch = dataMatch.find(
-                (obj) => obj.id === 11
-              )?.studyMethods;
-              const studyProgrammsDataMatch = dataMatch.find(
-                (obj) => obj.id === 12
-              )?.studyProgramms;
-              const timetableDataMatch = dataMatch.find(
-                (obj) => obj.id === 13
-              )?.timetable;
-              const studyPlaceDataMatch = dataMatch.find(
-                (obj) => obj.id === 14
-              )?.studyPlace;
-              const studentAdressDataMatch = dataMatch.find(
-                (obj) => obj.id === 15
-              )?.studentAdress;
-              const studentTripDataMatchLS =
-                dataMatch.find((obj) => obj.id === 16)?.studentTrip || [];
-              const studentTripDataMatch = Array.isArray(studentTripDataMatchLS)
-                ? studentTripDataMatchLS.map((item: { id: string }) => item.id)
-                : [];
-              const tutorTypeDataMatch = dataMatch.find(
-                (obj) => obj.id === 17
-              )?.tutorType;
-              const autoContactsString = dataMatch.find(
-                (obj) => obj.id === 22
-              )?.autoContacts;
-              let autoContactsBoolean;
-              if (autoContactsString === "Да, показывать контакты") {
-                autoContactsBoolean = true;
-              } else {
-                autoContactsBoolean = false;
-              }
-              const infoDataMatch = dataMatch.find(
-                (obj) => obj.id === 18
-              )?.info;
+      if (!token) {
+        console.warn("Токен не получен");
+        setErrorInput(true);
+        return;
+      }
 
-              // Создание заказа
-              fetchCreateOrder(
-                token,
-                subjectDataMatch,
-                goalDataMatch,
-                classDataMatch,
-                studentTypeDataMatch,
-                studentYearsDataMatch,
-                studentCourseDataMatch,
-                studentUniversityDataMatch,
-                internationalExamDataMatch,
-                studyMethodsDataMatch,
-                studyProgrammsDataMatch,
-                deadlineDataMatch,
-                studentLevelDataMatch,
-                tutorGenderDataMatch,
-                timetableDataMatch,
-                region,
-                studyPlaceDataMatch,
-                studentAdressDataMatch,
-                studentTripDataMatch,
-                tutorTypeDataMatch,
-                autoContactsBoolean,
-                infoDataMatch
-              )
-                .then((data) => {
-                  // Вызываем функцию перехода на следующий шаг
-                  handleNextStep(nextPageProperty + data.id);
-                })
-                .catch((error) => {
-                  console.error("Ошибка при создании заказа:", error);
-                });
-            });
-        } else {
-          setErrorInput(true);
+      setIsSuccess(true);
+
+      try {
+        // Пробуем получить студента
+        await dispatch(getCurrentStudent(token)).unwrap();
+        console.log("Студент успешно получен");
+      } catch (error) {
+        console.log(
+          "Ошибка при получении студента, создаём нового студента",
+          error
+        );
+
+        // Массив аватарок для случайного выбора
+        const avatars = [
+          "/img/icon/student/avatar/animal1.svg",
+          "/img/icon/student/avatar/animal2.svg",
+          "/img/icon/student/avatar/animal3.svg",
+          "/img/icon/student/avatar/animal4.svg",
+          "/img/icon/student/avatar/animal5.svg",
+          "/img/icon/student/avatar/animal6.svg",
+          "/img/icon/student/avatar/animal7.svg",
+        ];
+        const randomAvatar =
+          avatars[Math.floor(Math.random() * avatars.length)];
+
+        // Логируем dataMatch для проверки
+        console.log("dataMatch:", dataMatch);
+
+        const fioDataMatch = dataMatch.find((obj) => obj.id == "19");
+        const fioValue = fioDataMatch ? fioDataMatch.fio : "";
+
+        console.log("fioValue для создания студента:", fioValue);
+
+        if (!fioValue) {
+          console.warn("fioValue пустой, не создаём студента");
+          return;
         }
+
+        // Создаём нового студента
+        console.log("Создаем студента:", {
+          name: fioValue,
+          phone,
+          avatarUrl: randomAvatar,
+          region,
+          token,
+        });
+
+        await dispatch(
+          createStudent({
+            name: fioValue,
+            phone,
+            avatarUrl: randomAvatar,
+            region: "Москва",
+            token,
+          })
+        ).unwrap();
+
+        // После создания снова пробуем получить студента
+        await dispatch(getCurrentStudent(token)).unwrap();
+      }
+
+      // После получения студента — создаём заказ
+      try {
+        const subjectDataMatch = dataMatch.find(
+          (obj) => obj.id == "0"
+        )?.subject;
+        const goalDataMatch = dataMatch.find((obj) => obj.id == "1")?.goal;
+        const classDataMatch = dataMatch.find((obj) => obj.id == "2")?.class;
+        const studentTypeDataMatch = dataMatch.find(
+          (obj) => obj.id == "3"
+        )?.studentType;
+        const studentCourseDataMatch = dataMatch.find(
+          (obj) => obj.id == "4"
+        )?.studentCourse;
+        const deadlineDataMatch = dataMatch.find(
+          (obj) => obj.id == "5"
+        )?.deadline;
+        const studentLevelDataMatch = dataMatch.find(
+          (obj) => obj.id == "6"
+        )?.studentLevel;
+        const studentYearsDataMatch = dataMatch.find(
+          (obj) => obj.id == "7"
+        )?.studentYears;
+        const tutorGenderDataMatch = dataMatch.find(
+          (obj) => obj.id == "8"
+        )?.tutorGender;
+        const studentUniversityDataMatch = dataMatch.find(
+          (obj) => obj.id == "9"
+        )?.studentUniversity;
+        const internationalExamDataMatch = dataMatch.find(
+          (obj) => obj.id == "10"
+        )?.internationalExam;
+        const studyMethodsDataMatch = dataMatch.find(
+          (obj) => obj.id == "11"
+        )?.studyMethods;
+        const studyProgrammsDataMatch = dataMatch.find(
+          (obj) => obj.id == "12"
+        )?.studyProgramms;
+        const timetableDataMatch = dataMatch.find(
+          (obj) => obj.id == "13"
+        )?.timetable;
+        const studyPlaceDataMatch = dataMatch.find(
+          (obj) => obj.id == "14"
+        )?.studyPlace;
+        const studentAdressDataMatch = dataMatch.find(
+          (obj) => obj.id == "15"
+        )?.studentAdress;
+
+        const studentTripDataMatchLSRaw = dataMatch.find(
+          (obj) => obj.id == "16"
+        )?.studentTrip;
+
+        let studentTripDataMatch: string[] = [];
+
+        if (Array.isArray(studentTripDataMatchLSRaw)) {
+          if (
+            studentTripDataMatchLSRaw.length > 0 &&
+            typeof studentTripDataMatchLSRaw[0] === "object" &&
+            studentTripDataMatchLSRaw[0] !== null &&
+            "id" in studentTripDataMatchLSRaw[0]
+          ) {
+            studentTripDataMatch = (
+              studentTripDataMatchLSRaw as unknown as { id: string }[]
+            ).map((item) => item.id);
+          } else if (typeof studentTripDataMatchLSRaw[0] === "string") {
+            studentTripDataMatch = studentTripDataMatchLSRaw as string[];
+          }
+        }
+
+        const tutorTypeDataMatch = dataMatch.find(
+          (obj) => obj.id == "17"
+        )?.tutorType;
+        const autoContactsString = dataMatch.find(
+          (obj) => obj.id == "22"
+        )?.autoContacts;
+        const autoContactsBoolean =
+          autoContactsString === "Да, показывать контакты";
+
+        const infoDataMatch = dataMatch.find((obj) => obj.id == "18")?.info;
+
+        const orderData = await fetchCreateOrder(
+          token,
+          subjectDataMatch,
+          goalDataMatch,
+          classDataMatch,
+          studentTypeDataMatch,
+          studentYearsDataMatch,
+          studentCourseDataMatch,
+          studentUniversityDataMatch,
+          internationalExamDataMatch,
+          studyMethodsDataMatch,
+          studyProgrammsDataMatch,
+          deadlineDataMatch,
+          studentLevelDataMatch,
+          tutorGenderDataMatch,
+          timetableDataMatch,
+          regionTest,
+          studyPlaceDataMatch,
+          studentAdressDataMatch,
+          studentTripDataMatch,
+          tutorTypeDataMatch,
+          autoContactsBoolean,
+          infoDataMatch
+        );
+
+        // Переход на следующий шаг с ID заказа
+        handleNextStep(nextPageProperty + orderData.id);
+      } catch (error) {
+        console.error("Ошибка при создании заказа:", error);
       }
     } catch (error) {
-      console.warn(error);
+      console.warn("Ошибка в handleGetToken:", error);
+      setErrorInput(true);
     }
   };
 
@@ -314,7 +360,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   const [isDisabled, setIsDisabled] = useState(false);
 
   // Находим объект массива с введенным телефоном
-  const phoneDataMatch = dataMatch.find((obj) => obj.id === 20);
+  const phoneDataMatch = dataMatch.find((obj) => obj.id === "20");
   // Вытаскиваем значение данного объека из свойства phone
   const phoneValue = phoneDataMatch ? phoneDataMatch.phone : "";
 
@@ -324,7 +370,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   useEffect(() => {
     // Находим объект массива по ID вопроса (формы)
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
+    const currentDataMatch = dataMatch.find((obj) => obj.id === String(id));
     // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
     setInputValue(valueProperty);

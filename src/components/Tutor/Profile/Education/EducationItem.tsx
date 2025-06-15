@@ -13,7 +13,7 @@ import {
   setIsModalEditEducation,
   setIsModalEducationItem,
 } from "@/store/features/modalSlice";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
 
 interface EducationItemProps {
   educationId: string;
@@ -120,7 +120,7 @@ export const EducationItem = ({
                         <Image
                           key={index}
                           onClick={() => handleImageClick(index)} // Клик по изображению
-                          src={`${host}${port}${diplom}`}
+                          src={`${getBackendUrl()}${diplom}`}
                           alt="Документ об образовании"
                           width={100}
                           height={100}

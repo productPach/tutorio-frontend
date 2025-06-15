@@ -1,5 +1,5 @@
 import { Theme, Topic } from "@/types/types";
-import { baseUrl } from "./configApi";
+import { baseUrl, getBackendUrl } from "./configApi";
 
 // Создание нового топика
 export const fetchCreateTopic = async (token: string, topic: Omit<Topic, "id" | "createdAt" | "updatedAt">): Promise<Topic> => {
@@ -45,7 +45,7 @@ export const fetchGetAllTopics = async (token: string): Promise<Topic[]> => {
 // Получение топика по ID
 export const fetchGetTopicById = async (id: string, token?:string): Promise<Topic> => {
     try {
-      const response = await fetch(`${baseUrl}topics/${id}`, {
+      const response = await fetch(`${getBackendUrl()}/api/topics/${id}`, {
         method: "GET",
         headers: { "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, },

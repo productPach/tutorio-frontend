@@ -207,7 +207,7 @@ export const SubjectModal = () => {
                 [componentStyles.focused]: focusedFields[key],
                 [componentStyles.errorInput]: errorInput,
               })}
-              customInput="input"
+              customInput={"input" as any}
               allowNegative={false}
               isAllowed={(values) => values.value.length <= 6}
               onFocus={(e) => {

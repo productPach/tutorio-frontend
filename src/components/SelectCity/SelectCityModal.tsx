@@ -11,85 +11,70 @@ import {
   getAreaByCoordinates,
   getGeolocation,
 } from "@/utils/locations/getGeolocation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllLocations } from "@/store/features/locationSlice";
 
 export const SelectCityModal = () => {
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getAllLocations());
-  }, [dispatch]);
-  // Получаем значение regionUser из Redux
-  const regionUserFromStore: UserRegion | null = useAppSelector(
-    (state) => state.auth.regionUser
-  );
-  let regionUser: UserRegion | null = regionUserFromStore;
 
-  // Получаем дату городов из Redux
+  const regionUser = useAppSelector((state) => state.auth.regionUser);
   const locations = useAppSelector((state) => state.locations.city);
-
-  // Проверка на наличие данных о регионе
-  if (!regionUser) {
-    const regionUserLS = localStorage.getItem("region-user");
-    if (regionUserLS) {
-      try {
-        const parsedRegionUser = JSON.parse(regionUserLS) as UserRegion;
-        regionUser = parsedRegionUser;
-        dispatch(setRegionUser(regionUser));
-      } catch (e) {
-        console.error("Ошибка парсинга JSON:", e);
-      }
-    }
-  }
-
-  // Если данные о регионе все еще отсутствуют, получаем геолокацию
-  if (!regionUser) {
-    getGeolocation()
-      .then(async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        try {
-          // Получаем область по координатам
-          const locationData = await getAreaByCoordinates(latitude, longitude);
-
-          // Проверяем, что полученные данные корректны
-          if (!locationData || !locationData.area) {
-            console.error("Ошибка: Не удалось найти область");
-            return;
-          }
-
-          // Проверяем, есть ли область в объекте locations
-          const foundCity = locations.find(
-            (city) => city.area === locationData.area
-          );
-
-          if (foundCity) {
-            const userRegion = { city: foundCity.title, area: foundCity.area };
-            localStorage.setItem("region-user", JSON.stringify(userRegion));
-            dispatch(setRegionUser(userRegion));
-          } else {
-            console.error("Область не найдена в объекте locations");
-          }
-        } catch (error) {
-          console.error("Ошибка при получении данных о местоположении:", error);
-        }
-      })
-      .catch((error) => {
-        console.error("Ошибка при получении геолокации:", error);
-      });
-  }
-
-  // Получаем значение isModalSelectCity из Redux
   const isModalSelectCity = useAppSelector(
     (state) => state.modal.isModalSelectCity
   );
 
+  const [localRegion, setLocalRegion] = useState<UserRegion | null>(null);
+
+  useEffect(() => {
+    dispatch(getAllLocations());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (regionUser) return;
+
+    const detectRegion = async () => {
+      try {
+        const regionUserLS = localStorage.getItem("region-user");
+        if (regionUserLS) {
+          const parsed = JSON.parse(regionUserLS) as UserRegion;
+          dispatch(setRegionUser(parsed));
+          setLocalRegion(parsed);
+          return;
+        }
+
+        const pos = await getGeolocation();
+        const { latitude, longitude } = pos.coords;
+
+        const locationData = await getAreaByCoordinates(latitude, longitude);
+        if (!locationData || !locationData.area) {
+          console.error("Ошибка: Не удалось найти область");
+          return;
+        }
+
+        const foundCity = locations.find(
+          (city) => city.area === locationData.area
+        );
+
+        if (foundCity) {
+          const userRegion = { city: foundCity.title, area: foundCity.area };
+          localStorage.setItem("region-user", JSON.stringify(userRegion));
+          dispatch(setRegionUser(userRegion));
+          setLocalRegion(userRegion);
+        } else {
+          console.error("Область не найдена в объекте locations");
+        }
+      } catch (error) {
+        console.error("Ошибка при определении местоположения:", error);
+      }
+    };
+
+    detectRegion();
+  }, [dispatch, locations, regionUser]);
+
   return (
     <>
       <div
-        onClick={() => {
-          dispatch(setModalSelectCity(true));
-        }}
+        onClick={() => dispatch(setModalSelectCity(true))}
         className={styles.header__geo}
       >
         <Image
@@ -99,7 +84,7 @@ export const SelectCityModal = () => {
           alt="Выбор местоположения"
           className={styles.header__geoImage}
         />
-        {regionUser && regionUser.city}
+        {(regionUser || localRegion)?.city}
       </div>
 
       <Modal
@@ -107,7 +92,7 @@ export const SelectCityModal = () => {
         contentModal={<SelectCity />}
         isModal={isModalSelectCity}
         modalId={"selectCity"}
-      ></Modal>
+      />
     </>
   );
 };

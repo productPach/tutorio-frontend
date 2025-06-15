@@ -1,0 +1,38 @@
+.center {
+  padding-left: calc(50% - 300px);
+  padding-right: calc(50% - 300px);
+  display: flex;
+  justify-content: center; /* Горизонтальное центрирование */
+  align-items: center; /* Вертикальное центрирование */
+  height: 100vh; /* Занимает всю высоту экрана */
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 50%;
+}
+.container {
+  display: flex;
+}
+
+.content_block {
+  width: 100%;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 18px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+.title {
+  font-size: 28px;
+}
+.description {
+  font-size: 18px;
+}
