@@ -16,7 +16,7 @@ import {
 } from "@/store/features/orderSlice";
 import Image from "next/image";
 import Link from "next/link";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
   getChatById,
@@ -180,7 +180,7 @@ export const ChatComponent = ({
   );
   const subjectName = subjectArr?.title;
 
-  const tutorAvatar = chat && `${host}${port}${chat.tutor.avatarUrl}`;
+  const tutorAvatar = chat && `${getBackendUrl()}${chat.tutor.avatarUrl}`;
 
   // Получаем текущее время
   const currentTime = new Date();

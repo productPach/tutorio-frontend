@@ -48,7 +48,7 @@ const EducationItemPage: React.FC = () => {
         <LeftBar page={page} />
         <div className={styles.content}>
           <EducationItem
-            educationId={educationId}
+            educationId={educationId as string}
             educationIndex={educationIndex}
           />
         </div>
@@ -63,7 +63,7 @@ const EducationItemPage: React.FC = () => {
         titleModal={"Образование"}
         contentModal={
           <EditEducationModal
-            educationId={educationId}
+            educationId={educationId as string}
             educationIndex={educationIndex}
           />
         }

@@ -1,7 +1,7 @@
 import Match from "@/components/Match/Match";
 import { Metadata } from "next";
 
-const formMetaMap: { [key: string]: { title: string; description: string } } = {
+const formMetaMap: Record<string, { title: string; description: string }> = {
   goal: {
     title: "Цель занятий — Tutorio",
     description:
@@ -104,13 +104,17 @@ const formMetaMap: { [key: string]: { title: string; description: string } } = {
   },
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { typeForm: string };
-}): Promise<Metadata> {
-  const meta = formMetaMap[params.typeForm];
+type Params = {
+  typeForm: string;
+  componentRoute: string;
+};
 
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // «context» — это тот объект, который Next.js сам подставляет:
+  // context.params, context.searchParams и т. д.
+  const params = (context as { params: Params }).params;
+
+  const meta = formMetaMap[params.typeForm];
   return {
     title: meta?.title || "Создание заказа на подбор репетитора — Tutorio",
     description:

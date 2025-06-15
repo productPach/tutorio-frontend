@@ -1,5 +1,5 @@
 import { LessonDuration, Tutor, TutorSubjectPriceInput } from "@/types/types";
-import { baseUrl } from "./configApi";
+import { baseUrl, getBackendUrl } from "./configApi";
 
 // Регистрация репетитора
 export const fetchCreateTutor = async (phone: string, token: string) => {
@@ -422,18 +422,24 @@ export const fetchTutorById = async (id: string, token: string) => {
 };
 
 // Получение репетитора по ID (Публичный)
-export const fetchTutorByIdPublic = async (id: string): Promise<Tutor> => {
+export const fetchTutorByIdPublic = async (id: string): Promise<Tutor | null> => {
   try {
-    const response = await fetch(`${baseUrl}public/tutors/${id}`, {
+    const response = await fetch(`${getBackendUrl()}/api/public/tutors/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store", // если ты хочешь отключить кэш
+      cache: "no-store", // отключение кэша
     });
 
+    if (response.status === 404) {
+      // Репетитор не найден — это не критическая ошибка
+      return null;
+    }
+
     if (!response.ok) {
-      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+      console.error(`Ошибка запроса: ${response.status} — ${response.statusText}`);
+      return null;
     }
 
     const data = await response.json();
@@ -441,6 +447,6 @@ export const fetchTutorByIdPublic = async (id: string): Promise<Tutor> => {
 
   } catch (error) {
     console.error("Ошибка при получении репетитора:", error);
-    throw error;
+    return null;
   }
 };

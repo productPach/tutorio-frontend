@@ -1,7 +1,7 @@
 import SignInStudent from "@/components/SignIn/SignInStudent/SignInStudent";
 import { Metadata } from "next";
 
-const formMetaMap: { [key: string]: { title: string; description: string } } = {
+const formMetaMap: Record<string, { title: string; description: string }> = {
   phone: {
     title: "Вход для учеников — Tutorio",
     description:
@@ -13,12 +13,10 @@ const formMetaMap: { [key: string]: { title: string; description: string } } = {
   },
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { typeForm: string };
-}): Promise<Metadata> {
-  const meta = formMetaMap[params.typeForm];
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // Вытащим params из переданного контекста:
+  const params = (context as { params: { typeForm: string } }).params;
+  const meta = params?.typeForm ? formMetaMap[params.typeForm] : undefined;
 
   return {
     title: meta?.title || "Авторизация ученика — Tutorio",

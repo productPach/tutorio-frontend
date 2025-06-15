@@ -1,5 +1,5 @@
 import { Order } from "@/types/types";
-import { baseUrl } from "./configApi";
+import { baseUrl, getBackendUrl } from "./configApi";
 
 // Создание заказа
 export const fetchCreateOrder = async (
@@ -142,27 +142,33 @@ export const fetchGetOrderById = async (token: string, id: string) => {
 // Получение публичного заказа по ID
 export const fetchGetPublicOrderById = async (id: string) => {
   try {
-    const response = await fetch(`${baseUrl}public/orders/${id}`, {
+    const response = await fetch(`${getBackendUrl()}/api/public/orders/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    // Проверка, был ли запрос успешным
-    if (!response.ok) {
-      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    // Если заказ не найден, просто вернём null
+    if (response.status === 404) {
+      return null;
     }
 
-    // Парсинг JSON
+    // Остальные ошибки (500 и прочее) можно логировать
+    if (!response.ok) {
+      console.error(`Ошибка запроса: ${response.status} — ${response.statusText}`);
+      return null;
+    }
+
     const data: Order = await response.json();
     return data;
 
   } catch (error) {
     console.error("Ошибка при получении публичного заказа:", error);
-    throw error;
+    return null;
   }
 };
+
 
 
 // Функция для обновления заказа студента

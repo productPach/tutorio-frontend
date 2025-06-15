@@ -1,17 +1,14 @@
 import { fetchGetTopicById } from "@/api/server/wikiApi";
 import TopicPage from "@/components/Tutor/Wiki/TopicPage";
 import { Topic } from "@/types/types";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
-type Props = {
-  params: {
-    topic: string;
-  };
-};
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // Вытянем params.topic из переданного Next.js контекста:
+  const params = (context as { params: { topic: string } }).params;
+  const topicId = params.topic;
 
-// Динамическая генерация мета-тегов
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const topic: Topic = await fetchGetTopicById(params.topic);
+  const topic: Topic = await fetchGetTopicById(topicId);
 
   if (!topic) {
     return {

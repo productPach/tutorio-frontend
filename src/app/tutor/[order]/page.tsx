@@ -1,17 +1,14 @@
 import { fetchGetPublicOrderById } from "@/api/server/orderApi";
 import OrderPage from "@/components/Tutor/Order/OrderPage";
 import { data } from "@/utils/listSubjects";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
-type Props = {
-  params: {
-    order: string;
-  };
-};
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // Вытянем params.order из переданного Next.js контекста:
+  const params = (context as { params: { order: string } }).params;
+  const orderId = params.order;
 
-// Динамическая генерация мета-тегов
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const order = await fetchGetPublicOrderById(params.order);
+  const order = await fetchGetPublicOrderById(orderId);
 
   if (!order) {
     return {
@@ -21,10 +18,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const subjectArr = data.find((subject) => subject.id_p === order?.subject);
+  const subjectArr = data.find((subject) => subject.id_p === order.subject);
   const subjectNameForReq = subjectArr?.for_request;
+
   return {
-    title: `${order.goal + " по " + subjectNameForReq} — Tutorio`,
+    title: `${order.goal} по ${subjectNameForReq} — Tutorio`,
     robots: { index: false, follow: false },
   };
 }

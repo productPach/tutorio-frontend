@@ -20,13 +20,16 @@ export const EducationItemModal = () => {
   const educationId = Array.isArray(education) ? education[0] : education;
 
   const deleteEducation = (tutorId: string) => {
-    token &&
+    if (token && educationId) {
       dispatch(deleteTutorEducation({ tutorId, educationId, token })).then(
         () => {
           dispatch(setIsModalEducationItem(false));
           route.push("/tutor/profile/educations");
         }
       );
+    } else {
+      console.error("educationId or token is missing");
+    }
   };
 
   return (

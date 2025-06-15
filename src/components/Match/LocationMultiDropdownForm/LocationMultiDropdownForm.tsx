@@ -136,7 +136,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
   // При перезагрузке страницы восстанавливаем данные из LS
   useEffect(() => {
-    const currentDataMatch = dataMatch.find((obj) => obj.id === id);
+    const currentDataMatch = dataMatch.find((obj) => Number(obj.id) === id);
     const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
     valueProperty && dispatch(setSelectedValues(valueProperty));
   }, [typeForm]);
@@ -196,7 +196,9 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
       return;
     }
 
-    let existingData = dataMatch.find((item) => item.id === id);
+    let existingData: Partial<Order> | undefined = dataMatch.find(
+      (item) => Number(item.id) === id
+    );
 
     if (existingData) {
       existingData[typeForm] = selectedValues.map((item) => ({
@@ -205,7 +207,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
       }));
     } else {
       existingData = {
-        id: id,
+        id: id.toString(),
         [typeForm]: selectedValues.map((item) => ({
           id: item.id,
           title: item.title,
@@ -213,7 +215,7 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
       };
     }
 
-    const updatedDataMatch = dataMatch.filter((item) => item.id !== id);
+    const updatedDataMatch = dataMatch.filter((item) => Number(item.id) !== id);
     const dataToSave = [...updatedDataMatch, existingData];
     localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
   }, [selectedValues]);

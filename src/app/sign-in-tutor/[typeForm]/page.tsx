@@ -1,7 +1,7 @@
 import SignInTutor from "@/components/SignIn/SignInTutor/SignInTutor";
 import { Metadata } from "next";
 
-const formMetaMap: { [key: string]: { title: string; description: string } } = {
+const formMetaMap: Record<string, { title: string; description: string }> = {
   phone: {
     title: "Для репетиторов — Tutorio",
     description:
@@ -38,11 +38,9 @@ const formMetaMap: { [key: string]: { title: string; description: string } } = {
   },
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { typeForm: string };
-}): Promise<Metadata> {
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // Вытаскиваем params из переданного Next.js контекста:
+  const params = (context as { params: { typeForm: string } }).params;
   const meta = formMetaMap[params.typeForm];
 
   return {

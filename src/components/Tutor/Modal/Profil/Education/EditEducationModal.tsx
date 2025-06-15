@@ -9,7 +9,8 @@ import {
   updateTutorEducation,
 } from "@/store/features/tutorSlice";
 import { setIsModalEditEducation } from "@/store/features/modalSlice";
-import { host, port } from "@/api/server/configApi";
+import { getBackendUrl, host, port } from "@/api/server/configApi";
+import Image from "next/image";
 
 interface EducationModalProps {
   educationId: string | null;
@@ -63,7 +64,7 @@ export const EditEducationModal = ({
 
         // Загружаем URL изображений (если они есть)
         const files = education.educationDiplomUrl.map(
-          (url) => `${host}${port}${url}`
+          (url) => `${getBackendUrl()}${url}`
         );
 
         // Если файлов меньше 5, добавляем недостающие null
@@ -142,7 +143,9 @@ export const EditEducationModal = ({
     const isShowDiplom = isChecked; // Это поле по умолчанию
 
     // Массив фотографий, состоящий из старых фотографий с сервера и новых, выбранных пользователем
-    const nonEmptyFiles = selectedFiles.filter((file) => file instanceof File);
+    const nonEmptyFiles = selectedFiles.filter(
+      (file): file is File => file instanceof File
+    );
 
     dispatch(
       updateTutorEducation({
@@ -208,7 +211,7 @@ export const EditEducationModal = ({
       const education = tutor.educations.find((edu) => edu.id === educationId);
       if (education) {
         const files = education.educationDiplomUrl.map(
-          (url) => `${host}${port}${url}`
+          (url) => `${getBackendUrl()}${url}`
         );
         const fileArray = [...files, ...Array(5 - files.length).fill(null)];
         setSelectedFiles(fileArray); // Синхронизация с Redux
@@ -293,7 +296,7 @@ export const EditEducationModal = ({
         </div>
       </div>
       <div className={styles.description}>
-        Диплом, сертификат и другие документы
+        Диплом, сертификат и другие документы!
       </div>
       <div className={componentStyles.containerFlxRw}>
         {selectedFiles.map((file, index) => (
@@ -302,14 +305,22 @@ export const EditEducationModal = ({
               {file ? (
                 typeof file === "string" ? (
                   <>
-                    <img
-                      src={file} // Показываем изображение с сервера
+                    <Image
+                      key={index}
+                      src={`${file}`}
                       alt={`Документ ${index + 1}`}
+                      width={68}
+                      height={68}
                       className={componentStyles.imagePreview}
                     />
+                    {/* <img
+                      src={`${getBackendUrl()}file`} // Показываем изображение с сервера
+                      alt={`Документ ${index + 1}`}
+                      className={componentStyles.imagePreview}
+                    /> */}
                   </>
                 ) : (
-                  <img
+                  <Image
                     src={URL.createObjectURL(file)} // Показываем локально загруженное изображение
                     alt={`Документ ${index + 1}`}
                     className={componentStyles.imagePreview}

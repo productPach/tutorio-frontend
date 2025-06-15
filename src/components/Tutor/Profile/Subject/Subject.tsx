@@ -36,12 +36,20 @@ export const Subject = () => {
   const [isChecked, setIsChecked] = useState(tutor?.isGroup || false);
 
   const toggleSwitch = () => {
-    setIsChecked((prev) => {
-      const newState = !prev;
-      update(newState); // Передаем новое значение
-      return newState;
-    });
+    setIsChecked((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (tutor && token) {
+      dispatch(
+        updateTutor({
+          id: tutor.id,
+          token,
+          isGroup: isChecked,
+        })
+      ).unwrap();
+    }
+  }, [isChecked]);
 
   const update = (isGroup: boolean) => {
     if (tutor && token) {
