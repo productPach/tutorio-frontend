@@ -1,14 +1,17 @@
+import { getBackendUrl } from "@/api/server/configApi";
 import { fetchGetPublicOrderById } from "@/api/server/orderApi";
 import OrderPage from "@/components/Student/Order/OrderPage";
 import { data } from "@/utils/listSubjects";
 import type { Metadata } from "next";
 
 export async function generateMetadata(context: any): Promise<Metadata> {
-  // Вытянем params.order из переданного контекста:
-  const params = (context as { params: { order: string } }).params;
+  // Принудительно ждём params (если это промис)
+  const params = await Promise.resolve(context.params);
   const orderId = params.order;
 
-  // Делаем запрос за данными заказа
+  console.log("generateMetadata orderId:", orderId);
+  console.log("generateMetadata backend URL:", getBackendUrl());
+
   const order = await fetchGetPublicOrderById(orderId);
 
   if (!order) {
@@ -19,13 +22,13 @@ export async function generateMetadata(context: any): Promise<Metadata> {
     };
   }
 
-  // Вычисляем название предмета для заголовка
   const subjectArr = data.find((subject) => subject.id_p === order.subject);
-  const subjectNameForReq = subjectArr?.for_request;
+  const subjectNameForReq = subjectArr?.for_request || "предмету";
 
   return {
     title: `${order.goal} по ${subjectNameForReq} — Tutorio`,
-    robots: { index: false, follow: false },
+    description: `Найди репетитора для подготовки по ${subjectNameForReq}`,
+    robots: { index: true, follow: true },
   };
 }
 

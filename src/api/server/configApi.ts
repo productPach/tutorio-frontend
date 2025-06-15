@@ -21,13 +21,8 @@ export const getBackendUrl = () => {
 // export const host = `http://${process.env.NEXT_PUBLIC_IP}:`;
 // export const port = process.env.NEXT_PUBLIC_PORT;
 // export const getBackendUrl = () => {
-//   if (typeof window !== "undefined") {
 //     // Клиент (браузер)
 //     return `${host}${port}` || "http://localhost:3000";
-//   } else {
-//     // Сервер (Next.js внутри docker-контейнера)
-//     return `http://${process.env.NEXT_PUBLIC_BACKEND_HOST || "tutorio-express"}:${process.env.NEXT_PUBLIC_BACKEND_PORT || "3000"}`;
-//   }
 // };
 
 export const baseUrl = `${host}${port}/api/`;
