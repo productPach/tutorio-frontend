@@ -4,7 +4,10 @@ import axios from 'axios';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { token } = req.body;
-    const secretKey = '6LeS-_spAAAAAPOPnH_1UMvKyjhRZWMAUu4ht4VM';
+    // ДЛЯ LOCALHOST
+    //const secretKey = '6LeS-_spAAAAAPOPnH_1UMvKyjhRZWMAUu4ht4VM';
+    // ДЛЯ DEV TUTORIO
+    const secretKey = '6LdL82IrAAAAAPg6Ivwoym8BAoEvwJyrXaCb6e2a';
 
     try {
       const response = await axios.post(
