@@ -8,6 +8,7 @@ export const fetchGetToken = async ({ phone, secretCode }: SignInFormType) => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       phone: phone,
       secretSMS: secretCode,
