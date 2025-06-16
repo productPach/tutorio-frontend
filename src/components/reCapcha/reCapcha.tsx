@@ -1,6 +1,6 @@
 // components/ReCaptcha.tsx
-import React, { useRef } from 'react';
-import ReCAPTCHA from 'react-google-recaptcha';
+import React, { useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface ReCaptchaProps {
   onVerify: (token: string | null) => void;
@@ -18,7 +18,7 @@ const ReCaptcha: React.FC<ReCaptchaProps> = ({ onVerify }) => {
   return (
     <ReCAPTCHA
       ref={recaptchaRef}
-      sitekey="6LeS-_spAAAAAEDsQ_QY-qk6ZPdJtLerf66lriyz"
+      sitekey="6LdL82IrAAAAAAukiP82j_IfzlR1_1nLf-HDh2If"
       onChange={handleChange}
     />
   );
