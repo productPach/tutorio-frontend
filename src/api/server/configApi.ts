@@ -1,12 +1,12 @@
 import "dotenv/config";
 
 // Для окружения Docker-compose
-export const host = `http://51.250.97.190:`;
+export const host = `http://89.169.176.162:`;
 export const port = `3000`;
 export const getBackendUrl = () => {
   if (typeof window !== "undefined") {
     // Клиент
-    return process.env.NEXT_PUBLIC_CDN_URL || "http://51.250.97.190:3000";
+    return process.env.NEXT_PUBLIC_CDN_URL || "http://89.169.176.162:3000";
   } else {
     // Сервер (Next.js внутри докера)
     return `http://${process.env.NEXT_PUBLIC_BACKEND_HOST || "tutorio-express"}:${process.env.NEXT_PUBLIC_BACKEND_PORT || "3000"}`;
