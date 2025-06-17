@@ -51,7 +51,7 @@ export const EducationItem = ({
     ?.educationDiplomUrl
     ? tutor.educations[educationIndex].educationDiplomUrl.map((diplom) => ({
         //src: `${host}${port}${diplom}`, // ЛОКАЛЬНО
-        src: `${getBackendUrl()}${diplom}`,
+        src: `https://dev-tutorio.ru${diplom}`,
         alt: "Документ об образовании",
       }))
     : [];
