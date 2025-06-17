@@ -50,8 +50,8 @@ export const EducationItem = ({
   const slides: SlideImage[] = tutor?.educations[educationIndex]
     ?.educationDiplomUrl
     ? tutor.educations[educationIndex].educationDiplomUrl.map((diplom) => ({
-        src: `${host}${port}${diplom}`, // ЛОКАЛЬНО
-        //src: `${getBackendUrl()}${diplom}`,
+        //src: `${host}${port}${diplom}`, // ЛОКАЛЬНО
+        src: `${host}${diplom}`,
         alt: "Документ об образовании",
       }))
     : [];
