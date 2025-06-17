@@ -97,6 +97,7 @@ const authSlice = createSlice({
           // Проверяем на наличие токена
           state.token = action.payload;
           state.isLoggedIn = true;
+          // По идее теперь для прода это не нужно, тк устанавливается на бэке
           setCookie("user", state.token, 30, {});
         } else {
           // Обработка ситуации, когда токен отсутствует
