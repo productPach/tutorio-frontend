@@ -32,9 +32,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!initialized && token && (student?.id || tutor?.id)) {
-      const socket = io(`${host}${port}`, {
+      // const socket = io(`${host}${port}`, {
+      //   auth: { token },
+      //   transports: ["websocket"], // 🧠 важно
+      // });
+      const socket = io("https://dev-tutorio.ru", {
         auth: { token },
-        transports: ["websocket"], // 🧠 важно
+        transports: ["websocket"],
       });
 
       socket.on("connect", () => {

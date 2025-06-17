@@ -1,15 +1,9 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styles from "../../../app/tutor/layout.module.css";
 import componentStyle from "./Settings.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import {
-  getCurrentTutor,
-  setTutor,
-  updateTutor,
-  verifyEmail,
-} from "@/store/features/tutorSlice";
+import { updateTutor } from "@/store/features/tutorSlice";
 import { Tutor } from "@/types/types";
-import Link from "next/link";
 import {
   setIsModalDelete,
   setIsModalEmail,
@@ -20,9 +14,7 @@ import {
 } from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
-import { io } from "socket.io-client";
 import "dotenv/config";
-import { host, port } from "@/api/server/configApi";
 
 type SettingsProps = {
   tutor: Tutor | null;
@@ -36,34 +28,6 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
 
   const tutor2 = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
   const isVerifiedEmail = tutor?.isVerifedEmail;
-
-  // useEffect(() => {
-  //   //console.log("Connecting to socket...");
-  //   const socket = io(`${host}${port}`);
-
-  //   socket.on("connect", () => {
-  //     //console.log("Socket connected:", socket.id);
-
-  //     // Если есть tutorId (или token), отправляем его на сервер для связывания с сокетом
-  //     if (tutor2?.id) {
-  //       socket.emit("setUser", { tutorId: tutor2.id });
-  //       //console.log("Sent tutorId to server:", tutor2.id);
-  //     }
-  //   });
-
-  //   socket.on("emailVerified", ({ tutorId }) => {
-  //     //console.log("Received emailVerified event", tutorId);
-  //     if (token) {
-  //       dispatch(getCurrentTutor(token));
-  //       //console.log("Email verified, updating tutor data.");
-  //     }
-  //   });
-
-  //   return () => {
-  //     //console.log("Disconnecting socket...");
-  //     socket.disconnect();
-  //   };
-  // }, [dispatch, token, tutor2]);
 
   // Состояние для свитча публичной анкеты
   const [isCheckedPublic, setIsCheckedPublic] = useState(
