@@ -5,7 +5,7 @@ import { useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const HeaderMenu = () => {
   const route = useRouter();
@@ -57,6 +57,14 @@ export const HeaderMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className={styles.header__menu}>

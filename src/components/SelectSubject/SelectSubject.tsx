@@ -145,7 +145,7 @@ export const SelectSubject = () => {
         <input
           id="subjectInput"
           type="text"
-          placeholder="Введи предмет, по которому ищите репетитора .."
+          placeholder="Введите предмет"
           autoComplete="off"
           value={inputSearchTutor}
           onChange={(e) => handleSearchTutor(e.target.value)}
