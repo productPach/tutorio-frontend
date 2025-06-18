@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      {/* <main>
+      <main>
         <section className={clsx(styles.firstSection, styles.center)}>
           <div className={styles.mobContainer}>
             <h1>Быстрый поиск репетиторов</h1>
@@ -68,7 +68,7 @@ export default function Home() {
           </div>
 
           <SelectSubject />
-          <div className={styles.firstSection__snippetSearch}>
+          {/* <div className={styles.firstSection__snippetSearch}>
             <div
               className={clsx(
                 styles.firstSection__snippet,
@@ -178,9 +178,9 @@ export default function Home() {
                 className={styles.firstSection__snippetImage}
               />
             </div>
-          </div>
+          </div> */}
         </section>
-        <section className={clsx(styles.howWork, styles.center)}>
+        {/* <section className={clsx(styles.howWork, styles.center)}>
           <div className={styles.howWork__title}>Как это работает</div>
           <div className={styles.howWork__step}>
             <div className={styles.stepNumber}>01</div>
@@ -788,9 +788,9 @@ export default function Home() {
               </div>
             </a>
           </div>
-        </section>
+        </section> */}
       </main>
-      <footer className={clsx(styles.footer, styles.center)}>
+      {/* <footer className={clsx(styles.footer, styles.center)}>
         <div className={styles.footer__left}>
           <div className={styles.footer__menu}>
             <a href="">Найти репетитора</a>

@@ -62,19 +62,31 @@ export const HeaderMenu = () => {
     <div className={styles.header__menu}>
       {tutor || student ? (
         <>
-          <Link href={nextPage} prefetch>
-            <Image
-              src="/img/icon/profil.svg"
-              width={17}
-              height={17}
-              alt="Профиль"
-            />
-            {name}
-          </Link>
+          <div className={styles.dContainerProfil}>
+            <Link href={nextPage} prefetch>
+              <Image
+                src="/img/icon/profil.svg"
+                width={17}
+                height={17}
+                alt="Профиль"
+              />
+              {name}
+            </Link>
+          </div>
+          <div className={styles.mContainerProfil}>
+            <Link href={nextPage} prefetch>
+              <Image
+                src="/img/icon/profil.svg"
+                width={24}
+                height={24}
+                alt="Профиль"
+              />
+            </Link>
+          </div>
         </>
       ) : (
         <>
-          <div className={styles.desktopContainerAuth}>
+          <div className={styles.dContainerAuth}>
             <Link href={"/sign-in-tutor/phone"} prefetch>
               Репетиторам
             </Link>
@@ -83,7 +95,7 @@ export const HeaderMenu = () => {
               Ученикам
             </Link>
           </div>
-          <div className={styles.mobContainerAuth}>
+          <div className={styles.mContainerAuth}>
             <Image
               src="/img/icon/burgerMenu.svg"
               width={24}

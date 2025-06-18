@@ -16,7 +16,7 @@ body {
   overflow-x: hidden;
   width: 100%;
   max-width: 100%;
-  min-width: 380px;
+  min-width: 280px;
 }
 body::-webkit-scrollbar {
   display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
@@ -60,9 +60,8 @@ main {
 }
 @media (max-width: 480px) {
   main {
-    min-width: 380px;
-    margin: 0 auto;
-    padding: 0 20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 input {
