@@ -142,15 +142,19 @@ export const SelectSubject = () => {
   return (
     <div className={styles.firstSection__tutorSearch}>
       <div className={styles.searchContainer}>
-        <input
-          id="subjectInput"
-          type="text"
-          placeholder="Введите предмет"
-          autoComplete="off"
-          value={inputSearchTutor}
-          onChange={(e) => handleSearchTutor(e.target.value)}
-          className={errorSubject ? styles.errorInput : undefined}
-        />
+        <div className={styles.searchWrapper}>
+          <input
+            id="subjectInput"
+            type="text"
+            placeholder="Введите предмет"
+            autoComplete="off"
+            value={inputSearchTutor}
+            onChange={(e) => handleSearchTutor(e.target.value)}
+            className={errorSubject ? styles.errorInput : undefined}
+          />
+          <span className={styles.searchIcon} />
+        </div>
+
         {isLoading && (
           <div className={styles.spinner}>
             <Spinner />
@@ -189,6 +193,7 @@ export const SelectSubject = () => {
           </div>
         )}
       </div>
+
       <button type="submit">Найти</button>
     </div>
   );
