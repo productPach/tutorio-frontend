@@ -17,22 +17,36 @@
   margin-bottom: -3px;
   margin-right: 5px;
 }
-.desktopContainerAuth {
+.dContainerAuth {
   display: flex;
   -moz-column-gap: 38px;
   column-gap: 38px;
   align-items: center;
 }
 @media (max-width: 668px) {
-  .desktopContainerAuth {
+  .dContainerAuth {
     display: none;
   }
 }
-.mobContainerAuth {
+.mContainerAuth {
   display: none;
 }
 @media (max-width: 668px) {
-  .mobContainerAuth {
+  .mContainerAuth {
+    display: block;
+  }
+}
+.dContainerProfil {
+  display: block;
+}
+.mContainerProfil {
+  display: none;
+}
+@media (max-width: 480px) {
+  .dContainerProfil {
+    display: none;
+  }
+  .mContainerProfil {
     display: block;
   }
 }
