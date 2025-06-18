@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
+      {/* <main>
         <section className={clsx(styles.firstSection, styles.center)}>
           <div className={styles.mobContainer}>
             <h1>Быстрый поиск репетиторов</h1>
@@ -68,7 +68,7 @@ export default function Home() {
           </div>
 
           <SelectSubject />
-          {/* <div className={styles.firstSection__snippetSearch}>
+          <div className={styles.firstSection__snippetSearch}>
             <div
               className={clsx(
                 styles.firstSection__snippet,
@@ -178,9 +178,9 @@ export default function Home() {
                 className={styles.firstSection__snippetImage}
               />
             </div>
-          </div> */}
+          </div>
         </section>
-        {/* <section className={clsx(styles.howWork, styles.center)}>
+        <section className={clsx(styles.howWork, styles.center)}>
           <div className={styles.howWork__title}>Как это работает</div>
           <div className={styles.howWork__step}>
             <div className={styles.stepNumber}>01</div>
@@ -258,8 +258,8 @@ export default function Home() {
               />
             </div>
           </div>
-        </section> */}
-        {/* <section className={clsx(styles.tutorsIn, styles.center)}>
+        </section>
+        <section className={clsx(styles.tutorsIn, styles.center)}>
           <div className={styles.howWork__title}>Репетиторы в Москве</div>
           <div className={styles.tutorsIn__subjects}>
             <div className={styles.tutorsIn__subject}>
@@ -503,8 +503,8 @@ export default function Home() {
               </ul>
             </div>
           </div>
-        </section> */}
-        {/* <section className={clsx(styles.feedbacks, styles.center)}>
+        </section>
+        <section className={clsx(styles.feedbacks, styles.center)}>
           <div className={styles.howWork__title}>Отзывы о репетиторах</div>
           <div className={styles.feedbacks__container}>
             <div className={styles.feedbacks__container__feedback1}>
@@ -666,8 +666,8 @@ export default function Home() {
               <span className={styles.feedbacks__container__name}>Олеся</span>
             </div>
           </div>
-        </section> */}
-        {/* <section className={clsx(styles.blog, styles.center)}>
+        </section>
+        <section className={clsx(styles.blog, styles.center)}>
           <div className={styles.howWork__title}>
             Интересное в{" "}
             <a href="#" style={{ textDecoration: "underline" }}>
@@ -788,9 +788,9 @@ export default function Home() {
               </div>
             </a>
           </div>
-        </section> */}
+        </section>
       </main>
-      {/* <footer className={clsx(styles.footer, styles.center)}>
+      <footer className={clsx(styles.footer, styles.center)}>
         <div className={styles.footer__left}>
           <div className={styles.footer__menu}>
             <a href="">Найти репетитора</a>

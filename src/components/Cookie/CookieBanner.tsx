@@ -56,20 +56,21 @@ export default function CookieBanner() {
   if (cookiesAccepted) return null;
 
   return (
-    <div className={styles.cookie_container}>
-      <div className={styles.cookie_link}>
-        Продолжая использовать данный сайт, вы соглашаетесь с использованием
-        файлов cookie в соответствии с нашей{" "}
-        <Link className={styles.cookie_link} href={"/docs/privacy-policy"}>
-          Политикой конфиденциальности
-        </Link>
-      </div>
-      <button
-        onClick={acceptCookies}
-        className={clsx(styles.content_block_button, styles.buttonYlw)}
-      >
-        Понятно
-      </button>
-    </div>
+    <></>
+    // <div className={styles.cookie_container}>
+    //   <div className={styles.cookie_link}>
+    //     Продолжая использовать данный сайт, вы соглашаетесь с использованием
+    //     файлов cookie в соответствии с нашей{" "}
+    //     <Link className={styles.cookie_link} href={"/docs/privacy-policy"}>
+    //       Политикой конфиденциальности
+    //     </Link>
+    //   </div>
+    //   <button
+    //     onClick={acceptCookies}
+    //     className={clsx(styles.content_block_button, styles.buttonYlw)}
+    //   >
+    //     Понятно
+    //   </button>
+    // </div>
   );
 }

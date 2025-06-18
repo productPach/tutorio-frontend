@@ -480,6 +480,13 @@
     padding-right: 30px;
   }
 }
+@media (max-width: 480px) {
+  .cookie_container {
+    min-width: 380px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
 
 .cookie_link {
   color: white;
