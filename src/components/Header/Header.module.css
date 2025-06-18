@@ -25,8 +25,9 @@
 }
 @media (max-width: 480px) {
   .header {
-    padding-left: 20px;
-    padding-right: 20px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
   }
 }
 .header__logo {
