@@ -55,6 +55,7 @@ export const metadata = {
 };
 
 export default function Home() {
+  console.log(String.fromCodePoint(0x1f1ec, 0x1f1e7));
   return (
     <>
       <Header />
@@ -68,27 +69,27 @@ export default function Home() {
               Подберём репетиторов, сможете общаться с{"\u00A0"}ними напрямую
             </h2>
           </div>
-
           <SelectSubject />
-          {/* <div className={styles.firstSection__snippetSearch}>
+
+          <div className={styles.firstSection__snippetSearch}>
             <div
               className={clsx(
                 styles.firstSection__snippet,
                 styles.snippetMedium
               )}
             >
-              Подготовка к ЕГЭ
-              <p>
+              Подготовка к ЕГЭ 📝
+              <p className={styles.firstSection__snippetL}>
                 Подготовка к единому государственному экзамену по основным
                 предметам{" "}
               </p>
-              <Image
+              {/* <Image
                 src="img/icon/15SVuaWGVoLUQKfaewU9N.svg"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
             <div
               className={clsx(
@@ -96,14 +97,17 @@ export default function Home() {
                 styles.snippetSmall
               )}
             >
-              Начальная школа
-              <Image
+              Начальная школа 📚
+              <p className={styles.firstSection__snippetM}>
+                Успешный старт в{"\u00A0"}учебе
+              </p>
+              {/* <Image
                 src="img/icon/5qBfrtWBerdJfAGoeMhRG.svg"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
             <div
               className={clsx(
@@ -111,14 +115,17 @@ export default function Home() {
                 styles.snippetSmall
               )}
             >
-              Английский язык
-              <Image
+              Английский язык &#127468;&#127463;
+              <p className={styles.firstSection__snippetM}>
+                Уверенный английский для{"\u00A0"}учебы и{"\u00A0"}жизни
+              </p>
+              {/* <Image
                 src="img/icon/fkCvxuEhaO12Mt68ulWN8.svg"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
             <div
               className={clsx(
@@ -126,14 +133,17 @@ export default function Home() {
                 styles.snippetSmall
               )}
             >
-              Математика
-              <Image
+              Математика ➗
+              <p className={styles.firstSection__snippetM}>
+                Устраним пробелы, научим решать задачи уверенно
+              </p>
+              {/* <Image
                 src="img/icon/fkCvxuEhaO12Mt68ulWN8.svg"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
             <div
               className={clsx(
@@ -141,14 +151,17 @@ export default function Home() {
                 styles.snippetSmall
               )}
             >
-              Русский язык
-              <Image
+              Русский язык 🇷🇺
+              <p className={styles.firstSection__snippetM}>
+                Грамотность без страха. Пишем и{"\u00A0"}говорим правильно!
+              </p>
+              {/* <Image
                 src="img/icon/aYAN0eWITt-SaVT-q8qCe.svg"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
             <div
               className={clsx(
@@ -156,14 +169,17 @@ export default function Home() {
                 styles.snippetSmall
               )}
             >
-              Подготовка к школе
-              <Image
+              Подготовка к школе 🎒
+              <p className={styles.firstSection__snippetM}>
+                Будущий первоклассник: учимся с{"\u00A0"}удовольствием!
+              </p>
+              {/* <Image
                 src="/img/icon/PvEmA6wAmMTYaCPr9g0XH.png"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
             <div
               className={clsx(
@@ -171,16 +187,19 @@ export default function Home() {
                 styles.snippetSmall
               )}
             >
-              Физика
-              <Image
+              Физика ⚡
+              <p className={styles.firstSection__snippetM}>
+                Сложная физика станет понятной
+              </p>
+              {/* <Image
                 src="/img/icon/6p_qT465khupqdKiWpIWG.png"
                 alt="Подготовка к ЕГЭ"
                 width={98}
                 height={98}
                 className={styles.firstSection__snippetImage}
-              />
+              /> */}
             </div>
-          </div> */}
+          </div>
         </section>
         {/* <section className={clsx(styles.howWork, styles.center)}>
           <div className={styles.howWork__title}>Как это работает</div>
