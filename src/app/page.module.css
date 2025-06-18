@@ -115,6 +115,7 @@
   grid-template-columns: repeat(12, 1fr);
   gap: 18px;
 }
+
 .firstSection__snippet {
   background-color: #e1e4eb;
   border: 1px solid #e9e9e9;
@@ -129,10 +130,17 @@
 .firstSection__snippet:hover {
   background-color: #d9dee8;
 }
-.firstSection__snippet p {
+.firstSection__snippetL {
   width: 500px;
   font-size: 16px;
   color: #888888;
+  margin-bottom: 0;
+}
+.firstSection__snippetM {
+  width: 244px;
+  font-size: 16px;
+  color: #888888;
+  margin-bottom: 0;
 }
 .firstSection__snippetImage {
   position: absolute;
@@ -168,19 +176,18 @@
 @media (max-width: 1024px) {
   .firstSection h2 {
     font-size: 22px;
-    line-height: 1;
   }
 }
 
 @media (max-width: 480px) {
   .firstSection h1 {
     font-size: 24px;
-    margin: 24px 0 0 0;
+    margin: 46px 0 0 0;
     letter-spacing: -0.2px;
   }
   .firstSection h2 {
     font-size: 18px;
-    line-height: 1.2;
+    line-height: 1.3;
     margin: 6px 0 26px 0;
   }
 }
@@ -196,7 +203,36 @@
 .snippetSmall {
   grid-column: span 3;
 }
-
+@media (max-width: 1280px) {
+  .firstSection__snippetSearch {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .firstSection__snippetSearch {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .snippetSmall {
+    grid-column: span 6;
+  }
+  .firstSection__snippet {
+    height: min-content;
+    font-size: 18px;
+  }
+  .firstSection__snippetL {
+    width: auto;
+    margin-top: 6px;
+  }
+  .firstSection__snippetM {
+    width: auto;
+    margin-top: 6px;
+  }
+}
+@media (max-width: 480px) {
+  .firstSection__snippetSearch {
+    margin-top: 34px;
+  }
+}
 .howWork {
   display: flex;
   flex-direction: column;
