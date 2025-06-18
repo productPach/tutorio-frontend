@@ -13,7 +13,7 @@
 .header__menu span:hover {
   color: #000000;
 }
-.header__menu img {
+.imgProfil {
   margin-bottom: -3px;
   margin-right: 5px;
 }
@@ -34,6 +34,9 @@
 @media (max-width: 668px) {
   .mContainerAuth {
     display: block;
+    padding: 11px 13px 6px 13px;
+    background-color: #f1f2f4;
+    border-radius: 10px;
   }
 }
 .dContainerProfil {
@@ -48,6 +51,9 @@
   }
   .mContainerProfil {
     display: block;
+    padding: 11px 13px 6px 13px;
+    background-color: #f1f2f4;
+    border-radius: 10px;
   }
 }
 .fullscreenMenu {
@@ -65,6 +71,9 @@
   display: flex;
   justify-content: flex-end;
   padding: 20px;
+}
+.closeImg {
+  margin: 5px 13px 5px 5px;
 }
 .linksMenu {
   display: flex;

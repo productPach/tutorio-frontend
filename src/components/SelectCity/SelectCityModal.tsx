@@ -78,9 +78,9 @@ export const SelectCityModal = () => {
         className={styles.header__geo}
       >
         <Image
-          src="/img/icon/location.svg"
-          width={15}
-          height={18}
+          src="/img/icon/caretDown.svg"
+          width={17}
+          height={17}
           alt="Выбор местоположения"
           className={styles.header__geoImage}
         />
