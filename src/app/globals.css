@@ -7,11 +7,9 @@ body {
   font-size: 16px;
   overflow: auto;
   -ms-overflow-style: none; /* Для Internet Explorer и Edge */
-}
-@media (max-width: 480px) {
-  body {
-    min-width: 380px;
-  }
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 body::-webkit-scrollbar {
   display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
@@ -40,6 +38,7 @@ li {
 main {
   padding-left: calc(50% - 600px);
   padding-right: calc(50% - 600px);
+  min-width: 380px;
 }
 @media (max-width: 1280px) {
   main {
