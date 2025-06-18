@@ -60,10 +60,11 @@ export default function Home() {
       <Header />
       <main>
         <section className={clsx(styles.firstSection, styles.center)}>
-          <div className={styles.mobContainer}>
+          <div className={styles.mContainer}>
             <h1>Быстрый поиск репетиторов</h1>
             <h2>
-              Выбирайте проверенных репетиторов и общайтесь с ними напрямую
+              Выбирайте проверенных репетиторов и{"\u00A0"}общайтесь с{"\u00A0"}
+              ними напрямую
             </h2>
           </div>
 

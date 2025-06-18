@@ -23,6 +23,11 @@
   outline: none;
   border: 2px solid #fad949;
 }
+@media (max-width: 480px) {
+  .firstSection__tutorSearch input {
+    height: 53px;
+  }
+}
 .firstSection__tutorSearch button {
   grid-column: span 3;
   width: auto;
@@ -81,25 +86,24 @@
 
 .spinner {
   position: relative;
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    top: 24px;
-    right: 24px;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 24px;
+  right: 24px;
 }
-
 
 /* Для компонента Search */
 .firstSection__tutorSearch2 input {
   width: 100%;
-    height: 54px;
-    border: 1px solid #e9e9e9;
-    border-radius: 10px;
-    font-size: 16px;
-    padding: 0 20px 0 20px;
-    background-color: rgb(241, 242, 244);
-    box-sizing: border-box;
+  height: 54px;
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 20px 0 20px;
+  background-color: rgb(241, 242, 244);
+  box-sizing: border-box;
 }
 .firstSection__tutorSearch2 input::-moz-placeholder {
   color: #c1c1c1;
@@ -114,10 +118,10 @@
 
 .spinner2 {
   position: relative;
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    top: 18px;
-    right: 24px;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: 18px;
+  right: 24px;
 }
