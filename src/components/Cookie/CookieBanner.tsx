@@ -3,8 +3,7 @@
 import clsx from "clsx";
 import styles from "../../app/page.module.css";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setCookies } from "@/store/features/generalSlice";
 
