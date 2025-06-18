@@ -8,7 +8,7 @@
   width: stretch; /* Стандартное свойство */
   width: -moz-available; /* Для поддержки в Firefox */
   height: 63px;
-  border: 2px solid #e9e9e9;
+  border: 1px solid #e9e9e9;
   border-radius: 10px;
   font-size: 16px;
   padding: 0 20px 0 20px;
@@ -21,7 +21,7 @@
 }
 .firstSection__tutorSearch input:focus {
   outline: none;
-  border: 2px solid #fad949;
+  border: 1px solid #fad949;
 }
 @media (max-width: 480px) {
   .firstSection__tutorSearch input {

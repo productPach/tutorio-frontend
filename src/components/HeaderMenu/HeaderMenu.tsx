@@ -73,6 +73,7 @@ export const HeaderMenu = () => {
           <div className={styles.dContainerProfil}>
             <Link href={nextPage} prefetch>
               <Image
+                className={styles.imgProfil}
                 src="/img/icon/profil.svg"
                 width={17}
                 height={17}
@@ -85,8 +86,8 @@ export const HeaderMenu = () => {
             <Link href={nextPage} prefetch>
               <Image
                 src="/img/icon/profil.svg"
-                width={24}
-                height={24}
+                width={17}
+                height={17}
                 alt="Профиль"
               />
             </Link>
@@ -106,8 +107,8 @@ export const HeaderMenu = () => {
           <div className={styles.mContainerAuth}>
             <Image
               src="/img/icon/burgerMenu.svg"
-              width={24}
-              height={24}
+              width={17}
+              height={17}
               alt="Меню"
               onClick={toggleMenu}
             />
@@ -118,10 +119,11 @@ export const HeaderMenu = () => {
                 <div className={styles.closeMenu}>
                   <Image
                     src="/img/icon/close.svg"
-                    width={24}
-                    height={24}
+                    width={17}
+                    height={17}
                     alt="Закрыть меню"
                     onClick={toggleMenu}
+                    className={styles.closeImg}
                   />
                 </div>
                 <div className={styles.linksMenu}>
