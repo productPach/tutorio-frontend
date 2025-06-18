@@ -5,6 +5,7 @@ import { useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
+import { useState } from "react";
 
 export const HeaderMenu = () => {
   const route = useRouter();
@@ -53,6 +54,10 @@ export const HeaderMenu = () => {
     nextPage = "/student/orders";
   }
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
   return (
     <div className={styles.header__menu}>
       {tutor || student ? (
@@ -69,13 +74,55 @@ export const HeaderMenu = () => {
         </>
       ) : (
         <>
-          <Link href={"/sign-in-tutor/phone"} prefetch>
-            Репетиторам
-          </Link>
+          <div className={styles.desktopContainerAuth}>
+            <Link href={"/sign-in-tutor/phone"} prefetch>
+              Репетиторам
+            </Link>
 
-          <Link href={"/sign-in-student/phone"} prefetch>
-            Ученикам
-          </Link>
+            <Link href={"/sign-in-student/phone"} prefetch>
+              Ученикам
+            </Link>
+          </div>
+          <div className={styles.mobContainerAuth}>
+            <Image
+              src="/img/icon/burgerMenu.svg"
+              width={24}
+              height={24}
+              alt="Меню"
+              onClick={toggleMenu}
+            />
+          </div>
+          {isMenuOpen && (
+            <div className={styles.fullscreenMenu}>
+              <div className={styles.containerMenu}>
+                <div className={styles.closeMenu}>
+                  <Image
+                    src="/img/icon/close.svg"
+                    width={24}
+                    height={24}
+                    alt="Закрыть меню"
+                    onClick={toggleMenu}
+                  />
+                </div>
+                <div className={styles.linksMenu}>
+                  <Link
+                    href={"/sign-in-tutor/phone"}
+                    prefetch
+                    onClick={toggleMenu}
+                  >
+                    Репетиторам
+                  </Link>
+                  <Link
+                    href={"/sign-in-student/phone"}
+                    prefetch
+                    onClick={toggleMenu}
+                  >
+                    Ученикам
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

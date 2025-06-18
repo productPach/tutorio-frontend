@@ -58,7 +58,7 @@ export default function CookieBanner() {
 
   return (
     <div className={styles.cookie_container}>
-      <div>
+      <div className={styles.cookie_link}>
         Продолжая использовать данный сайт, вы соглашаетесь с использованием
         файлов cookie в соответствии с нашей{" "}
         <Link className={styles.cookie_link} href={"/docs/privacy-policy"}>

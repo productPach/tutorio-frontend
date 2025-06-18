@@ -8,7 +8,11 @@ body {
   overflow: auto;
   -ms-overflow-style: none; /* Для Internet Explorer и Edge */
 }
-
+@media (max-width: 480px) {
+  body {
+    min-width: 380px;
+  }
+}
 body::-webkit-scrollbar {
   display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
 }
@@ -37,7 +41,24 @@ main {
   padding-left: calc(50% - 600px);
   padding-right: calc(50% - 600px);
 }
-
+@media (max-width: 1280px) {
+  main {
+    padding-left: calc(50% - 480px);
+    padding-right: calc(50% - 480px);
+  }
+}
+@media (max-width: 1024px) {
+  main {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+@media (max-width: 480px) {
+  main {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 input {
   font-family: "Source Sans 3", sans-serif;
 }

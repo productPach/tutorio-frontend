@@ -1,0 +1,72 @@
+.header {
+  width: auto;
+  height: 70px;
+  background-color: white;
+  border-bottom: 1px solid #e9e9e9;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
+}
+@media (max-width: 1280px) {
+  .header {
+    padding-left: calc(50% - 480px);
+    padding-right: calc(50% - 480px);
+  }
+}
+@media (max-width: 1024px) {
+  .header {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+@media (max-width: 480px) {
+  .header {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+.header__logo {
+  display: flex;
+  flex-direction: column;
+  font-family: "Sofia Sans", sans-serif;
+  font-weight: 900;
+  font-size: 32px;
+}
+.header__underLogo {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+}
+@media (max-width: 668px) {
+  .header__underLogo {
+    display: none;
+  }
+}
+.header__underLogoMob {
+  display: none;
+}
+@media (max-width: 668px) {
+  .header__underLogoMob {
+    display: block;
+    font-family: "Fira Sans", sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+  }
+}
+.header__geoImage {
+  margin-bottom: -3px;
+  margin-right: 5px;
+}
+.header__offers {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+}
+.header__offers a:hover {
+  text-decoration: underline;
+}
