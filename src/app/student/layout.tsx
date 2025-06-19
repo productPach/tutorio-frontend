@@ -123,7 +123,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
               <div className={styles.header__menu}>
                 {student && (
                   <>
-                    <span>{student.name}</span>
+                    <span className={styles.name}>{student.name}</span>
                     <Image
                       className={styles.header__menu_avatar}
                       src={
@@ -141,7 +141,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
               </div>
             </div>
           </header>
-          {student && <main>{children}</main>}
+          {student && <main className={styles.main}>{children}</main>}
           <footer className={clsx(styles.center)}>
             <p></p>
           </footer>

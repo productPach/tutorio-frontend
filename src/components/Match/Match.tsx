@@ -3,7 +3,7 @@ import { YearsInputForms } from "@/components/Match/YearsInputForm/YearsInputFor
 import { RadioListForms } from "@/components/Match/RadioListForms/RadioListForms";
 import { listQuestionsAnswers } from "@/utils/listQuestionsAnswers";
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { UniversityInputForms } from "@/components/Match/UniversityInputForm/UniversityInputForm";
 import { TextForms } from "@/components/Match/TextForms/TextForms";
 import { CheckboxListForms } from "@/components/Match/CheckboxListForms/CheckboxListForms";
@@ -40,6 +40,8 @@ interface ComponentsList {
 const Match: React.FC = () => {
   const route = useRouter();
   const dispatch = useAppDispatch();
+  const [matchData, setMatchData] = useState<any | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     // Получаем токен из куки
@@ -56,11 +58,20 @@ const Match: React.FC = () => {
   }, [dispatch]);
 
   // Вытаскиваем актуальный массив c данными формы из LocalStorage
-  const getDataMatchLS = localStorage.getItem("currentMatch");
-  // Если в LS нет объекта с ключом currentMatch, делаем редирект на главную
+  // Проверяем localStorage (только на клиенте)
   useEffect(() => {
-    if (!getDataMatchLS) {
+    const raw = localStorage.getItem("currentMatch");
+
+    if (!raw) {
+      // Если в LS нет объекта с ключом currentMatch, делаем редирект на главную
       route.push("/");
+    } else {
+      try {
+        setMatchData(JSON.parse(raw));
+        setIsReady(true);
+      } catch {
+        route.push("/");
+      }
     }
   }, [route]);
 

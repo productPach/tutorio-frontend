@@ -9,9 +9,6 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   const params = await Promise.resolve(context.params);
   const orderId = params.order;
 
-  console.log("generateMetadata orderId:", orderId);
-  console.log("generateMetadata backend URL:", getBackendUrl());
-
   const order = await fetchGetPublicOrderById(orderId);
 
   if (!order) {
