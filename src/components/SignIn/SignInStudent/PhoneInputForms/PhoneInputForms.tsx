@@ -266,6 +266,8 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             <input
               id="studentPhoneNumber"
               type="tel"
+              inputMode="numeric"
+              pattern="[0-9]*"
               placeholder={placeholder}
               autoComplete="off"
               value={inputValue}
@@ -294,8 +296,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             )}
           >
             {isTimerActive && (minutes !== 0 || seconds !== 0) ? (
-              `Изменить телефон можно через ${formatTime(minutes)}:
-            ${formatTime(seconds)}`
+              <>
+                Изменить телефон можно через{" "}
+                <span className={styles.wsNoWrap}>
+                  {formatTime(minutes)}:{formatTime(seconds)}
+                </span>
+              </>
             ) : (
               <div className={styles.reCaptchaContainer}>
                 <ReCaptcha onVerify={handleVerify} />
