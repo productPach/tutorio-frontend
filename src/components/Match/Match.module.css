@@ -475,6 +475,9 @@
   margin: 0;
   padding: 0;
 }
+.wsNoWrap {
+  white-space: nowrap;
+}
 
 /* Адаптивные стили под разрешения экранов */
 
@@ -553,6 +556,9 @@
     flex-direction: column;
   }
   .continueButton {
+    width: 100%;
+  }
+  .inputStudentYears {
     width: 100%;
   }
 }

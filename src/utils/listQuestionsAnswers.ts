@@ -1879,7 +1879,7 @@ export const listQuestionsAnswers = [
     id: 20,
     typeForm: "phone",
     question: "Номер телефона",
-    description: "",
+    description: "На указанный номер придёт проверочный код для подтверждения",
     page: [
       {
         id: 1,

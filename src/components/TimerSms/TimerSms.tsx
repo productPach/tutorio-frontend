@@ -101,8 +101,12 @@ export const TimerSms = () => {
       )}
     >
       {isTimerActive && (minutes !== 0 || seconds !== 0) ? (
-        `Отправить код ещё раз через ${formatTime(minutes)}:
-            ${formatTime(seconds)}`
+        <>
+          Отправить код ещё раз через{" "}
+          <span className={styles.wsNoWrap}>
+            {formatTime(minutes)}:{formatTime(seconds)}
+          </span>
+        </>
       ) : (
         <span onClick={onClickSms}>Отправить код ещё раз</span>
       )}

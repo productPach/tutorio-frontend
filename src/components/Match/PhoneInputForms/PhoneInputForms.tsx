@@ -39,6 +39,7 @@ type Order = {
 export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   id,
   question,
+  description,
   typeForm,
   answerArray,
 }) => {
@@ -264,6 +265,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             Назад
           </div>
           <div className={styles.title}>{question}</div>
+          <div className={styles.description}>{description}</div>
           <div className={styles.inputContainer}>
             <span
               className={clsx(styles.inputPhoneNumberPrefix, {
@@ -299,8 +301,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             )}
           >
             {isTimerActive && (minutes !== 0 || seconds !== 0) ? (
-              `Изменить телефон можно через ${formatTime(minutes)}:
-            ${formatTime(seconds)}`
+              <>
+                Изменить телефон можно через{" "}
+                <span className={styles.wsNoWrap}>
+                  {formatTime(minutes)}:{formatTime(seconds)}
+                </span>
+              </>
             ) : (
               <div className={styles.reCaptchaContainer}>
                 <ReCaptcha onVerify={handleVerify} />
