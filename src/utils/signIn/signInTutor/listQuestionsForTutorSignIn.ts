@@ -74,7 +74,7 @@ export const listQuestionsForTutorSignIn = [
         id: 8,
         typeForm: "photo",
         question: "Фотография профиля",
-        description: "Анкеты с фото ученики выбирают в 3 раза чаще",
+        description: "Анкеты с фото ученики выбирают в\u00A03\u00A0раза чаще",
         placeholder: "",
         nextPage: "/tutor/orders",
     },

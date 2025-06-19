@@ -194,9 +194,10 @@ export const EmailInputForms: React.FC<ComponentRenderProps> = ({
           <div className={styles.description}>{description}</div>
           <input
             id="fioTutor"
-            type="text"
+            type="email"
+            inputMode="email" // ✅ Улучшает поддержку на Android
+            autoComplete="email" // ✅ Автозаполнение email'а
             placeholder={placeholder}
-            autoComplete="off"
             value={inputValue}
             onChange={handleInputValue}
             className={clsx(styles.inputUniversityName, {

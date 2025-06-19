@@ -228,7 +228,10 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
               onClick={() => inputRef.current?.click()}
             >
               <input {...getInputProps()} ref={inputRef} />
-              <p>Перетащите изображение сюда или кликните для выбора</p>
+              <p className={styles.photoDescription}>
+                Перетащите изображение сюда или{`\u00A0`}кликните для{`\u00A0`}
+                выбора
+              </p>
             </div>
           ) : isCropping ? (
             <div

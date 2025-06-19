@@ -366,14 +366,20 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           </div>
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>
-            {description} +7{phoneValue}
+            {description}{" "}
+            <span className={styles.wsNoWrap}>+7{phoneValue}</span>
           </div>
 
-          <div className={styles.inputCodeConfirmContainer}>
+          <form
+            autoComplete="one-time-code"
+            className={styles.inputCodeConfirmContainer}
+          >
             {codes.map((value, index) => (
               <input
                 key={index}
-                type="text"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="•"
                 value={value}
                 maxLength={1}
@@ -390,7 +396,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 disabled={index !== activeIndex}
               />
             ))}
-          </div>
+          </form>
           <TimerSms />
         </div>
         <div className={styles.wrapButton}>

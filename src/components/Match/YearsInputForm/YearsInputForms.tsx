@@ -170,7 +170,9 @@ export const YearsInputForms: React.FC<ComponentRenderProps> = ({
           {/* <div className={styles.description}>Выберите один из нижеперечисленных вариантов</div> */}
           <input
             id="stydentYears"
-            type="text"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
             placeholder={answerArray[0].title}
             autoComplete="off"
             value={inputValue}

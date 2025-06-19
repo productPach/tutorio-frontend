@@ -132,14 +132,14 @@ export const HeaderMenu = () => {
                     prefetch
                     onClick={toggleMenu}
                   >
-                    Репетиторам
+                    Репетиторам 👨‍🏫👩‍🏫
                   </Link>
                   <Link
                     href={"/sign-in-student/phone"}
                     prefetch
                     onClick={toggleMenu}
                   >
-                    Ученикам
+                    Ученикам 👩‍🎓👨‍🎓
                   </Link>
                 </div>
               </div>

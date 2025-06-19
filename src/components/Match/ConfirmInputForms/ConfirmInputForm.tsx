@@ -401,33 +401,34 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
             {answerArray[0].title} +7{phoneValue}
           </div>
 
-          <div className={styles.inputCodeConfirmContainer}>
-            <form autoComplete="one-time-code">
-              {codes.map((value, index) => (
-                <input
-                  key={index}
-                  type="tel"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  autoComplete={index === 0 ? "one-time-code" : "off"} // ✅ Только первый
-                  placeholder="•"
-                  value={value}
-                  maxLength={1}
-                  ref={(el) => {
-                    inputRefs.current[index] = el;
-                  }}
-                  onChange={(e) => handleChange(e.target.value, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  onKeyPress={(e) => handleKeyPress(e, index)}
-                  className={clsx(
-                    styles.inputCodeConfirm,
-                    errorInput ? styles.errorInput : ""
-                  )}
-                  disabled={index !== activeIndex}
-                />
-              ))}
-            </form>
-          </div>
+          <form
+            autoComplete="one-time-code"
+            className={styles.inputCodeConfirmContainer}
+          >
+            {codes.map((value, index) => (
+              <input
+                key={index}
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                autoComplete={index === 0 ? "one-time-code" : "off"} // ✅ Только первый
+                placeholder="•"
+                value={value}
+                maxLength={1}
+                ref={(el) => {
+                  inputRefs.current[index] = el;
+                }}
+                onChange={(e) => handleChange(e.target.value, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
+                className={clsx(
+                  styles.inputCodeConfirm,
+                  errorInput ? styles.errorInput : ""
+                )}
+                disabled={index !== activeIndex}
+              />
+            ))}
+          </form>
           <TimerSms />
         </div>
         <div className={styles.wrapButton}>

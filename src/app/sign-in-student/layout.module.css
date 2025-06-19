@@ -1,80 +1,160 @@
 .center {
-    padding-left: calc(50% - 300px);
-    padding-right: calc(50% - 300px);
-  }
+  padding-left: calc(50% - 300px);
+  padding-right: calc(50% - 300px);
+}
 
 .header {
-    width: auto;
-    height: 70px;
-    background-color: white;
-    border-bottom: 1px solid #e9e9e9;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .header__logo {
-    display: flex;
-    flex-direction: column;
-    font-family: "Sofia Sans", sans-serif;
-    font-weight: 900;
-    font-size: 32px;
-    align-items: flex-end;
-  }
-  .header__underLogo {
-    font-family: "Fira Sans", sans-serif;
-    font-weight: 400;
-    font-size: 9px;
-  }
-  .header__geoImage {
-    margin-bottom: -3px;
-    margin-right: 5px;
-  }
-  .header__menu {
-    display: flex;
-    -moz-column-gap: 18px;
-    column-gap: 18px;
-    align-items: center;
-  }
-  .header__menu a {
-    text-decoration: none;
-    color: #333333;
-    transition: all 0.3s;
-  }
-  .header__menu a:hover {
-    color: #000000;
-    text-decoration: underline;
-  }
-  .header__menu img {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    -o-object-fit: cover;
-    object-fit: cover;
-    margin-top: 5px;
-    border: 1px solid #e9e9e9;
-  }
-  .header__offers {
-    display: flex;
-    flex-direction: row;
-    gap: 6px;
-    align-items: center;
-  }
-  .header__offers a:hover {
-    text-decoration: underline;
-  }
+  width: auto;
+  height: 70px;
+  background-color: white;
+  border-bottom: 1px solid #e9e9e9;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.header__logo {
+  display: flex;
+  flex-direction: column;
+  font-family: "Sofia Sans", sans-serif;
+  font-weight: 900;
+  font-size: 32px;
+  align-items: flex-end;
+}
+.header__underLogo {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+}
+.header__geoImage {
+  margin-bottom: -3px;
+  margin-right: 5px;
+}
+.header__menu {
+  display: flex;
+  -moz-column-gap: 18px;
+  column-gap: 18px;
+  align-items: center;
+}
+.header__menu a {
+  text-decoration: none;
+  color: #333333;
+  transition: all 0.3s;
+}
+.header__menu a:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+.header__menu img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  -o-object-fit: cover;
+  object-fit: cover;
+  margin-top: 5px;
+  border: 1px solid #e9e9e9;
+}
+.header__offers {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+}
+.header__offers a:hover {
+  text-decoration: underline;
+}
 
-  .hidden {
-    opacity: 0;
-    transition: opacity 0.4s ease-in-out;
+.hidden {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .disabled {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .visible {
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+.main_with_cookies {
+  margin-bottom: 174px;
+}
+/* Адаптивные стили под разрешения экранов */
+
+/* ******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+******************************************************
+****************************************************** */
+
+/* ******************************************************
+******************************************************
+******************************************************
+                        1280px
+******************************************************
+******************************************************
+****************************************************** */
+
+@media (max-width: 1280px) {
+}
+/* ******************************************************
+******************************************************
+******************************************************
+                        1024px
+******************************************************
+******************************************************
+****************************************************** */
+@media (max-width: 1024px) {
+}
+/* ******************************************************
+******************************************************
+******************************************************
+                        768px
+******************************************************
+******************************************************
+****************************************************** */
+@media (max-width: 768px) {
+}
+/* ******************************************************
+******************************************************
+******************************************************
+                        560px
+******************************************************
+******************************************************
+****************************************************** */
+@media (max-width: 660px) {
+  .center {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+/* ******************************************************
+******************************************************
+******************************************************
+                        480px
+******************************************************
+******************************************************
+****************************************************** */
+@media (max-width: 480px) {
+  .center {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .main {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
