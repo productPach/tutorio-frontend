@@ -5,6 +5,7 @@ import { getSubjectListForSearch } from "@/api/subjects/apiSubjcts";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../Spinner/Spinner";
 import { Subject } from "@/types/types";
+import clsx from "clsx";
 
 export const SelectSubject = () => {
   // Состояние для отслеживания строки поиска предмета
@@ -152,11 +153,13 @@ export const SelectSubject = () => {
             onChange={(e) => handleSearchTutor(e.target.value)}
             className={errorSubject ? styles.errorInput : undefined}
           />
-          <span className={styles.searchIcon} />
+          <span
+            className={`${styles.searchIcon} ${isLoading ? styles.searchIconNone : ""}`}
+          />
         </div>
 
         {isLoading && (
-          <div className={styles.spinner}>
+          <div className={clsx(styles.spinner, styles.spinInd)}>
             <Spinner />
           </div>
         )}

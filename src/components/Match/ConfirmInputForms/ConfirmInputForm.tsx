@@ -402,26 +402,31 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           </div>
 
           <div className={styles.inputCodeConfirmContainer}>
-            {codes.map((value, index) => (
-              <input
-                key={index}
-                type="text"
-                placeholder="•"
-                value={value}
-                maxLength={1}
-                ref={(el) => {
-                  inputRefs.current[index] = el;
-                }}
-                onChange={(e) => handleChange(e.target.value, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onKeyPress={(e) => handleKeyPress(e, index)}
-                className={clsx(
-                  styles.inputCodeConfirm,
-                  errorInput ? styles.errorInput : ""
-                )}
-                disabled={index !== activeIndex}
-              />
-            ))}
+            <form autoComplete="one-time-code">
+              {codes.map((value, index) => (
+                <input
+                  key={index}
+                  type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete={index === 0 ? "one-time-code" : "off"} // ✅ Только первый
+                  placeholder="•"
+                  value={value}
+                  maxLength={1}
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+                  }}
+                  onChange={(e) => handleChange(e.target.value, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onKeyPress={(e) => handleKeyPress(e, index)}
+                  className={clsx(
+                    styles.inputCodeConfirm,
+                    errorInput ? styles.errorInput : ""
+                  )}
+                  disabled={index !== activeIndex}
+                />
+              ))}
+            </form>
           </div>
           <TimerSms />
         </div>

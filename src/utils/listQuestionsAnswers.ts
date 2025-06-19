@@ -1820,17 +1820,17 @@ export const listQuestionsAnswers = [
         answers: [
           {
             id: 1,
-            title: "Начинающий: до 1000 рублей",
+            title: "Начинающий: до\u00A01000\u00A0₽",
             nextPage: "/match/autoContacts/approve",
           },
           {
             id: 2,
-            title: "Репетитор со средним опытом: до 1500 рублей",
+            title: "Репетитор со средним опытом: до\u00A01500\u00A0₽",
             nextPage: "/match/autoContacts/approve",
           },
           {
             id: 3,
-            title: "Опытный репетитор: до 2500 рублей",
+            title: "Опытный репетитор: до\u00A02500\u00A0₽",
             nextPage: "/match/autoContacts/approve",
           },
         ],
