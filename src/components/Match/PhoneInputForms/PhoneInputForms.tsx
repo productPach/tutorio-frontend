@@ -275,6 +275,8 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             <input
               id="studentPhoneNumber"
               type="tel"
+              inputMode="numeric"
+              pattern="[0-9]*"
               placeholder="Введите номер телефона"
               autoComplete="off"
               value={inputValue}

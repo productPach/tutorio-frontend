@@ -28,6 +28,9 @@
   background-size: contain;
   pointer-events: none; /* чтобы клик проходил к input */
 }
+.searchIconNone {
+  display: none;
+}
 .firstSection__tutorSearch input::-moz-placeholder {
   color: #c1c1c1;
 }
@@ -109,7 +112,10 @@
   top: 24px;
   right: 24px;
 }
-
+.spinInd {
+  top: 16px;
+  right: 16px;
+}
 /* Для компонента Search */
 .firstSection__tutorSearch2 input {
   width: 100%;
