@@ -30,9 +30,8 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname(); // Получаем текущий путь
   const student = useAppSelector((state) => state.student.student);
-  const token = useAppSelector((state) => state.auth.token);
-
-  const socketRef = useRef<Socket | null>(null);
+  // Получаем стейт храниения компонента для отображения
+  const component = useAppSelector((state) => state.orders.componentMenu);
 
   useEffect(() => {
     const token = getTokenFromCookie();
@@ -110,7 +109,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
               content="Бесплатно подберём репетитора под ваш запрос и бюджет. Проверенные репетиторы."
             />
           </Head>
-          <header>
+          <header className={[5, 6].includes(component) ? styles.dsplNone : ""}>
             <div className={clsx(styles.header, styles.center)}>
               <Link href="/student/orders">
                 <div className={styles.header__logo}>

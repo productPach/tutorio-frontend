@@ -704,6 +704,9 @@
   border-color: #fad9493a;
   border-radius: 10px;
 }
+.responseMenuM {
+  display: none;
+}
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************
@@ -735,6 +738,18 @@
   .header {
     padding-left: calc(50% - 480px);
     padding-right: calc(50% - 480px);
+  }
+  .leftbar {
+    grid-column: span 7;
+  }
+  .content {
+    grid-column: span 18;
+  }
+  .contentFull {
+    grid-column: span 20;
+  }
+  .responseMenuM {
+    display: block;
   }
 }
 /* ******************************************************
@@ -772,6 +787,9 @@
   }
   .contentFull {
     grid-column: span 27;
+  }
+  .dsplNone {
+    display: none;
   }
 }
 /* ******************************************************
@@ -814,16 +832,19 @@
 ****************************************************** */
 @media (max-width: 480px) {
   .center {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .main {
     padding-left: 10px;
     padding-right: 10px;
   }
   .header {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .content_block {
+    padding: 10px;
   }
 }
 /* ******************************************************
@@ -836,5 +857,8 @@
 @media (max-width: 340px) {
   .name {
     display: none;
+  }
+  .content {
+    grid-column: span 10;
   }
 }

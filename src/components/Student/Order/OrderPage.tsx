@@ -23,6 +23,8 @@ import { getChatsByOrderId } from "@/store/features/chatSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 import { useChat } from "@/context/ChatContext";
 import { getThemesByTopic } from "@/store/features/wikiSlice";
+import { ResponseSidbarMobile } from "../ResponseMobile/ResponseMobile";
+import OrderMenuMobile from "../OrderMenuMobile/OrderMenuMobile";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -171,6 +173,18 @@ const OrderPage: React.FC = () => {
               setVisibleEmoji={setVisibleEmoji}
             />
           ) : null}
+          {component === 7 || component === 8 ? (
+            <ResponseSidbarMobile
+              chats={chats}
+              clearChats={clearChats}
+              visibleEmoji={visibleEmoji}
+              setVisibleEmoji={setVisibleEmoji}
+              isChecked={isChecked}
+              setIsChecked={setIsChecked}
+              orderById={orderById}
+              loading={loading}
+            />
+          ) : null}
         </div>
         <ResponseSidbar
           chats={chats}
@@ -183,6 +197,7 @@ const OrderPage: React.FC = () => {
           loading={loading}
         />
       </section>
+      {component !== 5 && component !== 6 ? <OrderMenuMobile /> : null}
       <Modal
         titleModal={"Предложить заказ репетитору"}
         contentModal={<ResponseStudentToTutorModal />}

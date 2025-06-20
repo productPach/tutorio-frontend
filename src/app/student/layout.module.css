@@ -304,16 +304,22 @@
 .order_block_flx_rw_flxstrt {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-wrap: nowrap;
+  align-items: flex-start;
   justify-content: flex-start;
   column-gap: 4px;
 }
-
+.lctTrContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
 .order_block_flx_rw_flxstrt svg {
   margin-top: 0;
 }
-
+.order_block_flx_rw_flxstrt_text {
+  margin-top: 6px;
+}
 .order_block_flx_rw_subtext {
   font-size: 14px;
   color: #888888;
@@ -381,6 +387,9 @@
   100% {
     opacity: 1;
   }
+}
+.sidebarResponseM {
+  display: none;
 }
 
 .sidebar_filter {
@@ -686,7 +695,11 @@
   gap: 18px;
   align-items: center;
 }
+.studentBlockOrderWithResponseCount {
+  line-height: 18px;
+}
 .studentBlockOrderWithResponseImg {
+  white-space: nowrap;
   height: 36px;
 }
 .studentResponseImg {
@@ -748,6 +761,12 @@
   border-color: #fad9493a;
   border-radius: 10px;
 }
+.wsNoWrap {
+  white-space: nowrap;
+}
+.stPlcSvg {
+  min-width: 32px;
+}
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************
@@ -780,6 +799,23 @@
     padding-left: calc(50% - 480px);
     padding-right: calc(50% - 480px);
   }
+  .leftbar {
+    grid-column: span 7;
+  }
+  .content {
+    grid-column: span 20;
+  }
+  .contentFull {
+    grid-column: span 20;
+  }
+  .sidebarResponse {
+    display: none;
+  }
+  .sidebarResponseM {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -795,12 +831,6 @@
   }
   .leftbar {
     grid-column: span 7;
-  }
-  .content {
-    grid-column: span 13;
-  }
-  .contentFull {
-    grid-column: span 20;
   }
 }
 /* ******************************************************
@@ -861,16 +891,19 @@
 ****************************************************** */
 @media (max-width: 480px) {
   .center {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .main {
     padding-left: 10px;
     padding-right: 10px;
   }
   .header {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .content_block {
+    padding: 10px;
   }
 }
 /* ******************************************************
@@ -880,8 +913,11 @@
 ******************************************************
 ******************************************************
 ****************************************************** */
-@media (max-width: 340px) {
+@media (max-width: 360px) {
   .name {
     display: none;
+  }
+  .content {
+    grid-column: span 10;
   }
 }

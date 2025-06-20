@@ -68,7 +68,7 @@ const Orders = () => {
             const subject = data.find((item) => item.id_p === order.subject);
             const goal = order.goal ? order.goal + " // " : null;
             const deadline = order.deadline
-              ? order.deadline + " до экзамена // "
+              ? order.deadline + " до\u00A0экзамена // "
               : null;
             const studentType = order.studentType
               ? order.studentType + " // "
@@ -143,7 +143,12 @@ const Orders = () => {
 
             // Выводим город ученика
             if (studentPlace?.includes("Дистанционно")) {
-              remoteLessons = `Дистанционно — ${studentRegion}`;
+              remoteLessons = (
+                <>
+                  Дистанционно:{" "}
+                  <span className={styles.wsNoWrap}>{studentRegion}</span>
+                </>
+              );
             }
 
             // Сделать вывод ближайших локаций к адресу ученика
@@ -168,13 +173,21 @@ const Orders = () => {
             const tutorType = order.tutorType ? order.tutorType : null;
             // Выводим цену
             let price;
-            if (tutorType === "Начинающий: до 1000 рублей") {
+            // if (tutorType === "Начинающий: до 1000 ₽") {
+            //   price = "до 1000 ₽";
+            // }
+            // if (tutorType === "Репетитор со средним опытом: до 1500 ₽") {
+            //   price = "1000 — 1500 ₽";
+            // }
+            // if (tutorType === "Опытный репетитор: до 2500 ₽") {
+            //   price = "1500 — 2500 ₽";
+            // }
+
+            if (tutorType?.includes("Начинающий")) {
               price = "до 1000 ₽";
-            }
-            if (tutorType === "Репетитор со средним опытом: до 1500 рублей") {
+            } else if (tutorType?.includes("со средним опытом")) {
               price = "1000 — 1500 ₽";
-            }
-            if (tutorType === "Опытный репетитор: до 2500 рублей") {
+            } else if (tutorType?.includes("Опытный")) {
               price = "1500 — 2500 ₽";
             }
 
@@ -185,6 +198,7 @@ const Orders = () => {
             const activeChats = order.chats.filter(
               (chat) => chat.status === "Active"
             );
+            console.log(price);
 
             return (
               <div
@@ -212,10 +226,13 @@ const Orders = () => {
 
                   <p className={styles.content_block_p}>
                     {goal} {deadline} {studentType} {studentYears}{" "}
-                    {studentClass}
+                    <span className={styles.wsNoWrap}>{studentClass}</span>
                     {studentCourse} {studentUniversity} {studentExam}{" "}
-                    {studyProgramm} {studyMethod} {price}{" "}
-                    {" // " + formatTimeAgo(order.createdAt)}
+                    {studyProgramm} {studyMethod}{" "}
+                    <span className={styles.wsNoWrap}>{price}</span>{" "}
+                    <span className={styles.wsNoWrap}>
+                      {" // " + formatTimeAgo(order.createdAt)}
+                    </span>
                   </p>
                   <p className={styles.content_block_p}>{studentWishes}</p>
 
@@ -227,6 +244,7 @@ const Orders = () => {
                         height="32"
                         viewBox="0 0 24 24"
                         fill="none"
+                        className={styles.stPlcSvg}
                       >
                         <path
                           fillRule="evenodd"
@@ -255,6 +273,7 @@ const Orders = () => {
                         height="32"
                         viewBox="0 0 24 24"
                         fill="none"
+                        className={styles.stPlcSvg}
                       >
                         <path
                           d="M17.2326 10.0951L13.2326 6.96466C12.5086 6.398 11.4914 6.398 10.7674 6.96466L6.76738 10.0951C6.28301 10.4742 6 11.055 6 11.6701V16C6 17.1046 6.89543 18 8 18H12H16C17.1046 18 18 17.1046 18 16V11.6701C18 11.055 17.717 10.4742 17.2326 10.0951Z"
@@ -312,6 +331,7 @@ const Orders = () => {
                         height="32"
                         viewBox="0 0 24 24"
                         fill="none"
+                        className={styles.stPlcSvg}
                       >
                         <path
                           fillRule="evenodd"
@@ -345,33 +365,39 @@ const Orders = () => {
                         />
                       </svg>
                       <span className={styles.order_block_flx_rw_flxstrt_text}>
-                        Готов приехать —
-                        <div className={locationsStyles.crcl_mtr_wrap}>
-                          {firstLocationTrip?.lineNumber && (
-                            <div className={locationsStyles.crcl_mtr_container}>
-                              <div
-                                className={clsx(
-                                  styles.order_block,
-                                  locationsStyles.crcl_mtr,
-                                  locationsStyles[
-                                    `crcl_mtr_msk_${firstLocationTrip?.lineNumber}`
-                                  ]
-                                )}
-                              ></div>
+                        <div className={styles.lctTrContainer}>
+                          Готов приехать:
+                          <div>
+                            <div className={locationsStyles.crcl_mtr_wrap}>
+                              {firstLocationTrip?.lineNumber && (
+                                <div
+                                  className={locationsStyles.crcl_mtr_container}
+                                >
+                                  <div
+                                    className={clsx(
+                                      styles.order_block,
+                                      locationsStyles.crcl_mtr,
+                                      locationsStyles[
+                                        `crcl_mtr_msk_${firstLocationTrip?.lineNumber}`
+                                      ]
+                                    )}
+                                  ></div>
+                                </div>
+                              )}
                             </div>
-                          )}
+                            {firstLocationTrip?.title}
+                            <span
+                              className={clsx(
+                                styles.order_block_flx_rw_subtext,
+                                generalStyles.mrgnLt5
+                              )}
+                            >
+                              {studentTrip &&
+                                studentTrip?.length > 1 &&
+                                `и ещё ${countTrip}`}
+                            </span>
+                          </div>
                         </div>
-                        {firstLocationTrip?.title}
-                        <span
-                          className={clsx(
-                            styles.order_block_flx_rw_subtext,
-                            generalStyles.mrgnLt5
-                          )}
-                        >
-                          {studentTrip &&
-                            studentTrip?.length > 1 &&
-                            `и ещё ${countTrip}`}
-                        </span>
                       </span>
                     </div>
                   )}

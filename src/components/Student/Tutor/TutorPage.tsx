@@ -16,6 +16,7 @@ import {
   getOrderById,
 } from "@/store/features/orderSlice";
 import { useChat } from "@/context/ChatContext";
+import OrderMenuMobile from "../OrderMenuMobile/OrderMenuMobile";
 
 const TutorPage: React.FC = () => {
   const page = "Tutor";
@@ -100,6 +101,7 @@ const TutorPage: React.FC = () => {
           isChatWithTutor={hasChatWithTutor}
         />
       </section>
+      <OrderMenuMobile />
       <Modal
         titleModal={"Предложить заказ репетитору"}
         contentModal={<ResponseStudentToTutorModal />}
