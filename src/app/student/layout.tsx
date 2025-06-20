@@ -140,7 +140,16 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
               </div>
             </div>
           </header>
-          {student && <main className={styles.main}>{children}</main>}
+          {student && (
+            <main
+              className={clsx(
+                styles.main,
+                [5, 6].includes(component) ? styles.mainChtM : ""
+              )}
+            >
+              {children}
+            </main>
+          )}
           <footer className={clsx(styles.center)}>
             <p></p>
           </footer>

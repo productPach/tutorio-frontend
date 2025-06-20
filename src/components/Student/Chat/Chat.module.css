@@ -7,6 +7,9 @@
 .gap14 {
   gap: 14px;
 }
+.gap6 {
+  gap: 6px;
+}
 .mrgnTp10 {
   margin-top: 10px;
 }
@@ -365,7 +368,16 @@
 ****************************************************** */
 @media (max-width: 480px) {
   .content__chat {
-    height: calc(100dvh - 88px);
+    height: calc(100dvh - 57px);
+  }
+  .chat__message {
+    padding: 5px 8px;
+  }
+  .padng18 {
+    padding: 10px;
+  }
+  .chat__block {
+    row-gap: 6px;
   }
 }
 /* ******************************************************

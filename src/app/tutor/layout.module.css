@@ -845,6 +845,17 @@
   }
   .content_block {
     padding: 10px;
+    margin-bottom: 10px;
+  }
+  .mainChtM {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .content_blockChtM {
+    margin-bottom: 3px;
+  }
+  .container {
+    margin-top: 10px;
   }
 }
 /* ******************************************************
