@@ -84,6 +84,31 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
           {page && page === "Tutor" ? (
             <>
               <li
+                className={styles.responseMenuM}
+                onClick={() => {
+                  dispatch(setComponentMenu(7));
+                  dispatch(
+                    updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
+                  );
+                  dispatch(setChat(null));
+                  route.push("../");
+                }}
+              >
+                <Image
+                  src="/../img/icon/tutor/orders.svg"
+                  alt="Отклики"
+                  width={32}
+                  height={32}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 7,
+                  })}
+                >
+                  Отклики
+                </span>
+              </li>
+              <li
                 onClick={() => {
                   dispatch(setComponentMenu(1));
                   dispatch(
@@ -158,6 +183,27 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
             </>
           ) : (
             <>
+              <li
+                className={styles.responseMenuM}
+                onClick={() => {
+                  dispatch(setComponentMenu(7));
+                  dispatch(setChat(null));
+                }}
+              >
+                <Image
+                  src="/../img/icon/tutor/orders.svg"
+                  alt="Отклики"
+                  width={32}
+                  height={32}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.undrln]: component === 7,
+                  })}
+                >
+                  Отклики
+                </span>
+              </li>
               <li
                 onClick={() => {
                   dispatch(setComponentMenu(1));
