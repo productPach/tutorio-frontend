@@ -45,35 +45,9 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
               {page && page === "Tutor" ? (
                 <>
                   <li
-                    className={styles.liM}
-                    onClick={() => {
-                      dispatch(setComponentMenu(7));
-                      dispatch(
-                        updateScrollPosition({
-                          scrollPosition: 0,
-                          scrollHeight: 0,
-                        })
-                      );
-                      dispatch(setChat(null));
-                      route.push("../");
-                    }}
-                  >
-                    <Image
-                      src="/../img/icon/tutor/orders.svg"
-                      alt="Отклики"
-                      width={32}
-                      height={32}
-                    />
-                    <span
-                      className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 7,
-                      })}
-                    >
-                      Отклики
-                    </span>
-                  </li>
-                  <li
-                    className={styles.liM}
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 1,
+                    })}
                     onClick={() => {
                       dispatch(setComponentMenu(1));
                       dispatch(
@@ -101,7 +75,40 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     </span>
                   </li>
                   <li
-                    className={styles.liM}
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 7,
+                    })}
+                    onClick={() => {
+                      dispatch(setComponentMenu(7));
+                      dispatch(
+                        updateScrollPosition({
+                          scrollPosition: 0,
+                          scrollHeight: 0,
+                        })
+                      );
+                      dispatch(setChat(null));
+                      route.push("../");
+                    }}
+                  >
+                    <Image
+                      src="/../img/icon/tutor/orders.svg"
+                      alt="Отклики"
+                      width={32}
+                      height={32}
+                    />
+                    <span
+                      className={clsx(styles.left_menu__list_text, {
+                        [styles.undrln]: component === 7,
+                      })}
+                    >
+                      Отклики
+                    </span>
+                  </li>
+
+                  <li
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 2,
+                    })}
                     onClick={() => {
                       dispatch(setComponentMenu(2));
                       dispatch(
@@ -129,7 +136,9 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     </span>
                   </li>
                   <li
-                    className={styles.liM}
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 3,
+                    })}
                     onClick={() => {
                       dispatch(setComponentMenu(3));
                       dispatch(
@@ -160,28 +169,9 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
               ) : (
                 <>
                   <li
-                    className={styles.liM}
-                    onClick={() => {
-                      dispatch(setComponentMenu(7));
-                      dispatch(setChat(null));
-                    }}
-                  >
-                    <Image
-                      src="/../img/icon/tutor/orders.svg"
-                      alt="Отклики"
-                      width={32}
-                      height={32}
-                    />
-                    <span
-                      className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 7,
-                      })}
-                    >
-                      Отклики
-                    </span>
-                  </li>
-                  <li
-                    className={styles.liM}
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 1,
+                    })}
                     onClick={() => {
                       dispatch(setComponentMenu(1));
                       dispatch(setChat(null));
@@ -202,7 +192,32 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     </span>
                   </li>
                   <li
-                    className={styles.liM}
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 7,
+                    })}
+                    onClick={() => {
+                      dispatch(setComponentMenu(7));
+                      dispatch(setChat(null));
+                    }}
+                  >
+                    <Image
+                      src="/../img/icon/tutor/orders.svg"
+                      alt="Отклики"
+                      width={32}
+                      height={32}
+                    />
+                    <span
+                      className={clsx(styles.left_menu__list_text, {
+                        [styles.undrln]: component === 7,
+                      })}
+                    >
+                      Отклики
+                    </span>
+                  </li>
+                  <li
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 2,
+                    })}
                     onClick={() => {
                       dispatch(setComponentMenu(2));
                       dispatch(setChat(null));
@@ -223,7 +238,9 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     </span>
                   </li>
                   <li
-                    className={styles.liM}
+                    className={clsx(styles.liM, {
+                      [styles.activeLi]: component === 3,
+                    })}
                     onClick={() => {
                       dispatch(setComponentMenu(3));
                       dispatch(setChat(null));

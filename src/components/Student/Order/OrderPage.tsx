@@ -45,7 +45,7 @@ const OrderPage: React.FC = () => {
 
   const [student, setStudent] = useState<Student | null>(null);
   const { chats, setChatsState, clearChats } = useChat();
-
+  console.log(chats);
   const { orderById, loading, error } = useAppSelector((state) => state.orders);
 
   // Получаем всех репетиторов (фильтровать будем на клиенте)
@@ -135,7 +135,13 @@ const OrderPage: React.FC = () => {
 
   return (
     <>
-      <section className={clsx(styles.container, styles.center)}>
+      <section
+        className={clsx(
+          styles.container,
+          styles.center,
+          [5, 6].includes(component) && styles.containerChM
+        )}
+      >
         <LeftBarOrder />
         <div className={styles.content}>
           {component === 1 && (
