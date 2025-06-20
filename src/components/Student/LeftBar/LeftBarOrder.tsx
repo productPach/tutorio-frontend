@@ -50,7 +50,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
             <li>
               <Image
                 src="/../img/icon/tutor/go-back.svg"
-                alt="Заказы"
+                alt="Назад"
                 width={32}
                 height={32}
               />

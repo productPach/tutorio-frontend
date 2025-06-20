@@ -199,6 +199,7 @@
   overflow: hidden;
   transition: height 0.1s ease-in-out;
 }
+
 /* .wrapperRef:focus-within {
   border: 1px solid #fad949;
 } */
@@ -316,7 +317,25 @@
 ****************************************************** */
 @media (max-width: 768px) {
   .content__chat {
-    height: calc(100vh - 122px);
+    height: calc(100dvh - 104px);
+  }
+  /* .emojiWrapper {
+    display: none;
+  } */
+  .emojiButton {
+    display: none;
+  }
+  .wrapperRef {
+    display: flex;
+    height: 60px;
+    padding: 0px;
+    flex-direction: row;
+    align-items: center;
+  }
+  .textarea {
+    top: auto;
+    height: auto;
+    align-content: center;
   }
 }
 /* ******************************************************
@@ -346,7 +365,7 @@
 ****************************************************** */
 @media (max-width: 480px) {
   .content__chat {
-    height: calc(100vh - 106px);
+    height: calc(100dvh - 88px);
   }
 }
 /* ******************************************************

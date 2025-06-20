@@ -74,11 +74,12 @@ export const ResponseSidbarMobile = ({
     }
   }, []);
 
-  useEffect(() => {
-    return () => {
-      clearChats();
-    };
-  }, []);
+  //РАЗОБРАТЬСЯ ДЛЯ ЧЕГО ЭТО НУЖНО БЫЛО в компоненте Response
+  //   useEffect(() => {
+  //     return () => {
+  //       clearChats();
+  //     };
+  //   }, []);
 
   const toggleSwitch = () => {
     setIsChecked((prev) => {

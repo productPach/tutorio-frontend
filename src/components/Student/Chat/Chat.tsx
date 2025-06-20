@@ -11,25 +11,17 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setComponentMenu,
-  setOrderById,
   updateChatInOrder,
 } from "@/store/features/orderSlice";
 import Image from "next/image";
 import Link from "next/link";
-import { getBackendUrl, host, port } from "@/api/server/configApi";
+import { getBackendUrl } from "@/api/server/configApi";
 import { formatTimeAgo } from "@/utils/date/date";
-import {
-  getChatById,
-  sendMessage,
-  setChat,
-  setChats,
-  updateMessage,
-} from "@/store/features/chatSlice";
+import { sendMessage, setChat, setChats } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import GroupedMessages from "./GroupedMessages";
 import { EmojiPicker } from "./EmojiPicker";
 import { useChatSocket } from "@/hooks/useChatSocket";
-import { useChat } from "@/context/ChatContext";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -98,6 +90,7 @@ export const ChatComponent = ({
   };
 
   useEffect(() => {
+    if (window.innerWidth <= 768) return; // ❌ Прерываем на мобильных
     if (textareaRef.current && wrapperRef.current) {
       textareaRef.current.style.height = "auto";
       const scrollHeight = textareaRef.current.scrollHeight;
@@ -371,45 +364,61 @@ export const ChatComponent = ({
           styles.order_gap
         )}
       >
-        <div
-          className={clsx(
-            styles.tutorImgFioContainer,
-            chatStyles.alnItmCntr,
-            chatStyles.gap14
-          )}
-        >
-          <div className={chatStyles.tutorImgContainer}>
-            <Link
-              href={`./${chat?.orderId}/tutor/${chat?.tutor.id}`}
-              onClick={() => {
-                dispatch(setComponentMenu(6));
-              }}
-            >
-              <Image
-                className={styles.tutorImg}
-                src={tutorAvatar ? tutorAvatar : "/img/tutor/avatarBasic.png"}
-                width={34}
-                height={34}
-                alt=""
-              />
-            </Link>
+        <div className={styles.contBackM}>
+          <div
+            onClick={() => {
+              dispatch(setComponentMenu(7));
+              dispatch(setChat(null));
+            }}
+            className={styles.backImg}
+          >
+            <Image
+              src="/../img/icon/tutor/go-back.svg"
+              alt="Назад"
+              width={32}
+              height={32}
+            />
           </div>
-          <div className={styles.flex4}>
-            <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+          <div
+            className={clsx(
+              styles.tutorImgFioContainer,
+              chatStyles.alnItmCntr,
+              chatStyles.gap14
+            )}
+          >
+            <div className={chatStyles.tutorImgContainer}>
               <Link
-                href={`./${orderById?.id}/tutor/${chat && chat.tutor.id}`}
+                href={`./${chat?.orderId}/tutor/${chat?.tutor.id}`}
                 onClick={() => {
                   dispatch(setComponentMenu(6));
-                }} // Сохраняем скролл при клике
+                }}
               >
-                <span>{chat && chat.tutor.name}</span>
+                <Image
+                  className={styles.tutorImg}
+                  src={tutorAvatar ? tutorAvatar : "/img/tutor/avatarBasic.png"}
+                  width={34}
+                  height={34}
+                  alt=""
+                />
               </Link>
-              {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                <div className={styles.containerIsOnline}>
-                  <div className={styles.isOnline}></div>
-                  <span>{onlineStatus}</span>
-                </div>
-              )}
+            </div>
+            <div className={styles.flex4}>
+              <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+                <Link
+                  href={`./${orderById?.id}/tutor/${chat && chat.tutor.id}`}
+                  onClick={() => {
+                    dispatch(setComponentMenu(6));
+                  }} // Сохраняем скролл при клике
+                >
+                  <span>{chat && chat.tutor.name}</span>
+                </Link>
+                {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
+                  <div className={styles.containerIsOnline}>
+                    <div className={styles.isOnline}></div>
+                    <span>{onlineStatus}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
