@@ -139,7 +139,7 @@ const OrderPage: React.FC = () => {
         className={clsx(
           styles.container,
           styles.center,
-          [5, 6].includes(component) && styles.containerChM
+          [5, 6].includes(component) ? styles.containerChM : styles.paddingBottM
         )}
       >
         <LeftBarOrder />

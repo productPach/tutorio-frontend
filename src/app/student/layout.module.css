@@ -854,6 +854,9 @@
   .contentFull {
     grid-column: span 1;
   }
+  .paddingBottM {
+    padding-bottom: 70px;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -908,6 +911,17 @@
   }
   .content_block {
     padding: 10px;
+    margin-bottom: 10px;
+  }
+  .sidebarResponseM {
+    gap: 10px;
+  }
+  .container {
+    margin-top: 10px;
+  }
+  .containerChM {
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: 0;
   }
 }
 /* ******************************************************

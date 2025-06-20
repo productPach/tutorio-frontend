@@ -90,7 +90,7 @@ export const ChatComponent = ({
   };
 
   useEffect(() => {
-    if (window.innerWidth <= 768) return; // ❌ Прерываем на мобильных
+    // if (window.innerWidth <= 768) return; // ❌ Прерываем на мобильных
     if (textareaRef.current && wrapperRef.current) {
       textareaRef.current.style.height = "auto";
       const scrollHeight = textareaRef.current.scrollHeight;
@@ -361,7 +361,8 @@ export const ChatComponent = ({
           generalStyles.content_block,
           generalStyles.order_block,
           generalStyles.crsr_pntr,
-          styles.order_gap
+          styles.order_gap,
+          generalStyles.content_blockChtM
         )}
       >
         <div className={styles.contBackM}>
@@ -403,7 +404,13 @@ export const ChatComponent = ({
               </Link>
             </div>
             <div className={styles.flex4}>
-              <div className={clsx(styles.containerFlxRw, styles.jtfCntSpBtwn)}>
+              <div
+                className={clsx(
+                  styles.containerFlxRw,
+                  styles.jtfCntSpBtwn,
+                  chatStyles.gap6
+                )}
+              >
                 <Link
                   href={`./${orderById?.id}/tutor/${chat && chat.tutor.id}`}
                   onClick={() => {
@@ -415,7 +422,7 @@ export const ChatComponent = ({
                 {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
                   <div className={styles.containerIsOnline}>
                     <div className={styles.isOnline}></div>
-                    <span>{onlineStatus}</span>
+                    <span className={styles.isOnlineTxt}>{onlineStatus}</span>
                   </div>
                 )}
               </div>
