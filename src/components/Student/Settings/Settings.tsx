@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styles from "../../../app/tutor/layout.module.css";
 import componentStyle from "../../Tutor/Settings/Settings.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -13,13 +13,8 @@ import {
 } from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
-import { io, Socket } from "socket.io-client";
 import "dotenv/config";
-import { host, port } from "@/api/server/configApi";
-import {
-  getCurrentStudent,
-  updateStudent,
-} from "@/store/features/studentSlice";
+import { updateStudent } from "@/store/features/studentSlice";
 
 type SettingsProps = {
   student: Student | null;
@@ -156,7 +151,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                 Будем отправлять вам уведомления на указанные каналы связи
               </span>
             </div>
-            <div className={styles.inputContainer}>
+            <div className={styles.inputContainerSwitch}>
               <label className={styles.iosSwitch}>
                 <input
                   type="checkbox"
@@ -184,7 +179,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                   Уведомления о новых откликах от репетиторов в заказах
                 </span>
               </div>
-              <div className={styles.inputContainer}>
+              <div className={styles.inputContainerSwitch}>
                 <label className={styles.iosSwitch}>
                   <input
                     type="checkbox"
@@ -203,7 +198,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                   Информируем вас о скидках, акциях и важных новостях
                 </span>
               </div>
-              <div className={styles.inputContainer}>
+              <div className={styles.inputContainerSwitch}>
                 <label className={styles.iosSwitch}>
                   <input
                     type="checkbox"
@@ -250,7 +245,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                 <div>E-mail</div>
                 {/* <span>Уведомления о новых откликах от учеников в заказах</span> */}
               </div>
-              <div className={styles.inputContainer}>
+              <div className={styles.inputContainerSwitch}>
                 <label className={styles.iosSwitch}>
                   <input
                     type="checkbox"
@@ -284,7 +279,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                 <div>Вконтакте</div>
                 {/* <span>Информируем вас о скидках, акциях и важных новостях</span> */}
               </div>
-              <div className={styles.inputContainer}>
+              <div className={styles.inputContainerSwitch}>
                 <label className={styles.iosSwitch}>
                   <input
                     type="checkbox"
@@ -312,7 +307,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                   " " + formatPhoneNumber(student.phone).formattedWithStars}
               </span>
             </div>
-            <div className={styles.inputContainer}>
+            <div className={styles.inputContainerSwitch}>
               <Image
                 onClick={(e) => {
                   e.preventDefault();
@@ -348,7 +343,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                   : "Не показывается в анкете. Мы будем отправлять на неё уведомления о новых заказах и откликах учеников"}
               </span>
             </div>
-            <div className={styles.inputContainer}>
+            <div className={styles.inputContainerSwitch}>
               <Image
                 onClick={(e) => {
                   e.preventDefault();
@@ -376,7 +371,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                   : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
               </span>
             </div>
-            <div className={styles.inputContainer}>
+            <div className={styles.inputContainerSwitch}>
               <Image
                 onClick={(e) => {
                   e.preventDefault();
@@ -404,7 +399,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                   : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
               </span>
             </div>
-            <div className={styles.inputContainer}>
+            <div className={styles.inputContainerSwitch}>
               <Image
                 onClick={(e) => {
                   e.preventDefault();

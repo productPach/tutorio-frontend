@@ -207,7 +207,7 @@ export const ResponseSidbar = ({
               <div className={stylesStudent.containerEntityTitleDescription}>
                 <div>Получать новые отклики</div>
               </div>
-              <div className={stylesStudent.inputContainer}>
+              <div className={stylesStudent.inputContainerSwitch}>
                 <label className={stylesStudent.iosSwitch}>
                   <input
                     type="checkbox"

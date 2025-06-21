@@ -99,6 +99,9 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       strokeWidth={component === 7 ? 1.5 : 1.25}
                       // fill={component === 7 ? "#e1e1e1" : "none"}
                     />
+                    {unreadCount > 0 && (
+                      <span className={styles.unreadCountM}>{unreadCount}</span>
+                    )}
                     <span
                       className={clsx(styles.left_menu__list_text, {
                         [styles.boldTM]: component === 7,
