@@ -6,10 +6,10 @@ import styles from "./MenuMobile.module.css";
 import { Menu, X } from "lucide-react"; // Можно заменить на свою иконку
 
 const links = [
-  { label: "Главная", href: "/" },
-  { label: "Курсы", href: "/courses" },
-  { label: "О нас", href: "/about" },
-  { label: "Контакты", href: "/contact" },
+  { label: "Новый заказ", href: "/" },
+  { label: "Заказы", href: "/student/orders" },
+  { label: "Настройки", href: "/student/settings" },
+  { label: "База знаний", href: "/student/wiki" },
 ];
 
 export default function MenuMobile() {
@@ -23,7 +23,11 @@ export default function MenuMobile() {
         className={styles.menuButton}
         aria-label="Открыть меню"
       >
-        {isOpen ? <X size={28} /> : <Menu size={28} />}
+        {isOpen ? (
+          <X size={28} strokeWidth={1.25} />
+        ) : (
+          <Menu size={28} strokeWidth={1.25} />
+        )}
       </button>
 
       {/* Меню */}
@@ -52,12 +56,7 @@ export default function MenuMobile() {
             }}
           >
             {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={styles.link}
-                onClick={() => setIsOpen(false)}
-              >
+              <a key={link.href} href={link.href} className={styles.link}>
                 {link.label}
               </a>
             ))}

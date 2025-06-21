@@ -112,15 +112,18 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </Head>
           <header className={[5, 6].includes(component) ? styles.dsplNone : ""}>
             <div className={clsx(styles.header, styles.center)}>
-              <MenuMobile />
-              <Link href="/student/orders">
-                <div className={styles.header__logo}>
-                  tutorio
-                  <span className={styles.header__underLogo}>
-                    Онлайн-сервис подбора репетиторов
-                  </span>
-                </div>
-              </Link>
+              <div className={styles.headerM}>
+                <MenuMobile />
+                <Link href="/student/orders">
+                  <div className={styles.header__logo}>
+                    tutorio
+                    <span className={styles.header__underLogo}>
+                      Онлайн-сервис подбора репетиторов
+                    </span>
+                  </div>
+                </Link>
+              </div>
+
               <div className={styles.header__menu}>
                 {student && (
                   <>

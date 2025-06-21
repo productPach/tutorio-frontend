@@ -2,15 +2,14 @@
 import styles from "./OrderMenuMobile.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { setChat } from "@/store/features/chatSlice";
-import Link from "next/link";
 import {
   setComponentMenu,
   updateScrollPosition,
 } from "@/store/features/orderSlice";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { MessageCircleQuestionMark, Send, Text, Users } from "lucide-react";
 
 interface LeftBarOrderProps {
   page?: string; // Строковый пропс для указания страницы, если нужно
@@ -60,15 +59,16 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       route.push("../");
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/orders.svg"
-                      alt="Заказы"
-                      width={32}
-                      height={32}
+                    <Text
+                      size={24}
+                      color={component === 1 ? "#343330" : "#777777"}
+                      strokeWidth={component === 1 ? 1.5 : 1.25}
+                      // fill={component === 1 ? "#e1e1e1" : "none"}
                     />
+                    {/* <span className={styles.pulseDot} /> */}
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 1,
+                        [styles.boldTM]: component === 1,
                       })}
                     >
                       Заказ
@@ -90,15 +90,15 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       route.push("../");
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/response.svg"
-                      alt="Отклики"
-                      width={32}
-                      height={32}
+                    <Send
+                      size={24}
+                      color={component === 7 ? "#343330" : "#777777"}
+                      strokeWidth={component === 7 ? 1.5 : 1.25}
+                      // fill={component === 7 ? "#e1e1e1" : "none"}
                     />
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 7,
+                        [styles.boldTM]: component === 7,
                       })}
                     >
                       Отклики
@@ -121,15 +121,15 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       route.push("../");
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/settings.svg"
-                      alt="Настройки"
-                      width={32}
-                      height={32}
+                    <Users
+                      size={24}
+                      color={component === 2 ? "#343330" : "#777777"}
+                      strokeWidth={component === 2 ? 1.5 : 1.25}
+                      // fill={component === 2 ? "#e1e1e1" : "none"}
                     />
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 2,
+                        [styles.boldTM]: component === 2,
                       })}
                     >
                       Репетиторы
@@ -151,15 +151,15 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       route.push("../");
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/base.svg"
-                      alt="Настройки"
-                      width={32}
-                      height={32}
+                    <MessageCircleQuestionMark
+                      size={24}
+                      color={component === 3 ? "#343330" : "#777777"}
+                      strokeWidth={component === 3 ? 1.5 : 1.25}
+                      // fill={component === 3 ? "#e1e1e1" : "none"}
                     />
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 3,
+                        [styles.boldTM]: component === 3,
                       })}
                     >
                       Помощь
@@ -177,15 +177,16 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       dispatch(setChat(null));
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/orders.svg"
-                      alt="Заказы"
-                      width={32}
-                      height={32}
+                    <Text
+                      size={24}
+                      color={component === 1 ? "#343330" : "#777777"}
+                      strokeWidth={component === 1 ? 1.5 : 1.25}
+                      // fill={component === 1 ? "#e1e1e1" : "none"}
                     />
+                    {/* <span className={styles.pulseDot} /> */}
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 1,
+                        [styles.boldTM]: component === 1,
                       })}
                     >
                       Заказ
@@ -200,15 +201,19 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       dispatch(setChat(null));
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/response.svg"
-                      alt="Отклики"
-                      width={32}
-                      height={32}
+                    {/* 
+                    <MessageSquareText size={24} strokeWidth={1.25} /> */}
+                    {/* <MessageSquareMore size={24} strokeWidth={1.25} /> */}
+                    {/* <MessageCircleMore size={24} strokeWidth={1.25} /> */}
+                    <Send
+                      size={24}
+                      color={component === 7 ? "#343330" : "#777777"}
+                      strokeWidth={component === 7 ? 1.5 : 1.25}
+                      // fill={component === 7 ? "#e1e1e1" : "none"}
                     />
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 7,
+                        [styles.boldTM]: component === 7,
                       })}
                     >
                       Отклики
@@ -223,15 +228,15 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       dispatch(setChat(null));
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/settings.svg"
-                      alt="Настройки"
-                      width={32}
-                      height={32}
+                    <Users
+                      size={24}
+                      color={component === 2 ? "#343330" : "#777777"}
+                      strokeWidth={component === 2 ? 1.5 : 1.25}
+                      // fill={component === 2 ? "#e1e1e1" : "none"}
                     />
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 2,
+                        [styles.boldTM]: component === 2,
                       })}
                     >
                       Репетиторы
@@ -246,15 +251,15 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       dispatch(setChat(null));
                     }}
                   >
-                    <Image
-                      src="/../img/icon/tutor/base.svg"
-                      alt="Настройки"
-                      width={32}
-                      height={32}
+                    <MessageCircleQuestionMark
+                      size={24}
+                      color={component === 3 ? "#343330" : "#777777"}
+                      strokeWidth={component === 3 ? 1.5 : 1.25}
+                      // fill={component === 3 ? "#e1e1e1" : "none"}
                     />
                     <span
                       className={clsx(styles.left_menu__list_text, {
-                        [styles.undrln]: component === 3,
+                        [styles.boldTM]: component === 3,
                       })}
                     >
                       Помощь

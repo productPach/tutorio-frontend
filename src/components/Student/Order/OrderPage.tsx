@@ -45,7 +45,7 @@ const OrderPage: React.FC = () => {
 
   const [student, setStudent] = useState<Student | null>(null);
   const { chats, setChatsState, clearChats } = useChat();
-  console.log(chats);
+
   const { orderById, loading, error } = useAppSelector((state) => state.orders);
 
   // Получаем всех репетиторов (фильтровать будем на клиенте)
@@ -61,6 +61,10 @@ const OrderPage: React.FC = () => {
       dispatch(clearOrderById());
     };
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [component]);
 
   // Фильтруем репетиторов по условиям заказа
   const tutorsForOrder = tutorsForOrderNotFilter
