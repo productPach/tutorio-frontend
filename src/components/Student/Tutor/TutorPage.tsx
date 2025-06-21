@@ -101,7 +101,7 @@ const TutorPage: React.FC = () => {
           isChatWithTutor={hasChatWithTutor}
         />
       </section>
-      <OrderMenuMobile />
+      <OrderMenuMobile page={page} />
       <Modal
         titleModal={"Предложить заказ репетитору"}
         contentModal={<ResponseStudentToTutorModal />}
