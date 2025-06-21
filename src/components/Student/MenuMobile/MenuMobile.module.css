@@ -1,0 +1,35 @@
+.menuButton {
+  position: relative;
+  z-index: 100;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menuPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh; /* высота меню */
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  gap: 20px;
+  z-index: 90;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.link {
+  font-size: 20px;
+  color: #222;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #0070f3;
+}

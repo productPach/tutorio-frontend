@@ -488,6 +488,15 @@ export const ChatComponent = ({
                 placeholder="Начните вводить сообщение"
                 rows={1}
                 className={chatStyles.textarea}
+                onBlur={() => {
+                  // Задержка позволяет дождаться закрытия клавиатуры
+                  setTimeout(() => {
+                    document.activeElement?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "end",
+                    });
+                  }, 100);
+                }}
               />
             </div>
             <EmojiPicker
