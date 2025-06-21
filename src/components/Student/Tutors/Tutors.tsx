@@ -52,7 +52,18 @@ export const TutorsComponent = ({
         ? diplom.educationDiplomUrl
             .slice(0, 6) // Ограничиваем количеством 6
             .map((imgDiplom) => ({
-              //src: `${getBackendUrl()}${imgDiplom}`, // Локально
+              src: `${getBackendUrl()}${imgDiplom}`,
+            }))
+        : []
+    )
+  );
+
+  const slidesPerTutorLb: SlideImage[][] = tutorsForOrder.map((tutor) =>
+    tutor.educations.flatMap((diplom) =>
+      diplom.isShowDiplom
+        ? diplom.educationDiplomUrl
+            .slice(0, 6) // Ограничиваем количеством 6
+            .map((imgDiplom) => ({
               src: `${host}${imgDiplom}`,
             }))
         : []
@@ -421,7 +432,7 @@ export const TutorsComponent = ({
         <Lightbox
           open={openLightboxIndex !== null}
           close={handleClose}
-          slides={slidesPerTutor[openLightboxIndex]}
+          slides={slidesPerTutorLb[openLightboxIndex]}
           index={currentImageIndex}
         />
       )}
