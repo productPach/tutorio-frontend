@@ -649,6 +649,13 @@
   /* border-radius: 32px; */
   border-radius: 28px;
   transition: background-color 0.3s ease;
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
 
 .iosSwitch .slider::before {

@@ -7,6 +7,13 @@
   cursor: pointer;
   height: 28px;
   color: #343330;
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
 
 .menuPanel {
@@ -31,10 +38,13 @@
   color: #222;
   text-decoration: none;
   transition: color 0.2s ease;
-}
-
-.link:hover {
-  color: #0070f3;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
 /* Адаптивные стили под разрешения экранов */
 
