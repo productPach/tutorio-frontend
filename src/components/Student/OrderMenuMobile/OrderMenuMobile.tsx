@@ -91,7 +91,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     }}
                   >
                     <Image
-                      src="/../img/icon/tutor/orders.svg"
+                      src="/../img/icon/tutor/response.svg"
                       alt="Отклики"
                       width={32}
                       height={32}
@@ -201,7 +201,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     }}
                   >
                     <Image
-                      src="/../img/icon/tutor/orders.svg"
+                      src="/../img/icon/tutor/response.svg"
                       alt="Отклики"
                       width={32}
                       height={32}

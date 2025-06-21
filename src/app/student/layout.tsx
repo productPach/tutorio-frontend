@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { io, Socket } from "socket.io-client";
 import { useSocket } from "@/context/SocketContext";
+import MenuMobile from "@/components/Student/MenuMobile/MenuMobile";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -111,6 +112,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </Head>
           <header className={[5, 6].includes(component) ? styles.dsplNone : ""}>
             <div className={clsx(styles.header, styles.center)}>
+              <MenuMobile />
               <Link href="/student/orders">
                 <div className={styles.header__logo}>
                   tutorio
