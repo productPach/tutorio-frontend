@@ -8,6 +8,11 @@
   flex-direction: row;
   gap: 20px;
 }
+.tutorImgFioContainerTP {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
 .tutorImg {
   border-radius: 10px;
 }
@@ -235,6 +240,10 @@
     display: block;
     height: 32px;
   }
+  .content_block {
+    opacity: initial; /* Начальная прозрачность */
+    animation: none; /* Анимация появления */
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -264,6 +273,20 @@
 @media (max-width: 480px) {
   .isOnlineTxt {
     display: none;
+  }
+  .tutorImgFioContainerTP {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .flex1 {
+    align-self: center;
+  }
+  .titleTutorInfo {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .order_gap {
+    gap: 14px;
   }
 }
 /* ******************************************************

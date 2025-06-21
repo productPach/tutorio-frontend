@@ -55,10 +55,10 @@ const TopicPage: React.FC = () => {
   return (
     <section className={clsx(styles.container, styles.center)}>
       <LeftBar page={page} pageName={pageName} />
-      <div className={styles.content}>
+      <div className={styles.contentFull}>
         {topicArr && <Topic themes={themes} topicTitle={topicArr.title} />}
       </div>
-      <InviteSidebar />
+      {/* <InviteSidebar /> */}
     </section>
   );
 };

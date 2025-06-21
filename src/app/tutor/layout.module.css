@@ -648,7 +648,15 @@
   gap: 6px;
   color: #000000;
 }
-
+.inputContainerSwitch {
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
 .iosSwitch {
   position: relative;
   display: inline-block;
@@ -804,6 +812,10 @@
   }
   .dsplNone {
     display: none;
+  }
+  .content_block {
+    opacity: initial; /* Начальная прозрачность */
+    animation: none; /* Анимация появления */
   }
 }
 /* ******************************************************

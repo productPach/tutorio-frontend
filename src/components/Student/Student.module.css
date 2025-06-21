@@ -12,6 +12,15 @@
   gap: 6px;
   color: #333333;
 }
+.inputContainerSwitch {
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
 .iosSwitch {
   position: relative;
   display: inline-block;

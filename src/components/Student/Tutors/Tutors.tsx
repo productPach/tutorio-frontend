@@ -189,7 +189,7 @@ export const TutorsComponent = ({
                 styles.order_gap
               )}
             >
-              <div className={styles.tutorImgFioContainer}>
+              <div className={styles.tutorImgFioContainerTP}>
                 <div className={styles.flex1}>
                   <Link
                     href={`./${orderById?.id}/tutor/${tutor.id}`}
