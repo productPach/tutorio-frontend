@@ -157,6 +157,30 @@ export const ChatComponent = ({
     setInputValue("");
   }, [dispatch, chat?.id]);
 
+  // Блокируем скролл самой страницы при открытой клавиатуре
+  useEffect(() => {
+    const lockScroll = () => {
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.width = "100%";
+    };
+
+    const unlockScroll = () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    };
+
+    window.addEventListener("focusin", lockScroll);
+    window.addEventListener("focusout", unlockScroll);
+
+    return () => {
+      window.removeEventListener("focusin", lockScroll);
+      window.removeEventListener("focusout", unlockScroll);
+    };
+  }, []);
+
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
