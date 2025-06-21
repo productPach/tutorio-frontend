@@ -152,24 +152,26 @@ export const ResponseSidbarMobile = ({
             </button>
           </>
         )}
-        {(orderById?.status === "Pending" ||
-          orderById?.status === "Sending") && (
-          <div className={styles.sidebar_filter}>
-            <div className={generalStyles.studentSidebarOrderNoResponse}>
-              <Player
-                autoplay
-                loop
-                animationData={Notification}
-                style={{ height: "30px", width: "30px" }}
-              />
-              <div>
-                Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
-                <br></br>
-                Скоро тут появятся отклики ..
+        {orderById &&
+          orderById.chats.length < 1 &&
+          (orderById?.status === "Pending" ||
+            orderById?.status === "Sending") && (
+            <div className={styles.sidebar_filter}>
+              <div className={generalStyles.studentSidebarOrderNoResponse}>
+                <Player
+                  autoplay
+                  loop
+                  animationData={Notification}
+                  style={{ height: "30px", width: "30px" }}
+                />
+                <div>
+                  Рассылаем ваш заказ подходящим репетиторам! 🎯 <br></br>
+                  <br></br>
+                  Скоро тут появятся отклики ..
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {orderById?.status === "Active" && orderById.chats.length < 1 && (
           <div className={styles.sidebar_filter}>
@@ -202,25 +204,28 @@ export const ResponseSidbarMobile = ({
           </div>
         )}
 
-        {(orderById?.status === "Active" || orderById?.status === "Hidden") && (
-          <div className={styles.sidebar_filter}>
-            <div className={stylesStudent.containerEntityShowEnd}>
-              <div className={stylesStudent.containerEntityTitleDescription}>
-                <div>Получать новые отклики</div>
-              </div>
-              <div className={stylesStudent.inputContainer}>
-                <label className={stylesStudent.iosSwitch}>
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={toggleSwitch}
-                  />
-                  <span className={stylesStudent.slider}></span>
-                </label>
+        {orderById &&
+          (orderById.chats.length > 0 ||
+            orderById?.status === "Active" ||
+            orderById?.status === "Hidden") && (
+            <div className={styles.sidebar_filter}>
+              <div className={stylesStudent.containerEntityShowEnd}>
+                <div className={stylesStudent.containerEntityTitleDescription}>
+                  <div>Получать новые отклики</div>
+                </div>
+                <div className={stylesStudent.inputContainerSwitch}>
+                  <label className={stylesStudent.iosSwitch}>
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={toggleSwitch}
+                    />
+                    <span className={stylesStudent.slider}></span>
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {orderById && orderById.chats.length > 0 && (
           <>

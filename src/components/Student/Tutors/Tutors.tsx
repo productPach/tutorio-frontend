@@ -52,7 +52,8 @@ export const TutorsComponent = ({
         ? diplom.educationDiplomUrl
             .slice(0, 6) // Ограничиваем количеством 6
             .map((imgDiplom) => ({
-              src: `${getBackendUrl()}${imgDiplom}`,
+              //src: `${getBackendUrl()}${imgDiplom}`, // Локально
+              src: `${host}${imgDiplom}`,
             }))
         : []
     )

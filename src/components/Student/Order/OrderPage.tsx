@@ -126,12 +126,16 @@ const OrderPage: React.FC = () => {
     if (orderById && token && !isDataLoaded) {
       fetchStudent();
       dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
-      setIsChecked(orderById.status === "Active");
+      setIsChecked(
+        orderById.status === "Active" ||
+          orderById.status === "Pending" ||
+          orderById.status === "Sending"
+      );
     }
   }, [orderById, token, dispatch, isDataLoaded]);
 
   // Состояние для свитча
-  const [isChecked, setIsChecked] = useState(orderById?.status === "Active");
+  const [isChecked, setIsChecked] = useState<boolean>(true); // всегда стартуем с true
 
   const themes = useAppSelector((state) => state.wiki.themes)
     .filter((theme) => theme.visibleToRoles.includes("student"))
