@@ -66,7 +66,14 @@ export const TutorComponent = ({
   const slidesPerTutor: SlideImage[] = tutor.educations.flatMap((diplom) =>
     diplom.isShowDiplom
       ? diplom.educationDiplomUrl.map((imgDiplom) => ({
-          //src: `${getBackendUrl()}${imgDiplom}`, //ЛОКАЛЬНО
+          src: `${getBackendUrl()}${imgDiplom}`, //ЛОКАЛЬНО
+        }))
+      : []
+  );
+
+  const slidesPerTutorLB: SlideImage[] = tutor.educations.flatMap((diplom) =>
+    diplom.isShowDiplom
+      ? diplom.educationDiplomUrl.map((imgDiplom) => ({
           src: `${host}${imgDiplom}`,
         }))
       : []
@@ -392,7 +399,7 @@ export const TutorComponent = ({
         <Lightbox
           open={openLightboxIndex !== null}
           close={() => handleClose()}
-          slides={slidesPerTutor}
+          slides={slidesPerTutorLB}
           index={currentImageIndex}
         />
       )}
