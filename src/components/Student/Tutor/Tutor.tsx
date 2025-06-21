@@ -5,19 +5,13 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { City, Order, Tutor } from "@/types/types";
 import Image from "next/image";
-import { getBackendUrl, host, port } from "@/api/server/configApi";
+import { getBackendUrl, host } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
 import { data } from "@/utils/listSubjects";
-import {
-  findLocTitleById,
-  findLocTitleByIdWithDistrict,
-  findLocTitlesByIds,
-} from "@/utils/locations/getTitleLocationById";
-import { setComponentMenu } from "@/store/features/orderSlice";
-import { useAppDispatch } from "@/store/store";
+import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocationById";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -36,7 +30,6 @@ export const TutorComponent = ({
   locations,
   tutor, // принимаем tutorId
 }: OrderProps) => {
-  const dispatch = useAppDispatch();
   useEffect(() => {
     //dispatch(setComponentMenu(4));
     window.scrollTo({
@@ -73,7 +66,8 @@ export const TutorComponent = ({
   const slidesPerTutor: SlideImage[] = tutor.educations.flatMap((diplom) =>
     diplom.isShowDiplom
       ? diplom.educationDiplomUrl.map((imgDiplom) => ({
-          src: `${getBackendUrl()}${imgDiplom}`,
+          //src: `${getBackendUrl()}${imgDiplom}`, //ЛОКАЛЬНО
+          src: `${host}${imgDiplom}`,
         }))
       : []
   );
