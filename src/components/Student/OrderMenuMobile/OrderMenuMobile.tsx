@@ -10,6 +10,7 @@ import {
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { MessageCircleQuestionMark, Send, Text, Users } from "lucide-react";
+import { useTotalUnreadCount } from "@/hooks/useTotalUnreadCount";
 
 interface LeftBarOrderProps {
   page?: string; // Строковый пропс для указания страницы, если нужно
@@ -23,6 +24,8 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
   const [isSafari, setIsSafari] = useState(false);
+
+  const unreadCount = useTotalUnreadCount();
 
   // Определяем, используется ли Safari
   useEffect(() => {
@@ -211,6 +214,9 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                       strokeWidth={component === 7 ? 1.5 : 1.25}
                       // fill={component === 7 ? "#e1e1e1" : "none"}
                     />
+                    {unreadCount > 0 && (
+                      <span className={styles.unreadCountM}>{unreadCount}</span>
+                    )}
                     <span
                       className={clsx(styles.left_menu__list_text, {
                         [styles.boldTM]: component === 7,

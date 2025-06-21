@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import Head from "next/head";
@@ -8,16 +8,13 @@ import { setToken } from "@/store/features/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { getCurrentTutor } from "@/store/features/tutorSlice";
 import Image from "next/image";
-import { host, port } from "@/api/server/configApi";
 import { getAllLocations } from "@/store/features/locationSlice";
 import {
   getCurrentStudent,
   updateStudent,
 } from "@/store/features/studentSlice";
 import Link from "next/link";
-import { io, Socket } from "socket.io-client";
 import { useSocket } from "@/context/SocketContext";
 import MenuMobile from "@/components/Student/MenuMobile/MenuMobile";
 
@@ -110,7 +107,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
               content="Бесплатно подберём репетитора под ваш запрос и бюджет. Проверенные репетиторы."
             />
           </Head>
-          <header className={[5, 6].includes(component) ? styles.dsplNone : ""}>
+          <header className={[5].includes(component) ? styles.dsplNone : ""}>
             <div className={clsx(styles.header, styles.center)}>
               <div className={styles.headerM}>
                 <MenuMobile />
