@@ -49,7 +49,7 @@
   -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
   -moz-user-select: none; /* Old versions of Firefox */ /* Internet Explorer/Edge */
   user-select: none;
-  background: url(/img/static/chat-fon.jpg) repeat center;
+  background: url(/img/static/chat-fon.webp) repeat center;
   background-size: 600px auto;
   background-repeat: repeat;
   background-position: center;
@@ -309,7 +309,7 @@
   height: calc(100dvh - 159px);
   align-items: center;
   justify-content: center;
-  background: url(/img/static/chat-fon.jpg) repeat center;
+  background: url(/img/static/chat-fon.webp) repeat center;
   background-position-x: center;
   background-position-y: center;
   background-repeat: repeat;
