@@ -52,7 +52,7 @@
   -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
   -moz-user-select: none; /* Old versions of Firefox */ /* Internet Explorer/Edge */
   user-select: none;
-  background: url(/img/static/chat-fon.jpg) repeat center;
+  background: url(/img/static/chat-fon.webp) repeat center;
   background-size: 600px auto;
   background-repeat: repeat;
   background-position: center;
@@ -285,6 +285,13 @@
   border-radius: 999px;
   padding: 5px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
 
 .activeWrapperIM {

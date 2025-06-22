@@ -88,9 +88,20 @@ export const ChatComponent = ({
     }
   };
 
+  const [isSending, setIsSending] = useState(false);
+
   const preHandleSendMessage = () => {
-    if (inputValue.trim() !== "") {
-      handleSendMessage();
+    if (inputValue.trim() !== "" && !isSending) {
+      setIsSending(true); // блокируем повторное нажатие
+
+      if (textareaRef.current) {
+        textareaRef.current.blur();
+      }
+
+      setTimeout(() => {
+        handleSendMessage();
+        setIsSending(false); // разблокируем
+      }, 200);
     }
   };
 
