@@ -158,18 +158,55 @@ export const ChatComponent = ({
   }, [dispatch, chat?.id]);
 
   // Блокируем скролл самой страницы при открытой клавиатуре
+  // useEffect(() => {
+  //   const lockScroll = () => {
+  //     document.body.style.position = "fixed";
+  //     document.body.style.top = `-${window.scrollY}px`;
+  //     document.body.style.width = "100%";
+  //   };
+
+  //   const unlockScroll = () => {
+  //     const scrollY = document.body.style.top;
+  //     document.body.style.position = "";
+  //     document.body.style.top = "";
+  //     window.scrollTo(0, parseInt(scrollY || "0") * -1);
+  //   };
+
+  //   window.addEventListener("focusin", lockScroll);
+  //   window.addEventListener("focusout", unlockScroll);
+
+  //   return () => {
+  //     window.removeEventListener("focusin", lockScroll);
+  //     window.removeEventListener("focusout", unlockScroll);
+  //   };
+  // }, []);
+
   useEffect(() => {
+    const chatElement = document.querySelector(".content__chat"); // <-- Твой скролл-контейнер
+    let scrollY = 0;
+
+    const preventScroll = (e: TouchEvent) => {
+      if (!chatElement?.contains(e.target as Node)) {
+        e.preventDefault(); // блокируем свайпы вне области чата
+      }
+    };
+
     const lockScroll = () => {
+      scrollY = window.scrollY;
       document.body.style.position = "fixed";
-      document.body.style.top = `-${window.scrollY}px`;
+      document.body.style.top = `-${scrollY}px`;
       document.body.style.width = "100%";
+      document.body.addEventListener("touchmove", preventScroll, {
+        passive: false,
+      });
     };
 
     const unlockScroll = () => {
-      const scrollY = document.body.style.top;
       document.body.style.position = "";
       document.body.style.top = "";
-      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      document.body.style.width = "";
+      window.scrollTo(0, scrollY);
+      document.body.removeEventListener("touchmove", preventScroll);
     };
 
     window.addEventListener("focusin", lockScroll);
@@ -178,6 +215,7 @@ export const ChatComponent = ({
     return () => {
       window.removeEventListener("focusin", lockScroll);
       window.removeEventListener("focusout", unlockScroll);
+      document.body.removeEventListener("touchmove", preventScroll);
     };
   }, []);
 
