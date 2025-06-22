@@ -17,11 +17,11 @@
 .content__chat {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 196px); /* Учитываем высоту шапки */
+  height: calc(100dvh - 196px); /* Учитываем высоту шапки */
   margin-bottom: 0px;
 }
 .content__chat_with_cookies {
-  height: calc(100vh - 283px);
+  height: calc(100dvh - 283px);
 }
 .flx1 {
   flex: 1;
@@ -306,7 +306,7 @@
   background-color: #66bb6a;
 }
 .defaultChatBlock {
-  height: calc(100vh - 159px);
+  height: calc(100dvh - 159px);
   align-items: center;
   justify-content: center;
   background: url(/img/static/chat-fon.jpg) repeat center;
@@ -319,7 +319,7 @@
   background-position: center;
 }
 .defaultChatBlock_with_cookies {
-  height: calc(100vh - 230px);
+  height: calc(100dvh - 230px);
 }
 .defaultChatText {
   width: 225px;

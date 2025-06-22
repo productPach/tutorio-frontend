@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center; /* Горизонтальное центрирование */
   align-items: center; /* Вертикальное центрирование */
-  height: 100vh; /* Занимает всю высоту экрана */
+  height: 100dvh; /* Занимает всю высоту экрана */
 }
 .spinner {
   width: 18px;
