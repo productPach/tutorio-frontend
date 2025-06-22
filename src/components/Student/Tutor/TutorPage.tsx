@@ -77,7 +77,9 @@ const TutorPage: React.FC = () => {
 
   return (
     <>
-      <section className={clsx(styles.container, styles.center)}>
+      <section
+        className={clsx(styles.container, styles.center, styles.paddingBottM)}
+      >
         <LeftBarOrder page={page} />
         <div className={styles.content}>
           <TutorComponent
