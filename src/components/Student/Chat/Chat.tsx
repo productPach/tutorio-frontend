@@ -94,10 +94,6 @@ export const ChatComponent = ({
     if (inputValue.trim() !== "" && !isSending) {
       setIsSending(true); // блокируем повторное нажатие
       handleSendMessage();
-      // Вернуть фокус, чтобы клавиатура не закрылась
-      setTimeout(() => {
-        textareaRef.current?.focus();
-      }, 0);
       setIsSending(false); // разблокируем
     }
   };

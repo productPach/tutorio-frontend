@@ -474,6 +474,7 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
+  font-family: "Source Sans 3", sans-serif;
 }
 @media (max-width: 668px) {
   .cookie_link {
@@ -677,6 +678,13 @@
   }
   .tutorsIn__subject {
     grid-column: span 3;
+  }
+  .buttonBlc {
+    letter-spacing: 0.5px;
+  }
+  .content_block_button {
+    padding: 12px 12px;
+    font-weight: 500;
   }
 }
 /* ******************************************************

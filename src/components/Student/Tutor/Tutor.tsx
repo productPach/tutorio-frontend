@@ -12,6 +12,13 @@ import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
 import { data } from "@/utils/listSubjects";
 import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocationById";
+import { setComponentMenu } from "@/store/features/orderSlice";
+import { setChat } from "@/store/features/chatSlice";
+import {
+  setIsModalResponseStudentToTutor,
+  setTutorIdForResponseStudentToTutor,
+} from "@/store/features/modalSlice";
+import { useAppDispatch } from "@/store/store";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -36,6 +43,8 @@ export const TutorComponent = ({
       top: 0,
     });
   }, []);
+
+  const dispatch = useAppDispatch();
 
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
@@ -174,6 +183,13 @@ export const TutorComponent = ({
     return subject ? subject.for_request : subjectId; // Если предмет не найден, возвращаем subjectId
   };
 
+  // Проверяем есть ли чат с этим репетитором
+  const hasChatWithTutor = orderById?.chats.some(
+    (chat) => chat.tutorId === tutor.id
+  );
+
+  const chat = orderById?.chats.find((chat) => chat.tutorId === tutor.id);
+
   return (
     <div
       className={clsx(
@@ -183,10 +199,10 @@ export const TutorComponent = ({
         styles.order_gap
       )}
     >
-      <div className={styles.tutorImgFioContainer}>
+      <div className={clsx(styles.tutorImgFioContainer, styles.flxClmn)}>
         <div className={styles.flex1}>
           <Image
-            className={styles.tutorImg}
+            className={clsx(styles.tutorImg, styles.tutorImgM)}
             src={tutorAvatar}
             width={120}
             height={120}
@@ -204,7 +220,13 @@ export const TutorComponent = ({
             )}
           </div>
 
-          <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+          <div
+            className={clsx(
+              styles.containerIsOnline,
+              styles.mt6px,
+              styles.dsplNoneM
+            )}
+          >
             <Image
               src="../../../../img/icon/location.svg"
               alt="Геолокация"
@@ -214,8 +236,15 @@ export const TutorComponent = ({
             />
             <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
           </div>
+
           {tutor.tutorPlace.length > 0 && (
-            <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+            <div
+              className={clsx(
+                styles.containerIsOnline,
+                styles.mt6px,
+                styles.dsplNoneM
+              )}
+            >
               {tutor.tutorPlace.includes("1") && (
                 <>
                   Дистанционно&nbsp;🖥️
@@ -231,13 +260,113 @@ export const TutorComponent = ({
               {tutor.tutorPlace.includes("3") && <>Выезд к ученику&nbsp;📍</>}
             </div>
           )}
-          <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
+
+          <div
+            className={clsx(
+              styles.containerIsOnline,
+              styles.mt6px,
+              styles.dsplNoneM
+            )}
+          >
             {hasPassportValid}
             {hasGoodReviews}
             {hasDocsEducation}
           </div>
         </div>
       </div>
+      <div className={styles.flex4}>
+        <div
+          className={clsx(
+            styles.containerIsOnline,
+            styles.mt6px,
+            styles.dsplBlcM
+          )}
+        >
+          <Image
+            src="../../../../img/icon/location.svg"
+            alt="Геолокация"
+            width={15}
+            height={18}
+            className={styles.header_geoImage}
+          />
+          <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
+        </div>
+        {tutor.tutorPlace.length > 0 && (
+          <div
+            className={clsx(
+              styles.containerIsOnline,
+              styles.mt6px,
+              styles.dsplBlcM
+            )}
+          >
+            {tutor.tutorPlace.includes("1") && (
+              <>
+                Дистанционно&nbsp;🖥️
+                {tutor.tutorPlace.length > 1 && " // "}
+              </>
+            )}
+            {tutor.tutorPlace.includes("2") && (
+              <>
+                У себя&nbsp;🏠
+                {tutor.tutorPlace.includes("3") && " //"}
+                {"\u00A0"}
+              </>
+            )}
+            {tutor.tutorPlace.includes("3") && (
+              <>Выезд&nbsp;к&nbsp;ученику&nbsp;📍</>
+            )}
+          </div>
+        )}
+        <div
+          className={clsx(
+            styles.containerIsOnline,
+            styles.mt6px,
+            styles.dsplBlcM
+          )}
+        >
+          {hasPassportValid}
+          {hasGoodReviews}
+          {hasDocsEducation}
+        </div>
+      </div>
+
+      {/* Кнопка предложения для моб версии */}
+      <div className={clsx(styles.dsplBlcM)}>
+        {chat?.status !== "Rejected" ? (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+
+              // Если чат с репетитором существует
+              if (hasChatWithTutor && chat) {
+                // Логика для существующего чата
+                dispatch(setComponentMenu(5));
+                dispatch(setChat(chat));
+                // Можно добавить другие действия, если чат уже существует
+              } else {
+                // Логика для нового чата (если чата нет)
+                dispatch(setIsModalResponseStudentToTutor(true));
+                dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
+                // Можно добавить другие действия для нового чата
+              }
+            }}
+            className={clsx(
+              generalStyles.content_block_button,
+              {
+                [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
+                [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
+              },
+              generalStyles.buttonWthCnt, // Этот класс всегда применяется
+              generalStyles.agnCntr
+            )}
+          >
+            {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
+          </button>
+        ) : (
+          <div>К сожалению, репетитор отклонил ваш заказ ❌</div>
+        )}
+      </div>
+      {/* Окончание */}
 
       <div className={styles.containerOrderInfo}>
         <span className={styles.titleTutorInfo}>Предметы</span>
@@ -292,10 +421,8 @@ export const TutorComponent = ({
 
           <div
             className={clsx(
-              styles.containerFlxRw,
-              styles.flxWrp,
-              slidesPerTutor.length > 5 && styles.jtfCntSpBtwn,
-              styles.gap10
+              styles.scrollContainer,
+              styles.gap10 // используйте gap, если он не ломает в nowrap
             )}
           >
             {slidesPerTutor.map((slide, index) => (

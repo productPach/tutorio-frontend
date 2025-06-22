@@ -258,6 +258,7 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
+  font-family: "Source Sans 3", sans-serif;
 }
 
 .content_block_chat {
@@ -875,6 +876,13 @@
   .content_block {
     opacity: initial; /* Начальная прозрачность */
     animation: none; /* Анимация появления */
+  }
+  .buttonBlc {
+    letter-spacing: 0.5px;
+  }
+  .content_block_button {
+    padding: 12px 12px;
+    font-weight: 500;
   }
 }
 /* ******************************************************

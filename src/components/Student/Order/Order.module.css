@@ -183,6 +183,25 @@
 .backImg {
   display: none;
 }
+.dsplBlcM {
+  display: none;
+}
+
+.scrollContainer {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch; /* для iOS инерции */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.flxClmn {
+  flex-direction: row;
+}
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************
@@ -244,6 +263,10 @@
     opacity: initial; /* Начальная прозрачность */
     animation: none; /* Анимация появления */
   }
+  .imageDiplomas {
+    border-radius: 0px;
+    flex: 0 0 auto;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -277,9 +300,17 @@
   .tutorImgFioContainerTP {
     flex-direction: column;
     gap: 10px;
+    align-items: center;
   }
-  .flex1 {
-    align-self: center;
+  .tutorImgFioContainer {
+    gap: 12px;
+  }
+  .flxClmn {
+    flex-direction: column;
+  }
+  .tutorImgM {
+    width: 180px;
+    height: 180px;
   }
   .titleTutorInfo {
     font-size: 16px;
@@ -287,6 +318,34 @@
   }
   .order_gap {
     gap: 14px;
+  }
+  .gap10 {
+    gap: 3px;
+  }
+  .imageDiplomas {
+    border-radius: 0px;
+  }
+  .dsplNoneM {
+    display: none;
+  }
+  .dsplBlcM {
+    display: flex;
+    align-self: anchor-center;
+  }
+
+  .tutorImgFioContainer {
+    align-items: center;
+  }
+  .order_gap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .jtfCntSpBtwn {
+    justify-content: center;
+  }
+  .containerIsOnline {
+    justify-content: center;
+    text-align: center;
   }
 }
 /* ******************************************************
