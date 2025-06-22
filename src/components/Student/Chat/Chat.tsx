@@ -93,10 +93,6 @@ export const ChatComponent = ({
   const preHandleSendMessage = () => {
     if (inputValue.trim() !== "" && !isSending) {
       setIsSending(true); // блокируем повторное нажатие
-
-      if (textareaRef.current) {
-        textareaRef.current.blur();
-      }
       handleSendMessage();
       setIsSending(false); // разблокируем
     }
