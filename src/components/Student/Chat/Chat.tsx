@@ -97,11 +97,8 @@ export const ChatComponent = ({
       if (textareaRef.current) {
         textareaRef.current.blur();
       }
-
-      setTimeout(() => {
-        handleSendMessage();
-        setIsSending(false); // разблокируем
-      }, 200);
+      handleSendMessage();
+      setIsSending(false); // разблокируем
     }
   };
 
@@ -591,7 +588,7 @@ export const ChatComponent = ({
             </div>
 
             <div
-              onClick={() => preHandleSendMessage()}
+              onMouseDown={preHandleSendMessage}
               className={`${chatStyles.wrapperIM} ${isActiveIcon ? chatStyles.activeWrapperIM : ""}`}
             >
               <SendHorizontal
