@@ -22,6 +22,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import GroupedMessages from "./GroupedMessages";
 import { EmojiPicker } from "./EmojiPicker";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { SendHorizontal } from "lucide-react";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -83,9 +84,13 @@ export const ChatComponent = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // предотвращаем обычный перенос строки
-      if (inputValue.trim() !== "") {
-        handleSendMessage();
-      }
+      preHandleSendMessage();
+    }
+  };
+
+  const preHandleSendMessage = () => {
+    if (inputValue.trim() !== "") {
+      handleSendMessage();
     }
   };
 
@@ -181,13 +186,15 @@ export const ChatComponent = ({
   //   };
   // }, []);
 
+  const chatRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const chatElement = document.querySelector(".content__chat"); // <-- Твой скролл-контейнер
     let scrollY = 0;
 
     const preventScroll = (e: TouchEvent) => {
-      if (!chatElement?.contains(e.target as Node)) {
-        e.preventDefault(); // блокируем свайпы вне области чата
+      // Только если свайп не по чату
+      if (!chatRef.current?.contains(e.target as Node)) {
+        e.preventDefault();
       }
     };
 
@@ -208,6 +215,14 @@ export const ChatComponent = ({
       window.scrollTo(0, scrollY);
       document.body.removeEventListener("touchmove", preventScroll);
     };
+
+    // Если при монтировании уже активен textarea — сразу блокируем скролл
+    const isTextInput =
+      document.activeElement?.tagName === "TEXTAREA" ||
+      document.activeElement?.tagName === "INPUT";
+    if (isTextInput) {
+      lockScroll();
+    }
 
     window.addEventListener("focusin", lockScroll);
     window.addEventListener("focusout", unlockScroll);
@@ -415,6 +430,7 @@ export const ChatComponent = ({
       }
     }
   };
+  const isActiveIcon = inputValue.length > 0;
 
   return (
     <>
@@ -494,6 +510,7 @@ export const ChatComponent = ({
       </div>
 
       <div
+        ref={chatRef}
         className={clsx(
           chatStyles.content__chat,
           { [chatStyles.content__chat_with_cookies]: !cookiesAccepted },
@@ -559,6 +576,18 @@ export const ChatComponent = ({
                     });
                   }, 100);
                 }}
+              />
+            </div>
+
+            <div
+              onClick={() => preHandleSendMessage()}
+              className={`${chatStyles.wrapperIM} ${isActiveIcon ? chatStyles.activeWrapperIM : ""}`}
+            >
+              <SendHorizontal
+                size={24}
+                className={`${chatStyles.iconIM} ${isActiveIcon ? chatStyles.activeIconIM : ""}`}
+                color={isActiveIcon ? "white" : "#777777"}
+                strokeWidth={isActiveIcon ? 1.5 : 1.25}
               />
             </div>
             <EmojiPicker
