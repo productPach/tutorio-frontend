@@ -3,28 +3,14 @@
 import clsx from "clsx";
 import styles from "../../app/page.module.css";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setCookies } from "@/store/features/generalSlice";
 
 export default function CookieBanner() {
   const dispatch = useAppDispatch();
   const cookiesAccepted = useAppSelector((state) => state.general.cookies);
-
-  useEffect(() => {
-    const hasConsent = document.cookie.includes("cookieConsent=true");
-    dispatch(setCookies(hasConsent));
-
-    if (hasConsent) {
-      loadYandexMetrika();
-    }
-  }, [dispatch]);
-
-  const acceptCookies = () => {
-    document.cookie = "cookieConsent=true; path=/; max-age=31536000"; // 1 год
-    dispatch(setCookies(true));
-    loadYandexMetrika();
-  };
+  const [isReady, setIsReady] = useState(false);
 
   const loadYandexMetrika = () => {
     if (typeof window === "undefined") return;
@@ -51,6 +37,25 @@ export default function CookieBanner() {
         webvisor: true,
       });
     };
+  };
+
+  useEffect(() => {
+    const hasConsent = document.cookie.includes("cookieConsent=true");
+    dispatch(setCookies(hasConsent));
+
+    if (hasConsent) {
+      loadYandexMetrika();
+    }
+
+    setIsReady(true); // только после всех проверок
+  }, [dispatch]);
+
+  if (!isReady || cookiesAccepted) return null;
+
+  const acceptCookies = () => {
+    document.cookie = "cookieConsent=true; path=/; max-age=31536000"; // 1 год
+    dispatch(setCookies(true));
+    loadYandexMetrika();
   };
 
   if (cookiesAccepted) return null;

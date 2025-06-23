@@ -55,7 +55,6 @@ export const metadata = {
 };
 
 export default function Home() {
-  console.log(String.fromCodePoint(0x1f1ec, 0x1f1e7));
   return (
     <>
       <Header />

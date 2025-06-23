@@ -21,7 +21,9 @@ export const ExitModal = ({ logout }: { logout: () => void }) => {
         <button
           className={buttonStyles.buttonGr}
           onClick={() => {
-            if (student) {
+            if (
+              student // ВОТ ТУТ МОЖЕТ БЫТЬ ПРОБЛЕМА ПОСЛЕ ПЕРЕЗАПУСКОВ БИЛДА
+            ) {
               logout();
               dispatch(setIsModalExit(false));
               dispatch(setScrollY(0));

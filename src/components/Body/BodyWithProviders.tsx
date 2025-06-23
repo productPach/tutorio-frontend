@@ -10,6 +10,7 @@ import VerboxChat from "@/components/Vendor/Verbox/VerboxChat";
 import { SocketProvider } from "@/context/SocketContext";
 import { ChatProvider } from "@/context/ChatContext";
 import clsx from "clsx";
+import { usePathname } from "next/navigation";
 
 export default function BodyWithProviders({
   children,
@@ -20,12 +21,21 @@ export default function BodyWithProviders({
     (state: RootState) => state.general.cookies
   );
 
+  const pathname = usePathname();
+  // Прячем баннер только на /student/order/[id]
+  const hideCookieBanner = /^\/student\/order\/[^/]+$/.test(pathname);
+  const shouldShowCookieBanner = !hideCookieBanner;
+
   return (
-    <body className={clsx({ [styles.bodyWithCookies]: !cookiesAccepted })}>
+    <body
+      className={clsx({
+        [styles.bodyWithCookies]: shouldShowCookieBanner && !cookiesAccepted,
+      })}
+    >
       <SocketProvider>
         <ChatProvider>{children}</ChatProvider>
       </SocketProvider>
-      <CookieBanner />
+      {shouldShowCookieBanner && <CookieBanner />}
       <VerboxChat />
     </body>
   );

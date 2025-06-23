@@ -198,7 +198,6 @@ const Orders = () => {
             const activeChats = order.chats.filter(
               (chat) => chat.status === "Active"
             );
-            console.log(price);
 
             return (
               <div

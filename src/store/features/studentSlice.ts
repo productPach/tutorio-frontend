@@ -8,6 +8,7 @@ import {
 import { Student } from "@/types/types";
 import {
   getStudentFromLocalStorage,
+  removeLocalStorage,
   setLocalStorage,
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -161,6 +162,7 @@ const studentSlice = createSlice({
       state.student = action.payload;
     },
     setStudentLogout: (state) => {
+      removeLocalStorage("student");
       state.student = null;
     },
     resetDeleteRequest: (state) => {
