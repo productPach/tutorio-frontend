@@ -1,7 +1,9 @@
 .undrln {
   text-decoration: underline;
 }
-
+.bodyWithCookies {
+  padding-bottom: 90px;
+}
 .undrlnHover:hover {
   text-decoration: underline;
 }
@@ -493,9 +495,7 @@
   background-color: #fad949;
   color: black;
 }
-.bodyWithCookies {
-  margin-bottom: 86px;
-}
+
 .titleH1Page {
   font-size: 24px;
   margin: 0 0 28px 0;
