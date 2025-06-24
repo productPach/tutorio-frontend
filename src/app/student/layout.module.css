@@ -882,7 +882,7 @@
   }
   .content_block_button {
     padding: 12px 12px;
-    font-weight: 500;
+    font-weight: 600;
   }
 }
 /* ******************************************************
@@ -939,6 +939,10 @@
   .content_block {
     padding: 10px;
     margin-bottom: 10px;
+  }
+  .content_block h3 {
+    font-size: 20px;
+    line-height: 20px;
   }
   .sidebarResponseM {
     gap: 10px;

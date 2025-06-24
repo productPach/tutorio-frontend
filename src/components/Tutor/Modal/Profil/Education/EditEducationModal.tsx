@@ -320,7 +320,7 @@ export const EditEducationModal = ({
                     /> */}
                   </>
                 ) : (
-                  <Image
+                  <img
                     src={URL.createObjectURL(file)} // Показываем локально загруженное изображение
                     alt={`Документ ${index + 1}`}
                     className={componentStyles.imagePreview}

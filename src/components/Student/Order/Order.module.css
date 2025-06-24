@@ -30,14 +30,30 @@
 .flex4 {
   flex: 4;
 }
+.pstnRltv {
+  position: relative;
+  max-width: fit-content;
+}
 .jtfCntSpBtwn {
   justify-content: space-between;
+}
+.gap6 {
+  gap: 6px;
 }
 .gap10 {
   gap: 10px;
 }
 .gap20 {
   gap: 20px;
+}
+.pdngTp20 {
+  padding-top: 20px;
+}
+.tutorPlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex-direction: row;
 }
 .containerIsOnline {
   display: flex;
@@ -57,6 +73,7 @@
   border-radius: 4px;
   background-color: #dddddd;
 }
+
 .mt6px {
   margin-top: 6px;
 }
@@ -131,10 +148,10 @@
   );
 }
 
-.listEducation {
+/* .listEducation {
   list-style-type: circle;
   margin-left: 20px;
-}
+} */
 .profileInfoText {
   white-space: pre-line;
 }
@@ -239,6 +256,9 @@
 ******************************************************
 ****************************************************** */
 @media (max-width: 1024px) {
+  .onlineStatus {
+    display: none;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -313,7 +333,7 @@
     height: 180px;
   }
   .titleTutorInfo {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
   }
   .order_gap {

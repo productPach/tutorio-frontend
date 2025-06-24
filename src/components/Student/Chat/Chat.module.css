@@ -23,9 +23,6 @@
   height: calc(100dvh - 196px); /* Учитываем высоту шапки */
   margin-bottom: 0px;
 }
-.content__chat_with_cookies {
-  height: calc(100dvh - 283px);
-}
 .flx1 {
   flex: 1;
 }
