@@ -162,10 +162,10 @@
 }
 .raiting {
   width: fit-content;
-  padding: 1px 3px;
-  border-radius: 6px;
+  padding: 2px 4px;
+  border-radius: 4px;
   font-size: 14px;
-  color: #0b0800;
+  color: #917834;
   background: linear-gradient(
     90deg,
     rgba(250, 217, 73, 0.5),

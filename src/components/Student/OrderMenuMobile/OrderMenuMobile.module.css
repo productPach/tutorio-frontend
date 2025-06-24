@@ -135,11 +135,17 @@
     color: black;
     border-top: 1px solid #f7f7f7;
     z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom);
 
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-top: 1px solid rgba(228, 228, 228, 0.3);
   }
 }
 /* ******************************************************

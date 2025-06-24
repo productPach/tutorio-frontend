@@ -54,6 +54,9 @@
   flex-wrap: wrap;
   gap: 4px;
   flex-direction: row;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 3px 0;
 }
 .containerIsOnline {
   display: flex;
@@ -213,6 +216,7 @@
   white-space: nowrap;
   -webkit-overflow-scrolling: touch; /* для iOS инерции */
   scrollbar-width: none; /* Firefox */
+  border-radius: 10px;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -323,6 +327,7 @@
     flex-direction: column;
     gap: 10px;
     align-items: center;
+    margin-top: 10px;
   }
   .tutorImgFioContainer {
     gap: 12px;

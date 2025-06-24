@@ -212,8 +212,7 @@ export const TutorsComponent = ({
                 generalStyles.content_block,
                 generalStyles.order_block,
                 generalStyles.crsr_pntr,
-                styles.order_gap,
-                styles.pdngTp20
+                styles.order_gap
               )}
             >
               <div className={styles.tutorImgFioContainerTP}>
@@ -237,7 +236,7 @@ export const TutorsComponent = ({
                   <div
                     className={clsx(tutorsStyles.raiting, tutorsStyles.flxWrp)}
                   >
-                    <Star size={16} color="#0b0800" strokeWidth={1.25} />
+                    <Star size={16} color="#917834" strokeWidth={1.25} />
                     &nbsp;4.95
                   </div>
                 </div>
