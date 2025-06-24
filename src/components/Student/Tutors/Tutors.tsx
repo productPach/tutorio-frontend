@@ -14,6 +14,7 @@ import { formatTimeAgo } from "@/utils/date/date";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setIsModalResponseStudentToTutor,
+  setIsSheetOpen,
   setTutorIdForResponseStudentToTutor,
 } from "@/store/features/modalSlice";
 import Link from "next/link";
@@ -23,6 +24,8 @@ import {
 } from "@/store/features/orderSlice";
 import { setChat } from "@/store/features/chatSlice";
 import { Star } from "lucide-react";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";
 
 type OrderProps = {
   tutorsForOrder: Tutor[];
@@ -43,6 +46,7 @@ export const TutorsComponent = ({
   error,
 }: OrderProps) => {
   const dispatch = useAppDispatch();
+  const isSheetOpen = useAppSelector((state) => state.modal.isSheetOpen);
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
   );
@@ -233,7 +237,8 @@ export const TutorsComponent = ({
                   <div
                     className={clsx(tutorsStyles.raiting, tutorsStyles.flxWrp)}
                   >
-                    ⭐️&nbsp;4.8
+                    <Star size={16} color="#0b0800" strokeWidth={1.25} />
+                    &nbsp;4.95
                   </div>
                 </div>
                 <div className={styles.flex4}>
@@ -322,10 +327,12 @@ export const TutorsComponent = ({
                           // Можно добавить другие действия, если чат уже существует
                         } else {
                           // Логика для нового чата (если чата нет)
-                          dispatch(setIsModalResponseStudentToTutor(true));
+                          // dispatch(setIsModalResponseStudentToTutor(true));
                           dispatch(
                             setTutorIdForResponseStudentToTutor(tutor.id)
                           );
+                          dispatch(setIsSheetOpen(true)); // Открываем шторку
+
                           // Можно добавить другие действия для нового чата
                         }
                       }}
@@ -343,7 +350,9 @@ export const TutorsComponent = ({
                       {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
                     </button>
                   ) : (
-                    <div>К сожалению, репетитор отклонил ваш заказ ❌</div>
+                    <div>
+                      К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
+                    </div>
                   )}
                 </div>
                 {/* Окончание */}
@@ -461,7 +470,9 @@ export const TutorsComponent = ({
                   {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
                 </button>
               ) : (
-                <div>К сожалению, репетитор отклонил ваш заказ ❌</div>
+                <div className={styles.tutorRejectedOrder}>
+                  К сожалению, репетитор отклонил ваш заказ ❌
+                </div>
               )}
             </div>
 
@@ -660,6 +671,10 @@ export const TutorsComponent = ({
           index={currentImageIndex}
         />
       )}
+      <BottomSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)}>
+        <ResponseStudentToTutorModal />
+        {/* <button onClick={() => setIsSheetOpen(false)}>Закрыть</button> */}
+      </BottomSheet>
     </>
   );
 };

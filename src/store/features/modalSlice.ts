@@ -26,6 +26,7 @@ type ModalStateType = {
   loadingPage: boolean;
   isModalRejectResponse: boolean;
   isModalAcceptResponse: boolean;
+  isSheetOpen: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -54,6 +55,7 @@ const initialState: ModalStateType = {
   loadingPage: false,
   isModalRejectResponse: false,
   isModalAcceptResponse: false,
+  isSheetOpen: false,
 };
 
 const modalSlice = createSlice({
@@ -135,6 +137,9 @@ const modalSlice = createSlice({
     setIsModalAcceptResponse(state, action: PayloadAction<boolean>) {
       state.isModalAcceptResponse = action.payload;
     },
+    setIsSheetOpen(state, action: PayloadAction<boolean>) {
+      state.isSheetOpen = action.payload;
+    }
   },
 });
 
@@ -164,5 +169,6 @@ export const {
   setLoadingPage,
   setIsModalRejectResponse,
   setIsModalAcceptResponse,
+  setIsSheetOpen,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

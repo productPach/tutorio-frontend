@@ -203,7 +203,9 @@
 .dsplBlcM {
   display: none;
 }
-
+.tutorRejectedOrder {
+  display: block;
+}
 .scrollContainer {
   display: flex;
   overflow-x: auto;
@@ -366,6 +368,9 @@
   .containerIsOnline {
     justify-content: center;
     text-align: center;
+  }
+  .tutorRejectedOrder {
+    display: none;
   }
 }
 /* ******************************************************
