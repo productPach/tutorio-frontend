@@ -22,8 +22,8 @@ export default function BodyWithProviders({
   );
 
   const pathname = usePathname();
-  // Прячем баннер только на /student/order/[id]
-  const hideCookieBanner = /^\/student\/order\/[^/]+$/.test(pathname);
+  // Скрываем баннер на /student/order/[id] И всех подпутях, вроде /student/order/[id]/tutor/...
+  const hideCookieBanner = /^\/student\/order\/[^/]+(\/.*)?$/.test(pathname);
   const shouldShowCookieBanner = !hideCookieBanner;
 
   return (
