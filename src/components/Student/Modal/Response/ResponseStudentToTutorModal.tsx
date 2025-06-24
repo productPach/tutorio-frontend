@@ -8,6 +8,7 @@ import generalStyles from "../../../../app/student/layout.module.css";
 import { ChangeEvent, useState } from "react";
 import {
   setIsModalResponseStudentToTutor,
+  setIsSheetOpen,
   setLoadingPage,
   setScrollY,
 } from "@/store/features/modalSlice";
@@ -106,6 +107,7 @@ export const ResponseStudentToTutorModal = () => {
     }
     dispatch(setIsModalResponseStudentToTutor(false));
     dispatch(setScrollY(0));
+    dispatch(setIsSheetOpen(false));
   };
 
   // Состояние для свитча
