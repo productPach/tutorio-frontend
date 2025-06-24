@@ -671,7 +671,10 @@ export const TutorsComponent = ({
           index={currentImageIndex}
         />
       )}
-      <BottomSheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)}>
+      <BottomSheet
+        isOpen={isSheetOpen}
+        onClose={() => dispatch(setIsSheetOpen(false))}
+      >
         <ResponseStudentToTutorModal />
         {/* <button onClick={() => setIsSheetOpen(false)}>Закрыть</button> */}
       </BottomSheet>

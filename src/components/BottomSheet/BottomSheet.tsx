@@ -1,7 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./BottomSheet.module.css";
+import { ReactNode } from "react";
 
-export const BottomSheet = ({ isOpen, onClose, children }) => {
+interface BottomSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+export const BottomSheet = ({
+  isOpen,
+  onClose,
+  children,
+}: BottomSheetProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
