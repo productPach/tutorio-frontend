@@ -117,7 +117,7 @@ export default function Home() {
               <div className={styles.fs_SnippetItemEmj}>
                 Английский язык
                 <Image
-                  src="img/icon/Greatbritainflag.svg"
+                  src="/img/icon/Greatbritainflag.svg"
                   alt="Английский язык"
                   width={17}
                   height={17}
@@ -162,7 +162,7 @@ export default function Home() {
               <div className={styles.fs_SnippetItemEmj}>
                 Русский язык
                 <Image
-                  src="img/icon/Russianflag.svg"
+                  src="/img/icon/Russianflag.svg"
                   alt="Русский язык"
                   width={17}
                   height={17}

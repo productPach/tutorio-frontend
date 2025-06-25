@@ -266,8 +266,8 @@
 }
 
 .buttonBlc {
-  background-color: black;
-  color: white;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0, rgba(69, 72, 77, 1));
+  color: #dddddd;
 }
 
 .buttonYlw {
@@ -883,6 +883,7 @@
   .content_block_button {
     padding: 12px 12px;
     font-weight: 600;
+    font-size: 17px;
   }
 }
 /* ******************************************************
