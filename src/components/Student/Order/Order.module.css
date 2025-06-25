@@ -13,8 +13,16 @@
   flex-direction: row;
   gap: 20px;
 }
+.tutorFioBagesContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .tutorImg {
+  width: 85px;
+  height: 85px;
   border-radius: 10px;
+  display: block;
 }
 .containerFlxRw {
   display: flex;
@@ -36,6 +44,9 @@
 }
 .jtfCntSpBtwn {
   justify-content: space-between;
+}
+.gap3 {
+  gap: 3px;
 }
 .gap6 {
   gap: 6px;
@@ -108,47 +119,48 @@
   color: #777;
 }
 .titleTutorInfo {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 400;
+  color: #888888;
 }
 .priceInt {
   font-size: 28px;
 }
 .passportControl {
   width: fit-content;
-  padding: 4px 6px;
-  border-radius: 4px;
+  /* padding: 4px 6px;
+  border-radius: 4px; */
   font-size: 14px;
-  color: #206420;
+  /* color: #206420;
   background: linear-gradient(
     90deg,
     rgba(102, 187, 106, 0.5),
     rgba(139, 195, 74, 0.4)
-  );
+  ); */
 }
 .goodReviews {
   width: fit-content;
-  padding: 4px 6px;
-  border-radius: 4px;
+  /* padding: 4px 6px;
+  border-radius: 4px; */
   font-size: 14px;
-  color: #8c6a00;
+  /* color: #8c6a00;
   background: linear-gradient(
     90deg,
     rgba(250, 217, 73, 0.5),
     rgba(241, 193, 64, 0.4)
-  );
+  ); */
 }
 .docsEducation {
   width: fit-content;
-  padding: 4px 6px;
-  border-radius: 4px;
+  /* padding: 4px 6px;
+  border-radius: 4px; */
   font-size: 14px;
-  color: #4a3d78; /* Глубокий лавандовый */
+  /* color: #4a3d78; 
   background: linear-gradient(
     90deg,
     rgba(190, 180, 255, 0.5),
     rgba(160, 150, 230, 0.4)
-  );
+  ); */
 }
 
 /* .listEducation {
@@ -160,7 +172,7 @@
 }
 .imageDiplomas {
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 0;
   cursor: pointer;
   flex: 1 1;
   max-width: 85px;
@@ -216,7 +228,7 @@
   white-space: nowrap;
   -webkit-overflow-scrolling: touch; /* для iOS инерции */
   scrollbar-width: none; /* Firefox */
-  border-radius: 10px;
+  border-radius: 0;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -335,13 +347,12 @@
   .flxClmn {
     flex-direction: column;
   }
-  .tutorImgM {
+  /* .tutorImgM {
     width: 180px;
     height: 180px;
-  }
+  } */
   .titleTutorInfo {
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 15px;
   }
   .order_gap {
     gap: 14px;

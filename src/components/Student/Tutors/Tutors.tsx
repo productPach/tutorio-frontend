@@ -233,14 +233,16 @@ export const TutorsComponent = ({
                       alt=""
                     />
                   </Link>
-                  <div
+                  {/* <div
                     className={clsx(tutorsStyles.raiting, tutorsStyles.flxWrp)}
                   >
                     <Star size={16} color="#917834" strokeWidth={1.25} />
                     &nbsp;4.95
-                  </div>
+                  </div> */}
                 </div>
-                <div className={styles.flex4}>
+                <div
+                  className={clsx(styles.flex4, styles.tutorFioBagesContainer)}
+                >
                   <div
                     className={clsx(
                       styles.containerFlxRw,
@@ -294,66 +296,70 @@ export const TutorsComponent = ({
                       {tutor.tutorPlace.includes("3") && (
                         <div>📍Выезд&nbsp;к&nbsp;ученику&nbsp;</div>
                       )}
+                      {hasPassportValid}
+                      {hasGoodReviews}
+                      {hasDocsEducation}
                     </div>
                   )}
-                  <div
+                  {/* <div
                     className={clsx(
                       styles.containerIsOnline,
                       styles.mt6px,
                       tutorsStyles.flxWrp
                     )}
-                  >
-                    {hasPassportValid}
-                    {hasGoodReviews}
-                    {hasDocsEducation}
-                  </div>
+                  ></div> */}
                 </div>
 
                 {/* Кнопка предложения для моб версии */}
-                <div
-                  className={clsx(styles.dsplBlcM, tutorsStyles.buttonGoChat)}
-                >
-                  {chat?.status !== "Rejected" ? (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
+                {chat?.status !== "Rejected" && (
+                  <div
+                    className={clsx(styles.dsplBlcM, tutorsStyles.buttonGoChat)}
+                  >
+                    {chat?.status !== "Rejected" ? (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
 
-                        // Если чат с репетитором существует
-                        if (hasChatWithTutor && chat) {
-                          // Логика для существующего чата
-                          dispatch(setComponentMenu(5));
-                          dispatch(setChat(chat));
-                          // Можно добавить другие действия, если чат уже существует
-                        } else {
-                          // Логика для нового чата (если чата нет)
-                          // dispatch(setIsModalResponseStudentToTutor(true));
-                          dispatch(
-                            setTutorIdForResponseStudentToTutor(tutor.id)
-                          );
-                          dispatch(setIsSheetOpen(true)); // Открываем шторку
+                          // Если чат с репетитором существует
+                          if (hasChatWithTutor && chat) {
+                            // Логика для существующего чата
+                            dispatch(setComponentMenu(5));
+                            dispatch(setChat(chat));
+                            // Можно добавить другие действия, если чат уже существует
+                          } else {
+                            // Логика для нового чата (если чата нет)
+                            // dispatch(setIsModalResponseStudentToTutor(true));
+                            dispatch(
+                              setTutorIdForResponseStudentToTutor(tutor.id)
+                            );
+                            dispatch(setIsSheetOpen(true)); // Открываем шторку
 
-                          // Можно добавить другие действия для нового чата
-                        }
-                      }}
-                      className={clsx(
-                        generalStyles.content_block_button,
-                        {
-                          [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
-                          [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
-                        },
-                        generalStyles.buttonWthCnt, // Этот класс всегда применяется
-                        generalStyles.agnCntr,
-                        tutorsStyles.buttonGoChat
-                      )}
-                    >
-                      {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
-                    </button>
-                  ) : (
-                    <div>
-                      К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
-                    </div>
-                  )}
-                </div>
+                            // Можно добавить другие действия для нового чата
+                          }
+                        }}
+                        className={clsx(
+                          generalStyles.content_block_button,
+                          {
+                            [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
+                            [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
+                          },
+                          generalStyles.buttonWthCnt, // Этот класс всегда применяется
+                          generalStyles.agnCntr,
+                          tutorsStyles.buttonGoChat
+                        )}
+                      >
+                        {hasChatWithTutor
+                          ? "Перейти в чат"
+                          : "Предложить заказ"}
+                      </button>
+                    ) : (
+                      false
+                      // <div>
+                      //   К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
+                      // </div>
+                    )}
+                  </div>
+                )}
                 {/* Окончание */}
               </div>
 
@@ -363,7 +369,7 @@ export const TutorsComponent = ({
                     Диплом, сертификаты и другие документы
                   </span> */}
 
-                  <div className={clsx(styles.scrollContainer, styles.gap10)}>
+                  <div className={clsx(styles.scrollContainer, styles.gap3)}>
                     {slidesPerTutor[tutorIndex]
                       .slice(0, 6)
                       .map((slide, index) => (
@@ -383,7 +389,7 @@ export const TutorsComponent = ({
 
               {tutor.educations.length > 0 && (
                 <div className={styles.containerOrderInfo}>
-                  <span className={styles.titleTutorInfo}>Образование</span>
+                  <span className={styles.titleTutorInfo}>образование</span>
 
                   <ul>
                     {tutor.educations.map((education) => (
@@ -399,7 +405,7 @@ export const TutorsComponent = ({
 
               {tutor.profileInfo && (
                 <div className={styles.containerOrderInfo}>
-                  <span className={styles.titleTutorInfo}>О себе</span>
+                  <span className={styles.titleTutorInfo}>о себе</span>
                   <div className={styles.profileInfoText}>
                     {tutor.profileInfo.length > 250
                       ? `${tutor.profileInfo.slice(0, 250)}...`
@@ -411,7 +417,7 @@ export const TutorsComponent = ({
               {relevantPrices.length > 0 && (
                 <div className={styles.containerOrderInfo}>
                   <span className={styles.titleTutorInfo}>
-                    Стоимость занятий
+                    стоимость занятий
                   </span>
 
                   <table className={generalStyles.table}>
