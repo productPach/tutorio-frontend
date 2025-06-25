@@ -1,6 +1,12 @@
 .tutorImgContainer {
   height: 34px;
 }
+.tutorImg {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: block;
+}
 .alnItmCntr {
   align-items: center;
 }

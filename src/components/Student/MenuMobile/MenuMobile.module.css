@@ -15,7 +15,15 @@
   -ms-user-select: none;
   touch-action: manipulation;
 }
-
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
 .menuPanel {
   position: fixed;
   bottom: 0;

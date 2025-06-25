@@ -6,6 +6,9 @@
   align-items: center;
   justify-content: space-between;
 }
+.containerEntityShowEndAlgnCntr {
+  display: none;
+}
 .containerEntityTitleDescription {
   display: flex;
   flex-direction: column;
@@ -78,4 +81,10 @@
 
 .iosSwitch input:checked + .slider::before {
   transform: translateX(26px);
+}
+
+.containerEntityShowEndAlgnCntr {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }

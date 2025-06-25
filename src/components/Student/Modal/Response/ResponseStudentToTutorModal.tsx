@@ -123,8 +123,8 @@ export const ResponseStudentToTutorModal = () => {
   return (
     <>
       <div className={styles.description}>
-        Репетитор получит уведомление и сможет откликнуться, если предложение
-        его заинтересует 📩
+        Репетитор получит уведомление и&nbsp;сможет откликнуться, если
+        предложение его&nbsp;заинтересует&nbsp;📩
       </div>
       <div className={styles.inputContainer}>
         <textarea
@@ -143,14 +143,18 @@ export const ResponseStudentToTutorModal = () => {
       </div>
 
       <div
-        className={clsx(stylesStudent.containerEntityShowEnd, styles.mrTp15)}
+        className={clsx(
+          stylesStudent.containerEntityShowEnd,
+          styles.mrTp15,
+          stylesStudent.containerEntityShowEndAlgnCntr
+        )}
       >
         <div className={stylesStudent.containerEntityTitleDescription}>
           <div className={generalStyles.textBlc}>
-            Отправить мой номер телефона репетитору
+            Отправить телефон репетитору
           </div>
-          <span className={generalStyles.textGr}>
-            Репетитор получит ваш номер и сможет связаться с&nbsp;вами
+          <span className={clsx(generalStyles.textGr, generalStyles.text14)}>
+            Репетитор получит ваш номер и&nbsp;сможет связаться с&nbsp;вами
             напрямую&nbsp;☎️
           </span>
         </div>
