@@ -143,12 +143,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             </div>
           </header>
           {student && (
-            <main
-              className={clsx(
-                styles.main,
-                [5, 6].includes(component) ? styles.mainChtM : ""
-              )}
-            >
+            <main className={clsx(styles.main, styles.mainChtM)}>
               {children}
             </main>
           )}

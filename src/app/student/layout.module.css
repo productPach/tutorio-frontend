@@ -930,16 +930,17 @@
     padding-right: 0px;
   }
   .main {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .header {
     padding-left: 10px;
     padding-right: 10px;
   }
   .content_block {
-    padding: 10px;
+    padding: 20px;
     margin-bottom: 10px;
+    border-radius: 0;
   }
   .content_block h3 {
     font-size: 20px;

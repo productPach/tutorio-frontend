@@ -182,10 +182,19 @@
 ****************************************************** */
 @media (max-width: 480px) {
   .sidebar_filter {
-    padding: 12px 10px 12px 10px;
+    border-radius: 0;
+    padding: 12px 20px 12px 20px;
   }
   .studentChatContainerImgAndMessage {
-    padding: 10px;
+    padding: 10px 20px;
+  }
+  .firstChat {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .lastChat {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
