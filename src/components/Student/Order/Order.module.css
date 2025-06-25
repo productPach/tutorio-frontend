@@ -339,7 +339,6 @@
     flex-direction: column;
     gap: 10px;
     align-items: center;
-    margin-top: 10px;
   }
   .tutorImgFioContainer {
     gap: 12px;
@@ -387,6 +386,15 @@
   }
   .tutorRejectedOrder {
     display: none;
+  }
+  .containerOrderInfoBG {
+    padding: 10px;
+    background-color: #f1f2f4;
+    border-radius: 10px;
+  }
+  .containerOrderDiploms {
+    padding: 0;
+    background-color: white;
   }
 }
 /* ******************************************************

@@ -476,7 +476,7 @@ export const ChatComponent = ({
                 }}
               >
                 <Image
-                  className={styles.tutorImg}
+                  className={chatStyles.tutorImg}
                   src={tutorAvatar ? tutorAvatar : "/img/tutor/avatarBasic.png"}
                   width={34}
                   height={34}

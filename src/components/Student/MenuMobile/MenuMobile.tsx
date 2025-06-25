@@ -33,34 +33,42 @@ export default function MenuMobile() {
       {/* Меню */}
       <AnimatePresence>
         {isOpen && (
-          <motion.nav
-            className={styles.menuPanel}
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 25,
-            }}
-            drag="y"
-            dragConstraints={{ top: 0, bottom: 300 }} // разрешаем тянуть вниз на 300px
-            dragElastic={0.3} // немного упругости
-            onDragEnd={(event, info) => {
-              // info.point.y - позиция относительно экрана
-              // info.offset.y - смещение с момента начала drag
-              // info.velocity.y - скорость
-              if (info.offset.y > 100 || info.velocity.y > 500) {
-                setIsOpen(false); // закрываем меню при сильном свайпе вниз
-              }
-            }}
+          <motion.div
+            className={styles.backdrop}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
           >
-            {links.map((link) => (
-              <a key={link.href} href={link.href} className={styles.link}>
-                {link.label}
-              </a>
-            ))}
-          </motion.nav>
+            <motion.nav
+              className={styles.menuPanel}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 25,
+              }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 300 }} // разрешаем тянуть вниз на 300px
+              dragElastic={0.3} // немного упругости
+              onDragEnd={(event, info) => {
+                // info.point.y - позиция относительно экрана
+                // info.offset.y - смещение с момента начала drag
+                // info.velocity.y - скорость
+                if (info.offset.y > 100 || info.velocity.y > 500) {
+                  setIsOpen(false); // закрываем меню при сильном свайпе вниз
+                }
+              }}
+            >
+              {links.map((link) => (
+                <a key={link.href} href={link.href} className={styles.link}>
+                  {link.label}
+                </a>
+              ))}
+            </motion.nav>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

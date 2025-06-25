@@ -284,7 +284,8 @@ export const TutorsComponent = ({
                       className={clsx(
                         styles.containerIsOnline,
                         styles.mt6px,
-                        styles.tutorPlaces
+                        styles.tutorPlaces,
+                        styles.lnHgt18
                       )}
                     >
                       {tutor.tutorPlace.includes("1") && (
@@ -364,7 +365,12 @@ export const TutorsComponent = ({
               </div>
 
               {slidesPerTutor[tutorIndex].length > 0 && (
-                <div className={styles.containerOrderInfo}>
+                <div
+                  className={clsx(
+                    styles.containerOrderInfo,
+                    styles.containerOrderDiploms
+                  )}
+                >
                   {/* <span className={styles.titleTutorInfo}>
                     Диплом, сертификаты и другие документы
                   </span> */}
@@ -387,8 +393,25 @@ export const TutorsComponent = ({
                 </div>
               )}
 
+              <div
+                className={clsx(
+                  styles.containerOrderInfo,
+                  styles.containerOrderInfoBG
+                )}
+              >
+                <span className={styles.titleTutorInfo}>местоположение</span>
+                <div className={styles.profileInfoText}>
+                  <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
+                </div>
+              </div>
+
               {tutor.educations.length > 0 && (
-                <div className={styles.containerOrderInfo}>
+                <div
+                  className={clsx(
+                    styles.containerOrderInfo,
+                    styles.containerOrderInfoBG
+                  )}
+                >
                   <span className={styles.titleTutorInfo}>образование</span>
 
                   <ul>
@@ -404,7 +427,12 @@ export const TutorsComponent = ({
               )}
 
               {tutor.profileInfo && (
-                <div className={styles.containerOrderInfo}>
+                <div
+                  className={clsx(
+                    styles.containerOrderInfo,
+                    styles.containerOrderInfoBG
+                  )}
+                >
                   <span className={styles.titleTutorInfo}>о себе</span>
                   <div className={styles.profileInfoText}>
                     {tutor.profileInfo.length > 250
@@ -415,7 +443,12 @@ export const TutorsComponent = ({
               )}
 
               {relevantPrices.length > 0 && (
-                <div className={styles.containerOrderInfo}>
+                <div
+                  className={clsx(
+                    styles.containerOrderInfo,
+                    styles.containerOrderInfoBG
+                  )}
+                >
                   <span className={styles.titleTutorInfo}>
                     стоимость занятий
                   </span>
