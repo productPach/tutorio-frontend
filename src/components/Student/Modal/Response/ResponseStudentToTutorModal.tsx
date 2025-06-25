@@ -150,9 +150,7 @@ export const ResponseStudentToTutorModal = () => {
         )}
       >
         <div className={stylesStudent.containerEntityTitleDescription}>
-          <div className={generalStyles.textBlc}>
-            Отправить телефон репетитору
-          </div>
+          <div className={generalStyles.textBlc}>Отправить телефон</div>
           <span className={clsx(generalStyles.textGr, generalStyles.text14)}>
             Репетитор получит ваш номер и&nbsp;сможет связаться с&nbsp;вами
             напрямую&nbsp;☎️

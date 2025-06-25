@@ -877,8 +877,9 @@
     padding-right: 10px;
   }
   .content_block {
-    padding: 10px;
+    padding: 10px 20px;
     margin-bottom: 10px;
+    border-radius: 0;
   }
   .mainChtM {
     padding-left: 0px;

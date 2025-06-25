@@ -23,7 +23,7 @@ import {
   updateScrollPosition,
 } from "@/store/features/orderSlice";
 import { setChat } from "@/store/features/chatSlice";
-import { Star } from "lucide-react";
+import { MessageCircle, Star } from "lucide-react";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";
 
@@ -233,13 +233,8 @@ export const TutorsComponent = ({
                       alt=""
                     />
                   </Link>
-                  {/* <div
-                    className={clsx(tutorsStyles.raiting, tutorsStyles.flxWrp)}
-                  >
-                    <Star size={16} color="#917834" strokeWidth={1.25} />
-                    &nbsp;4.95
-                  </div> */}
                 </div>
+
                 <div
                   className={clsx(styles.flex4, styles.tutorFioBagesContainer)}
                 >
@@ -269,6 +264,25 @@ export const TutorsComponent = ({
                     )}
                   </div>
 
+                  <div
+                    className={clsx(
+                      styles.containerIsOnline,
+                      styles.mt6px,
+                      styles.tutorPlaces,
+                      styles.lnHgt18
+                    )}
+                  >
+                    {/* 4.7 рейтинг */}
+                    <div>
+                      {/* <Star size={16} strokeWidth={"1.5"} /> */}
+                      &nbsp;4.7&nbsp;рейтинг
+                    </div>
+                    <div>
+                      {/* <MessageCircle size={16} strokeWidth={"1.5"} /> */}
+                      &nbsp;32&nbsp;отзыва
+                    </div>
+                  </div>
+
                   {/* <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
                     <Image
                       src="../../img/icon/location.svg"
@@ -279,6 +293,46 @@ export const TutorsComponent = ({
                     />
                     <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
                   </div> */}
+
+                  {/* <div
+                    className={clsx(
+                      styles.containerIsOnline,
+                      styles.mt6px,
+                      tutorsStyles.flxWrp
+                    )}
+                  ></div> */}
+                </div>
+
+                {/* <div
+                  className={clsx(styles.flex4, styles.tutorFioBagesContainer)}
+                >
+                  <div
+                    className={clsx(
+                      styles.containerFlxRw,
+                      styles.jtfCntSpBtwn,
+                      styles.gap6
+                    )}
+                  >
+                    <Link
+                      href={`./${orderById?.id}/tutor/${tutor.id}`}
+                      onClick={() => {
+                        saveScrollPosition();
+                        dispatch(setComponentMenu(4));
+                      }} // Сохраняем скролл при клике
+                    >
+                      <h3>{tutor.name}</h3>
+                    </Link>
+                    {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
+                      <div className={styles.containerIsOnline}>
+                        <div className={styles.isOnline}></div>
+                        <span className={tutorsStyles.onlineStatus}>
+                          {onlineStatus}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+
                   {tutor.tutorPlace.length > 0 && (
                     <div
                       className={clsx(
@@ -302,67 +356,83 @@ export const TutorsComponent = ({
                       {hasDocsEducation}
                     </div>
                   )}
-                  {/* <div
-                    className={clsx(
-                      styles.containerIsOnline,
-                      styles.mt6px,
-                      tutorsStyles.flxWrp
-                    )}
-                  ></div> */}
-                </div>
 
-                {/* Кнопка предложения для моб версии */}
-                {chat?.status !== "Rejected" && (
-                  <div
-                    className={clsx(styles.dsplBlcM, tutorsStyles.buttonGoChat)}
-                  >
-                    {chat?.status !== "Rejected" ? (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-
-                          // Если чат с репетитором существует
-                          if (hasChatWithTutor && chat) {
-                            // Логика для существующего чата
-                            dispatch(setComponentMenu(5));
-                            dispatch(setChat(chat));
-                            // Можно добавить другие действия, если чат уже существует
-                          } else {
-                            // Логика для нового чата (если чата нет)
-                            // dispatch(setIsModalResponseStudentToTutor(true));
-                            dispatch(
-                              setTutorIdForResponseStudentToTutor(tutor.id)
-                            );
-                            dispatch(setIsSheetOpen(true)); // Открываем шторку
-
-                            // Можно добавить другие действия для нового чата
-                          }
-                        }}
-                        className={clsx(
-                          generalStyles.content_block_button,
-                          {
-                            [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
-                            [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
-                          },
-                          generalStyles.buttonWthCnt, // Этот класс всегда применяется
-                          generalStyles.agnCntr,
-                          tutorsStyles.buttonGoChat
-                        )}
-                      >
-                        {hasChatWithTutor
-                          ? "Перейти в чат"
-                          : "Предложить заказ"}
-                      </button>
-                    ) : (
-                      false
-                      // <div>
-                      //   К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
-                      // </div>
-                    )}
-                  </div>
-                )}
-                {/* Окончание */}
+                </div> */}
               </div>
+
+              {tutor.tutorPlace.length > 0 && (
+                <div
+                  className={clsx(
+                    styles.containerIsOnline,
+                    styles.mt6px,
+                    styles.tutorPlaces,
+                    styles.lnHgt18
+                  )}
+                >
+                  {tutor.tutorPlace.includes("1") && (
+                    <div>🖥️&nbsp;Дистанционно</div>
+                  )}
+                  {tutor.tutorPlace.includes("2") && (
+                    <div>🏠&nbsp;У&nbsp;себя</div>
+                  )}
+                  {tutor.tutorPlace.includes("3") && (
+                    <div>📍Выезд&nbsp;к&nbsp;ученику&nbsp;</div>
+                  )}
+                  {hasPassportValid}
+                  {hasGoodReviews}
+                  {hasDocsEducation}
+                </div>
+              )}
+
+              {/* Кнопка предложения для моб версии */}
+              {chat?.status !== "Rejected" && (
+                <div
+                  className={clsx(styles.dsplBlcM, tutorsStyles.buttonGoChat)}
+                >
+                  {chat?.status !== "Rejected" ? (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        // Если чат с репетитором существует
+                        if (hasChatWithTutor && chat) {
+                          // Логика для существующего чата
+                          dispatch(setComponentMenu(5));
+                          dispatch(setChat(chat));
+                          // Можно добавить другие действия, если чат уже существует
+                        } else {
+                          // Логика для нового чата (если чата нет)
+                          // dispatch(setIsModalResponseStudentToTutor(true));
+                          dispatch(
+                            setTutorIdForResponseStudentToTutor(tutor.id)
+                          );
+                          dispatch(setIsSheetOpen(true)); // Открываем шторку
+
+                          // Можно добавить другие действия для нового чата
+                        }
+                      }}
+                      className={clsx(
+                        generalStyles.content_block_button,
+                        {
+                          [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
+                          [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
+                        },
+                        generalStyles.buttonWthCnt, // Этот класс всегда применяется
+                        generalStyles.agnCntr,
+                        tutorsStyles.buttonGoChat
+                      )}
+                    >
+                      {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
+                    </button>
+                  ) : (
+                    false
+                    // <div>
+                    //   К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
+                    // </div>
+                  )}
+                </div>
+              )}
+              {/* Окончание */}
 
               {slidesPerTutor[tutorIndex].length > 0 && (
                 <div
