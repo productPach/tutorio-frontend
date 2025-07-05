@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "../Profil/ProfileInfo/ProfileInfo.module.css";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   setIsModalResponseTutorToStudentWithContakt,
   setLoadingPage,
@@ -14,10 +14,10 @@ import {
   sendMessage,
   setChat,
 } from "@/store/features/chatSlice";
-import { data } from "@/utils/listSubjects";
 import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const ResponseTutorToStudentWithContaktModal = () => {
   const dispatch = useAppDispatch();
@@ -43,7 +43,13 @@ export const ResponseTutorToStudentWithContaktModal = () => {
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
-  const subjectForRequest = data.find(
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
+  const subjectForRequest = subjects.find(
     (item) => item.id_p === order?.subject
   )?.for_request;
 

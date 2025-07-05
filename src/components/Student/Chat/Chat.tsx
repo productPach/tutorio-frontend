@@ -5,7 +5,6 @@ import chatNoAccessStyles from "../../Tutor/Chat/ChatNoAccess.module.css";
 import chatStyles from "./Chat.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { data } from "@/utils/listSubjects";
 import { Chat, City, Message, Order, Student } from "@/types/types";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -23,6 +22,7 @@ import GroupedMessages from "./GroupedMessages";
 import { EmojiPicker } from "./EmojiPicker";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { SendHorizontal } from "lucide-react";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -64,6 +64,13 @@ export const ChatComponent = ({
   const [inputValue, setInputValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   // Подписка на чат для получения новых сообщений через useChatSocket
   const { messages, unreadCount, sendMessageSocket, markAsRead } =
@@ -248,7 +255,7 @@ export const ChatComponent = ({
 
   if (error) return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
 
-  const subjectArr = data.find(
+  const subjectArr = subjects.find(
     (subject) => subject.id_p === orderById?.subject
   );
   const subjectName = subjectArr?.title;
@@ -285,7 +292,7 @@ export const ChatComponent = ({
       token &&
       messageResponse
     ) {
-      const subjectForRequest = data.find(
+      const subjectForRequest = subjects.find(
         (item) => item.id_p === orderById?.subject
       )?.for_request;
       const themeOrder = `${orderById.goal} по ${subjectForRequest}`;

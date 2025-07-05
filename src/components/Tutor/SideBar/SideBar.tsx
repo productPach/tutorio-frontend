@@ -7,11 +7,11 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { getAllOrders, setOrderFilters } from "@/store/features/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
-import { data } from "@/utils/listSubjects";
 import { listGoalForSubjects } from "@/utils/subjects/goalForSubjects";
 import { setRegionUser } from "@/store/features/authSlice";
 import { setTutor } from "@/store/features/tutorSlice";
 import { Tutor } from "@/types/types";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,6 +25,12 @@ const SideBar = () => {
   );
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
+
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   const handleFilterChange = (filter: string, type: "place" | "goal") => {
     if (type === "place") {
@@ -52,7 +58,7 @@ const SideBar = () => {
 
   // Чтобы выводить в сайдбаре те цели занятий, которые подходят под предметы репетитора, делаем следующее
   // Вытаскиваем объекты предметов по предметам репетитора
-  const subjectObj = data.filter((subject) =>
+  const subjectObj = subjects.filter((subject) =>
     tutor?.subject.includes(subject.id_p)
   );
   // Преобразуем полученные объекты в массив айдишников целей

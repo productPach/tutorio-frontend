@@ -11,11 +11,11 @@ import animation from "../../../../app/sign-in-tutor/layout.module.css";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
-import { data } from "@/utils/listSubjects";
 import { SubjectItem } from "./SubjectItem";
 import { Search } from "@/components/SelectSubject/Search";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { updateTutor } from "@/store/features/tutorSlice";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 interface ComponentProps {
   id: number;
@@ -62,6 +62,13 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
 
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
@@ -89,7 +96,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   );
 
   // Импортируем предметы
-  const listSubjects = data;
+  const listSubjects = subjects;
   // Предметы-категории
   const listCategorySubjects = listSubjects.filter(
     (subject) => subject.general
@@ -197,7 +204,10 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
           <div className={styles.title}>{question}</div>
           <div className={styles.description}>{description}</div>
           <div className={styles.sticky}>
-            <Search handleScrollToSubject={handleScrollToSubject} />
+            <Search
+              handleScrollToSubject={handleScrollToSubject}
+              subjects={subjects}
+            />
           </div>
           <div className={styles.description}></div>
           <div className={styles.containerAnswers}>

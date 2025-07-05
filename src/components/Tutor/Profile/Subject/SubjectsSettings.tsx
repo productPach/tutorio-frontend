@@ -1,5 +1,4 @@
 "use client";
-import { data } from "@/utils/listSubjects";
 import stylesGen from "../../../../app/tutor/layout.module.css";
 import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -13,6 +12,7 @@ import componentSubjectStyle from "./Subject.module.css";
 import { Subject } from "@/types/types";
 import { Spinner } from "@/components/Spinner/Spinner";
 import clsx from "clsx";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const SubjectsSettings = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +25,13 @@ export const SubjectsSettings = () => {
   const [errorInput, setErrorInput] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   // Получаем значение loading из Redux
   const isLoading = useAppSelector((state) => state.tutor.loading);
@@ -82,7 +89,7 @@ export const SubjectsSettings = () => {
     }
   };
 
-  const listSubjects = data;
+  const listSubjects = subjects;
 
   const getGeneralCategories = (
     tutorSubjects: string[],
@@ -141,7 +148,10 @@ export const SubjectsSettings = () => {
 
       <div className={stylesGen.content_block}>
         <div className={styles.sticky}>
-          <Search handleScrollToSubject={handleScrollToSubject} />
+          <Search
+            handleScrollToSubject={handleScrollToSubject}
+            subjects={subjects}
+          />
         </div>
 
         <div className={componentSubjectStyle.titleSubject}>

@@ -5,9 +5,8 @@ import clsx from "clsx";
 import styles from "../Profil/ProfileInfo/ProfileInfo.module.css";
 import stylesStudent from "../../../Student/Student.module.css";
 import generalStyles from "../../../../app/student/layout.module.css";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
-  setIsModalResponseStudentToTutor,
   setIsModalResponseTutorToStudent,
   setLoadingPage,
 } from "@/store/features/modalSlice";
@@ -17,17 +16,16 @@ import {
   sendMessage,
   setChat,
 } from "@/store/features/chatSlice";
-import { data } from "@/utils/listSubjects";
 import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const ResponseTutorToStudentModal = () => {
   const dispatch = useAppDispatch();
   const route = useRouter();
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
-  const student = useAppSelector((state) => state.student.student);
   const order = useAppSelector((state) => state.orders.orderByIdDefault);
   const tutor = useAppSelector((state) => state.tutor.tutor);
   const { sendMessage: sendMessageContext, newChat } = useChat();
@@ -47,7 +45,13 @@ export const ResponseTutorToStudentModal = () => {
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
-  const subjectForRequest = data.find(
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
+  const subjectForRequest = subjects.find(
     (item) => item.id_p === order?.subject
   )?.for_request;
 

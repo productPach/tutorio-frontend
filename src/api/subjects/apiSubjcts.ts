@@ -1,8 +1,7 @@
 import { Subject } from "@/types/types";
-import { data } from "@/utils/listSubjects";
 
 // Запрос для получения списка предметов // mock object // Перенести фильтрацию на сторону сервера
-export const getSubjectListForSearch = async (subject: string) => {
+export const getSubjectListForSearch = async (subject: string, data: Subject[]) => {
   //   const response = await fetch("https://jsonplaceholder.typicode.com/todos");
 
   //   if (!response.ok) {

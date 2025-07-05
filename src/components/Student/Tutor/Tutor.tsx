@@ -10,7 +10,6 @@ import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
-import { data } from "@/utils/listSubjects";
 import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocationById";
 import { setComponentMenu } from "@/store/features/orderSlice";
 import { setChat } from "@/store/features/chatSlice";
@@ -18,7 +17,8 @@ import {
   setIsModalResponseStudentToTutor,
   setTutorIdForResponseStudentToTutor,
 } from "@/store/features/modalSlice";
-import { useAppDispatch } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 type OrderProps = {
   citiesAndRegions: City[];
@@ -45,13 +45,17 @@ export const TutorComponent = ({
   }, []);
 
   const dispatch = useAppDispatch();
-
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   const [isExpanded, setIsExpanded] = useState(false);
+  // Стейт для предметов
+  const subjectsData = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   const handleToggle = () => {
     setIsExpanded((prevState) => !prevState); // Переключаем состояние
@@ -179,7 +183,7 @@ export const TutorComponent = ({
 
   // Функция для получения названия предмета по for_request
   const getSubjectTitle = (subjectId: string) => {
-    const subject = data.find((item) => item.id_p === subjectId);
+    const subject = subjectsData.find((item) => item.id_p === subjectId);
     return subject ? subject.for_request : subjectId; // Если предмет не найден, возвращаем subjectId
   };
 

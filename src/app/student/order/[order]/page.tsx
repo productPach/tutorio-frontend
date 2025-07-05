@@ -1,7 +1,6 @@
-import { getBackendUrl } from "@/api/server/configApi";
 import { fetchGetPublicOrderById } from "@/api/server/orderApi";
+import { fetchGetAllSubjects } from "@/api/server/subjectApi";
 import OrderPage from "@/components/Student/Order/OrderPage";
-import { data } from "@/utils/listSubjects";
 import type { Metadata } from "next";
 
 export async function generateMetadata(context: any): Promise<Metadata> {
@@ -10,6 +9,7 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   const orderId = params.order;
 
   const order = await fetchGetPublicOrderById(orderId);
+  const subjects = await fetchGetAllSubjects();
 
   if (!order) {
     return {
@@ -19,7 +19,7 @@ export async function generateMetadata(context: any): Promise<Metadata> {
     };
   }
 
-  const subjectArr = data.find((subject) => subject.id_p === order.subject);
+  const subjectArr = subjects.find((subject) => subject.id_p === order.subject);
   const subjectNameForReq = subjectArr?.for_request || "предмету";
 
   return {

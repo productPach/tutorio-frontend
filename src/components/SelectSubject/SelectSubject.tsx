@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "../Spinner/Spinner";
 import { Subject } from "@/types/types";
 import clsx from "clsx";
+import { RootState, useAppDispatch } from "@/store/store";
+import { useSelector } from "react-redux";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const SelectSubject = () => {
   // Состояние для отслеживания строки поиска предмета
@@ -20,6 +23,13 @@ export const SelectSubject = () => {
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   // Состояние для лоадера
   const [isLoading, setIsLoading] = useState(false);
+  // Стейт для предметов
+  const dispatch = useAppDispatch();
+  const subjects = useSelector((state: RootState) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   const router = useRouter();
 
@@ -123,7 +133,10 @@ export const SelectSubject = () => {
   const handleSearchTutor = async (subject: string) => {
     setInputSearchTutor(subject);
     try {
-      const result: Subject[] = await getSubjectListForSearch(subject);
+      const result: Subject[] = await getSubjectListForSearch(
+        subject,
+        subjects
+      );
       setResultSearchTutor(result);
       setResultSubjectIndex(0); // Сброс индекса при каждом новом поиске
     } catch (error) {

@@ -8,9 +8,13 @@ import { Subject } from "@/types/types";
 
 interface ComponentProps {
   handleScrollToSubject: Function;
+  subjects: Subject[];
 }
 
-export const Search: React.FC<ComponentProps> = ({ handleScrollToSubject }) => {
+export const Search: React.FC<ComponentProps> = ({
+  handleScrollToSubject,
+  subjects,
+}) => {
   // Состояние для отслеживания строки поиска предмета
   const [inputSearchTutor, setInputSearchTutor] = useState("");
   // Состояние для получения результатов поиска
@@ -50,6 +54,8 @@ export const Search: React.FC<ComponentProps> = ({ handleScrollToSubject }) => {
     },
     [linkApplicationSubject]
   );
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -112,7 +118,10 @@ export const Search: React.FC<ComponentProps> = ({ handleScrollToSubject }) => {
   const handleSearchTutor = async (subject: string) => {
     setInputSearchTutor(subject);
     try {
-      const result: Subject[] = await getSubjectListForSearch(subject);
+      const result: Subject[] = await getSubjectListForSearch(
+        subject,
+        subjects
+      );
       setResultSearchTutor(result);
       setResultSubjectIndex(0); // Сброс индекса при каждом новом поиске
     } catch (error) {

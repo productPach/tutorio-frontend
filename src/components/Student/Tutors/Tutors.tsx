@@ -23,7 +23,6 @@ import {
   updateScrollPosition,
 } from "@/store/features/orderSlice";
 import { setChat } from "@/store/features/chatSlice";
-import { MessageCircle, Star } from "lucide-react";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";
 
@@ -272,92 +271,10 @@ export const TutorsComponent = ({
                       styles.lnHgt18
                     )}
                   >
-                    {/* 4.7 рейтинг */}
-                    <div>
-                      {/* <Star size={16} strokeWidth={"1.5"} /> */}
-                      &nbsp;4.7&nbsp;рейтинг
-                    </div>
-                    <div>
-                      {/* <MessageCircle size={16} strokeWidth={"1.5"} /> */}
-                      &nbsp;32&nbsp;отзыва
-                    </div>
+                    <div>&nbsp;4.7&nbsp;рейтинг</div>
+                    <div>&nbsp;32&nbsp;отзыва</div>
                   </div>
-
-                  {/* <div className={clsx(styles.containerIsOnline, styles.mt6px)}>
-                    <Image
-                      src="../../img/icon/location.svg"
-                      alt="Геолокация"
-                      width={15}
-                      height={18}
-                      className={styles.header_geoImage}
-                    />
-                    <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
-                  </div> */}
-
-                  {/* <div
-                    className={clsx(
-                      styles.containerIsOnline,
-                      styles.mt6px,
-                      tutorsStyles.flxWrp
-                    )}
-                  ></div> */}
                 </div>
-
-                {/* <div
-                  className={clsx(styles.flex4, styles.tutorFioBagesContainer)}
-                >
-                  <div
-                    className={clsx(
-                      styles.containerFlxRw,
-                      styles.jtfCntSpBtwn,
-                      styles.gap6
-                    )}
-                  >
-                    <Link
-                      href={`./${orderById?.id}/tutor/${tutor.id}`}
-                      onClick={() => {
-                        saveScrollPosition();
-                        dispatch(setComponentMenu(4));
-                      }} // Сохраняем скролл при клике
-                    >
-                      <h3>{tutor.name}</h3>
-                    </Link>
-                    {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                      <div className={styles.containerIsOnline}>
-                        <div className={styles.isOnline}></div>
-                        <span className={tutorsStyles.onlineStatus}>
-                          {onlineStatus}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-
-                  {tutor.tutorPlace.length > 0 && (
-                    <div
-                      className={clsx(
-                        styles.containerIsOnline,
-                        styles.mt6px,
-                        styles.tutorPlaces,
-                        styles.lnHgt18
-                      )}
-                    >
-                      {tutor.tutorPlace.includes("1") && (
-                        <div>🖥️&nbsp;Дистанционно</div>
-                      )}
-                      {tutor.tutorPlace.includes("2") && (
-                        <div>🏠&nbsp;У&nbsp;себя</div>
-                      )}
-                      {tutor.tutorPlace.includes("3") && (
-                        <div>📍Выезд&nbsp;к&nbsp;ученику&nbsp;</div>
-                      )}
-                      {hasPassportValid}
-                      {hasGoodReviews}
-                      {hasDocsEducation}
-                    </div>
-                  )}
-
-                </div> */}
               </div>
 
               {tutor.tutorPlace.length > 0 && (
@@ -434,6 +351,27 @@ export const TutorsComponent = ({
               )}
               {/* Окончание */}
 
+              {tutor.educations.length > 0 && (
+                <div
+                  className={clsx(
+                    styles.containerOrderInfo,
+                    styles.containerOrderInfoBG
+                  )}
+                >
+                  <span className={styles.titleTutorInfo}>образование</span>
+
+                  <ul>
+                    {tutor.educations.map((education) => (
+                      <li key={education.id} className={styles.listEducation}>
+                        {education.educationInfo} (
+                        {education.educationStartYear}-
+                        {education.educationEndYear})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {slidesPerTutor[tutorIndex].length > 0 && (
                 <div
                   className={clsx(
@@ -475,43 +413,6 @@ export const TutorsComponent = ({
                 </div>
               </div>
 
-              {tutor.educations.length > 0 && (
-                <div
-                  className={clsx(
-                    styles.containerOrderInfo,
-                    styles.containerOrderInfoBG
-                  )}
-                >
-                  <span className={styles.titleTutorInfo}>образование</span>
-
-                  <ul>
-                    {tutor.educations.map((education) => (
-                      <li key={education.id} className={styles.listEducation}>
-                        {education.educationInfo} (
-                        {education.educationStartYear}-
-                        {education.educationEndYear})
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {tutor.profileInfo && (
-                <div
-                  className={clsx(
-                    styles.containerOrderInfo,
-                    styles.containerOrderInfoBG
-                  )}
-                >
-                  <span className={styles.titleTutorInfo}>о себе</span>
-                  <div className={styles.profileInfoText}>
-                    {tutor.profileInfo.length > 250
-                      ? `${tutor.profileInfo.slice(0, 250)}...`
-                      : tutor.profileInfo}
-                  </div>
-                </div>
-              )}
-
               {relevantPrices.length > 0 && (
                 <div
                   className={clsx(
@@ -543,6 +444,22 @@ export const TutorsComponent = ({
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+
+              {tutor.profileInfo && (
+                <div
+                  className={clsx(
+                    styles.containerOrderInfo,
+                    styles.containerOrderInfoBG
+                  )}
+                >
+                  <span className={styles.titleTutorInfo}>о себе</span>
+                  <div className={styles.profileInfoText}>
+                    {tutor.profileInfo.length > 250
+                      ? `${tutor.profileInfo.slice(0, 250)}...`
+                      : tutor.profileInfo}
+                  </div>
                 </div>
               )}
 
@@ -583,167 +500,6 @@ export const TutorsComponent = ({
                 </div>
               )}
             </div>
-
-            /*<div
-                key={tutor.id}
-                className={clsx(
-                  generalStyles.content_block,
-                  generalStyles.order_block,
-                  generalStyles.crsr_pntr,
-                  styles.order_gap
-                )}
-              >
-                <div className={tutorsStyles.container1}>
-                  <div>
-                    <Image
-                      className={clsx(
-                        tutorsStyles.tutorImg,
-                        tutorsStyles.tutorImgM
-                      )}
-                      src={tutorAvatar}
-                      width={120}
-                      height={120}
-                      alt=""
-                    />
-                  </div>
-                  <div className={tutorsStyles.containerDetails}>
-                    <div className={tutorsStyles.containerName}>
-                      <Link
-                        href={`./${orderById?.id}/tutor/${tutor.id}`}
-                        onClick={() => {
-                          saveScrollPosition();
-                          dispatch(setComponentMenu(4));
-                        }} // Сохраняем скролл при клике
-                      >
-                        <h3 className={tutorsStyles.h3}>{tutor.name}</h3>
-                      </Link>
-                      {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                        <div className={styles.containerIsOnline}>
-                          <div className={styles.isOnline}></div>
-                          <span className={styles.onlineStatus}>
-                            {onlineStatus}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    {/* <div className={tutorsStyles.containerRG}>
-                      <div className={tutorsStyles.containerRaiting}>
-                        <Star size={17} color={"#343330"} strokeWidth={1.6} />
-                        <span>4,9</span>
-                      </div>
-                      <div
-                        className={clsx(styles.containerIsOnline, styles.mt6px)}
-                      >
-                        <Image
-                          src="../../img/icon/location.svg"
-                          alt="Геолокация"
-                          width={15}
-                          height={18}
-                          className={styles.header_geoImage}
-                        />
-                        <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
-                      </div>
-                    </div> */
-            /*<div
-                      className={clsx(
-                        tutorsStyles.containerBages,
-                        styles.mt6px
-                      )}
-                    >
-                      <div className={styles.goodReviews}>⭐️&nbsp;4.8</div>
-                      {hasPassportValid}
-                      {hasDocsEducation}
-                    </div>
-                  </div>
-                </div>
-                <div className={tutorsStyles.container2}>
-                  <div>
-                    <div className={clsx(styles.dsplBlcM)}>
-                      {chat?.status !== "Rejected" ? (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-
-                            // Если чат с репетитором существует
-                            if (hasChatWithTutor && chat) {
-                              // Логика для существующего чата
-                              dispatch(setComponentMenu(5));
-                              dispatch(setChat(chat));
-                              // Можно добавить другие действия, если чат уже существует
-                            } else {
-                              // Логика для нового чата (если чата нет)
-                              dispatch(setIsModalResponseStudentToTutor(true));
-                              dispatch(
-                                setTutorIdForResponseStudentToTutor(tutor.id)
-                              );
-                              // Можно добавить другие действия для нового чата
-                            }
-                          }}
-                          className={clsx(
-                            generalStyles.content_block_button,
-                            {
-                              [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
-                              [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
-                            },
-                            generalStyles.buttonWthCnt, // Этот класс всегда применяется
-                            generalStyles.agnCntr
-                          )}
-                        >
-                          {hasChatWithTutor
-                            ? "Перейти в чат"
-                            : "Предложить заказ"}
-                        </button>
-                      ) : (
-                        <div>К сожалению, репетитор отклонил ваш заказ ❌</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={tutorsStyles.container3}>
-                  {slidesPerTutor[tutorIndex].length > 0 && (
-                    <div className={styles.containerOrderInfo}>
-                      {/* <span className={styles.titleTutorInfo}>
-                        Диплом, сертификаты и другие документы
-                      </span> */
-
-            /* <div
-                        className={clsx(styles.scrollContainer, styles.gap10)}
-                      >
-                        {slidesPerTutor[tutorIndex]
-                          .slice(0, 6)
-                          .map((slide, index) => (
-                            <Image
-                              key={index}
-                              onClick={() =>
-                                handleImageClick(tutorIndex, index)
-                              }
-                              src={slide.src}
-                              alt="Документ об образовании"
-                              width={100}
-                              height={100}
-                              className={styles.imageDiplomas}
-                            />
-                          ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className={tutorsStyles.container4}>
-                  {tutor.profileInfo && (
-                    <div className={styles.containerOrderInfo}>
-                      {/* <span className={styles.titleTutorInfo}>О себе</span> */
-            /* <div className={styles.profileInfoText}>
-                        {tutor.profileInfo.length > 450
-                          ? `${tutor.profileInfo.slice(0, 450)}...`
-                          : tutor.profileInfo}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div> 
-            </>*/
           );
         })
       ) : (
