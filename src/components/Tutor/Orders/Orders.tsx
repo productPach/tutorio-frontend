@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { getAllOrders, setOrderByIdDefault } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
-import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
@@ -21,6 +20,7 @@ import {
 import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 const Orders = () => {
   const route = useRouter();
@@ -33,10 +33,15 @@ const Orders = () => {
     (state: RootState) => state.orders
   );
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
-
   const { selectedPlaceFilters, selectedGoalFilters } = filters;
-
   const { chats, chatsLoading, setChatsLoaded } = useChat();
+
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   useEffect(() => {
     if (token) {
@@ -121,7 +126,9 @@ const Orders = () => {
               "Rejected"
             )
               return null;
-            const subject = data.find((item) => item.id_p === order.subject);
+            const subject = subjects.find(
+              (item) => item.id_p === order.subject
+            );
             const goal = order.goal ? order.goal + " // " : null;
             const deadline = order.deadline
               ? order.deadline + " до экзамена // "

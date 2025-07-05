@@ -4,20 +4,16 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import styles from "../ProfileInfo/ProfileInfo.module.css";
 import componentStyles from "./SubjectModal.module.css";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { availableDurations, data } from "@/utils/listSubjects";
+import { availableDurations } from "@/utils/listSubjects";
 import clsx from "clsx";
-import {
-  LessonDuration,
-  LessonFormat,
-  Subject,
-  TutorSubjectPriceInput,
-} from "@/types/types";
+import { LessonDuration, LessonFormat, Subject } from "@/types/types";
 import {
   addSubjectPrice,
   updateSubjectPrice,
   updateTutor,
 } from "@/store/features/tutorSlice";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const SubjectModal = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +26,12 @@ export const SubjectModal = () => {
 
   const [successUpdateTutor, setSuccessUpdateTutor] = useState(true);
 
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
   useEffect(() => {
     updateStatus === "success" && setSuccessUpdateTutor(true);
   }, [updateStatus]);
@@ -37,7 +39,7 @@ export const SubjectModal = () => {
   const editSubjectId = useAppSelector(
     (state) => state.modal.subjectForEditInModal
   );
-  const subject: Subject | undefined = data.find(
+  const subject: Subject | undefined = subjects.find(
     (item) => item.id_p === editSubjectId
   );
 

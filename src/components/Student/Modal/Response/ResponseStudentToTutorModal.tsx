@@ -5,25 +5,18 @@ import clsx from "clsx";
 import styles from "../../../Tutor/Modal/Profil/ProfileInfo/ProfileInfo.module.css";
 import stylesStudent from "../../Student.module.css";
 import generalStyles from "../../../../app/student/layout.module.css";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   setIsModalResponseStudentToTutor,
   setIsSheetOpen,
-  setLoadingPage,
   setScrollY,
 } from "@/store/features/modalSlice";
-import {
-  createChat,
-  getChatsByOrderId,
-  getChatsByUserId,
-  sendMessage,
-  setChat,
-} from "@/store/features/chatSlice";
+import { createChat, sendMessage } from "@/store/features/chatSlice";
 import { useChat } from "@/context/ChatContext";
 import { useRouter } from "next/navigation";
-import { data } from "@/utils/listSubjects";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getOrderById } from "@/store/features/orderSlice";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const ResponseStudentToTutorModal = () => {
   const dispatch = useAppDispatch();
@@ -53,7 +46,14 @@ export const ResponseStudentToTutorModal = () => {
   // Состояние для лоадера
   const [isLoading, setIsLoading] = useState(false);
 
-  const subjectForRequest = data.find(
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
+  const subjectForRequest = subjects.find(
     (item) => item.id_p === orderById?.subject
   )?.for_request;
 

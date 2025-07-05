@@ -4,7 +4,6 @@ import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
 import componentSubjectStyle from "./Subject.module.css";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { availableDurations } from "@/utils/listSubjects";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   setIsModalEditSubjectPrices,

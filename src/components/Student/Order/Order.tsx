@@ -4,12 +4,13 @@ import styles from "./Order.module.css";
 import locationsStyles from "../../../app/tutor/locations.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { formatTimeAgo } from "@/utils/date/date";
 import { findLocTitlesByIds } from "@/utils/locations/getTitleLocationById";
 import { City, Order, Student } from "@/types/types";
 import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 type OrderProps = {
   loading: boolean;
@@ -31,6 +32,15 @@ export const OrderComponent = ({
       top: 0,
     });
   }, []);
+
+  // Стейт для предметов
+  const dispatch = useAppDispatch();
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
@@ -42,7 +52,7 @@ export const OrderComponent = ({
 
   if (error) return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
 
-  const subjectArr = data.find(
+  const subjectArr = subjects.find(
     (subject) => subject.id_p === orderById?.subject
   );
   const subjectName = subjectArr?.title;

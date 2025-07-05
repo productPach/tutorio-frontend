@@ -1,5 +1,4 @@
 "use client";
-import { data } from "@/utils/listSubjects";
 import styles from "../../../../app/tutor/layout.module.css";
 import componentSubjectStyle from "./Subject.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -13,6 +12,7 @@ import {
   setIsModalEditSubjectPrices,
   setSubjectForEditInModal,
 } from "@/store/features/modalSlice";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 export const Subject = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +23,17 @@ export const Subject = () => {
   const isLoading = useAppSelector((state) => state.tutor.loading);
   const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
 
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
+
   const [successUpdateTutor, setSuccessUpdateTutor] = useState(true);
 
   // Импортируем предметы
-  const listSubjects = data;
+  const listSubjects = subjects;
   // Предметы-категории
   const listCategorySubjects = listSubjects.filter(
     (subject) => subject.general

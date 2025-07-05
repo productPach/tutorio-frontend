@@ -18,7 +18,6 @@ import { setLoadingPage, setScrollY } from "@/store/features/modalSlice";
 import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal";
 import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
 import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
-import { data } from "@/utils/listSubjects";
 
 const OrderPage: React.FC = () => {
   const page = "Order";

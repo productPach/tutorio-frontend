@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { getOrdersByStudentId } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
-import { data } from "@/utils/listSubjects";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
@@ -17,8 +16,9 @@ import { formatTimeAgo } from "@/utils/date/date";
 import Image from "next/image";
 import { SpinnerOrange } from "@/components/Spinner/SpinnerOrange";
 import { getDeclension } from "@/utils/words/getDeclension";
-import { getBackendUrl, host, port } from "@/api/server/configApi";
+import { getBackendUrl } from "@/api/server/configApi";
 import { setChat } from "@/store/features/chatSlice";
+import { getAllSubjects } from "@/store/features/subjectSlice";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,6 +30,13 @@ const Orders = () => {
     (state: RootState) => state.orders
   );
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
+
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+  }, [dispatch]);
 
   useEffect(() => {
     if (token && student) {
@@ -65,7 +72,9 @@ const Orders = () => {
       </div> */}
       {activeOrders.length > 0
         ? activeOrders.map((order) => {
-            const subject = data.find((item) => item.id_p === order.subject);
+            const subject = subjects.find(
+              (item) => item.id_p === order.subject
+            );
             const goal = order.goal ? order.goal + " // " : null;
             const deadline = order.deadline
               ? order.deadline + " до\u00A0экзамена // "
