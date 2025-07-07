@@ -10,7 +10,10 @@ import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { getAllOrders, setOrderByIdDefault } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { getYearWord } from "@/utils/words/getYearWord";
-import { findLocTitleById } from "@/utils/locations/getTitleLocationById";
+import {
+  findLocTitleById,
+  findLocTitleByIdWithDistrict,
+} from "@/utils/locations/getTitleLocationById";
 import { Order } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
@@ -213,7 +216,7 @@ const Orders = () => {
             let firstLocationHome;
             let countHome;
             if (studentPlace?.includes("У меня дома") && studentHomeLoc) {
-              firstLocationHome = findLocTitleById(
+              firstLocationHome = findLocTitleByIdWithDistrict(
                 studentHomeLoc[0],
                 locations
               );
@@ -224,7 +227,10 @@ const Orders = () => {
             let firstLocationTrip;
             let countTrip;
             if (studentPlace?.includes("У репетитора") && studentTrip) {
-              firstLocationTrip = findLocTitleById(studentTrip[0], locations);
+              firstLocationTrip = findLocTitleByIdWithDistrict(
+                studentTrip[0],
+                locations
+              );
               countTrip = studentTrip.length - 1;
             }
 
