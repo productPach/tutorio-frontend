@@ -4,7 +4,7 @@ import styles from "../Order/Order.module.css";
 import tutorsStyles from "./Tutors.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { City, Order, Student, Tutor } from "@/types/types";
+import { Chat, City, Order, Student, Tutor } from "@/types/types";
 import Image from "next/image";
 import { getBackendUrl, host, port } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
@@ -27,6 +27,7 @@ import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";
 
 type OrderProps = {
+  chats: Chat[];
   tutorsForOrder: Tutor[];
   citiesAndRegions: City[];
   loading: boolean;
@@ -37,6 +38,7 @@ type OrderProps = {
 };
 
 export const TutorsComponent = ({
+  chats,
   tutorsForOrder,
   citiesAndRegions,
   loading,
@@ -88,22 +90,22 @@ export const TutorsComponent = ({
     (state) => state.orders
   );
 
-  useEffect(() => {
-    // dispatch(setComponentMenu(2));
-    setTimeout(() => {
-      window.scrollTo({
-        top: scrollPosition,
-        behavior: "smooth", // Плавный скролл
-      });
-    }, 500); // Задержка для плавного скролла
-  }, []);
+  // useEffect(() => {
+  //   // dispatch(setComponentMenu(2));
+  //   setTimeout(() => {
+  //     window.scrollTo({
+  //       top: scrollPosition,
+  //       behavior: "smooth", // Плавный скролл
+  //     });
+  //   }, 500); // Задержка для плавного скролла
+  // }, [scrollPosition]);
 
   // Для сохранения позиции
-  const saveScrollPosition = () => {
-    const scrollPosition = window.scrollY;
-    const scrollHeight = document.documentElement.scrollHeight; // Получаем высоту документа
-    dispatch(updateScrollPosition({ scrollPosition, scrollHeight }));
-  };
+  // const saveScrollPosition = () => {
+  //   const scrollPosition = window.scrollY;
+  //   const scrollHeight = document.documentElement.scrollHeight; // Получаем высоту документа
+  //   dispatch(updateScrollPosition({ scrollPosition, scrollHeight }));
+  // };
 
   if (loading && !student?.name)
     return (
@@ -200,9 +202,7 @@ export const TutorsComponent = ({
           const hasChatWithTutor = orderById?.chats.some(
             (chat) => chat.tutorId === tutor.id
           );
-          const chat = orderById?.chats.find(
-            (chat) => chat.tutorId === tutor.id
-          );
+          const chat = chats.find((chat) => chat.tutorId === tutor.id);
 
           return (
             <div
@@ -246,10 +246,11 @@ export const TutorsComponent = ({
                   >
                     <Link
                       href={`./${orderById?.id}/tutor/${tutor.id}`}
-                      onClick={() => {
-                        saveScrollPosition();
-                        dispatch(setComponentMenu(4));
-                      }} // Сохраняем скролл при клике
+                      target="_blank"
+                      // onClick={() => {
+                      //   saveScrollPosition();
+                      //   dispatch(setComponentMenu(4));
+                      // }} // Сохраняем скролл при клике
                     >
                       <h3>{tutor.name}</h3>
                     </Link>
@@ -316,6 +317,7 @@ export const TutorsComponent = ({
                           // Логика для существующего чата
                           dispatch(setComponentMenu(5));
                           dispatch(setChat(chat));
+                          //saveScrollPosition();
                           // Можно добавить другие действия, если чат уже существует
                         } else {
                           // Логика для нового чата (если чата нет)
@@ -473,6 +475,7 @@ export const TutorsComponent = ({
                       // Логика для существующего чата
                       dispatch(setComponentMenu(5));
                       dispatch(setChat(chat));
+                      //saveScrollPosition();
                       // Можно добавить другие действия, если чат уже существует
                     } else {
                       // Логика для нового чата (если чата нет)

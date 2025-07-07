@@ -160,7 +160,7 @@ export const ChatSidbar = ({
                               : "Ученик заинтересовался вашим профилем и отправил предложение на занятия"}
                           </div>
 
-                          {lastMessage.senderId === tutor?.id ? (
+                          {lastMessage?.senderId === tutor?.id ? (
                             lastMessage.isRead ? (
                               <Image
                                 className={styles.studentChatIcon}
@@ -179,7 +179,7 @@ export const ChatSidbar = ({
                               />
                             )
                           ) : (
-                            !lastMessage.isRead && (
+                            !lastMessage?.isRead && (
                               <div
                                 className={styles.isNotReadTutorsMessageCount}
                               >
@@ -195,7 +195,7 @@ export const ChatSidbar = ({
                         </div>
 
                         <div className={styles.studentChatMessageDate}>
-                          {formatTimeAgo(lastMessage?.createdAt)}
+                          {lastMessage && formatTimeAgo(lastMessage?.createdAt)}
                         </div>
                       </div>
                     </div>

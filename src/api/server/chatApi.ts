@@ -29,7 +29,10 @@ export const fetchCreateChat = async (
   
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Ошибка при создании чата");
+      throw {
+        status: response.status,
+        message: errorData.error || "Ошибка при создании чата",
+      };
     }
   
     const data = await response.json();

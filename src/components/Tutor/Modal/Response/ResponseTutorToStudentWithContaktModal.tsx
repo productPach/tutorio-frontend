@@ -37,6 +37,8 @@ export const ResponseTutorToStudentWithContaktModal = () => {
   const [errorInput, setErrorInput] = useState(false);
   // Состояние для лоадера
   const [isLoading, setIsLoading] = useState(false);
+  // Состояние для валидации
+  const [valid, setValid] = useState(false);
 
   // Состояние для фиксации фокусирования на поле с вводом телефона
   const [isFocused, setIsFocused] = useState(false);
@@ -111,15 +113,22 @@ export const ResponseTutorToStudentWithContaktModal = () => {
             }
           }, 0);
         }
-      } catch (error) {
-        console.error(
-          "Ошибка при создании чата или отправке сообщения:",
-          error
-        );
+        dispatch(setIsModalResponseTutorToStudentWithContakt(false));
+        dispatch(setLoadingPage(true));
+      } catch (error: any) {
+        const errorMessage = error?.message;
+        if (error?.status === 403 && errorMessage?.includes("откликнуться")) {
+          setValid(true);
+          dispatch(setLoadingPage(false));
+          setIsLoading(false);
+        } else {
+          console.error(
+            "Ошибка при создании чата или отправке сообщения:",
+            error
+          );
+        }
       }
     }
-    dispatch(setIsModalResponseTutorToStudentWithContakt(false));
-    dispatch(setLoadingPage(true));
   };
 
   return (
@@ -144,8 +153,22 @@ export const ResponseTutorToStudentWithContaktModal = () => {
         />
       </div>
 
+      {valid && (
+        <p className={styles.error}>
+          📫 Отклик не доставлен! Ученик уже закрыл заказ или временно
+          приостановил приём откликов
+          {/* . <br />
+          Но это не конец — возможно, это просто знак, что ваш заказ ещё
+          впереди! 🧭✨ */}
+        </p>
+      )}
+
       <div className={styles.button}>
-        <button disabled={isLoading} onClick={update} type="button">
+        <button
+          disabled={isLoading || valid || inputValue.length < 1}
+          onClick={update}
+          type="button"
+        >
           Получить контакты
           {isLoading && (
             <div className={styles.buttonYlSpinner2}>
