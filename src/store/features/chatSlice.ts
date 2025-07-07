@@ -13,7 +13,7 @@ type ChatStateType = {
 
 // Создание чата
 export const createChat = createAsyncThunk<
-  Chat, // что возвращаем
+  Chat, // что возвращаем при успехе
   {
     tutorId: string;
     studentId: string;
@@ -22,11 +22,38 @@ export const createChat = createAsyncThunk<
     themeOrder: string;
     status: string;
     token: string;
+  },
+  {
+    rejectValue: {
+      status: number;
+      message: string;
+    };
   }
->("chat/create", async ({ tutorId, studentId, orderId, initiatorRole, themeOrder, status, token }) => {
-  const response = await fetchCreateChat(tutorId, studentId, orderId, initiatorRole, themeOrder, status, token);
-  return response;
-});
+>(
+  "chat/create",
+  async (
+    { tutorId, studentId, orderId, initiatorRole, themeOrder, status, token },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetchCreateChat(
+        tutorId,
+        studentId,
+        orderId,
+        initiatorRole,
+        themeOrder,
+        status,
+        token
+      );
+      return response;
+    } catch (error: any) {
+      return rejectWithValue({
+        status: error?.status || 500,
+        message: error?.message || "Ошибка при создании чата",
+      });
+    }
+  }
+);
 
 // Обновление чата
 export const updateChat = createAsyncThunk<

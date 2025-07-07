@@ -248,6 +248,9 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                 onClick={() => {
                   dispatch(setComponentMenu(3));
                   dispatch(setChat(null));
+                  dispatch(
+                    updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
+                  );
                 }}
               >
                 <Image

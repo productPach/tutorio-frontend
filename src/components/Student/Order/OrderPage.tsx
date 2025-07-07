@@ -163,6 +163,7 @@ const OrderPage: React.FC = () => {
           )}
           {component === 2 || component === 4 ? (
             <TutorsComponent
+              chats={chats}
               tutorsForOrder={tutorsForOrder}
               citiesAndRegions={citiesAndRegions}
               loading={loading}

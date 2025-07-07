@@ -6,7 +6,10 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { formatTimeAgo } from "@/utils/date/date";
-import { findLocTitlesByIds } from "@/utils/locations/getTitleLocationById";
+import {
+  findLocTitleByIdWithDistrict,
+  findLocTitlesByIds,
+} from "@/utils/locations/getTitleLocationById";
 import { City, Order, Student } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect } from "react";
@@ -199,10 +202,13 @@ export const OrderComponent = ({
               Ближайшие локации к ученику
             </span>
             <span>
-              {findLocTitlesByIds(orderById?.studentHomeLoc, locations).map(
-                (location, index) => (
+              {orderById?.studentHomeLoc?.map((id, index) => {
+                const location = findLocTitleByIdWithDistrict(id, locations);
+
+                return (
                   <div key={index}>
-                    {typeof location !== "string" && location.lineNumber && (
+                    {/* Отображаем кружок метро, если есть lineNumber */}
+                    {location?.lineNumber && (
                       <div className={locationsStyles.crcl_mtr_wrap}>
                         <div className={locationsStyles.crcl_mtr_container}>
                           <div
@@ -214,17 +220,12 @@ export const OrderComponent = ({
                               ]
                             )}
                           ></div>
-                          {/* <div
-                            className={clsx(
-                              styles.order_block,
-                              locationsStyles.crcl_mtr,
-                              locationsStyles.crcl_mtr_msk_7
-                            )}
-                          ></div> */}
                         </div>
                       </div>
                     )}
-                    {typeof location === "string" && (
+
+                    {/* Если lineNumber нет (то есть это район или регион), отобразим нейтральный кружок */}
+                    {!location?.lineNumber && (
                       <div className={locationsStyles.crcl_mtr_wrap}>
                         <div className={locationsStyles.crcl_mtr_container}>
                           <div
@@ -233,20 +234,15 @@ export const OrderComponent = ({
                               locationsStyles.crcl_mtr_none
                             )}
                           ></div>
-                          {/* <div
-                            className={clsx(
-                              styles.order_block,
-                              locationsStyles.crcl_mtr,
-                              locationsStyles.crcl_mtr_msk_7
-                            )}
-                          ></div> */}
                         </div>
                       </div>
                     )}
-                    {typeof location === "string" ? location : location.title}
+
+                    {/* Заголовок (название станции / района / города) */}
+                    {location?.title || "Неизвестная локация"}
                   </div>
-                )
-              )}
+                );
+              })}
             </span>
           </div>
         )}
@@ -255,10 +251,13 @@ export const OrderComponent = ({
           <div className={styles.containerOrderInfo}>
             <span className={styles.titleOrderInfo}>Ученик готов приехать</span>
             <span>
-              {findLocTitlesByIds(orderById?.studentTrip, locations).map(
-                (location, index) => (
+              {orderById?.studentTrip?.map((id, index) => {
+                const location = findLocTitleByIdWithDistrict(id, locations);
+
+                return (
                   <div key={index}>
-                    {typeof location !== "string" && location.lineNumber && (
+                    {/* Если это метро (есть номер линии) */}
+                    {location?.lineNumber && (
                       <div className={locationsStyles.crcl_mtr_wrap}>
                         <div className={locationsStyles.crcl_mtr_container}>
                           <div
@@ -270,17 +269,12 @@ export const OrderComponent = ({
                               ]
                             )}
                           ></div>
-                          {/* <div
-                            className={clsx(
-                              styles.order_block,
-                              locationsStyles.crcl_mtr,
-                              locationsStyles.crcl_mtr_msk_7
-                            )}
-                          ></div> */}
                         </div>
                       </div>
                     )}
-                    {typeof location === "string" && (
+
+                    {/* Если это не метро (район/регион) */}
+                    {!location?.lineNumber && (
                       <div className={locationsStyles.crcl_mtr_wrap}>
                         <div className={locationsStyles.crcl_mtr_container}>
                           <div
@@ -289,20 +283,15 @@ export const OrderComponent = ({
                               locationsStyles.crcl_mtr_none
                             )}
                           ></div>
-                          {/* <div
-                            className={clsx(
-                              styles.order_block,
-                              locationsStyles.crcl_mtr,
-                              locationsStyles.crcl_mtr_msk_7
-                            )}
-                          ></div> */}
                         </div>
                       </div>
                     )}
-                    {typeof location === "string" ? location : location.title}
+
+                    {/* Название локации */}
+                    {location?.title || "Неизвестная локация"}
                   </div>
-                )
-              )}
+                );
+              })}
             </span>
           </div>
         )}

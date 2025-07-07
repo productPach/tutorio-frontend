@@ -244,7 +244,11 @@ export const ChatComponent = ({
     };
   }, []);
 
-  if (loading && !student?.name)
+  useEffect(() => {
+    console.log("все загрузилось");
+  }, [chat, chat?.tutor, student, orderById]);
+
+  if (loading || !chat || !chat.tutor || !student || !orderById) {
     return (
       <div className={generalStyles.container__spinner}>
         <div className={generalStyles.spinner}>
@@ -252,6 +256,7 @@ export const ChatComponent = ({
         </div>
       </div>
     );
+  }
 
   if (error) return <div>Видимо, что-то сломалось. Попробуйте зайти позже</div>;
 

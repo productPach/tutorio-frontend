@@ -12,8 +12,8 @@
 }
 
 .crcl_mtr_none {
-  width: 3px;
-  height: 3px;
+  width: 8px;
+  height: 8px;
   border-radius: 4px;
   border: 1px solid black;
 }
