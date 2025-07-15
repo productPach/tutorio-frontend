@@ -19,6 +19,8 @@ import { getDeclension } from "@/utils/words/getDeclension";
 import { getBackendUrl } from "@/api/server/configApi";
 import { setChat } from "@/store/features/chatSlice";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { getPlaceholderAvatar } from "@/utils/avatar/getPlaceholderAvatar";
+import { UserRound } from "lucide-react";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -474,17 +476,56 @@ const Orders = () => {
 
                   {order.status === "Active" && activeChats.length > 0 && (
                     <div className={styles.studentBlockOrderWithResponse}>
-                      <div className={styles.studentBlockOrderWithResponseImg}>
-                        {activeChats.slice(0, 3).map((chat) => (
-                          <Image
-                            key={chat.id}
-                            className={styles.studentResponseImg}
-                            src={`${getBackendUrl()}${chat.tutor.avatarUrl}`}
-                            width={36}
-                            height={36}
-                            alt=""
-                          />
-                        ))}
+                      <div
+                        className={clsx(
+                          styles.studentBlockOrderWithResponseImg,
+                          styles.dsplFlx
+                        )}
+                      >
+                        {activeChats.slice(0, 3).map((chat) => {
+                          if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
+                          const hasAvatar = !!chat.tutor?.avatarUrl;
+
+                          if (hasAvatar) {
+                            const avatarSrc = `${getBackendUrl()}${chat.tutor.avatarUrl}`;
+                            return (
+                              <Image
+                                key={chat.id}
+                                className={styles.studentResponseImg}
+                                src={avatarSrc}
+                                width={36}
+                                height={36}
+                                alt=""
+                              />
+                            );
+                          } else {
+                            const { backgroundColor, textColor, initials } =
+                              getPlaceholderAvatar(chat.id, chat.tutor?.name);
+
+                            return (
+                              <div
+                                key={chat.id}
+                                className={styles.studentResponseImg}
+                                style={{
+                                  width: 36,
+                                  height: 36,
+                                  borderRadius: 10,
+                                  backgroundColor,
+                                  color: textColor,
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  userSelect: "none",
+                                }}
+                              >
+                                {initials}
+                                {/* <UserRound size={20} strokeWidth={1.5} /> */}
+                              </div>
+                            );
+                          }
+                        })}
                       </div>
                       <div
                         className={styles.studentBlockOrderWithResponseCount}

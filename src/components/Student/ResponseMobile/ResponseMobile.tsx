@@ -233,6 +233,7 @@ export const ResponseSidbarMobile = ({
               <div className={styles.sidebar_filterForChat}>
                 <div className={styles.studentChatWrap}>
                   {sortedChats.map((chat, index, array) => {
+                    if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
                     // Мемоизируем сортировку сообщений для каждого чата
                     const sortedMessages = [...chat.messages].sort(
                       (a, b) =>
