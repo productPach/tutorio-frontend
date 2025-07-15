@@ -14,7 +14,9 @@
 .wdth100 {
   width: 100%;
 }
-
+.dsplFlx {
+  display: flex;
+}
 .header {
   width: auto;
   height: 70px;
