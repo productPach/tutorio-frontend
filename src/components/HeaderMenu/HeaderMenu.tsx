@@ -42,14 +42,16 @@ export const HeaderMenu = () => {
   if (
     tutor?.status === "Pending" ||
     tutor?.status === "Active" ||
-    tutor?.status === "Canceled delete"
+    tutor?.status === "Canceled delete" ||
+    tutor?.status === "Deleted" // Сделать в ЛК какое то уведомление-плашку с датой удаления и возможностью отмены
   ) {
     nextPage = "/tutor/orders";
   }
   if (
     student?.status === "Pending" ||
     student?.status === "Active" ||
-    student?.status === "Canceled delete"
+    student?.status === "Canceled delete" ||
+    student?.status === "Deleted" // Сделать в ЛК какое то уведомление-плашку с датой удаления и возможностью отмены
   ) {
     nextPage = "/student/orders";
   }

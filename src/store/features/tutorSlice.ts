@@ -31,6 +31,7 @@ import {
 } from "@/types/types";
 import {
   getTutorFromLocalStorage,
+  removeLocalStorage,
   setLocalStorage,
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -486,6 +487,8 @@ const tutorSlice = createSlice({
       .addCase(getCurrentTutor.rejected, (state) => {
         state.loading = false;
         state.updateStatus = "failed";
+        state.tutor = null; // Обнуляем репетитора
+        removeLocalStorage("tutor"); // Удаляем из localStorage
       })
       .addCase(getAllTutors.pending, (state) => {
         state.loading = true;
