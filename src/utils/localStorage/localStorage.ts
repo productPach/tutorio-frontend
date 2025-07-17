@@ -1,8 +1,19 @@
 // Установка значения в Local Storage
-export const setLocalStorage = (key: string, value: string | object) => {
-    const stringValue = typeof value === "string" ? value : JSON.stringify(value); // Преобразуем объект в строку, если нужно
-    localStorage.setItem(key, stringValue);
-  };
+// export const setLocalStorage = (key: string, value: string | object) => {
+//     const stringValue = typeof value === "string" ? value : JSON.stringify(value); // Преобразуем объект в строку, если нужно
+//     localStorage.setItem(key, stringValue);
+//   };
+// Установка значения в Local Storage (новая версия с защитой от записи ошибок) от 17 07 2025
+  export const setLocalStorage = (key: string, value: string | object) => {
+  // Проверяем, не является ли value объектом с ошибкой
+  if (typeof value === 'object' && value !== null && 'error' in value) {
+    localStorage.removeItem(key); // Удаляем если это объект с ошибкой
+    return;
+  }
+  
+  const stringValue = typeof value === "string" ? value : JSON.stringify(value);
+  localStorage.setItem(key, stringValue);
+};
   
   // Чтение значения из Local Storage
   export const getLocalStorage = (key: string): string | null => {
