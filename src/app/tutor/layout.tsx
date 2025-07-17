@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setToken } from "@/store/features/authSlice";
+import { setLogout, setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
@@ -34,7 +34,13 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     const token = getTokenFromCookie();
     if (token) {
       dispatch(setToken(token));
-      dispatch(getCurrentTutor(token));
+      dispatch(getCurrentTutor(token))
+        .unwrap() // Разворачиваем Promise для обработки отклонённого случая
+        .catch(() => {
+          // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
+          dispatch(setLogout());
+          router.push("/");
+        });
     } else {
       router.push("/");
       return;
