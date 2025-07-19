@@ -145,7 +145,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           </header>
           {tutor && <main>{children}</main>}
           <footer className={clsx(styles.center)}>
-            <p></p>
             {/* Добавьте здесь другие элементы подвала */}
           </footer>
         </>

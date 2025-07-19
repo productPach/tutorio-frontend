@@ -583,8 +583,10 @@
   border-radius: 10px;
   font-size: 13px;
   padding: 0px 9px;
-  max-width: 136px;
-  height: 54px;
+  /* max-width: 136px; */
+  /* height: 54px; */
+  width: 152px;
+  height: 46px;
   display: flex;
   column-gap: 4px;
   flex-direction: row;

@@ -21,7 +21,8 @@
   margin-bottom: 0px;
 }
 .content__chat_with_cookies {
-  height: calc(100dvh - 283px);
+  /* height: calc(100dvh - 283px); */
+  height: calc(100dvh - 275px);
 }
 .flx1 {
   flex: 1;
@@ -306,7 +307,8 @@
   background-color: #66bb6a;
 }
 .defaultChatBlock {
-  height: calc(100dvh - 159px);
+  /* height: calc(100dvh - 159px); */
+  height: calc(100dvh - 108px);
   align-items: center;
   justify-content: center;
   background: url(/img/static/chat-fon.webp) repeat center;
@@ -319,7 +321,8 @@
   background-position: center;
 }
 .defaultChatBlock_with_cookies {
-  height: calc(100dvh - 230px);
+  /* height: calc(100dvh - 230px); */
+  height: calc(100dvh - 186px);
 }
 .defaultChatText {
   width: 225px;
