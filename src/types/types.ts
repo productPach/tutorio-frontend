@@ -186,6 +186,7 @@ export type GoalForSubject = {
 export type Order = {
   id: string;
   createdAt: Date;
+  updatedAt: Date;
   studentId: string;
   subject?: string;
   goal?: string;
