@@ -62,18 +62,17 @@ export default function CookieBanner() {
 
   return (
     <div className={styles.cookie_container}>
-      <div className={styles.cookie_link}>
-        Продолжая использовать данный сайт, вы соглашаетесь с использованием
-        файлов cookie в соответствии с нашей{" "}
+      <div className={styles.cookie_text}>
+        Мы используем cookie. Подробнее&nbsp;—&nbsp;
         <Link className={styles.cookie_link} href={"/docs/privacy-policy"}>
-          Политикой конфиденциальности
+          политика
         </Link>
       </div>
       <button
         onClick={acceptCookies}
         className={clsx(styles.content_block_button, styles.buttonYlw)}
       >
-        Понятно
+        Согласен
       </button>
     </div>
   );
