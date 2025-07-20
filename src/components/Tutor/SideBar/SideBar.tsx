@@ -2,6 +2,7 @@
 import Image from "next/image";
 import styles from "../../../app/tutor/layout.module.css";
 import inputStyles from "../../../app/tutor/input.module.css";
+import locationsStyles from "../../../app/tutor/locations.module.css";
 import clsx from "clsx";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { getAllOrders, setOrderFilters } from "@/store/features/orderSlice";
@@ -12,11 +13,15 @@ import { setRegionUser } from "@/store/features/authSlice";
 import { setTutor } from "@/store/features/tutorSlice";
 import { Tutor } from "@/types/types";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { getLocationSelectionText } from "@/utils/words/getLocationSelectionText";
+import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocationById";
+import Link from "next/link";
 
 const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor) as Tutor;
+
   const selectedPlaceFilters = useSelector(
     (state: RootState) => state.orders.filters.selectedPlaceFilters
   );
@@ -252,6 +257,96 @@ const SideBar = () => {
             </div>
           </div>
         </div>
+
+        {!(
+          selectedPlaceFilters.includes("Дистанционно") &&
+          !selectedPlaceFilters.includes("У репетитора") &&
+          !selectedPlaceFilters.includes("У меня дома")
+        ) && (
+          <Link href="/tutor/profile/locations">
+            <div>
+              <p className={styles.sidebar_title}>Локации</p>
+              {tutor?.tutorTripCity.length > 0 ||
+              tutor?.tutorTripArea.length > 0 ? (
+                <div className={locationsStyles.locations_containerSideBar}>
+                  {(() => {
+                    const cityIds = tutor?.tutorTripCity || [];
+                    const areaIds = tutor?.tutorTripArea || [];
+
+                    const allIds = [...cityIds, ...areaIds]; // сначала города, потом районы
+                    const shownIds = allIds.slice(0, 10); // максимум 10
+                    const remainingCount = allIds.length - shownIds.length;
+
+                    return (
+                      <>
+                        {shownIds.map((id) => {
+                          const location = findLocTitleByIdWithDistrict(
+                            id,
+                            locations
+                          );
+                          return (
+                            <React.Fragment key={`loc-${id}`}>
+                              <div
+                                className={clsx(
+                                  locationsStyles.location_itemSideBar,
+                                  location?.lineNumber
+                                    ? locationsStyles[
+                                        `location_itemSideBar_${location.lineNumber}`
+                                      ]
+                                    : locationsStyles.location_itemSideBar_none
+                                )}
+                              >
+                                <div className={locationsStyles.crcl_mtr_wrap}>
+                                  <div
+                                    className={
+                                      locationsStyles.crcl_mtr_container
+                                    }
+                                  >
+                                    <div
+                                      className={clsx(
+                                        locationsStyles.crcl_mtr,
+                                        location?.lineNumber
+                                          ? locationsStyles[
+                                              `crcl_mtr_msk_${location.lineNumber}`
+                                            ]
+                                          : locationsStyles.crcl_mtr_noneSB
+                                      )}
+                                    />
+                                  </div>
+                                </div>
+                                <span
+                                  className={locationsStyles.location_title}
+                                >
+                                  {location?.title || `ID:${id}`}
+                                </span>
+                              </div>
+                            </React.Fragment>
+                          );
+                        })}
+
+                        {remainingCount > 0 && (
+                          <span className={styles.remainingText}>
+                            {getLocationSelectionText(remainingCount, 0)}
+                          </span>
+                        )}
+                      </>
+                    );
+                  })()}
+                  <span className={styles.textDecorationUndrl}>
+                    Настроить локации
+                  </span>
+                </div>
+              ) : (
+                <>
+                  Не выбрано ни одной локации
+                  <p className={styles.textDecorationUndrl}>
+                    Настроить локации
+                  </p>
+                </>
+              )}
+            </div>
+          </Link>
+        )}
 
         <div>
           <p className={styles.sidebar_title}>Цель занятий</p>

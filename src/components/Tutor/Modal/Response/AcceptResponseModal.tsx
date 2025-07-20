@@ -45,9 +45,9 @@ export const AcceptResponseModal = () => {
 
   return (
     <>
-      <div className={styles.description}>
+      <div className={styles.description2}>
         Спишем с вашего баланса {orderById?.responseCost} ₽. После этого сможете
-        обсудить детали и обменяться контактами с учеником 📲
+        обсудить детали и обменяться контактами с учеником&nbsp;📲
       </div>
 
       <div className={componentStyles.containerFlxRw}>

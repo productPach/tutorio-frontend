@@ -548,7 +548,7 @@ export const ChatComponent = ({
             <div className={clsx(chatNoAccessStyles.inputMessageBlock)}>
               <div className={chatNoAccessStyles.notAccessTextContainer}>
                 <h3 className={chatNoAccessStyles.notAccessTitle}>
-                  Вы предложили заказ репетитору 📩
+                  Вы предложили заказ репетитору&nbsp;📩
                 </h3>{" "}
                 Если ваш заказ его заинтересует, он примет его. После этого вы
                 сможете обсудить детали занятий в этом чате
@@ -559,7 +559,7 @@ export const ChatComponent = ({
             <div className={clsx(chatNoAccessStyles.inputMessageBlock)}>
               <div className={chatNoAccessStyles.notAccessTextContainer}>
                 <h3 className={chatNoAccessStyles.notAccessTitle}>
-                  Репетитор отклонил ваш заказ ❌
+                  Репетитор отклонил ваш заказ&nbsp;❌
                 </h3>{" "}
                 К сожалению, этот заказ не подошёл репетитору. Вы можете выбрать
                 другого или подождать, пока кто-то из подходящих специалистов

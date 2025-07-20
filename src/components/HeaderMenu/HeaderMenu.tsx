@@ -6,9 +6,10 @@ import Image from "next/image";
 import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getTokenFromCookie } from "@/utils/cookies/cookies";
 
 export const HeaderMenu = () => {
-  const route = useRouter();
+  const token = getTokenFromCookie();
 
   // Получаем студента из Redux
   const student: Student | null = useAppSelector(
@@ -55,6 +56,17 @@ export const HeaderMenu = () => {
   ) {
     nextPage = "/student/orders";
   }
+
+  useEffect(() => {
+    const token = getTokenFromCookie();
+
+    if (!token) {
+      console.log("Токен отсутствует. Очищаем localStorage...");
+      localStorage.removeItem("tutor");
+      localStorage.removeItem("student");
+      name = "";
+    }
+  }, []);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

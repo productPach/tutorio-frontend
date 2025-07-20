@@ -731,6 +731,10 @@
 .responseMenuM {
   display: none;
 }
+.textDecorationUndrl {
+  text-decoration: underline;
+}
+
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************

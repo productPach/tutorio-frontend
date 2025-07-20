@@ -74,6 +74,7 @@ export type Tutor = {
   tutorTripCity: string[];
   tutorTripCityData: string;
   tutorTripArea: string[];
+  tutorHomeLoc: string[];
   profileInfo: string;
   experience: string;
   educations: TutorEducation[];

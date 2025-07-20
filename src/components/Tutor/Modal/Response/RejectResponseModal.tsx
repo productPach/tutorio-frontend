@@ -74,7 +74,7 @@ export const RejectResponseModal = () => {
 
   return (
     <>
-      <div className={styles.description}>
+      <div className={styles.description2}>
         Вы действительно хотите отклонить заказ ученика?
       </div>
 
