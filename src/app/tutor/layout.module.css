@@ -348,6 +348,13 @@
   margin-bottom: 18px;
   opacity: 0; /* Начальная прозрачность */
   animation: fadeIn 0.5s forwards; /* Анимация появления */
+  height: fit-content;
+}
+
+.fixedSB {
+  width: min-content;
+  position: fixed;
+  bottom: 0;
 }
 
 @keyframes fadeIn {
@@ -731,6 +738,10 @@
 .responseMenuM {
   display: none;
 }
+.textDecorationUndrl {
+  text-decoration: underline;
+}
+
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************

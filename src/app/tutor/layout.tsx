@@ -3,17 +3,23 @@ import React, { ReactNode, useEffect, useState } from "react";
 import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setLogout, setToken } from "@/store/features/authSlice";
+import { setLogout, setRegionUser, setToken } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
-import { getCurrentTutor, updateTutor } from "@/store/features/tutorSlice";
+import {
+  getCurrentTutor,
+  setSelectedValuesArea,
+  setSelectedValuesCity,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 import Image from "next/image";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { usePathname } from "next/navigation"; // Правильный импорт для использования пути
 import { getChatsByUserId } from "@/store/features/chatSlice";
 import Link from "next/link";
 import { getBackendUrl } from "@/api/server/configApi";
+import { District, Metro, RegionalCity } from "@/types/types";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -26,6 +32,8 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const dispatch = useAppDispatch();
   const tutor = useAppSelector((state) => state.tutor.tutor);
   const token = useAppSelector((state) => state.auth.token);
+  // Получаем дату городов из Redux
+  const locations = useAppSelector((state) => state.locations.city);
 
   // Получаем токен из куки
   // Если токен в куки есть, тогда добавляем токен в Redux
@@ -35,7 +43,8 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     if (token) {
       dispatch(setToken(token));
       dispatch(getCurrentTutor(token))
-        .unwrap() // Разворачиваем Promise для обработки отклонённого случая
+        .unwrap()
+        // Разворачиваем Promise для обработки отклонённого случая
         .catch(() => {
           // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
           dispatch(setLogout());
@@ -47,6 +56,103 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     }
     setIsLoadedPage(true);
   }, [dispatch, router]);
+
+  // Устанавилваем регион
+  useEffect(() => {
+    const regionUserJson = localStorage.getItem("region-user");
+    const regionUser = regionUserJson ? JSON.parse(regionUserJson) : "";
+
+    if (regionUser) {
+      dispatch(setRegionUser(regionUser));
+    } else {
+      const userRegionObj = locations.find(
+        (item) => item.title === tutor?.region
+      );
+      if (userRegionObj) {
+        // Обновляем регион в объекте юзера
+        const userRegion = {
+          city: userRegionObj.title,
+          area: userRegionObj.area,
+        };
+        console.log(userRegionObj);
+
+        dispatch(setRegionUser(userRegion));
+        localStorage.setItem("region-user", JSON.stringify(userRegion));
+      }
+    }
+  }, [tutor, locations, dispatch]);
+
+  // Устанавилваем локации города
+  useEffect(() => {
+    const initialTutorTripCity = tutor?.tutorTripCity || [];
+    if (!locations.length || !initialTutorTripCity.length) return; // Если данных нет, не выполняем
+
+    // Преобразуем ID в объекты District и Metro
+    const transformedCityData = initialTutorTripCity.flatMap((cityId) => {
+      return locations.flatMap((city) => {
+        const selectedItems: (District | Metro)[] = []; // Типизируем массив как (District | Metro)
+
+        // Ищем в districts для совпадения с cityId
+        const district = city.districts.find(
+          (district) => district.id === cityId
+        );
+        if (district) {
+          // Если нашли district, добавляем его с типами District
+          selectedItems.push({
+            id: district.id,
+            title: district.title,
+          } as District);
+        }
+
+        // Ищем метро (Metro) отдельно в каждом district
+        const metro = city.districts.flatMap((district) =>
+          district.metros.filter((metro) => metro.id === cityId)
+        );
+        metro.forEach((metroItem) => {
+          // Если нашли metro, добавляем его с типами Metro
+          selectedItems.push({
+            id: metroItem.id,
+            title: metroItem.title,
+          } as Metro);
+        });
+
+        return selectedItems; // Возвращаем массив с найденными District и Metro
+      });
+    });
+
+    // Отправляем преобразованные данные в редуктор
+    dispatch(setSelectedValuesCity(transformedCityData));
+  }, [locations, dispatch, tutor]); // Зависимости для useEffect
+
+  // Устанавилваем локации региона
+  useEffect(() => {
+    const initialtutorTripArea = tutor?.tutorTripArea || [];
+    if (!locations.length || !initialtutorTripArea.length) return; // Если данных нет, не выполняем
+
+    // Преобразуем ID в объекты RegionalCity
+    const transformedAreaData = initialtutorTripArea.flatMap((areaId) => {
+      return locations.flatMap((city) => {
+        const selectedItems: RegionalCity[] = []; // Типизируем массив как RegionalCity
+
+        // Ищем в regionalCities для совпадения с areaId
+        const regionalCity = city.regionalCities.find(
+          (region) => region.id === areaId
+        );
+        if (regionalCity) {
+          // Если нашли RegionalCity, добавляем его
+          selectedItems.push({
+            id: regionalCity.id,
+            title: regionalCity.title,
+          });
+        }
+
+        return selectedItems; // Возвращаем массив с найденными RegionalCity
+      });
+    });
+
+    // Отправляем преобразованные данные в редуктор
+    dispatch(setSelectedValuesArea(transformedAreaData));
+  }, [locations, dispatch, tutor]); // Зависимости для useEffect
 
   useEffect(() => {
     dispatch(getAllLocations());

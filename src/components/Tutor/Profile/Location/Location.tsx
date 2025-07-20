@@ -4,10 +4,9 @@ import componentLocationStyle from "./Location.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import React, { useEffect, useState } from "react";
-import { District, Metro, RegionalCity } from "@/types/types";
+import { District, Metro } from "@/types/types";
 import { getAllLocations } from "@/store/features/locationSlice";
 import {
-  setSelectedValuesArea,
   setSelectedValuesCity,
   updateTutor,
 } from "@/store/features/tutorSlice";
@@ -48,80 +47,6 @@ export const Location = () => {
   const initialTutorPlace = tutor?.tutorPlace || [];
   const initialTutorTrip = tutor?.tutorTrip || [];
   const initialTutorTripCityData = tutor?.tutorTripCityData || null;
-  const initialTutorTripCity = tutor?.tutorTripCity || [];
-
-  // ПРЕОБРАЗУЕМ СПИСОК АЙДИШНИКОВ District и Metro в (District | Metro)[], чтобы передать в tutorSclice
-  // ЗАЧЕМ: ЧТОБЫ ПЕРЕИСПОЛЬЗОВАТЬ КОМПОНЕНТЫ С ВЫПАДАЮЩИМИ СПИСКАМИ РАЙОНОВ, МЕТРО И РЕГИОНАЛЬНЫХ ГОРОДОВ
-  useEffect(() => {
-    if (!locations.length || !initialTutorTripCity.length) return; // Если данных нет, не выполняем
-
-    // Преобразуем ID в объекты District и Metro
-    const transformedCityData = initialTutorTripCity.flatMap((cityId) => {
-      return locations.flatMap((city) => {
-        const selectedItems: (District | Metro)[] = []; // Типизируем массив как (District | Metro)
-
-        // Ищем в districts для совпадения с cityId
-        const district = city.districts.find(
-          (district) => district.id === cityId
-        );
-        if (district) {
-          // Если нашли district, добавляем его с типами District
-          selectedItems.push({
-            id: district.id,
-            title: district.title,
-          } as District);
-        }
-
-        // Ищем метро (Metro) отдельно в каждом district
-        const metro = city.districts.flatMap((district) =>
-          district.metros.filter((metro) => metro.id === cityId)
-        );
-        metro.forEach((metroItem) => {
-          // Если нашли metro, добавляем его с типами Metro
-          selectedItems.push({
-            id: metroItem.id,
-            title: metroItem.title,
-          } as Metro);
-        });
-
-        return selectedItems; // Возвращаем массив с найденными District и Metro
-      });
-    });
-
-    // Отправляем преобразованные данные в редуктор
-    dispatch(setSelectedValuesCity(transformedCityData));
-  }, [locations, initialTutorTripCity, dispatch]); // Зависимости для useEffect
-
-  const initialtutorTripArea = tutor?.tutorTripArea || [];
-  // ПРЕОБРАЗУЕМ СПИСОК АЙДИШНИКОВ RegionalCity и Metro в (RegionalCity)[], чтобы передать в tutorSclice
-  // ЗАЧЕМ: ЧТОБЫ ПЕРЕИСПОЛЬЗОВАТЬ КОМПОНЕНТЫ С ВЫПАДАЮЩИМИ СПИСКАМИ РАЙОНОВ, МЕТРО И РЕГИОНАЛЬНЫХ ГОРОДОВ
-  useEffect(() => {
-    if (!locations.length || !initialtutorTripArea.length) return; // Если данных нет, не выполняем
-
-    // Преобразуем ID в объекты RegionalCity
-    const transformedAreaData = initialtutorTripArea.flatMap((areaId) => {
-      return locations.flatMap((city) => {
-        const selectedItems: RegionalCity[] = []; // Типизируем массив как RegionalCity
-
-        // Ищем в regionalCities для совпадения с areaId
-        const regionalCity = city.regionalCities.find(
-          (region) => region.id === areaId
-        );
-        if (regionalCity) {
-          // Если нашли RegionalCity, добавляем его
-          selectedItems.push({
-            id: regionalCity.id,
-            title: regionalCity.title,
-          });
-        }
-
-        return selectedItems; // Возвращаем массив с найденными RegionalCity
-      });
-    });
-
-    // Отправляем преобразованные данные в редуктор
-    dispatch(setSelectedValuesArea(transformedAreaData));
-  }, [locations, initialtutorTripArea, dispatch]); // Зависимости для useEffect
 
   const initialTutorAdress = tutor?.tutorAdress;
 
@@ -169,6 +94,14 @@ export const Location = () => {
           tutorTripArea,
         })
       ).unwrap;
+      localStorage.setItem(
+        "selected-values-city",
+        JSON.stringify(selectedValuesCity)
+      );
+      localStorage.setItem(
+        "selected-values-area",
+        JSON.stringify(selectedValuesArea)
+      );
     } else {
       console.log("Нет токена");
     }
@@ -207,9 +140,6 @@ export const Location = () => {
     }
     dispatch(setSelectedValuesCity(locationsTripCity));
   };
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   // Функция для валидации условий активации кнопки
   const isFormValid = () => {

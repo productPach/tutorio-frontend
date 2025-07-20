@@ -14,7 +14,7 @@ import {
   findLocTitleById,
   findLocTitleByIdWithDistrict,
 } from "@/utils/locations/getTitleLocationById";
-import { Order } from "@/types/types";
+import { Order, Tutor } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
   setIsModalResponseTutorToStudent,
@@ -53,27 +53,108 @@ const Orders = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
+    if (!tutor) {
+      setActiveOrders([]);
+      return;
+    }
+
+    // Функция проверки локаций по условиям
+    const locationMatchForOrder = (order: Order) => {
+      const {
+        tutorHomeLoc = [],
+        tutorTripCity = [],
+        tutorTripArea = [],
+        tutorPlace = [],
+      } = tutor;
+
+      const { studentTrip = [], studentHomeLoc = [] } = order;
+
+      const placeFilters = selectedPlaceFilters;
+
+      const includesTutor = placeFilters.includes("У репетитора");
+      const includesStudentHome = placeFilters.includes("У меня дома");
+      const includesRemote = placeFilters.includes("Дистанционно");
+
+      const tutorSupportsRemote = tutorPlace.includes("1");
+      const canShowRemote =
+        tutorSupportsRemote || (!tutorSupportsRemote && includesRemote);
+
+      const allPlacesSelected =
+        placeFilters.length === 0 ||
+        (includesTutor && includesStudentHome && includesRemote);
+
+      // Показываем всё + дистанционные, если выбраны все или ничего
+      if (allPlacesSelected) {
+        return (
+          isLocationMatch(order, tutor) ||
+          (canShowRemote && order.studentPlace?.includes("Дистанционно"))
+        );
+      }
+
+      // Всегда показываем дистанционные заказы, если допустимо
+      if (
+        includesRemote &&
+        canShowRemote &&
+        order.studentPlace?.includes("Дистанционно")
+      ) {
+        return true;
+      }
+
+      // Проверка для "У репетитора"
+      let tutorMatch = false;
+      if (includesTutor) {
+        const tutorLocs = [...tutorHomeLoc, ...tutorTripCity, ...tutorTripArea];
+        tutorMatch = tutorLocs.some((loc) => studentTrip.includes(loc));
+      }
+
+      // Проверка для "У меня дома"
+      let studentHomeMatch = false;
+      if (includesStudentHome) {
+        const tutorLocs = [...tutorTripCity, ...tutorTripArea];
+        studentHomeMatch = studentHomeLoc.some((loc) =>
+          tutorLocs.includes(loc)
+        );
+      }
+
+      // Один из вариантов оффлайн подходит
+      if (includesTutor && includesStudentHome) {
+        return tutorMatch || studentHomeMatch;
+      }
+
+      if (includesTutor) return tutorMatch;
+      if (includesStudentHome) return studentHomeMatch;
+
+      return false;
+    };
+
     let filteredOrders = orders
       .filter((order) => order.status === "Active")
       .filter(
         (order) =>
-          tutor?.subject &&
+          tutor.subject &&
           tutor.subject.length > 0 &&
           tutor.subject.some((subject) => order.subject === subject)
       )
-      .filter(
-        (order) =>
-          tutor?.region === order.region ||
-          (tutor?.region !== order.region &&
+      // Фильтруем по региону и месту занятия (частично твоя логика)
+      .filter((order) => {
+        if (
+          tutor.region === order.region ||
+          (tutor.region !== order.region &&
             order.studentPlace?.includes("Дистанционно") &&
-            ((!filters.selectedPlaceFilters.includes("У репетитора") &&
-              !filters.selectedPlaceFilters.includes("У меня дома")) ||
-              ((filters.selectedPlaceFilters.includes("У репетитора") ||
-                filters.selectedPlaceFilters.includes("У меня дома")) &&
-                filters.selectedPlaceFilters.includes("Дистанционно"))))
-      );
+            ((!selectedPlaceFilters.includes("У репетитора") &&
+              !selectedPlaceFilters.includes("У меня дома")) ||
+              ((selectedPlaceFilters.includes("У репетитора") ||
+                selectedPlaceFilters.includes("У меня дома")) &&
+                selectedPlaceFilters.includes("Дистанционно"))))
+        ) {
+          return true;
+        }
+        return false;
+      })
+      // Фильтр локаций с учётом выбранных мест занятий
+      .filter(locationMatchForOrder);
 
-    // Применяем оба фильтра, если они заданы
+    // Далее применяем фильтрацию по целям и месту, как было у тебя
     if (selectedGoalFilters.length > 0 && selectedPlaceFilters.length > 0) {
       filteredOrders = filteredOrders.filter(
         (order) =>
@@ -85,12 +166,10 @@ const Orders = () => {
           )
       );
     } else if (selectedGoalFilters.length > 0) {
-      // Применяем только фильтр цели
       filteredOrders = filteredOrders.filter(
         (order) => order.goal && selectedGoalFilters.includes(order.goal)
       );
     } else if (selectedPlaceFilters.length > 0) {
-      // Применяем только фильтр места
       filteredOrders = filteredOrders.filter(
         (order) =>
           order.studentPlace &&
@@ -106,7 +185,26 @@ const Orders = () => {
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )
     );
-  }, [orders, selectedPlaceFilters, selectedGoalFilters]);
+  }, [orders, selectedPlaceFilters, selectedGoalFilters, tutor]);
+
+  // console.log(activeOrders.length);
+
+  // Метчинг локаций репетитора и заказа
+  function isLocationMatch(order: Order, tutor: Tutor): boolean {
+    const tutorHomeLoc = tutor?.tutorHomeLoc || [];
+    const tutorTripCity = tutor?.tutorTripCity || [];
+    const tutorTripArea = tutor?.tutorTripArea || [];
+    const tutorTrip = [...tutorTripCity, ...tutorTripArea];
+
+    const studentHomeLoc = order.studentHomeLoc || [];
+    const studentTrip = order.studentTrip || [];
+
+    return (
+      tutorHomeLoc.some((id) => studentTrip.includes(id)) ||
+      tutorTrip.some((id) => studentHomeLoc.includes(id)) ||
+      tutorTrip.some((id) => studentTrip.includes(id))
+    );
+  }
 
   if (loading || chatsLoading) {
     return (
