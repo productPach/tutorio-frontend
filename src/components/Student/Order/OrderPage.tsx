@@ -66,26 +66,96 @@ const OrderPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, [component]);
 
-  // Фильтруем репетиторов по условиям заказа
   const tutorsForOrder = tutorsForOrderNotFilter
     .filter((tutor) => tutor.status === "Active")
     .filter(
-      (tutor) =>
-        orderById?.subject && tutor.subject.includes(orderById?.subject)
+      (tutor) => orderById?.subject && tutor.subject.includes(orderById.subject)
     )
     .filter((tutor) => {
-      if (!orderById?.studentPlace) return true; // Если ученик не указал место, не фильтруем
+      // Если не указано место занятия у ученика, показываем всех
+      if (!orderById?.studentPlace || orderById.studentPlace.length === 0)
+        return true;
 
-      // Преобразуем studentPlace в числа согласно маппингу
+      // Преобразуем места занятия из строки в коды
       const studentPlacesMapped = orderById.studentPlace
         .map((place) => placeMapping[place])
-        .filter(Boolean); // Убираем возможные undefined
+        .filter(Boolean);
 
-      // Оставляем только тех репетиторов, у которых есть хотя бы одно совпадение
-      return tutor.tutorPlace.some((place) =>
-        studentPlacesMapped.includes(place)
-      );
+      // Если у репетитора нет ни одного места из указанных у ученика — исключаем
+      if (
+        !tutor.tutorPlace.some((place) => studentPlacesMapped.includes(place))
+      ) {
+        return false;
+      }
+
+      // Проверяем, какие места выбраны у ученика
+      const includesRemote = orderById.studentPlace.includes("Дистанционно");
+      const includesAtTutor = orderById.studentPlace.includes("У репетитора");
+      const includesAtStudent = orderById.studentPlace.includes("У меня дома");
+
+      // Проверяем, какие места поддерживает репетитор
+      const hasRemote = tutor.tutorPlace.includes("1");
+      const hasAtTutor = tutor.tutorPlace.includes("2");
+      const hasAtStudent = tutor.tutorPlace.includes("3");
+
+      // Локации ученика
+      let studentTrip = orderById.studentTrip ? [...orderById.studentTrip] : [];
+      const studentHomeLoc = orderById.studentHomeLoc || [];
+
+      // Локации репетитора
+      const tutorHomeLoc = tutor.tutorHomeLoc || [];
+      const tutorTripCity = tutor.tutorTripCity || [];
+      const tutorTripArea = tutor.tutorTripArea || [];
+
+      // --- ВАЖНО ---
+      // Если выбрано "У репетитора", добавляем локации studentHomeLoc в studentTrip,
+      // если их там нет, чтобы учитывать совпадения, когда ученик не указал эти локации в trip.
+      if (includesAtTutor && studentHomeLoc.length > 0) {
+        studentHomeLoc.forEach((loc) => {
+          if (!studentTrip.includes(loc)) {
+            studentTrip.push(loc);
+          }
+        });
+      }
+
+      // 1. Дистанционно: совпадение если и ученик, и репетитор поддерживают
+      const matchRemote = includesRemote && hasRemote;
+
+      // 2. У репетитора: репетитор готов принимать, ученик готов приехать,
+      // и локации пересекаются (тут учитываем homeLoc, tripCity и tripArea репетитора)
+      const matchAtTutor =
+        includesAtTutor &&
+        hasAtTutor &&
+        [...tutorHomeLoc, ...tutorTripCity, ...tutorTripArea].some((loc) =>
+          studentTrip.includes(loc)
+        );
+
+      // 3. У ученика: ученик хочет заниматься у себя, репетитор готов ездить,
+      // и локации ученика пересекаются с локациями репетитора для выезда (город и область)
+      const matchAtStudent =
+        includesAtStudent &&
+        hasAtStudent &&
+        studentHomeLoc.some((loc) =>
+          [...tutorTripCity, ...tutorTripArea].includes(loc)
+        );
+
+      // 4. Нейтральная территория: оба готовы выехать в одну и ту же локацию
+      // учитываем локации tutorTripCity и tutorTripArea
+      // Тут не проверяем tutorPlace, так как это нейтральная зона, все согласны
+      const matchNeutralPlace =
+        includesAtTutor &&
+        studentTrip.some((loc) =>
+          [...tutorTripCity, ...tutorTripArea].includes(loc)
+        );
+
+      if (tutor.id === "68591da8ffcc467c8314df7b") {
+        console.log("📍 TARGET tutor", tutor);
+      }
+
+      // Возвращаем true если хотя бы один из кейсов совпал
+      return matchRemote || matchAtTutor || matchAtStudent || matchNeutralPlace;
     });
+
   // Получаем список регионов
   const citiesAndRegions = useAppSelector((state) => state.locations.city);
 

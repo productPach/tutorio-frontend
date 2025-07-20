@@ -64,7 +64,9 @@ const Orders = () => {
         tutorHomeLoc = [],
         tutorTripCity = [],
         tutorTripArea = [],
-      } = tutor || {};
+        tutorPlace = [],
+      } = tutor;
+
       const { studentTrip = [], studentHomeLoc = [] } = order;
 
       const placeFilters = selectedPlaceFilters;
@@ -73,32 +75,40 @@ const Orders = () => {
       const includesStudentHome = placeFilters.includes("У меня дома");
       const includesRemote = placeFilters.includes("Дистанционно");
 
+      const tutorSupportsRemote = tutorPlace.includes("1");
+      const canShowRemote =
+        tutorSupportsRemote || (!tutorSupportsRemote && includesRemote);
+
       const allPlacesSelected =
         placeFilters.length === 0 ||
         (includesTutor && includesStudentHome && includesRemote);
 
-      // Если все места выбраны или ничего не выбрано — показываем заказы с совпадением локаций или дистанционные
+      // Показываем всё + дистанционные, если выбраны все или ничего
       if (allPlacesSelected) {
         return (
           isLocationMatch(order, tutor) ||
-          (order.studentPlace?.includes("Дистанционно") ?? false)
+          (canShowRemote && order.studentPlace?.includes("Дистанционно"))
         );
       }
 
-      // Если выбрано дистанционно — всегда показываем дистанционные заказы
-      if (includesRemote && order.studentPlace?.includes("Дистанционно")) {
+      // Всегда показываем дистанционные заказы, если допустимо
+      if (
+        includesRemote &&
+        canShowRemote &&
+        order.studentPlace?.includes("Дистанционно")
+      ) {
         return true;
       }
 
-      // Если выбрано "У репетитора"
-      let tutorMatch = true;
+      // Проверка для "У репетитора"
+      let tutorMatch = false;
       if (includesTutor) {
         const tutorLocs = [...tutorHomeLoc, ...tutorTripCity, ...tutorTripArea];
         tutorMatch = tutorLocs.some((loc) => studentTrip.includes(loc));
       }
 
-      // Если выбрано "У меня дома"
-      let studentHomeMatch = true;
+      // Проверка для "У меня дома"
+      let studentHomeMatch = false;
       if (includesStudentHome) {
         const tutorLocs = [...tutorTripCity, ...tutorTripArea];
         studentHomeMatch = studentHomeLoc.some((loc) =>
@@ -106,20 +116,14 @@ const Orders = () => {
         );
       }
 
-      // Если выбраны оба варианта, то нужно, чтобы заказ соответствовал хотя бы одному из них
+      // Один из вариантов оффлайн подходит
       if (includesTutor && includesStudentHome) {
         return tutorMatch || studentHomeMatch;
       }
 
-      // Если выбран только один из вариантов
-      if (includesTutor) {
-        return tutorMatch;
-      }
-      if (includesStudentHome) {
-        return studentHomeMatch;
-      }
+      if (includesTutor) return tutorMatch;
+      if (includesStudentHome) return studentHomeMatch;
 
-      // Если ни один фильтр не подошёл, скрываем заказ
       return false;
     };
 
@@ -182,6 +186,8 @@ const Orders = () => {
       )
     );
   }, [orders, selectedPlaceFilters, selectedGoalFilters, tutor]);
+
+  // console.log(activeOrders.length);
 
   // Метчинг локаций репетитора и заказа
   function isLocationMatch(order: Order, tutor: Tutor): boolean {

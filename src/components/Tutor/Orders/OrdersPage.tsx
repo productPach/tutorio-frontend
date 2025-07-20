@@ -1,7 +1,7 @@
 "use client";
 import styles from "../../../app/tutor/layout.module.css";
 import clsx from "clsx";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import Orders from "@/components/Tutor/Orders/Orders";
 import SideBar from "@/components/Tutor/SideBar/SideBar";
@@ -63,6 +63,7 @@ const OrdersPage: React.FC = () => {
           <WelcomeScreen page={page} />
           <Orders />
         </div>
+
         <SideBar />
       </section>
       <Modal
