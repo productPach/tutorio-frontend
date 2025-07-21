@@ -69,7 +69,12 @@ const TutorPage: React.FC = () => {
   }, [dispatch, token, order, tutor]);
 
   useEffect(() => {
-    orderById && setIsChecked(orderById.status === "Active");
+    orderById &&
+      setIsChecked(
+        orderById.status === "Active" ||
+          orderById.status === "Pending" ||
+          orderById.status === "Sending"
+      );
   }, [orderById]);
 
   // Состояние для свитча
