@@ -194,11 +194,11 @@ const Orders = () => {
             //   price = "1500 — 2500 ₽";
             // }
 
-            if (tutorType?.includes("Начинающий")) {
+            if (tutorType?.includes("1")) {
               price = "до 1000 ₽";
-            } else if (tutorType?.includes("со средним опытом")) {
+            } else if (tutorType?.includes("2")) {
               price = "1000 — 1500 ₽";
-            } else if (tutorType?.includes("Опытный")) {
+            } else if (tutorType?.includes("3")) {
               price = "1500 — 2500 ₽";
             }
 

@@ -24,6 +24,7 @@ import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { useViewedOrders } from "@/hooks/useViewedOrders";
 
 const Orders = () => {
   const route = useRouter();
@@ -41,6 +42,8 @@ const Orders = () => {
 
   // Стейт для предметов
   const subjects = useAppSelector((state) => state.subject.subjects);
+  // Достаем просмотренные заказы
+  const { isViewed } = useViewedOrders();
 
   useEffect(() => {
     dispatch(getAllSubjects());
@@ -335,13 +338,13 @@ const Orders = () => {
             const tutorType = order.tutorType ? order.tutorType : null;
             // Выводим цену
             let price;
-            if (tutorType === "Начинающий: до 1000 рублей") {
+            if (tutorType === "1") {
               price = "до 1000 ₽";
             }
-            if (tutorType === "Репетитор со средним опытом: до 1500 рублей") {
+            if (tutorType === "2") {
               price = "1000 — 1500 ₽";
             }
-            if (tutorType === "Опытный репетитор: до 2500 рублей") {
+            if (tutorType === "3") {
               price = "1500 — 2500 ₽";
             }
 
@@ -367,23 +370,45 @@ const Orders = () => {
                 )}
               >
                 <Link href={`${order.id}`}>
-                  <div className={styles.order_block_flx_rw_spbtw}>
+                  <div
+                    className={clsx(
+                      styles.order_block_flx_rw_spbtw,
+                      isViewed(order.id) && styles.closedFilter
+                    )}
+                  >
                     <h3>{subject?.title}</h3>
                     <span className={styles.order_block_flx_rw_spbtw_price}>
                       {price}
                     </span>
                   </div>
 
-                  <p className={styles.content_block_p}>
+                  <p
+                    className={clsx(
+                      styles.content_block_p,
+                      isViewed(order.id) && styles.closedFilter
+                    )}
+                  >
                     {goal} {deadline} {studentType} {studentYears}{" "}
                     {studentClass}
                     {studentCourse} {studentUniversity} {studentExam}{" "}
                     {studyProgramm} {studyMethod}
                   </p>
-                  <p className={styles.content_block_p}>{studentWishes}</p>
+                  <p
+                    className={clsx(
+                      styles.content_block_p,
+                      isViewed(order.id) && styles.closedFilter
+                    )}
+                  >
+                    {studentWishes}
+                  </p>
 
                   {studentPlace?.includes("Дистанционно") && (
-                    <div className={styles.order_block_flx_rw_flxstrt}>
+                    <div
+                      className={clsx(
+                        styles.order_block_flx_rw_flxstrt,
+                        isViewed(order.id) && styles.closedFilter
+                      )}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="32"
@@ -411,7 +436,12 @@ const Orders = () => {
                   )}
 
                   {studentPlace?.includes("У меня дома") && (
-                    <div className={styles.order_block_flx_rw_flxstrt}>
+                    <div
+                      className={clsx(
+                        styles.order_block_flx_rw_flxstrt,
+                        isViewed(order.id) && styles.closedFilter
+                      )}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="32"
@@ -475,7 +505,12 @@ const Orders = () => {
                   )}
 
                   {studentPlace?.includes("У репетитора") && (
-                    <div className={styles.order_block_flx_rw_flxstrt}>
+                    <div
+                      className={clsx(
+                        styles.order_block_flx_rw_flxstrt,
+                        isViewed(order.id) && styles.closedFilter
+                      )}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="32"

@@ -55,7 +55,12 @@ export const ResponseSidbar = () => {
             <>
               {orderById?.autoContactsOnResponse ? (
                 /* Отклик на заказ с получением контактов */
-                <div className={generalStyles.sidebar_filterBlack}>
+                <div
+                  className={clsx(
+                    generalStyles.sidebar_filterBlack,
+                    orderById?.status === "Closed" && generalStyles.closedFilter
+                  )}
+                >
                   <div>
                     <h3>Контакты сразу после отклика 🔥</h3>
                     <span>
@@ -106,7 +111,12 @@ export const ResponseSidbar = () => {
                 </div>
               ) : (
                 /* Отклик на заказ без контактов */
-                <div className={generalStyles.sidebar_filter}>
+                <div
+                  className={clsx(
+                    generalStyles.sidebar_filter,
+                    orderById?.status === "Closed" && generalStyles.closedFilter
+                  )}
+                >
                   <div>
                     <h3>Отклик на заказ</h3>
                     <span>
@@ -157,7 +167,13 @@ export const ResponseSidbar = () => {
             <>
               {existingChat.tutorHasAccess ? (
                 <>
-                  <div className={generalStyles.sidebar_filter}>
+                  <div
+                    className={clsx(
+                      generalStyles.sidebar_filter,
+                      orderById?.status === "Closed" &&
+                        generalStyles.closedFilter
+                    )}
+                  >
                     <div>
                       <h3>Вы откликнулись на заказ</h3>
                       <span>
@@ -189,7 +205,13 @@ export const ResponseSidbar = () => {
                 </>
               ) : (
                 <>
-                  <div className={generalStyles.sidebar_filter}>
+                  <div
+                    className={clsx(
+                      generalStyles.sidebar_filter,
+                      orderById?.status === "Closed" &&
+                        generalStyles.closedFilter
+                    )}
+                  >
                     <div>
                       <h3>Ученик предложил вам заказ</h3>
                       <span>

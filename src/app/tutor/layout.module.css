@@ -386,22 +386,19 @@
 }
 
 .sidebarResponseChat {
-  margin-bottom: 18px;
   grid-column: span 8;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  height: -moz-fit-content;
   height: fit-content;
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   user-select: none;
-  opacity: 0; /* Начальная прозрачность */
-  animation: fadeIn 0.5s forwards; /* Анимация появления */
+  animation: layout_fadeIn__t3I3N 0.5s forwards;
 }
 
 @keyframes fadeIn {
@@ -740,6 +737,13 @@
 }
 .textDecorationUndrl {
   text-decoration: underline;
+}
+.closedFilter {
+  opacity: 0.8 !important;
+  filter: grayscale(100%);
+}
+.closedFilterMini {
+  opacity: 0.8 !important;
 }
 
 /* Адаптивные стили под разрешения экранов */

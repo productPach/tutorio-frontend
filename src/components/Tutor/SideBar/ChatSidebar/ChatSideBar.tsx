@@ -55,8 +55,24 @@ export const ChatSidbar = ({
     }
   }, []);
 
+  const [activeTab, setActiveTab] = useState<"Active" | "Closed">("Active");
+
+  useEffect(() => {
+    if (selectChat?.status === "Closed") setActiveTab("Closed");
+  }, [selectChat]);
+
   const sortedChats = useMemo(() => {
-    return [...chats]
+    const filtered = chats.filter((chat) => {
+      if (activeTab === "Active") {
+        return chat.status !== "Closed" && chat.status !== "Rejected";
+      }
+      if (activeTab === "Closed") {
+        return chat.status === "Closed";
+      }
+      return false;
+    });
+
+    return filtered
       .sort((a, b) => {
         const lastA = a.messages
           .filter((m) => m.createdAt)
@@ -77,7 +93,7 @@ export const ChatSidbar = ({
         );
       })
       .filter((chats) => chats.status !== "Rejected");
-  }, [chats]);
+  }, [chats, activeTab]);
 
   //console.log(sortedChats);
 
@@ -91,118 +107,158 @@ export const ChatSidbar = ({
           }
         >
           {chats.length > 0 && (
-            <div className={styles.sidebar_filterForChat}>
-              <div className={styles.studentChatWrap}>
-                {sortedChats.map((chat, index, array) => {
-                  const lastMessage = [...chat.messages].sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  )[0];
+            <>
+              <div className={styles.sidebar_chatType}>
+                <div className={styles.toggleWrapper}>
+                  <div
+                    className={`${styles.toggleOption} ${activeTab === "Active" ? styles.active : ""}`}
+                    onClick={() => setActiveTab("Active")}
+                  >
+                    Активные
+                  </div>
+                  <div
+                    className={`${styles.toggleOption} ${activeTab === "Closed" ? styles.active : ""}`}
+                    onClick={() => setActiveTab("Closed")}
+                  >
+                    Завершённые
+                  </div>
+                </div>
 
-                  const isFirst = index === 0;
-                  const isLast = index === array.length - 1;
-
-                  const noReadMessagesFromOther =
-                    tutor &&
-                    chat.messages.filter(
-                      (message) =>
-                        !message.isRead && message.senderId !== tutor.id
-                    );
-
-                  return (
-                    <div
-                      onClick={() => {
-                        dispatch(setComponentMenu(5));
-                        dispatch(setChat(chat));
-                        setVisibleEmoji && setVisibleEmoji(false);
-                        if (page && page === "Tutor") {
-                          route.push("../");
-                        }
-                      }}
-                      className={clsx(
-                        styles.studentChatContainerImgAndMessage,
-                        {
-                          [styles.firstChat]: isFirst,
-                          [styles.lastChat]: isLast,
-                          [styles.isNotReadTutorsMessageContainerBg]:
-                            lastMessage?.senderId !== tutor?.id &&
-                            !lastMessage?.isRead,
-                          [styles.selectStudentChatContainerImgAndMessage]:
-                            chat.id === selectChat?.id,
-                        }
-                      )}
-                      key={chat.id}
-                    >
-                      <Image
-                        className={styles.studentChatImg}
-                        src={
-                          chat.student.avatarUrl
-                            ? `${chat.student.avatarUrl}`
-                            : `/img/tutor/avatarBasic.png`
-                        }
-                        width={45}
-                        height={45}
-                        alt=""
-                      />
-                      <div className={styles.studentChatMessage}>
-                        <div className={styles.studentChatMessageFio}>
-                          {chat.themeOrder + " "}
-                          <span className={styles.textThemeOrder}>
-                            {chat.student.name}
-                          </span>
-                        </div>
-
-                        <div className={styles.studentChatMessageFlx}>
-                          <div className={styles.studentChatMessageText}>
-                            {chat.tutorHasAccess
-                              ? lastMessage?.text
-                              : "Ученик заинтересовался вашим профилем и отправил предложение на занятия"}
-                          </div>
-
-                          {lastMessage?.senderId === tutor?.id ? (
-                            lastMessage.isRead ? (
-                              <Image
-                                className={styles.studentChatIcon}
-                                src={"/../img/icon/isRead.svg"}
-                                width={18}
-                                height={18}
-                                alt=""
-                              />
-                            ) : (
-                              <Image
-                                className={styles.studentChatIcon}
-                                src={"/../img/icon/noRead.svg"}
-                                width={18}
-                                height={18}
-                                alt=""
-                              />
-                            )
-                          ) : (
-                            !lastMessage?.isRead && (
-                              <div
-                                className={styles.isNotReadTutorsMessageCount}
-                              >
-                                {
-                                  chat.messages.filter(
-                                    (msg) =>
-                                      !msg.isRead && msg.senderId !== tutor?.id
-                                  ).length
-                                }
-                              </div>
-                            )
-                          )}
-                        </div>
-
-                        <div className={styles.studentChatMessageDate}>
-                          {lastMessage && formatTimeAgo(lastMessage?.createdAt)}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                {/* <div>
+                  <input
+                    className={styles.inputSearchChats}
+                    id="subjectInput"
+                    placeholder="Поиск по чатам"
+                    autoComplete="off"
+                    type="text"
+                    value=""
+                  ></input>
+                </div> */}
               </div>
-            </div>
+              <div className={styles.sidebar_scrollWrapper}>
+                <div className={clsx(styles.sidebar_filterForChat)}>
+                  <div
+                    className={clsx(
+                      styles.studentChatWrap,
+                      activeTab === "Closed" && styles.closedChat
+                    )}
+                  >
+                    {sortedChats.map((chat, index, array) => {
+                      const lastMessage = [...chat.messages].sort(
+                        (a, b) =>
+                          new Date(b.createdAt).getTime() -
+                          new Date(a.createdAt).getTime()
+                      )[0];
+
+                      const isFirst = index === 0;
+                      const isLast = index === array.length - 1;
+
+                      const noReadMessagesFromOther =
+                        tutor &&
+                        chat.messages.filter(
+                          (message) =>
+                            !message.isRead && message.senderId !== tutor.id
+                        );
+
+                      return (
+                        <div
+                          onClick={() => {
+                            dispatch(setComponentMenu(5));
+                            dispatch(setChat(chat));
+                            setVisibleEmoji && setVisibleEmoji(false);
+                            if (page && page === "Tutor") {
+                              route.push("../");
+                            }
+                          }}
+                          className={clsx(
+                            styles.studentChatContainerImgAndMessage,
+                            {
+                              [styles.firstChat]: isFirst,
+                              [styles.lastChat]: isLast,
+                              [styles.isNotReadTutorsMessageContainerBg]:
+                                lastMessage?.senderId !== tutor?.id &&
+                                !lastMessage?.isRead,
+                              [styles.selectStudentChatContainerImgAndMessage]:
+                                chat.id === selectChat?.id,
+                            }
+                          )}
+                          key={chat.id}
+                        >
+                          <Image
+                            className={styles.studentChatImg}
+                            src={
+                              chat.student.avatarUrl
+                                ? `${chat.student.avatarUrl}`
+                                : `/img/tutor/avatarBasic.png`
+                            }
+                            width={45}
+                            height={45}
+                            alt=""
+                          />
+                          <div className={styles.studentChatMessage}>
+                            <div className={styles.studentChatMessageFio}>
+                              {chat.themeOrder + " "}
+                              <span className={styles.textThemeOrder}>
+                                {chat.student.name}
+                              </span>
+                            </div>
+
+                            <div className={styles.studentChatMessageFlx}>
+                              <div className={styles.studentChatMessageText}>
+                                {chat.tutorHasAccess
+                                  ? lastMessage?.text
+                                  : "Ученик заинтересовался вашим профилем и отправил предложение на занятия"}
+                              </div>
+
+                              {lastMessage?.senderId === tutor?.id ? (
+                                lastMessage.isRead ? (
+                                  <Image
+                                    className={styles.studentChatIcon}
+                                    src={"/../img/icon/isRead.svg"}
+                                    width={18}
+                                    height={18}
+                                    alt=""
+                                  />
+                                ) : (
+                                  <Image
+                                    className={styles.studentChatIcon}
+                                    src={"/../img/icon/noRead.svg"}
+                                    width={18}
+                                    height={18}
+                                    alt=""
+                                  />
+                                )
+                              ) : (
+                                !lastMessage?.isRead && (
+                                  <div
+                                    className={
+                                      styles.isNotReadTutorsMessageCount
+                                    }
+                                  >
+                                    {
+                                      chat.messages.filter(
+                                        (msg) =>
+                                          !msg.isRead &&
+                                          msg.senderId !== tutor?.id
+                                      ).length
+                                    }
+                                  </div>
+                                )
+                              )}
+                            </div>
+
+                            <div className={styles.studentChatMessageDate}>
+                              {lastMessage &&
+                                formatTimeAgo(lastMessage?.createdAt)}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
       )}

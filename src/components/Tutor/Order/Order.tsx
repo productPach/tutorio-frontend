@@ -14,6 +14,7 @@ import { City, Order, Student } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect } from "react";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { useViewedOrders } from "@/hooks/useViewedOrders";
 
 type OrderProps = {
   loading: boolean;
@@ -36,6 +37,12 @@ export const OrderComponent = ({
   const dispatch = useAppDispatch();
   const subjects = useAppSelector((state) => state.subject.subjects);
 
+  const { markAsViewed } = useViewedOrders();
+
+  useEffect(() => {
+    orderById?.id && markAsViewed(orderById?.id);
+  }, [orderById?.id, markAsViewed]);
+
   useEffect(() => {
     dispatch(getAllSubjects());
   }, [dispatch]);
@@ -56,13 +63,42 @@ export const OrderComponent = ({
   );
   const subjectName = subjectArr?.title;
 
+  let tutorType;
+  if (orderById?.tutorType === "1") {
+    tutorType = "Начинающий: до\u00A01000\u00A0₽";
+  }
+  if (orderById?.tutorType === "2") {
+    tutorType = "Репетитор со средним опытом: до\u00A01500\u00A0₽";
+  }
+  if (orderById?.tutorType === "3") {
+    tutorType = "Опытный репетитор: до\u00A02500\u00A0₽";
+  }
+
   return (
     <>
+      {orderById?.status === "Closed" && (
+        <div
+          className={clsx(
+            generalStyles.content_block,
+            generalStyles.order_block,
+            generalStyles.crsr_pntr
+          )}
+        >
+          {" "}
+          Этот заказ закрыт по инициативе ученика или по истечении срока
+          {"\u00A0"}⛔️
+          <br></br>
+          Посмотрите другие активные заказы — возможно, там ваш будущий ученик
+          {/* {"\u00A0"}👀 */}
+        </div>
+      )}
+
       <div
         className={clsx(
           generalStyles.content_block,
           generalStyles.order_block,
-          generalStyles.crsr_pntr
+          generalStyles.crsr_pntr,
+          orderById?.status === "Closed" && generalStyles.closedFilter
         )}
       >
         <div className={styles.containerOrderInfo}>
@@ -301,7 +337,7 @@ export const OrderComponent = ({
             <span className={styles.titleOrderInfo}>
               Предпочтения по стоимости занятий
             </span>
-            <span>{orderById?.tutorType}</span>
+            <span>{tutorType}</span>
           </div>
         )}
 
@@ -319,7 +355,8 @@ export const OrderComponent = ({
         className={clsx(
           generalStyles.content_block,
           generalStyles.order_block,
-          generalStyles.crsr_pntr
+          generalStyles.crsr_pntr,
+          orderById?.status === "Closed" && generalStyles.closedFilter
         )}
       >
         {student && (
