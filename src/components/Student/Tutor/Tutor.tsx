@@ -4,7 +4,7 @@ import styles from "../Order/Order.module.css";
 import tutorsStyles from "../Tutors/Tutors.module.css";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
-import { City, Order, Tutor } from "@/types/types";
+import { Chat, City, Order, Tutor } from "@/types/types";
 import Image from "next/image";
 import { getBackendUrl, host } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
@@ -21,8 +21,10 @@ import {
 } from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { useRouter } from "next/navigation";
 
 type OrderProps = {
+  chats: Chat[];
   citiesAndRegions: City[];
   loading: boolean;
   orderById: Order | null;
@@ -32,6 +34,7 @@ type OrderProps = {
 };
 
 export const TutorComponent = ({
+  chats,
   citiesAndRegions,
   loading,
   orderById,
@@ -45,7 +48,8 @@ export const TutorComponent = ({
       top: 0,
     });
   }, []);
-
+  const page = "Tutor";
+  const route = useRouter();
   const dispatch = useAppDispatch();
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
@@ -194,7 +198,7 @@ export const TutorComponent = ({
     (chat) => chat.tutorId === tutor.id
   );
 
-  const chat = orderById?.chats.find((chat) => chat.tutorId === tutor.id);
+  const chat = chats.find((chat) => chat.tutorId === tutor.id);
 
   return (
     <div
@@ -282,6 +286,10 @@ export const TutorComponent = ({
                   // Логика для существующего чата
                   dispatch(setComponentMenu(5));
                   dispatch(setChat(chat));
+
+                  if (page && page === "Tutor") {
+                    route.push("../");
+                  }
                   //saveScrollPosition();
                   // Можно добавить другие действия, если чат уже существует
                 } else {

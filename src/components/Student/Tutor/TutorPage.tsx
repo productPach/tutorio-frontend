@@ -88,6 +88,7 @@ const TutorPage: React.FC = () => {
         <LeftBarOrder page={page} />
         <div className={styles.content}>
           <TutorComponent
+            chats={chats}
             citiesAndRegions={citiesAndRegions}
             loading={loading}
             orderById={orderById}
