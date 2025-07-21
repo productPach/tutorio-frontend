@@ -148,10 +148,6 @@ const OrderPage: React.FC = () => {
           [...tutorTripCity, ...tutorTripArea].includes(loc)
         );
 
-      if (tutor.id === "68591da8ffcc467c8314df7b") {
-        console.log("📍 TARGET tutor", tutor);
-      }
-
       // Возвращаем true если хотя бы один из кейсов совпал
       return matchRemote || matchAtTutor || matchAtStudent || matchNeutralPlace;
     });

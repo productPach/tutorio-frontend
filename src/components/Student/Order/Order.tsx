@@ -57,6 +57,17 @@ export const OrderComponent = ({
   );
   const subjectName = subjectArr?.title;
 
+  let tutorType;
+  if (orderById?.tutorType === "1") {
+    tutorType = "Начинающий: до\u00A01000\u00A0₽";
+  }
+  if (orderById?.tutorType === "2") {
+    tutorType = "Репетитор со средним опытом: до\u00A01500\u00A0₽";
+  }
+  if (orderById?.tutorType === "3") {
+    tutorType = "Опытный репетитор: до\u00A02500\u00A0₽";
+  }
+
   return (
     <>
       <div
@@ -317,7 +328,7 @@ export const OrderComponent = ({
             <span className={styles.titleOrderInfo}>
               Предпочтения по стоимости занятий
             </span>
-            <span>{orderById?.tutorType}</span>
+            <span>{tutorType}</span>
           </div>
         )}
 

@@ -47,10 +47,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
   // Получаем студента из Redux
   const student = useAppSelector((state) => state.student.student);
   // Получаем репетитора из Redux (пока хардкодим)
-  const tutor = {
-    name: "Павел Федотов",
-    phone: "9269811041",
-  };
+  const tutor = useAppSelector((state) => state.tutor.tutor);
   //const tutor = useAppSelector((state) => state.tutor.tutor);
   // Получаем значение regionUser из Redux
   const regionUser = useAppSelector((state) => state.auth.regionUser);
@@ -198,14 +195,27 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
       const studentAdressDataMatch = dataMatch.find(
         (obj) => obj.id === 15
       )?.studentAdress;
-      const studentTripDataMatchLS =
-        dataMatch.find((obj) => obj.id === 16)?.studentTrip || [];
-      const studentTripDataMatch = Array.isArray(studentTripDataMatchLS)
-        ? studentTripDataMatchLS.map((item: { id: string }) => item.id)
-        : [];
-      const tutorTypeDataMatch = dataMatch.find(
-        (obj) => obj.id === 17
-      )?.tutorType;
+
+      const studentTripRaw = dataMatch.find((obj) => obj.id == 16)?.studentTrip;
+      let studentTripDataMatch: string[] = [];
+
+      if (Array.isArray(studentTripRaw)) {
+        studentTripDataMatch = studentTripRaw
+          .filter((el) => typeof el === "object" && el !== null && "id" in el)
+          .map((el) => (el as { id: string }).id);
+      }
+      const tutorType = dataMatch.find((obj) => obj.id == 17)?.tutorType;
+      let tutorTypeDataMatch;
+      if (tutorType === "Начинающий: до\u00A01000\u00A0₽") {
+        tutorTypeDataMatch = "1";
+      }
+      if (tutorType === "Репетитор со средним опытом: до\u00A01500\u00A0₽") {
+        tutorTypeDataMatch = "2";
+      }
+      if (tutorType === "Опытный репетитор: до\u00A02500\u00A0₽") {
+        tutorTypeDataMatch = "3";
+      }
+
       const autoContactsString = dataMatch.find(
         (obj) => obj.id === 22
       )?.autoContacts;

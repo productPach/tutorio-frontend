@@ -45,7 +45,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
   let region: string;
   regionUser && (region = regionUser?.city);
-  const regionTest = "Москва";
 
   // Состояние текстового поля
   const [inputValue, setInputValue] = useState("");
@@ -89,7 +88,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
       setErrorInput(false);
 
       if (!token) {
-        console.warn("Токен не получен");
         setErrorInput(true);
         return;
       }
@@ -99,13 +97,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
       try {
         // Пробуем получить студента
         await dispatch(getCurrentStudent(token)).unwrap();
-        console.log("Студент успешно получен");
       } catch (error) {
-        console.log(
-          "Ошибка при получении студента, создаём нового студента",
-          error
-        );
-
         // Массив аватарок для случайного выбора
         const avatars = [
           "/img/icon/student/avatar/animal1.svg",
@@ -119,34 +111,19 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         const randomAvatar =
           avatars[Math.floor(Math.random() * avatars.length)];
 
-        // Логируем dataMatch для проверки
-        console.log("dataMatch:", dataMatch);
-
         const fioDataMatch = dataMatch.find((obj) => obj.id == "19");
         const fioValue = fioDataMatch ? fioDataMatch.fio : "";
 
-        console.log("fioValue для создания студента:", fioValue);
-
         if (!fioValue) {
-          console.warn("fioValue пустой, не создаём студента");
           return;
         }
-
-        // Создаём нового студента
-        console.log("Создаем студента:", {
-          name: fioValue,
-          phone,
-          avatarUrl: randomAvatar,
-          region,
-          token,
-        });
 
         await dispatch(
           createStudent({
             name: fioValue,
             phone,
             avatarUrl: randomAvatar,
-            region: "Москва",
+            region: region,
             token,
           })
         ).unwrap();
@@ -202,30 +179,28 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           (obj) => obj.id == "15"
         )?.studentAdress;
 
-        const studentTripDataMatchLSRaw = dataMatch.find(
+        const studentTripRaw = dataMatch.find(
           (obj) => obj.id == "16"
         )?.studentTrip;
-
         let studentTripDataMatch: string[] = [];
 
-        if (Array.isArray(studentTripDataMatchLSRaw)) {
-          if (
-            studentTripDataMatchLSRaw.length > 0 &&
-            typeof studentTripDataMatchLSRaw[0] === "object" &&
-            studentTripDataMatchLSRaw[0] !== null &&
-            "id" in studentTripDataMatchLSRaw[0]
-          ) {
-            studentTripDataMatch = (
-              studentTripDataMatchLSRaw as unknown as { id: string }[]
-            ).map((item) => item.id);
-          } else if (typeof studentTripDataMatchLSRaw[0] === "string") {
-            studentTripDataMatch = studentTripDataMatchLSRaw as string[];
-          }
+        if (Array.isArray(studentTripRaw)) {
+          studentTripDataMatch = studentTripRaw
+            .filter((el) => typeof el === "object" && el !== null && "id" in el)
+            .map((el) => (el as { id: string }).id);
+        }
+        const tutorType = dataMatch.find((obj) => obj.id == "17")?.tutorType;
+        let tutorTypeDataMatch;
+        if (tutorType === "Начинающий: до\u00A01000\u00A0₽") {
+          tutorTypeDataMatch = "1";
+        }
+        if (tutorType === "Репетитор со средним опытом: до\u00A01500\u00A0₽") {
+          tutorTypeDataMatch = "2";
+        }
+        if (tutorType === "Опытный репетитор: до\u00A02500\u00A0₽") {
+          tutorTypeDataMatch = "3";
         }
 
-        const tutorTypeDataMatch = dataMatch.find(
-          (obj) => obj.id == "17"
-        )?.tutorType;
         const autoContactsString = dataMatch.find(
           (obj) => obj.id == "22"
         )?.autoContacts;
@@ -250,7 +225,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           studentLevelDataMatch,
           tutorGenderDataMatch,
           timetableDataMatch,
-          regionTest,
+          region,
           studyPlaceDataMatch,
           studentAdressDataMatch,
           studentTripDataMatch,
