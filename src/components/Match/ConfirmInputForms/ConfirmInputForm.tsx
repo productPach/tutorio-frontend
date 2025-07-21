@@ -182,12 +182,17 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         const studentTripRaw = dataMatch.find(
           (obj) => obj.id == "16"
         )?.studentTrip;
+
         let studentTripDataMatch: string[] = [];
 
         if (Array.isArray(studentTripRaw)) {
           studentTripDataMatch = studentTripRaw
-            .filter((el) => typeof el === "object" && el !== null && "id" in el)
-            .map((el) => (el as { id: string }).id);
+            .map((el) =>
+              typeof el === "object" && el !== null && "id" in el
+                ? (el as any).id
+                : null
+            )
+            .filter((id): id is string => typeof id === "string");
         }
         const tutorType = dataMatch.find((obj) => obj.id == "17")?.tutorType;
         let tutorTypeDataMatch;
