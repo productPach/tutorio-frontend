@@ -141,6 +141,49 @@
 .lnHgt18 {
   line-height: 18px;
 }
+
+.sidebar_scrollWrapper {
+  background-color: white;
+  overflow: hidden;
+  height: calc(100dvh - 196px);
+  border-radius: 10px;
+  max-height: fit-content;
+}
+
+.scrollShrink {
+  height: calc(100dvh - 106px);
+  transition: height 0.3s ease;
+}
+
+.sidebar_filterForChat {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #aaa transparent;
+}
+
+/* Chrome, Safari */
+.sidebar_filterForChat::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar_filterForChat::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar_filterForChat::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.sidebar_filterForChat::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************

@@ -128,6 +128,18 @@ export const ResponseSidbar = ({
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
 
+  const [scrolledDown, setScrolledDown] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setScrolledDown(scrollTop > 90);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <div
@@ -229,115 +241,124 @@ export const ResponseSidbar = ({
         {orderById && orderById.chats.length > 0 && (
           <>
             {chats && chats.length > 0 ? (
-              <div className={styles.sidebar_filterForChat}>
-                <div className={styles.studentChatWrap}>
-                  {sortedChats.map((chat, index, array) => {
-                    if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
-                    // Мемоизируем сортировку сообщений для каждого чата
-                    const sortedMessages = [...chat.messages].sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime()
-                    );
-
-                    const lastMessage = sortedMessages[0];
-                    const isFirst = index === 0;
-                    const isLast = index === array.length - 1;
-
-                    const noReadMessagesFromOther =
-                      student &&
-                      chat.messages.filter(
-                        (message) =>
-                          !message.isRead && message.senderId !== student.id
+              <div
+                className={clsx(
+                  styles.sidebar_scrollWrapper,
+                  scrolledDown && styles.scrollShrink
+                )}
+              >
+                <div className={styles.sidebar_filterForChat}>
+                  <div className={styles.studentChatWrap}>
+                    {sortedChats.map((chat, index, array) => {
+                      if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
+                      // Мемоизируем сортировку сообщений для каждого чата
+                      const sortedMessages = [...chat.messages].sort(
+                        (a, b) =>
+                          new Date(b.createdAt).getTime() -
+                          new Date(a.createdAt).getTime()
                       );
 
-                    return (
-                      <div
-                        onClick={() => {
-                          dispatch(setComponentMenu(5));
-                          dispatch(setChat(chat));
-                          // Закрываем блок с эмодзи
-                          setVisibleEmoji && setVisibleEmoji(false);
-                          if (page && page === "Tutor") {
-                            route.push("../");
-                          }
-                        }}
-                        className={clsx(
-                          styles.studentChatContainerImgAndMessage,
-                          {
-                            [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
-                            [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
-                            [styles.isNotReadTutorsMessageContainerBg]:
-                              lastMessage?.senderId !== student?.id &&
-                              chat.messages.some(
-                                (msg) =>
-                                  !msg.isRead && msg.senderId !== student?.id
-                              ),
-                            [styles.selectStudentChatContainerImgAndMessage]:
-                              chat.id === selectChat?.id,
-                          }
-                        )}
-                        key={chat.id}
-                      >
-                        {chat.tutor && (
-                          <Image
-                            className={styles.studentChatImg}
-                            src={`${getBackendUrl()}${chat?.tutor.avatarUrl}`}
-                            width={66}
-                            height={66}
-                            alt=""
-                          />
-                        )}
-                        <div className={styles.studentChatMessage}>
-                          <div className={styles.studentChatMessageFio}>
-                            {chat?.tutor?.name}
-                          </div>
-                          <div className={styles.studentChatMessageFlx}>
-                            <div className={styles.studentChatMessageText}>
-                              {lastMessage?.text}
-                            </div>
-                            {lastMessage.senderId === student?.id ? (
-                              lastMessage.isRead ? (
-                                <Image
-                                  className={styles.studentChatIcon}
-                                  src={"/../img/icon/isRead.svg"}
-                                  width={18}
-                                  height={18}
-                                  alt=""
-                                />
-                              ) : (
-                                <Image
-                                  className={styles.studentChatIcon}
-                                  src={"/../img/icon/noRead.svg"}
-                                  width={18}
-                                  height={18}
-                                  alt=""
-                                />
-                              )
-                            ) : (
-                              !lastMessage.isRead && (
-                                <div
-                                  className={styles.isNotReadTutorsMessageCount}
-                                >
-                                  {
-                                    chat.messages.filter(
-                                      (msg) =>
-                                        !msg.isRead &&
-                                        msg.senderId !== student?.id
-                                    ).length
-                                  }
-                                </div>
-                              )
-                            )}
-                          </div>
+                      const lastMessage = sortedMessages[0];
+                      const isFirst = index === 0;
+                      const isLast = index === array.length - 1;
 
-                          <div className={styles.studentChatMessageDate}>
-                            {formatTimeAgo(lastMessage?.createdAt)}
+                      const noReadMessagesFromOther =
+                        student &&
+                        chat.messages.filter(
+                          (message) =>
+                            !message.isRead && message.senderId !== student.id
+                        );
+
+                      return (
+                        <div
+                          onClick={() => {
+                            dispatch(setComponentMenu(5));
+                            dispatch(setChat(chat));
+                            // Закрываем блок с эмодзи
+                            setVisibleEmoji && setVisibleEmoji(false);
+                            if (page && page === "Tutor") {
+                              route.push("../");
+                            }
+                          }}
+                          className={clsx(
+                            styles.studentChatContainerImgAndMessage,
+                            {
+                              [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
+                              [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
+                              [styles.isNotReadTutorsMessageContainerBg]:
+                                lastMessage?.senderId !== student?.id &&
+                                chat.messages.some(
+                                  (msg) =>
+                                    !msg.isRead && msg.senderId !== student?.id
+                                ),
+                              [styles.selectStudentChatContainerImgAndMessage]:
+                                chat.id === selectChat?.id,
+                            }
+                          )}
+                          key={chat.id}
+                        >
+                          {chat.tutor && (
+                            <Image
+                              className={styles.studentChatImg}
+                              src={`${getBackendUrl()}${chat?.tutor.avatarUrl}`}
+                              width={66}
+                              height={66}
+                              alt=""
+                            />
+                          )}
+                          <div className={styles.studentChatMessage}>
+                            <div className={styles.studentChatMessageFio}>
+                              {chat?.tutor?.name}
+                            </div>
+                            <div className={styles.studentChatMessageFlx}>
+                              <div className={styles.studentChatMessageText}>
+                                {lastMessage?.text}
+                              </div>
+                              {lastMessage.senderId === student?.id ? (
+                                lastMessage.isRead ? (
+                                  <Image
+                                    className={styles.studentChatIcon}
+                                    src={"/../img/icon/isRead.svg"}
+                                    width={18}
+                                    height={18}
+                                    alt=""
+                                  />
+                                ) : (
+                                  <Image
+                                    className={styles.studentChatIcon}
+                                    src={"/../img/icon/noRead.svg"}
+                                    width={18}
+                                    height={18}
+                                    alt=""
+                                  />
+                                )
+                              ) : (
+                                !lastMessage.isRead && (
+                                  <div
+                                    className={
+                                      styles.isNotReadTutorsMessageCount
+                                    }
+                                  >
+                                    {
+                                      chat.messages.filter(
+                                        (msg) =>
+                                          !msg.isRead &&
+                                          msg.senderId !== student?.id
+                                      ).length
+                                    }
+                                  </div>
+                                )
+                              )}
+                            </div>
+
+                            <div className={styles.studentChatMessageDate}>
+                              {formatTimeAgo(lastMessage?.createdAt)}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             ) : (
