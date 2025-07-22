@@ -97,6 +97,8 @@ export type Tutor = {
   badges: string[];
   lastOnline: Date | null;
   response: Response[];
+  publicRating: number;
+  reviewsCount: number;
 };
 
 // Возможные значения длительности занятия
@@ -213,6 +215,7 @@ export type Order = {
   autoContactsOnResponse: boolean,
   responseCost: string;
   chats: Chat[];
+  selectedTutors: Tutor[];
   [key: string]: any;
   status: string;
 };
@@ -318,8 +321,14 @@ export type Chat = {
     avatarUrl: string;
     lastOnline: string | null;
   };
+  order: {
+    contracts: {
+      tutorId: string;
+    }[];
+  }
   themeOrder: string;
   initiatorRole: string;
+  isSelectedTutor: boolean;
   status: string;
 };
 
@@ -330,4 +339,16 @@ export type Message = {
   text: string;
   createdAt: string;
   isRead: boolean;
+}
+
+// Возможные значения selectedBy
+export type SelectedBy = "tutor" |"student";
+
+export type Contract = {
+  id: string;
+  orderId: string;
+  tutorId: string;
+  selectedBy: SelectedBy;
+  selectedAt: Date;
+  canceledAt: Date;
 }

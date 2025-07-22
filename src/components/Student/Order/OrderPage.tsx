@@ -25,12 +25,20 @@ import { useChat } from "@/context/ChatContext";
 import { getThemesByTopic } from "@/store/features/wikiSlice";
 import { ResponseSidbarMobile } from "../ResponseMobile/ResponseMobile";
 import OrderMenuMobile from "../OrderMenuMobile/OrderMenuMobile";
+import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
+import { HiddenOrderModal } from "../Modal/Response/hiddenOrderModal";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
   const { order } = useParams();
   const isModalResponseStudentToTutor = useAppSelector(
     (state) => state.modal.isModalResponseStudentToTutor
+  );
+  const isModalCreateContractByStudent = useAppSelector(
+    (state) => state.modal.isModalCreateContractByStudent
+  );
+  const isModalHiddenOrder = useAppSelector(
+    (state) => state.modal.isModalHiddenOrder
   );
 
   const dispatch = useAppDispatch();
@@ -284,6 +292,18 @@ const OrderPage: React.FC = () => {
         contentModal={<ResponseStudentToTutorModal />}
         isModal={isModalResponseStudentToTutor}
         modalId={"responseStudentToTutorModal"}
+      ></Modal>
+      <Modal
+        titleModal={"Выбрать репетитора"}
+        contentModal={<CreateContractByStudentModal />}
+        isModal={isModalCreateContractByStudent}
+        modalId={"createContractByStudent"}
+      ></Modal>
+      <Modal
+        titleModal={"🎉 Репетитор выбран!"}
+        contentModal={<HiddenOrderModal />}
+        isModal={isModalHiddenOrder}
+        modalId={"hiddenOrder"}
       ></Modal>
     </>
   );

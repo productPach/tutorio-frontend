@@ -27,6 +27,9 @@ type ModalStateType = {
   isModalRejectResponse: boolean;
   isModalAcceptResponse: boolean;
   isSheetOpen: boolean;
+  isModalCreateContractByTutor: boolean;
+  isModalCreateContractByStudent: boolean;
+  isModalHiddenOrder: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -56,6 +59,9 @@ const initialState: ModalStateType = {
   isModalRejectResponse: false,
   isModalAcceptResponse: false,
   isSheetOpen: false,
+  isModalCreateContractByTutor: false,
+  isModalCreateContractByStudent: false,
+  isModalHiddenOrder: false,
 };
 
 const modalSlice = createSlice({
@@ -139,7 +145,17 @@ const modalSlice = createSlice({
     },
     setIsSheetOpen(state, action: PayloadAction<boolean>) {
       state.isSheetOpen = action.payload;
-    }
+    },
+    setIsModalCreateContractByTutor(state, action: PayloadAction<boolean>) {
+      state.isModalCreateContractByTutor = action.payload;
+    },
+    setIsModalCreateContractByStudent(state, action: PayloadAction<boolean>) {
+      state.isModalCreateContractByStudent = action.payload;
+    },
+    setIsModalHiddenOrder(state, action: PayloadAction<boolean>) {
+      state.isModalHiddenOrder = action.payload;
+    },
+    
   },
 });
 
@@ -170,5 +186,8 @@ export const {
   setIsModalRejectResponse,
   setIsModalAcceptResponse,
   setIsSheetOpen,
+  setIsModalCreateContractByTutor,
+  setIsModalCreateContractByStudent,
+  setIsModalHiddenOrder,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

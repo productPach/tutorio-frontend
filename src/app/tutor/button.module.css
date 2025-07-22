@@ -10,6 +10,7 @@
   transition: all 0.3s;
   background-color: #fad949;
   color: black;
+  white-space: nowrap;
 }
 
 .buttonYlw:disabled {

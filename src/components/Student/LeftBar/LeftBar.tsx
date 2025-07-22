@@ -80,7 +80,11 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
 
       <div className={styles.left_menu}>
         <ul>
-          <Link href={"/student/orders"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/student/orders"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/orders.svg"
@@ -97,7 +101,11 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
               </span>
             </li>
           </Link>
-          <Link href={"/student/settings"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/student/settings"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/settings.svg"
@@ -114,7 +122,11 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
               </span>
             </li>
           </Link>
-          <Link href={"/student/wiki"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/student/wiki"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/base.svg"

@@ -197,9 +197,13 @@ export const ChatSidbar = ({
                           />
                           <div className={styles.studentChatMessage}>
                             <div className={styles.studentChatMessageFio}>
-                              {chat.themeOrder + " "}
+                              <span
+                                className={styles.studentChatMessageFioText}
+                              >
+                                {chat.student.name + " "}
+                              </span>
                               <span className={styles.textThemeOrder}>
-                                {chat.student.name}
+                                {chat.themeOrder}
                               </span>
                             </div>
 

@@ -175,6 +175,11 @@ const chatSlice = createSlice({
         state.chat.tutorHasAccess = false;
       }
     },
+    updateChatForContract: (state) => {
+      if (state.chat) {
+        state.chat.isSelectedTutor = true;
+      }
+    },
     markMessagesAsRead: (state, action) => {
       const { chatId, messageIds } = action.payload;
       if (state.chat && state.chat.id === chatId) {
@@ -315,5 +320,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChat, setMessages, addMessageToChat, updateChatForAccept, updateChatForReject, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
+export const { setChat, setMessages, addMessageToChat, updateChatForAccept, updateChatForReject, updateChatForContract, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;

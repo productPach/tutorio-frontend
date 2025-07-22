@@ -10,10 +10,11 @@
 }
 .notAccessTitle {
   padding: 0;
-  margin: 0 0 10px 0;
+  margin: 0 0 4px 0;
 }
 .notAccessTextContainer {
-  padding: 22px;
+  background-color: #f9f9f9;
+  padding: 8px 18px 18px 18px;
 }
 .containerButton {
   display: flex;
@@ -27,9 +28,9 @@
   justify-content: space-between;
   width: fit-content;
   margin: 10px 0 0 0;
-  padding: 12px 20px;
+  padding: 8px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;
@@ -44,9 +45,9 @@
   justify-content: space-between;
   width: fit-content;
   margin: 10px 0 0 0;
-  padding: 12px 20px;
+  padding: 8px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;

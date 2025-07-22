@@ -745,6 +745,10 @@
 .closedFilterMini {
   opacity: 0.8 !important;
 }
+.linkLeftBar {
+  width: fit-content;
+  display: block;
+}
 
 /* Адаптивные стили под разрешения экранов */
 

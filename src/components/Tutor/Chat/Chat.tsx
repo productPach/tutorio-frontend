@@ -32,6 +32,7 @@ import { sortMessages } from "@/utils/chat/sortMessages";
 import {
   setIsModalAcceptResponse,
   setIsModalBalanceBoost,
+  setIsModalCreateContractByTutor,
   setIsModalRejectResponse,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
@@ -291,6 +292,10 @@ export const ChatComponent = React.memo(
       }
     };
 
+    // const isSelectedTutor =
+    //   chat?.order.contracts && chat.order.contracts.length > 0;
+    // console.log(isSelectedTutor);
+
     return (
       <>
         {chat ? (
@@ -424,27 +429,50 @@ export const ChatComponent = React.memo(
                 </div>
               )}
               {chat.tutorHasAccess && (
-                <div className={clsx(chatStyles.inputMessageBlock)}>
-                  {/* Родительский блок с границами */}
-                  <div ref={wrapperRef} className={chatStyles.wrapperRef}>
-                    <textarea
-                      ref={textareaRef}
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Начните вводить сообщение"
-                      rows={1}
-                      className={chatStyles.textarea}
-                      disabled={!chat.tutorHasAccess}
+                <>
+                  {chat?.order.contracts &&
+                    chat.order.contracts.length === 0 && (
+                      <div className={chatStyles.actionChatBlock}>
+                        <button
+                          className={chatStyles.buttonContract}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(setIsModalCreateContractByTutor(true));
+                          }}
+                          type="button"
+                        >
+                          <span className={chatNoAccessStyles.textButton}>
+                            Договорились с учеником
+                            {/* Подтвердить договоренность */}
+                          </span>
+                        </button>
+                      </div>
+                    )}
+
+                  <div className={clsx(chatStyles.inputMessageBlock)}>
+                    {/* Родительский блок с границами */}
+                    <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+                      <textarea
+                        ref={textareaRef}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Начните вводить сообщение"
+                        rows={1}
+                        className={chatStyles.textarea}
+                        disabled={!chat.tutorHasAccess}
+                      />
+                    </div>
+                    <EmojiPicker
+                      onSelect={(emoji) =>
+                        setInputValue((prev) => prev + emoji)
+                      }
+                      textareaRef={textareaRef}
+                      visibleEmoji={visibleEmoji}
+                      setVisibleEmoji={setVisibleEmoji}
                     />
                   </div>
-                  <EmojiPicker
-                    onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
-                    textareaRef={textareaRef}
-                    visibleEmoji={visibleEmoji}
-                    setVisibleEmoji={setVisibleEmoji}
-                  />
-                </div>
+                </>
               )}
             </div>
           </>

@@ -25,6 +25,12 @@
   border-radius: 10px;
   display: block;
 }
+.tutorImgMini {
+  width: 66px;
+  height: 66px;
+  border-radius: 10px;
+  display: block;
+}
 .containerFlxRw {
   display: flex;
   flex-direction: row;
@@ -109,7 +115,12 @@
   flex-direction: column;
   gap: 10px;
 }
-
+.listContractTutor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
 .containerOrderInfo {
   display: flex;
   flex-direction: column;
@@ -238,6 +249,70 @@
 .flxClmn {
   flex-direction: row;
 }
+.buttonContract {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(69, 72, 77, 1) 124%
+  );
+  color: #dddddd;
+}
+.buttonContract:hover {
+  background: linear-gradient(
+    to right,
+    rgba(20, 20, 20, 1) 0%,
+    rgba(50, 52, 57, 1) 124%
+  );
+  color: #ffffff;
+}
+
+.buttonContract:active {
+  transform: scale(0.98);
+}
+.buttonContractM {
+  display: none;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(69, 72, 77, 1) 124%
+  );
+  color: #dddddd;
+}
+.buttonContractM:hover {
+  background: linear-gradient(
+    to right,
+    rgba(20, 20, 20, 1) 0%,
+    rgba(50, 52, 57, 1) 124%
+  );
+  color: #ffffff;
+}
+
+.buttonContractM:active {
+  transform: scale(0.98);
+}
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************
@@ -324,6 +399,13 @@
 ******************************************************
 ****************************************************** */
 @media (max-width: 660px) {
+  .buttonContract {
+    display: none;
+  }
+  .buttonContractM {
+    display: flex;
+    justify-content: center;
+  }
 }
 /* ******************************************************
 ******************************************************

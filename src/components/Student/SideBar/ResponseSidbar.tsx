@@ -102,6 +102,16 @@ export const ResponseSidbar = ({
     }
   };
 
+  useEffect(() => {
+    if (orderById) {
+      setIsChecked(
+        orderById.status === "Active" ||
+          orderById.status === "Pending" ||
+          orderById.status === "Sending"
+      );
+    }
+  }, [orderById]);
+
   // Мемоизация сортировки чатов
   const sortedChats = useMemo(() => {
     return [...chats].sort((a, b) => {
