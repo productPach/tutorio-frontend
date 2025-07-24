@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { fetchStudentPhoneById } from "@/api/server/studentApi";
 
 export const ResponseTutorToStudentWithContaktModal = () => {
   const dispatch = useAppDispatch();
@@ -92,13 +93,19 @@ export const ResponseTutorToStudentWithContaktModal = () => {
             })
           ).unwrap();
 
+          // Получаем телефон ученика
+          const phoneStudent = await fetchStudentPhoneById(
+            token,
+            order.studentId
+          );
+
           await dispatch(
             sendMessage({
               chatId: chat.id,
               senderId: tutor.id,
               orderId: order.id,
               themeOrder: themeOrder,
-              text: `Телефон ученика: <a href="tel:+79269811041">+79269811041</a>\n\n\
+              text: `Телефон ученика: <a href="tel:+7${phoneStudent}">+7${phoneStudent}</a>\n\n\
 Постарайтесь связаться с\u00A0учеником как можно скорее и\u00A0обязательно скажите, что\u00A0нашли его через сервис Tutorio.\n\n\
 Чем раньше вы выйдете на\u00A0связь, тем выше шанс, что\u00A0именно вы станете его репетитором!\u00A0🌟\n\n\
 Желаем успешных занятий и отличного результата!\u00A0🚀`,

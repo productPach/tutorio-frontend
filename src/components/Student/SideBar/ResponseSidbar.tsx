@@ -128,31 +128,6 @@ export const ResponseSidbar = ({
             new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
         )[0];
 
-      // const getFilteredLastMessage = (chat: Chat) => {
-      //   const filtered = chat.messages.filter((m) => {
-      //     if (m.type === "service") {
-      //       return (
-      //         m.recipientRole === null ||
-      //         m.recipientRole === undefined ||
-      //         m.recipientRole === "student"
-      //       );
-      //     }
-      //     return true;
-      //   });
-
-      //   const sorted = filtered
-      //     .filter((m) => m.createdAt)
-      //     .sort(
-      //       (x, y) =>
-      //         new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-      //     );
-
-      //   return sorted[0]; // последнее подходящее сообщение
-      // };
-
-      // const lastA = getFilteredLastMessage(a);
-      // const lastB = getFilteredLastMessage(b);
-
       return (
         new Date(lastB?.createdAt || 0).getTime() -
         new Date(lastA?.createdAt || 0).getTime()

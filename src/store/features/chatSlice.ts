@@ -109,7 +109,7 @@ export const getChatsByOrderId = createAsyncThunk<
   Chat[], // что возвращаем
   { orderId: string; role: string, token: string } // что принимаем
 >("chat/getByOrderId", async ({ orderId, role, token }) => {
-  const response = await fetchGetChatsByOrderId(orderId, role, token);
+  const response = await fetchGetChatsByOrderId(orderId, token);
   return response;
 });
 

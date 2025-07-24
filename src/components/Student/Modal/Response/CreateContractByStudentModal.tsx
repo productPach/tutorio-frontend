@@ -12,17 +12,22 @@ import {
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
 import { createContract } from "@/store/features/contractSlice";
-import { updateChatForContract } from "@/store/features/chatSlice";
+import { sendMessage, updateChatForContract } from "@/store/features/chatSlice";
 import { getOrderById, updateOrder } from "@/store/features/orderSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 export const CreateContractByStudentModal = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const chat = useAppSelector((state) => state.chat.chat);
+  // Стейт для предметов
+  const subjects = useAppSelector((state) => state.subject.subjects);
   const orderById = useAppSelector((state) => state.orders.orderById);
   const { loadChats } = useChat();
 
   const [step, setStep] = useState<"initial" | "success">("initial");
+  const { sendMessageSocket } = useChatSocket(chat?.id ? chat.id : "");
 
   const handleCreateContract = async () => {
     try {
@@ -51,6 +56,27 @@ export const CreateContractByStudentModal = () => {
             status: "Hidden",
           })
         ).unwrap();
+
+        const subjectForRequest = subjects.find(
+          (item) => item.id_p === orderById?.subject
+        )?.for_request;
+
+        const actionResult = await dispatch(
+          sendMessage({
+            chatId: chat.id,
+            senderId: chat.studentId,
+            orderId: orderById.id,
+            themeOrder: `${orderById.goal} по ${subjectForRequest}`,
+            text: "Ученик выбрал вас в качестве репетитора",
+            token,
+            type: "service",
+            recipientRole: "tutor",
+          })
+        );
+
+        const newMessage = unwrapResult(actionResult);
+        // После успешного сохранения отправляем реальное сообщение через сокет
+        sendMessageSocket(newMessage); // Передаем реальное сообщение с ID
 
         dispatch(getOrderById({ token, id: chat.orderId }));
       }

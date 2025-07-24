@@ -235,7 +235,24 @@ export const ResponseSidbarMobile = ({
                   {sortedChats.map((chat, index, array) => {
                     if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
                     // Мемоизируем сортировку сообщений для каждого чата
-                    const sortedMessages = [...chat.messages].sort(
+                    // const sortedMessages = [...chat.messages].sort(
+                    //   (a, b) =>
+                    //     new Date(b.createdAt).getTime() -
+                    //     new Date(a.createdAt).getTime()
+                    // );
+
+                    const filteredMessages = chat.messages.filter((message) => {
+                      if (message.type === "service") {
+                        return (
+                          message.recipientRole === null ||
+                          message.recipientRole === undefined ||
+                          message.recipientRole === "student"
+                        );
+                      }
+                      return true;
+                    });
+
+                    const sortedMessages = [...filteredMessages].sort(
                       (a, b) =>
                         new Date(b.createdAt).getTime() -
                         new Date(a.createdAt).getTime()
@@ -247,7 +264,7 @@ export const ResponseSidbarMobile = ({
 
                     const noReadMessagesFromOther =
                       student &&
-                      chat.messages.filter(
+                      sortedMessages.filter(
                         (message) =>
                           !message.isRead && message.senderId !== student.id
                       );
@@ -269,7 +286,7 @@ export const ResponseSidbarMobile = ({
                             [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
                             [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
                             [styles.isNotReadTutorsMessageContainerBg]:
-                              lastMessage?.senderId !== student?.id &&
+                              chat.lastMessage?.senderId !== student?.id &&
                               chat.messages.some(
                                 (msg) =>
                                   !msg.isRead && msg.senderId !== student?.id
@@ -295,7 +312,7 @@ export const ResponseSidbarMobile = ({
                           </div>
                           <div className={styles.studentChatMessageFlx}>
                             <div className={styles.studentChatMessageText}>
-                              {lastMessage?.text}
+                              {chat.lastMessage?.text}
                             </div>
                             {lastMessage.senderId === student?.id ? (
                               lastMessage.isRead ? (
@@ -316,24 +333,20 @@ export const ResponseSidbarMobile = ({
                                 />
                               )
                             ) : (
-                              !lastMessage.isRead && (
+                              noReadMessagesFromOther &&
+                              noReadMessagesFromOther?.length > 0 && (
                                 <div
                                   className={styles.isNotReadTutorsMessageCount}
                                 >
-                                  {
-                                    chat.messages.filter(
-                                      (msg) =>
-                                        !msg.isRead &&
-                                        msg.senderId !== student?.id
-                                    ).length
-                                  }
+                                  {noReadMessagesFromOther?.length}
                                 </div>
                               )
                             )}
                           </div>
 
                           <div className={styles.studentChatMessageDate}>
-                            {formatTimeAgo(lastMessage?.createdAt)}
+                            {chat.lastMessage &&
+                              formatTimeAgo(chat.lastMessage?.createdAt)}
                           </div>
                         </div>
                       </div>

@@ -314,6 +314,8 @@ export const ChatComponent = ({
         createdAt: new Date().toISOString(),
         isRead: false,
         pending: true, // Это временное поле
+        type: "user",
+        recipientRole: "null",
       };
 
       // Закрываем блок с эмодзи

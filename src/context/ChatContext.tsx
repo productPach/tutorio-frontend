@@ -14,6 +14,7 @@ import { useAppSelector, useAppDispatch } from "@/store/store";
 
 import { Chat, Message } from "@/types/types";
 import {
+  fetchGetChatById,
   fetchGetChatsByOrderId,
   fetchGetChatsByUserIdAndRole,
 } from "@/api/server/chatApi";
@@ -73,11 +74,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       let combinedChats: Chat[] = [];
 
       if (studentId && orderId) {
-        const studentChats = await fetchGetChatsByOrderId(
-          orderId.id,
-          "student",
-          token
-        );
+        const studentChats = await fetchGetChatsByOrderId(orderId.id, token);
         combinedChats = [...combinedChats, ...studentChats];
       }
 
@@ -121,11 +118,35 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = (message: Message) => {
-      console.log("новое сообщение");
-      //loadChats();
-      setTimeout(() => {
-        if (!isMountedRef.current) return;
+    // const handleNewMessage = (message: Message) => {
+    //   console.log("новое сообщение");
+    //   //loadChats();
+    //   setTimeout(() => {
+    //     if (!isMountedRef.current) return;
+    //     setChatsState((prev) => {
+    //       const updatedChats = prev.map((chat) =>
+    //         chat.id === message.chatId
+    //           ? {
+    //               ...chat,
+    //               messages: [...chat.messages, message],
+    //               lastMessage: message,
+    //               // status: "Active",
+    //               // tutorHasAccess: true,
+    //             }
+    //           : chat
+    //       );
+    //       dispatch(setChats(updatedChats));
+    //       return updatedChats;
+    //     });
+    //   }, 0);
+    //   playNotificationSound();
+    // };
+
+    const handleNewMessage = async (message: Message) => {
+      if (!isMountedRef.current) return;
+
+      // Если обычное сообщение — просто добавляем
+      if (message.type !== "service") {
         setChatsState((prev) => {
           const updatedChats = prev.map((chat) =>
             chat.id === message.chatId
@@ -133,15 +154,34 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
                   ...chat,
                   messages: [...chat.messages, message],
                   lastMessage: message,
-                  // status: "Active",
-                  // tutorHasAccess: true,
                 }
               : chat
           );
           dispatch(setChats(updatedChats));
           return updatedChats;
         });
-      }, 0);
+        playNotificationSound();
+        return;
+      }
+
+      // Если сервисное — грузим чат заново
+      if (token)
+        try {
+          const updatedChat = await fetchGetChatById(message.chatId, token);
+          setChatsState((prev) => {
+            const updatedChats = prev.map((chat) =>
+              chat.id === message.chatId ? updatedChat : chat
+            );
+            dispatch(setChats(updatedChats));
+            return updatedChats;
+          });
+        } catch (error) {
+          console.error(
+            "Ошибка при обновлении чата после сервисного сообщения",
+            error
+          );
+        }
+
       playNotificationSound();
     };
 
@@ -169,7 +209,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const handleNewChat = async (data: Chat) => {
-      console.log("новый чат");
+      //console.log("новый чат");
 
       if (data.initiatorRole === "tutor") {
         if (orderId?.id !== data.orderId) return;
@@ -187,9 +227,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         if (token) {
           // Подгружаем полный чат с сервера по id
-          const fullChats = await fetchGetChatsByOrderId(
+          const fullChats: Chat[] = await fetchGetChatsByOrderId(
             data.orderId,
-            "student",
             token
           );
           const fullChat = fullChats.find((c) => c.id === data.id);
@@ -274,27 +313,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     socket.emit("createChat", {
       chatId,
     });
-  };
-
-  const getLastVisibleMessage = (
-    messages: Message[],
-    role: "student" | "tutor"
-  ): Message | undefined => {
-    return [...messages]
-      .filter((message) => {
-        if (message.type === "service") {
-          return (
-            message.recipientRole === null ||
-            message.recipientRole === undefined ||
-            message.recipientRole === role
-          );
-        }
-        return true;
-      })
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )[0];
   };
 
   return (

@@ -79,6 +79,7 @@
   white-space: nowrap; /* Запрещает перенос текста */
   overflow: hidden; /* Обрезает текст, который выходит за пределы блока */
   text-overflow: ellipsis; /* Добавляет многоточие в конце переполненного текста */
+  pointer-events: none;
 }
 .studentChatMessageDate {
   width: 210px;

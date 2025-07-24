@@ -74,7 +74,9 @@ export const fetchSendMessage = async (
     orderId: string,
     themeOrder: string,
     text: string,
-    token: string
+    token: string,
+    type?: string, 
+    recipientRole?: string,
   ) => {
     const response = await fetch(`${baseUrl}message`, {
       method: "POST",
@@ -88,6 +90,7 @@ export const fetchSendMessage = async (
         orderId,
         themeOrder,
         text,
+        type, recipientRole
       }),
     });
   
