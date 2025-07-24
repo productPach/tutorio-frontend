@@ -26,7 +26,7 @@ import { getThemesByTopic } from "@/store/features/wikiSlice";
 import { ResponseSidbarMobile } from "../ResponseMobile/ResponseMobile";
 import OrderMenuMobile from "../OrderMenuMobile/OrderMenuMobile";
 import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
-import { HiddenOrderModal } from "../Modal/Response/hiddenOrderModal";
+import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -199,7 +199,13 @@ const OrderPage: React.FC = () => {
 
     if (orderById && token && !isDataLoaded) {
       fetchStudent();
-      dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
+      dispatch(
+        getChatsByOrderId({
+          orderId: orderById?.id,
+          role: "student",
+          token: token,
+        })
+      );
       setIsChecked(
         orderById.status === "Active" ||
           orderById.status === "Pending" ||

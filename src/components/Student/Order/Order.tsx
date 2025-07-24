@@ -14,6 +14,7 @@ import { getAllSubjects } from "@/store/features/subjectSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { getBackendUrl } from "@/api/server/configApi";
+import { pluralize } from "numeralize-ru";
 
 type OrderProps = {
   loading: boolean;
@@ -142,7 +143,17 @@ export const OrderComponent = ({
                           &nbsp;{tutor.publicRating?.toFixed(1) || "—"}
                           &nbsp;рейтинг
                         </div>
-                        <div>&nbsp;{tutor.reviewsCount || 0}&nbsp;отзыва</div>
+                        {tutor.reviewsCount > 0 && (
+                          <div>
+                            {tutor.reviewsCount}&nbsp;
+                            {pluralize(
+                              tutor.reviewsCount,
+                              "отзыв",
+                              "отзыва",
+                              "отзывов"
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 

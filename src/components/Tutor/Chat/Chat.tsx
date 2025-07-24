@@ -160,7 +160,9 @@ export const ChatComponent = React.memo(
           text: messageResponse,
           createdAt: new Date().toISOString(),
           isRead: false,
-          pending: true, // Это помечаем как дополнительное поле
+          pending: true,
+          type: "user",
+          recipientRole: "null", // Это помечаем как дополнительное поле
         };
 
         // Закрываем блок с эмодзи

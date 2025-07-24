@@ -7,6 +7,7 @@ import buttonStyles from "../../../../app/tutor/button.module.css";
 import componentStyles from "../../../Tutor/Modal/Profil/Education/Education.module.css";
 import {
   setIsModalCreateContractByStudent,
+  setIsModalHiddenOrder,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
@@ -54,7 +55,9 @@ export const CreateContractByStudentModal = () => {
         dispatch(getOrderById({ token, id: chat.orderId }));
       }
 
-      setStep("success");
+      //setStep("success");
+      dispatch(setIsModalCreateContractByStudent(false));
+      dispatch(setIsModalHiddenOrder(true));
     } catch (err) {
       console.error("Ошибка при создании контракта:", err);
     }

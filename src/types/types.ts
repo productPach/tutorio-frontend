@@ -331,6 +331,10 @@ export type Chat = {
   isSelectedTutor: boolean;
   status: string;
 };
+// Возможные значения type
+export type TypeMessage = "service" |"user";
+// Возможные значения recipientRole
+export type TypeRecipientRoleMessage = "null" | "tutor" |"student" | "admin";
 
 export type Message = {
   id: string;
@@ -339,6 +343,8 @@ export type Message = {
   text: string;
   createdAt: string;
   isRead: boolean;
+  type: TypeMessage;
+  recipientRole: TypeRecipientRoleMessage;
 }
 
 // Возможные значения selectedBy

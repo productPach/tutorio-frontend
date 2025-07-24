@@ -107,7 +107,7 @@ export const ResponseTutorToStudentModal = () => {
 
               if (chatToSet) {
                 dispatch(setChat(chatToSet)); // Добавляем чат в store
-                newChat(chat.id);
+                newChat(chat.id); // отправляет сокет создания нового чата и вызывает обновление у студента
               }
               route.push(`/tutor/responses?chatUpdateData=true`);
             } catch (error) {

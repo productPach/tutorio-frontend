@@ -17,6 +17,7 @@ import clsx from "clsx";
 import { formatTimeAgo } from "@/utils/date/date";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
+import DOMPurify from "dompurify";
 
 type ResponseSidbarProps = {
   chats: Chat[];
@@ -60,6 +61,26 @@ export const ChatSidbar = ({
   useEffect(() => {
     if (selectChat?.status === "Closed") setActiveTab("Closed");
   }, [selectChat]);
+
+  // Функция для замены ссылок на <a> теги
+  const formatTextWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const htmlText = text
+      .split(urlRegex)
+      .map((part, index) => {
+        if (part.match(urlRegex)) {
+          return `<a key=${index} style="color: blue; text-decoration: underline;" href="${part}" target="_blank" rel="noopener noreferrer">${part}</a>`;
+        }
+        return part;
+      })
+      .join("");
+
+    // Очищаем потенциально опасный HTML
+    return DOMPurify.sanitize(htmlText, {
+      ALLOWED_TAGS: ["a"],
+      ALLOWED_ATTR: ["href", "target", "rel", "style"],
+    });
+  };
 
   const sortedChats = useMemo(() => {
     const filtered = chats.filter((chat) => {
@@ -208,11 +229,21 @@ export const ChatSidbar = ({
                             </div>
 
                             <div className={styles.studentChatMessageFlx}>
-                              <div className={styles.studentChatMessageText}>
-                                {chat.tutorHasAccess
-                                  ? lastMessage?.text
-                                  : "Ученик заинтересовался вашим профилем и отправил предложение на занятия"}
-                              </div>
+                              {chat.tutorHasAccess ? (
+                                <div
+                                  className={styles.studentChatMessageText}
+                                  dangerouslySetInnerHTML={{
+                                    __html: formatTextWithLinks(
+                                      lastMessage?.text
+                                    ),
+                                  }}
+                                />
+                              ) : (
+                                <div className={styles.studentChatMessageText}>
+                                  Ученик заинтересовался вашим профилем и
+                                  отправил предложение на занятия
+                                </div>
+                              )}
 
                               {lastMessage?.senderId === tutor?.id ? (
                                 lastMessage.isRead ? (

@@ -3,15 +3,9 @@ import { useSocket } from "@/context/SocketContext";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { addMessageToChat, getChatById, markMessagesAsRead, updateChatForAccept, updateChatForReject } from "@/store/features/chatSlice";
 import { fetchGetChatById } from "@/api/server/chatApi";
+import { Message } from "@/types/types";
 
-type Message = {
-  id: string;
-  chatId: string;
-  senderId: string;
-  text: string;
-  createdAt: string;
-  isRead: boolean;
-};
+
 
 export const useChatSocket = (chatId: string) => {
   const { socket } = useSocket();

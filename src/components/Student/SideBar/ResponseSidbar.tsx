@@ -128,6 +128,31 @@ export const ResponseSidbar = ({
             new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
         )[0];
 
+      // const getFilteredLastMessage = (chat: Chat) => {
+      //   const filtered = chat.messages.filter((m) => {
+      //     if (m.type === "service") {
+      //       return (
+      //         m.recipientRole === null ||
+      //         m.recipientRole === undefined ||
+      //         m.recipientRole === "student"
+      //       );
+      //     }
+      //     return true;
+      //   });
+
+      //   const sorted = filtered
+      //     .filter((m) => m.createdAt)
+      //     .sort(
+      //       (x, y) =>
+      //         new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+      //     );
+
+      //   return sorted[0]; // последнее подходящее сообщение
+      // };
+
+      // const lastA = getFilteredLastMessage(a);
+      // const lastB = getFilteredLastMessage(b);
+
       return (
         new Date(lastB?.createdAt || 0).getTime() -
         new Date(lastA?.createdAt || 0).getTime()
@@ -262,7 +287,28 @@ export const ResponseSidbar = ({
                     {sortedChats.map((chat, index, array) => {
                       if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
                       // Мемоизируем сортировку сообщений для каждого чата
-                      const sortedMessages = [...chat.messages].sort(
+                      // const sortedMessages = [...chat.messages].sort(
+                      //   (a, b) =>
+                      //     new Date(b.createdAt).getTime() -
+                      //     new Date(a.createdAt).getTime()
+                      // );
+
+                      // const lastMessage = sortedMessages[0];
+
+                      const filteredMessages = chat.messages.filter(
+                        (message) => {
+                          if (message.type === "service") {
+                            return (
+                              message.recipientRole === null ||
+                              message.recipientRole === undefined ||
+                              message.recipientRole === "student"
+                            );
+                          }
+                          return true;
+                        }
+                      );
+
+                      const sortedMessages = [...filteredMessages].sort(
                         (a, b) =>
                           new Date(b.createdAt).getTime() -
                           new Date(a.createdAt).getTime()
@@ -274,11 +320,11 @@ export const ResponseSidbar = ({
 
                       const noReadMessagesFromOther =
                         student &&
-                        chat.messages.filter(
+                        sortedMessages.filter(
                           (message) =>
                             !message.isRead && message.senderId !== student.id
                         );
-
+                      console.log("chat.lastMessage", chat.lastMessage);
                       return (
                         <div
                           onClick={() => {
@@ -296,7 +342,7 @@ export const ResponseSidbar = ({
                               [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
                               [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
                               [styles.isNotReadTutorsMessageContainerBg]:
-                                lastMessage?.senderId !== student?.id &&
+                                chat.lastMessage?.senderId !== student?.id &&
                                 chat.messages.some(
                                   (msg) =>
                                     !msg.isRead && msg.senderId !== student?.id
@@ -322,9 +368,10 @@ export const ResponseSidbar = ({
                             </div>
                             <div className={styles.studentChatMessageFlx}>
                               <div className={styles.studentChatMessageText}>
-                                {lastMessage?.text}
+                                {chat.lastMessage?.text}
                               </div>
-                              {lastMessage.senderId === student?.id ? (
+                              {lastMessage &&
+                              lastMessage.senderId === student?.id ? (
                                 lastMessage.isRead ? (
                                   <Image
                                     className={styles.studentChatIcon}
@@ -343,26 +390,22 @@ export const ResponseSidbar = ({
                                   />
                                 )
                               ) : (
-                                !lastMessage.isRead && (
+                                noReadMessagesFromOther &&
+                                noReadMessagesFromOther?.length > 0 && (
                                   <div
                                     className={
                                       styles.isNotReadTutorsMessageCount
                                     }
                                   >
-                                    {
-                                      chat.messages.filter(
-                                        (msg) =>
-                                          !msg.isRead &&
-                                          msg.senderId !== student?.id
-                                      ).length
-                                    }
+                                    {noReadMessagesFromOther?.length}
                                   </div>
                                 )
                               )}
                             </div>
 
                             <div className={styles.studentChatMessageDate}>
-                              {formatTimeAgo(lastMessage?.createdAt)}
+                              {chat.lastMessage &&
+                                formatTimeAgo(chat.lastMessage?.createdAt)}
                             </div>
                           </div>
                         </div>

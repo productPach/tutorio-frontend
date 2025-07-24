@@ -10,14 +10,7 @@ import Image from "next/image";
 import chatStyles from "./Chat.module.css"; // путь к стилям поправь под себя
 import styles from "../Order/Order.module.css";
 import DOMPurify from "dompurify";
-
-type Message = {
-  id: string;
-  text: string;
-  createdAt: string;
-  senderId: string;
-  isRead?: boolean;
-};
+import { Message } from "@/types/types";
 
 type Props = {
   chatId: string;
@@ -116,7 +109,21 @@ const GroupedMessages: React.FC<Props> = ({
             : null;
 
         const shouldShowDate = currentDate !== prevDate;
+
+        const isServiceMessage = message.type === "service";
+        const isServiceForTutor =
+          isServiceMessage && message.recipientRole === "tutor";
         const isFromStudent = message.senderId === tutorId;
+
+        // Выбираем класс в зависимости от условий
+        const messageClassName = clsx(
+          chatStyles.chat__message,
+          isServiceForTutor
+            ? chatStyles.chat__message__serviceTutor
+            : isFromStudent
+              ? chatStyles.chat__message__right
+              : chatStyles.chat__message__left
+        );
 
         // Функция для замены ссылок на <a> теги
         const formatTextWithLinks = (text: string) => {
@@ -157,12 +164,7 @@ const GroupedMessages: React.FC<Props> = ({
           <div
             key={message.id}
             ref={index === allMessages.length - 1 ? lastMessageRef : null}
-            className={clsx(
-              chatStyles.chat__message,
-              isFromStudent
-                ? chatStyles.chat__message__right
-                : chatStyles.chat__message__left
-            )}
+            className={messageClassName}
           >
             <div
               dangerouslySetInnerHTML={{
@@ -170,27 +172,31 @@ const GroupedMessages: React.FC<Props> = ({
               }}
             />
 
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>
-                {new Date(message.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-              {isFromStudent && (
-                <Image
-                  className={styles.studentChatIcon}
-                  src={
-                    message.isRead
-                      ? "/../img/icon/isRead.svg"
-                      : "/../img/icon/noRead.svg"
-                  }
-                  width={18}
-                  height={18}
-                  alt=""
-                />
-              )}
-            </div>
+            {!isServiceForTutor && (
+              <div
+                className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
+              >
+                <span>
+                  {new Date(message.createdAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                {isFromStudent && (
+                  <Image
+                    className={styles.studentChatIcon}
+                    src={
+                      message.isRead
+                        ? "/../img/icon/isRead.svg"
+                        : "/../img/icon/noRead.svg"
+                    }
+                    width={18}
+                    height={18}
+                    alt=""
+                  />
+                )}
+              </div>
+            )}
           </div>
         );
 

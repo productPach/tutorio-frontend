@@ -9,14 +9,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import chatStyles from "./Chat.module.css"; // путь к стилям поправь под себя
 import styles from "../Order/Order.module.css";
-
-type Message = {
-  id: string;
-  text: string;
-  createdAt: string;
-  senderId: string;
-  isRead?: boolean;
-};
+import { Message } from "@/types/types";
 
 type Props = {
   chatId: string;
@@ -76,11 +69,25 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
       );
   }, [messages]);
 
+  const filteredMessages = useMemo(() => {
+    console.log("sortedMessages", sortedMessages);
+    return sortedMessages.filter((message) => {
+      if (message.type === "service") {
+        return (
+          message.recipientRole === undefined ||
+          message.recipientRole === null ||
+          message.recipientRole === "student"
+        );
+      }
+      return true; // user-сообщения всегда отображаются
+    });
+  }, [sortedMessages]);
+
   const visibleMessages = useMemo(() => {
-    return sortedMessages.slice(
-      Math.max(0, sortedMessages.length - visibleCount)
+    return filteredMessages.slice(
+      Math.max(0, filteredMessages.length - visibleCount)
     );
-  }, [sortedMessages, visibleCount]);
+  }, [filteredMessages, visibleCount]);
 
   // Скроллим вниз при первой загрузке после рендера сообщений
   useEffect(() => {

@@ -73,7 +73,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       let combinedChats: Chat[] = [];
 
       if (studentId && orderId) {
-        const studentChats = await fetchGetChatsByOrderId(orderId.id, token);
+        const studentChats = await fetchGetChatsByOrderId(
+          orderId.id,
+          "student",
+          token
+        );
         combinedChats = [...combinedChats, ...studentChats];
       }
 
@@ -118,6 +122,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (!socket) return;
 
     const handleNewMessage = (message: Message) => {
+      console.log("новое сообщение");
       //loadChats();
       setTimeout(() => {
         if (!isMountedRef.current) return;
@@ -163,14 +168,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }, 0);
     };
 
-    const handleNewChat = (data: Chat) => {
+    const handleNewChat = async (data: Chat) => {
+      console.log("новый чат");
+
       if (data.initiatorRole === "tutor") {
         if (orderId?.id !== data.orderId) return;
       }
-      //console.log("Новый чат");
       if (!isMountedRef.current) return;
 
-      // Добавить в orderId.chats, если его нет
+      // Проверяем, есть ли чат в заказе, если нет — добавляем
       const chatExistsInOrder = orderId?.chats?.some(
         (chat) => chat.id === data.id
       );
@@ -178,31 +184,41 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         dispatch(addChatToOrder(data));
       }
 
-      setChatsState((prev) => {
-        playNotificationSound();
-        const chatExists = prev.some((chat) => chat.id === data.id); // Проверка, существует ли уже чат
-        if (chatExists) {
-          // Обновляем существующий чат, если он есть
-          const updatedChats = prev.map((chat) =>
-            chat.id === data.id
-              ? {
-                  ...chat,
-                  messages: chat.messages.map((msg) =>
-                    msg.senderId !== data.tutorId
-                      ? { ...msg, isRead: true }
-                      : msg
-                  ),
-                }
-              : chat
+      try {
+        if (token) {
+          // Подгружаем полный чат с сервера по id
+          const fullChats = await fetchGetChatsByOrderId(
+            data.orderId,
+            "student",
+            token
           );
-          return updatedChats;
-        } else {
-          // Если чат не найден, добавляем его в начало списка
-          const updatedChats = [data, ...prev];
-          //dispatch(setChats(updatedChats));
-          return updatedChats;
+          const fullChat = fullChats.find((c) => c.id === data.id);
+
+          if (!fullChat) {
+            console.warn("Не удалось получить полный чат по id", data.id);
+            return;
+          }
+
+          setChatsState((prev) => {
+            playNotificationSound();
+            const chatExists = prev.some((chat) => chat.id === data.id);
+            if (chatExists) {
+              // Обновляем чат полностью новым полным объектом
+              const updatedChats = prev.map((chat) =>
+                chat.id === data.id ? fullChat : chat
+              );
+              console.log("апдейтчат: " + updatedChats);
+              return updatedChats;
+            } else {
+              // Добавляем новый чат
+              console.log("fullChat: " + fullChat);
+              return [fullChat, ...prev];
+            }
+          });
         }
-      });
+      } catch (error) {
+        console.error("Ошибка при загрузке полного чата:", error);
+      }
     };
 
     socket.on("newMessage", handleNewMessage);
@@ -258,6 +274,27 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     socket.emit("createChat", {
       chatId,
     });
+  };
+
+  const getLastVisibleMessage = (
+    messages: Message[],
+    role: "student" | "tutor"
+  ): Message | undefined => {
+    return [...messages]
+      .filter((message) => {
+        if (message.type === "service") {
+          return (
+            message.recipientRole === null ||
+            message.recipientRole === undefined ||
+            message.recipientRole === role
+          );
+        }
+        return true;
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )[0];
   };
 
   return (

@@ -42,7 +42,7 @@ export const HiddenOrderModal = () => {
 
       <div className={componentStyles.containerFlxRw}>
         <button
-          className={buttonStyles.buttonYlw}
+          className={buttonStyles.buttonBlc}
           onClick={(e) => {
             e.preventDefault();
             dispatch(setIsModalHiddenOrder(false));
@@ -53,7 +53,7 @@ export const HiddenOrderModal = () => {
           Хорошо
         </button>
         <button
-          className={buttonStyles.buttonBlc}
+          className={buttonStyles.buttonYlw}
           onClick={handleOpenOrder}
           type="button"
         >

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Chat, Message } from "@/types/types"; // Подставь нужные типы
+import { Chat, Message, TypeMessage, TypeRecipientRoleMessage } from "@/types/types"; // Подставь нужные типы
 import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchGetChatsByUserIdAndRole, fetchSendMessage, fetchUpdateChat, fetchUpdateMessage } from "@/api/server/chatApi";
 
 type ChatStateType = {
@@ -80,9 +80,11 @@ export const sendMessage = createAsyncThunk<
     themeOrder: string;
     text: string;
     token: string;
+    type?: TypeMessage;
+    recipientRole?: TypeRecipientRoleMessage;
   }
->("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, token }) => {
-  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, token);
+>("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, token, type, recipientRole }) => {
+  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, token, type, recipientRole);
   return response;
 });
 
@@ -105,9 +107,9 @@ export const updateMessage = createAsyncThunk<
 // Получение всех чатов по заказу
 export const getChatsByOrderId = createAsyncThunk<
   Chat[], // что возвращаем
-  { orderId: string; token: string } // что принимаем
->("chat/getByOrderId", async ({ orderId, token }) => {
-  const response = await fetchGetChatsByOrderId(orderId, token);
+  { orderId: string; role: string, token: string } // что принимаем
+>("chat/getByOrderId", async ({ orderId, role, token }) => {
+  const response = await fetchGetChatsByOrderId(orderId, role, token);
   return response;
 });
 
