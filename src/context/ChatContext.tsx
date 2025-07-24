@@ -18,7 +18,7 @@ import {
   fetchGetChatsByOrderId,
   fetchGetChatsByUserIdAndRole,
 } from "@/api/server/chatApi";
-import { setChats } from "@/store/features/chatSlice";
+import { setChat, setChats } from "@/store/features/chatSlice";
 import { useIsMounted } from "@/utils/chat/useIsMounted";
 import { addChatToOrder } from "@/store/features/orderSlice";
 
@@ -118,30 +118,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!socket) return;
 
-    // const handleNewMessage = (message: Message) => {
-    //   console.log("новое сообщение");
-    //   //loadChats();
-    //   setTimeout(() => {
-    //     if (!isMountedRef.current) return;
-    //     setChatsState((prev) => {
-    //       const updatedChats = prev.map((chat) =>
-    //         chat.id === message.chatId
-    //           ? {
-    //               ...chat,
-    //               messages: [...chat.messages, message],
-    //               lastMessage: message,
-    //               // status: "Active",
-    //               // tutorHasAccess: true,
-    //             }
-    //           : chat
-    //       );
-    //       dispatch(setChats(updatedChats));
-    //       return updatedChats;
-    //     });
-    //   }, 0);
-    //   playNotificationSound();
-    // };
-
     const handleNewMessage = async (message: Message) => {
       if (!isMountedRef.current) return;
 
@@ -165,22 +141,40 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       // Если сервисное — грузим чат заново
-      if (token)
-        try {
-          const updatedChat = await fetchGetChatById(message.chatId, token);
-          setChatsState((prev) => {
-            const updatedChats = prev.map((chat) =>
-              chat.id === message.chatId ? updatedChat : chat
-            );
-            dispatch(setChats(updatedChats));
-            return updatedChats;
-          });
-        } catch (error) {
-          console.error(
-            "Ошибка при обновлении чата после сервисного сообщения",
-            error
+      setChatsState((prev) => {
+        const updatedChats = prev.map((chat) => {
+          if (chat.id !== message.chatId) return chat;
+
+          const hasContract = chat.order.contracts.some(
+            (contract) => contract.tutorId === chat.tutorId
           );
-        }
+
+          const updatedContracts = hasContract
+            ? chat.order.contracts
+            : [...chat.order.contracts, { tutorId: chat.tutorId }];
+
+          return {
+            ...chat,
+            order: {
+              ...chat.order,
+              contracts: updatedContracts,
+            },
+            messages: [...chat.messages, message],
+            lastMessage: message,
+          };
+        });
+
+        // 💥 dispatch вызываем вне setState
+        setTimeout(() => {
+          dispatch(setChats(updatedChats));
+          const currentChat = updatedChats.find((c) => c.id === message.chatId);
+          if (currentChat) {
+            dispatch(setChat(currentChat));
+          }
+        }, 0); // или можно 100, если надо ждать, но лучше 0
+
+        return updatedChats;
+      });
 
       playNotificationSound();
     };
@@ -246,11 +240,9 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
               const updatedChats = prev.map((chat) =>
                 chat.id === data.id ? fullChat : chat
               );
-              console.log("апдейтчат: " + updatedChats);
               return updatedChats;
             } else {
               // Добавляем новый чат
-              console.log("fullChat: " + fullChat);
               return [fullChat, ...prev];
             }
           });

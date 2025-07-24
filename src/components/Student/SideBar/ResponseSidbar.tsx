@@ -299,7 +299,6 @@ export const ResponseSidbar = ({
                           (message) =>
                             !message.isRead && message.senderId !== student.id
                         );
-                      console.log("chat.lastMessage", chat.lastMessage);
                       return (
                         <div
                           onClick={() => {

@@ -575,7 +575,7 @@ export const ChatComponent = ({
 
         {chat?.tutorHasAccess && (
           <>
-            {chat?.isSelectedTutor ? (
+            {chat?.order?.contracts && chat.order.contracts.length > 0 ? (
               <div className={chatStyles.actionChatBlock}>
                 <button
                   className={chatStyles.buttonContract}

@@ -70,7 +70,6 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
   }, [messages]);
 
   const filteredMessages = useMemo(() => {
-    console.log("sortedMessages", sortedMessages);
     return sortedMessages.filter((message) => {
       if (message.type === "service") {
         return (

@@ -10,12 +10,16 @@ import {
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
 import { createContract } from "@/store/features/contractSlice";
+import { sendMessage } from "@/store/features/chatSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useChatSocket } from "@/hooks/useChatSocket";
 
 export const CreateContractByTutorModal = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const chat = useAppSelector((state) => state.chat.chat);
   const { loadChats } = useChat();
+  const { sendMessageSocket } = useChatSocket(chat?.id ? chat.id : "");
 
   const handleCreateContract = async () => {
     try {
@@ -31,6 +35,23 @@ export const CreateContractByTutorModal = () => {
           },
         })
       ).unwrap();
+
+      const actionResult = await dispatch(
+        sendMessage({
+          chatId: chat.id,
+          senderId: chat.studentId,
+          orderId: "какой-то айди",
+          themeOrder: "какая-то тема",
+          text: "Репетитор сообщил, что вы договорились с ним о занятии",
+          token,
+          type: "service",
+          recipientRole: "student",
+        })
+      );
+
+      const newMessage = unwrapResult(actionResult);
+      // После успешного сохранения отправляем реальное сообщение через сокет
+      sendMessageSocket(newMessage); // Передаем реальное сообщение с ID
 
       await loadChats(); // если тебе надо обновить список чатов с актуальными контрактами
     } catch (err) {

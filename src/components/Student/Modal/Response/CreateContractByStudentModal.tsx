@@ -33,7 +33,7 @@ export const CreateContractByStudentModal = () => {
     try {
       if (!token || !chat?.orderId || !chat?.tutorId) return;
 
-      await dispatch(
+      const contract = await dispatch(
         createContract({
           token,
           payload: {
@@ -44,9 +44,8 @@ export const CreateContractByStudentModal = () => {
         })
       ).unwrap();
 
-      dispatch(updateChatForContract());
-
-      await loadChats();
+      // Обновляем сат у ученика, чтобы поменять состояние кнопки на Оставить отзыв
+      dispatch(updateChatForContract({ tutorId: contract.tutorId }));
 
       if (orderById) {
         await dispatch(
@@ -77,8 +76,8 @@ export const CreateContractByStudentModal = () => {
         const newMessage = unwrapResult(actionResult);
         // После успешного сохранения отправляем реальное сообщение через сокет
         sendMessageSocket(newMessage); // Передаем реальное сообщение с ID
-
-        dispatch(getOrderById({ token, id: chat.orderId }));
+        await loadChats();
+        //dispatch(getOrderById({ token, id: chat.orderId }));
       }
 
       //setStep("success");

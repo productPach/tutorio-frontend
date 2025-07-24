@@ -177,9 +177,12 @@ const chatSlice = createSlice({
         state.chat.tutorHasAccess = false;
       }
     },
-    updateChatForContract: (state) => {
+    updateChatForContract: (state, action: PayloadAction<{ tutorId: string }>) => {
       if (state.chat) {
-        state.chat.isSelectedTutor = true;
+        if (!state.chat.order.contracts) {
+          state.chat.order.contracts = [];
+        }
+        state.chat.order.contracts.push(action.payload);
       }
     },
     markMessagesAsRead: (state, action) => {

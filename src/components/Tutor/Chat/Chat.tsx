@@ -445,7 +445,6 @@ export const ChatComponent = React.memo(
                         >
                           <span className={chatNoAccessStyles.textButton}>
                             Договорились с учеником
-                            {/* Подтвердить договоренность */}
                           </span>
                         </button>
                       </div>
