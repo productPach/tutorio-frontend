@@ -138,6 +138,11 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
             )}
           >
             {message.text}
+            {/* <div
+              dangerouslySetInnerHTML={{
+                __html: formatTextWithLinks(text),
+              }}
+            /> */}
             <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
               <span>
                 {new Date(message.createdAt).toLocaleTimeString([], {

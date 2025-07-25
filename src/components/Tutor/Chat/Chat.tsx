@@ -170,6 +170,8 @@ export const ChatComponent = React.memo(
 
         // Показываем сообщение сразу в UI
         const updatedMessages = [...chat.messages, tempMessage];
+        // + сортировка
+        //const updatedMessages = sortMessages([...chat.messages, tempMessage]);
 
         // Обновляем чаты в контексте
         const updatedChats = chats.map((existingChat) =>

@@ -165,11 +165,32 @@ export const ChatSidbar = ({
                     )}
                   >
                     {sortedChats.map((chat, index, array) => {
-                      const lastMessage = [...chat.messages].sort(
+                      const filteredMessages = chat.messages.filter(
+                        (message) => {
+                          if (message.type === "service") {
+                            return (
+                              message.recipientRole === null ||
+                              message.recipientRole === undefined ||
+                              message.recipientRole === "tutor"
+                            );
+                          }
+                          return true;
+                        }
+                      );
+
+                      const sortedMessages = [...filteredMessages].sort(
                         (a, b) =>
                           new Date(b.createdAt).getTime() -
                           new Date(a.createdAt).getTime()
-                      )[0];
+                      );
+
+                      // const lastMessage = [...chat.messages].sort(
+                      //   (a, b) =>
+                      //     new Date(b.createdAt).getTime() -
+                      //     new Date(a.createdAt).getTime()
+                      // )[0];
+
+                      const lastMessage = sortedMessages[0];
 
                       const isFirst = index === 0;
                       const isLast = index === array.length - 1;

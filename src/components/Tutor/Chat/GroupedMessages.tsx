@@ -78,11 +78,24 @@ const GroupedMessages: React.FC<Props> = ({
       );
   }, [messages]);
 
+  const filteredMessages = useMemo(() => {
+    return sortedMessages.filter((message) => {
+      if (message.type === "service") {
+        return (
+          message.recipientRole === undefined ||
+          message.recipientRole === null ||
+          message.recipientRole === "tutor"
+        );
+      }
+      return true; // user-сообщения всегда отображаются
+    });
+  }, [sortedMessages]);
+
   const visibleMessages = useMemo(() => {
-    return sortedMessages.slice(
-      Math.max(0, sortedMessages.length - visibleCount)
+    return filteredMessages.slice(
+      Math.max(0, filteredMessages.length - visibleCount)
     );
-  }, [sortedMessages, visibleCount]);
+  }, [filteredMessages, visibleCount]);
 
   // Скроллим вниз при первой загрузке после рендера сообщений
   useEffect(() => {
@@ -113,14 +126,14 @@ const GroupedMessages: React.FC<Props> = ({
         const isServiceMessage = message.type === "service";
         const isServiceForTutor =
           isServiceMessage && message.recipientRole === "tutor";
-        const isFromStudent = message.senderId === tutorId;
+        const isFromTutor = message.senderId === tutorId;
 
         // Выбираем класс в зависимости от условий
         const messageClassName = clsx(
           chatStyles.chat__message,
           isServiceForTutor
             ? chatStyles.chat__message__serviceTutor
-            : isFromStudent
+            : isFromTutor
               ? chatStyles.chat__message__right
               : chatStyles.chat__message__left
         );
@@ -182,7 +195,7 @@ const GroupedMessages: React.FC<Props> = ({
                     minute: "2-digit",
                   })}
                 </span>
-                {isFromStudent && (
+                {isFromTutor && (
                   <Image
                     className={styles.studentChatIcon}
                     src={
