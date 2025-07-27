@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Chat, Message } from "@/types/types"; // Подставь нужные типы
+import { Chat, Message, TypeMessage, TypeRecipientRoleMessage } from "@/types/types"; // Подставь нужные типы
 import { fetchCreateChat, fetchGetChatById, fetchGetChatsByOrderId, fetchGetChatsByUserIdAndRole, fetchSendMessage, fetchUpdateChat, fetchUpdateMessage } from "@/api/server/chatApi";
 
 type ChatStateType = {
@@ -80,9 +80,11 @@ export const sendMessage = createAsyncThunk<
     themeOrder: string;
     text: string;
     token: string;
+    type?: TypeMessage;
+    recipientRole?: TypeRecipientRoleMessage;
   }
->("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, token }) => {
-  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, token);
+>("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, token, type, recipientRole }) => {
+  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, token, type, recipientRole);
   return response;
 });
 
@@ -173,6 +175,14 @@ const chatSlice = createSlice({
         // Обновляем статус и доступ
         state.chat.status = "Rejected";
         state.chat.tutorHasAccess = false;
+      }
+    },
+    updateChatForContract: (state, action: PayloadAction<{ tutorId: string }>) => {
+      if (state.chat) {
+        if (!state.chat.order.contracts) {
+          state.chat.order.contracts = [];
+        }
+        state.chat.order.contracts.push(action.payload);
       }
     },
     markMessagesAsRead: (state, action) => {
@@ -315,5 +325,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { setChat, setMessages, addMessageToChat, updateChatForAccept, updateChatForReject, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
+export const { setChat, setMessages, addMessageToChat, updateChatForAccept, updateChatForReject, updateChatForContract, markMessagesAsRead, setChats, resetChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;

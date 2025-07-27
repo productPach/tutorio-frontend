@@ -14,12 +14,17 @@ import { useAppSelector, useAppDispatch } from "@/store/store";
 
 import { Chat, Message } from "@/types/types";
 import {
+  fetchGetChatById,
   fetchGetChatsByOrderId,
   fetchGetChatsByUserIdAndRole,
 } from "@/api/server/chatApi";
-import { setChats } from "@/store/features/chatSlice";
+import {
+  setChat,
+  setChats,
+  updateChatForContract,
+} from "@/store/features/chatSlice";
 import { useIsMounted } from "@/utils/chat/useIsMounted";
-import { addChatToOrder } from "@/store/features/orderSlice";
+import { addChatToOrder, updateOrder } from "@/store/features/orderSlice";
 
 type ChatContextType = {
   chats: Chat[];
@@ -117,26 +122,89 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = (message: Message) => {
-      //loadChats();
-      setTimeout(() => {
-        if (!isMountedRef.current) return;
-        setChatsState((prev) => {
-          const updatedChats = prev.map((chat) =>
-            chat.id === message.chatId
-              ? {
-                  ...chat,
-                  messages: [...chat.messages, message],
-                  lastMessage: message,
-                  // status: "Active",
-                  // tutorHasAccess: true,
-                }
-              : chat
+    const handleNewMessage = async (message: Message) => {
+      if (!isMountedRef.current) return;
+
+      // Если обычное сообщение — просто добавляем
+      // if (message.type !== "service") {
+      //   setChatsState((prev) => {
+      //     const updatedChats = prev.map((chat) =>
+      //       chat.id === message.chatId
+      //         ? {
+      //             ...chat,
+      //             messages: [...chat.messages, message],
+      //             lastMessage: message,
+      //           }
+      //         : chat
+      //     );
+      //     dispatch(setChats(updatedChats));
+      //     return updatedChats;
+      //   });
+
+      // 🔹 Обычное сообщение — просто добавляем в чат
+      if (message.type !== "service") {
+        const updatedChats = chats.map((chat) =>
+          chat.id === message.chatId
+            ? {
+                ...chat,
+                messages: [...chat.messages, message],
+                lastMessage: message,
+              }
+            : chat
+        );
+
+        setChatsState(updatedChats); // обновляем локальный стейт
+        dispatch(setChats(updatedChats)); // обновляем Redux
+
+        playNotificationSound();
+        return;
+      }
+
+      // Если сервисное — грузим чат заново
+      setChatsState((prev) => {
+        const updatedChats = prev.map((chat) => {
+          if (chat.id !== message.chatId) return chat;
+
+          const hasContract = chat.order.contracts.some(
+            (contract) => contract.tutorId === chat.tutorId
           );
-          dispatch(setChats(updatedChats));
-          return updatedChats;
+
+          const updatedContracts = hasContract
+            ? chat.order.contracts
+            : [...chat.order.contracts, { tutorId: chat.tutorId }];
+
+          return {
+            ...chat,
+            order: {
+              ...chat.order,
+              contracts: updatedContracts,
+            },
+            messages: [...chat.messages, message],
+            lastMessage: message,
+          };
         });
-      }, 0);
+
+        // 💥 dispatch вызываем вне setState
+        setTimeout(() => {
+          dispatch(setChats(updatedChats));
+          const currentChat = updatedChats.find((c) => c.id === message.chatId);
+          if (currentChat) {
+            dispatch(updateChatForContract(currentChat));
+            if (currentChat.orderId && token) {
+              dispatch(
+                updateOrder({
+                  id: currentChat.orderId,
+                  token,
+                  status: "Hidden",
+                })
+              ).unwrap();
+            }
+          }
+        }, 0); // или можно 100, если надо ждать, но лучше 0
+
+        return updatedChats;
+      });
+
       playNotificationSound();
     };
 
@@ -163,14 +231,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       }, 0);
     };
 
-    const handleNewChat = (data: Chat) => {
+    const handleNewChat = async (data: Chat) => {
+      //console.log("новый чат");
+
       if (data.initiatorRole === "tutor") {
         if (orderId?.id !== data.orderId) return;
       }
-      //console.log("Новый чат");
       if (!isMountedRef.current) return;
 
-      // Добавить в orderId.chats, если его нет
+      // Проверяем, есть ли чат в заказе, если нет — добавляем
       const chatExistsInOrder = orderId?.chats?.some(
         (chat) => chat.id === data.id
       );
@@ -178,31 +247,38 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         dispatch(addChatToOrder(data));
       }
 
-      setChatsState((prev) => {
-        playNotificationSound();
-        const chatExists = prev.some((chat) => chat.id === data.id); // Проверка, существует ли уже чат
-        if (chatExists) {
-          // Обновляем существующий чат, если он есть
-          const updatedChats = prev.map((chat) =>
-            chat.id === data.id
-              ? {
-                  ...chat,
-                  messages: chat.messages.map((msg) =>
-                    msg.senderId !== data.tutorId
-                      ? { ...msg, isRead: true }
-                      : msg
-                  ),
-                }
-              : chat
+      try {
+        if (token) {
+          // Подгружаем полный чат с сервера по id
+          const fullChats: Chat[] = await fetchGetChatsByOrderId(
+            data.orderId,
+            token
           );
-          return updatedChats;
-        } else {
-          // Если чат не найден, добавляем его в начало списка
-          const updatedChats = [data, ...prev];
-          //dispatch(setChats(updatedChats));
-          return updatedChats;
+          const fullChat = fullChats.find((c) => c.id === data.id);
+
+          if (!fullChat) {
+            console.warn("Не удалось получить полный чат по id", data.id);
+            return;
+          }
+
+          setChatsState((prev) => {
+            playNotificationSound();
+            const chatExists = prev.some((chat) => chat.id === data.id);
+            if (chatExists) {
+              // Обновляем чат полностью новым полным объектом
+              const updatedChats = prev.map((chat) =>
+                chat.id === data.id ? fullChat : chat
+              );
+              return updatedChats;
+            } else {
+              // Добавляем новый чат
+              return [fullChat, ...prev];
+            }
+          });
         }
-      });
+      } catch (error) {
+        console.error("Ошибка при загрузке полного чата:", error);
+      }
     };
 
     socket.on("newMessage", handleNewMessage);

@@ -390,7 +390,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
             </div>
           </div>
 
-          <div className={styles.containerEntityShowEnd}>
+          {/* <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Skype</div>
               <span className={componentStyle.containerSpan}>
@@ -416,7 +416,7 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
                 height={21}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

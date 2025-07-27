@@ -25,12 +25,20 @@ import { useChat } from "@/context/ChatContext";
 import { getThemesByTopic } from "@/store/features/wikiSlice";
 import { ResponseSidbarMobile } from "../ResponseMobile/ResponseMobile";
 import OrderMenuMobile from "../OrderMenuMobile/OrderMenuMobile";
+import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
+import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
   const { order } = useParams();
   const isModalResponseStudentToTutor = useAppSelector(
     (state) => state.modal.isModalResponseStudentToTutor
+  );
+  const isModalCreateContractByStudent = useAppSelector(
+    (state) => state.modal.isModalCreateContractByStudent
+  );
+  const isModalHiddenOrder = useAppSelector(
+    (state) => state.modal.isModalHiddenOrder
   );
 
   const dispatch = useAppDispatch();
@@ -61,9 +69,12 @@ const OrderPage: React.FC = () => {
       dispatch(clearOrderById());
     };
   }, []);
-
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const timeout = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50); // Можно увеличить до 100-200 если нужно
+
+    return () => clearTimeout(timeout);
   }, [component]);
 
   const tutorsForOrder = tutorsForOrderNotFilter
@@ -191,7 +202,12 @@ const OrderPage: React.FC = () => {
 
     if (orderById && token && !isDataLoaded) {
       fetchStudent();
-      dispatch(getChatsByOrderId({ orderId: orderById?.id, token: token }));
+      dispatch(
+        getChatsByOrderId({
+          orderId: orderById?.id,
+          token: token,
+        })
+      );
       setIsChecked(
         orderById.status === "Active" ||
           orderById.status === "Pending" ||
@@ -284,6 +300,18 @@ const OrderPage: React.FC = () => {
         contentModal={<ResponseStudentToTutorModal />}
         isModal={isModalResponseStudentToTutor}
         modalId={"responseStudentToTutorModal"}
+      ></Modal>
+      <Modal
+        titleModal={"Выбрать репетитора"}
+        contentModal={<CreateContractByStudentModal />}
+        isModal={isModalCreateContractByStudent}
+        modalId={"createContractByStudent"}
+      ></Modal>
+      <Modal
+        titleModal={"🎉 Репетитор выбран!"}
+        contentModal={<HiddenOrderModal />}
+        isModal={isModalHiddenOrder}
+        modalId={"hiddenOrder"}
       ></Modal>
     </>
   );

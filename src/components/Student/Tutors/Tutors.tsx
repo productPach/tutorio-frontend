@@ -25,6 +25,7 @@ import {
 import { setChat } from "@/store/features/chatSlice";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";
+import { pluralize } from "numeralize-ru";
 
 type OrderProps = {
   chats: Chat[];
@@ -272,8 +273,21 @@ export const TutorsComponent = ({
                       styles.lnHgt18
                     )}
                   >
-                    <div>&nbsp;4.7&nbsp;рейтинг</div>
-                    <div>&nbsp;32&nbsp;отзыва</div>
+                    <div>
+                      &nbsp;{tutor.publicRating?.toFixed(1) || "—"}
+                      &nbsp;рейтинг
+                    </div>
+                    {tutor.reviewsCount > 0 && (
+                      <div>
+                        {tutor.reviewsCount}&nbsp;
+                        {pluralize(
+                          tutor.reviewsCount,
+                          "отзыв",
+                          "отзыва",
+                          "отзывов"
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

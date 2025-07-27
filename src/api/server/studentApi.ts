@@ -45,6 +45,24 @@ export const fetchCurrentStudent = async (token: string) => {
   return data;
 };
 
+// Получение телефона ученика по ID
+export const fetchStudentPhoneById = async (token: string, id: string) => {
+  const response = await fetch(`${baseUrl}students/${id}/phone`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Не удалось получить номер телефона ученика");
+  }
+
+  const data = await response.json();
+  return data.phone as string;
+};
+
 // Получение ученика по ID
 export const fetchStudentById = async (token: string, id: string) => {
   const response = await fetch(`${baseUrl}students/${id}`, {

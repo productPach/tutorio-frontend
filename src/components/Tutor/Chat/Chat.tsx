@@ -32,6 +32,7 @@ import { sortMessages } from "@/utils/chat/sortMessages";
 import {
   setIsModalAcceptResponse,
   setIsModalBalanceBoost,
+  setIsModalCreateContractByTutor,
   setIsModalRejectResponse,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
@@ -159,7 +160,9 @@ export const ChatComponent = React.memo(
           text: messageResponse,
           createdAt: new Date().toISOString(),
           isRead: false,
-          pending: true, // Это помечаем как дополнительное поле
+          pending: true,
+          type: "user",
+          recipientRole: "null", // Это помечаем как дополнительное поле
         };
 
         // Закрываем блок с эмодзи
@@ -167,6 +170,8 @@ export const ChatComponent = React.memo(
 
         // Показываем сообщение сразу в UI
         const updatedMessages = [...chat.messages, tempMessage];
+        // + сортировка
+        //const updatedMessages = sortMessages([...chat.messages, tempMessage]);
 
         // Обновляем чаты в контексте
         const updatedChats = chats.map((existingChat) =>
@@ -290,6 +295,10 @@ export const ChatComponent = React.memo(
         }
       }
     };
+
+    // const isSelectedTutor =
+    //   chat?.order.contracts && chat.order.contracts.length > 0;
+    // console.log(isSelectedTutor);
 
     return (
       <>
@@ -424,27 +433,49 @@ export const ChatComponent = React.memo(
                 </div>
               )}
               {chat.tutorHasAccess && (
-                <div className={clsx(chatStyles.inputMessageBlock)}>
-                  {/* Родительский блок с границами */}
-                  <div ref={wrapperRef} className={chatStyles.wrapperRef}>
-                    <textarea
-                      ref={textareaRef}
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Начните вводить сообщение"
-                      rows={1}
-                      className={chatStyles.textarea}
-                      disabled={!chat.tutorHasAccess}
+                <>
+                  {chat?.order.contracts &&
+                    chat.order.contracts.length === 0 && (
+                      <div className={chatStyles.actionChatBlock}>
+                        <button
+                          className={chatStyles.buttonContract}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(setIsModalCreateContractByTutor(true));
+                          }}
+                          type="button"
+                        >
+                          <span className={chatNoAccessStyles.textButton}>
+                            Договорились с учеником
+                          </span>
+                        </button>
+                      </div>
+                    )}
+
+                  <div className={clsx(chatStyles.inputMessageBlock)}>
+                    {/* Родительский блок с границами */}
+                    <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+                      <textarea
+                        ref={textareaRef}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Начните вводить сообщение"
+                        rows={1}
+                        className={chatStyles.textarea}
+                        disabled={!chat.tutorHasAccess}
+                      />
+                    </div>
+                    <EmojiPicker
+                      onSelect={(emoji) =>
+                        setInputValue((prev) => prev + emoji)
+                      }
+                      textareaRef={textareaRef}
+                      visibleEmoji={visibleEmoji}
+                      setVisibleEmoji={setVisibleEmoji}
                     />
                   </div>
-                  <EmojiPicker
-                    onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
-                    textareaRef={textareaRef}
-                    visibleEmoji={visibleEmoji}
-                    setVisibleEmoji={setVisibleEmoji}
-                  />
-                </div>
+                </>
               )}
             </div>
           </>

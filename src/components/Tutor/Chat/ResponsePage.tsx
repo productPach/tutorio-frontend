@@ -12,6 +12,7 @@ import { Modal } from "@/components/Modal/Modal";
 import { RejectResponseModal } from "@/components/Tutor/Modal/Response/RejectResponseModal";
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { AcceptResponseModal } from "@/components/Tutor/Modal/Response/AcceptResponseModal";
+import { CreateContractByTutorModal } from "../Modal/Response/CreateContractByTutorModal";
 
 const ResponsesPage: React.FC = () => {
   const page = "Responses";
@@ -27,6 +28,9 @@ const ResponsesPage: React.FC = () => {
   );
   const isModalRejectResponse = useAppSelector(
     (state) => state.modal.isModalRejectResponse
+  );
+  const isModalCreateContractByTutor = useAppSelector(
+    (state) => state.modal.isModalCreateContractByTutor
   );
   // Стейт для эмодзи в чате
   const [visibleEmoji, setVisibleEmoji] = useState(false);
@@ -76,6 +80,12 @@ const ResponsesPage: React.FC = () => {
         contentModal={<RejectResponseModal />}
         isModal={isModalRejectResponse}
         modalId={"rejectResponse"}
+      ></Modal>
+      <Modal
+        titleModal={"Отчёт по заказу\u00A0📋"}
+        contentModal={<CreateContractByTutorModal />}
+        isModal={isModalCreateContractByTutor}
+        modalId={"createContractByTutor"}
       ></Modal>
     </>
   );

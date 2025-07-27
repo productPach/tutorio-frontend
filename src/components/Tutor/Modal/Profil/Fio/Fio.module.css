@@ -90,6 +90,33 @@
 .buttonGr {
   background-color: #c1c1c1;
 }
+
+.customList {
+  list-style: none;
+  padding-left: 0x;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.customList li {
+  position: relative;
+  padding-left: 24px; /* отступ под эмодзи */
+}
+
+.customList li::before {
+  content: "📌";
+  position: absolute;
+  left: 0;
+  top: 0.2em; /* выравнивание по высоте текста */
+}
+.buttonYlSpinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  margin-left: 10px;
+}
 /* ******************************************************
 ******************************************************
 ******************************************************

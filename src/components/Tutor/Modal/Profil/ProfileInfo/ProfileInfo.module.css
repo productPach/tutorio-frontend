@@ -103,7 +103,8 @@
   width: 18px;
   height: 18px;
   position: absolute;
-  right: 198px;
+  /* right: 198px; */
+  margin-left: 10px;
 }
 .buttonYlSpinner2 {
   display: inline-block;

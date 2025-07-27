@@ -11,6 +11,10 @@ import { City, Order, Student } from "@/types/types";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import Image from "next/image";
+import Link from "next/link";
+import { getBackendUrl } from "@/api/server/configApi";
+import { pluralize } from "numeralize-ru";
 
 type OrderProps = {
   loading: boolean;
@@ -27,11 +31,11 @@ export const OrderComponent = ({
   error,
   locations,
 }: OrderProps) => {
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 0,
+  //   });
+  // }, []);
 
   // Стейт для предметов
   const dispatch = useAppDispatch();
@@ -70,6 +74,123 @@ export const OrderComponent = ({
 
   return (
     <>
+      {orderById?.selectedTutors && orderById?.selectedTutors.length > 0 && (
+        <div
+          className={clsx(
+            generalStyles.content_block,
+            generalStyles.order_block,
+            generalStyles.crsr_pntr,
+            styles.order_gap
+          )}
+        >
+          <div className={styles.containerOrderInfo}>
+            <span className={styles.titleOrderInfo}>Выбранные репетиторы</span>
+            <div className={styles.listContractTutor}>
+              {orderById.selectedTutors.map((tutor) => (
+                <div key={tutor.id}>
+                  <div className={styles.tutorImgFioContainerTP}>
+                    <div className={clsx(styles.flex1, styles.pstnRltv)}>
+                      <Link
+                        href={`./${orderById.id}/tutor/${tutor.id}`}
+                        target="_blank"
+                      >
+                        <Image
+                          className={clsx(
+                            styles.tutorImgMini,
+                            styles.tutorImgMMini
+                          )}
+                          src={
+                            `${getBackendUrl()}${tutor.avatarUrl}` ||
+                            "/img/avatar-default.jpg"
+                          }
+                          width={66}
+                          height={66}
+                          alt={tutor.name}
+                        />
+                      </Link>
+                    </div>
+
+                    <div
+                      className={clsx(
+                        styles.flex4,
+                        styles.tutorFioBagesContainer
+                      )}
+                    >
+                      <div
+                        className={clsx(
+                          styles.containerFlxRw,
+                          styles.jtfCntSpBtwn,
+                          styles.gap6
+                        )}
+                      >
+                        <Link
+                          href={`./${orderById.id}/tutor/${tutor.id}`}
+                          target="_blank"
+                        >
+                          <h3>{tutor.name}</h3>
+                        </Link>
+                      </div>
+
+                      <div
+                        className={clsx(
+                          styles.containerIsOnline,
+                          styles.mt6px,
+                          styles.tutorPlaces,
+                          styles.lnHgt18
+                        )}
+                      >
+                        <div>
+                          &nbsp;{tutor.publicRating?.toFixed(1) || "—"}
+                          &nbsp;рейтинг
+                        </div>
+                        {tutor.reviewsCount > 0 && (
+                          <div>
+                            {tutor.reviewsCount}&nbsp;
+                            {pluralize(
+                              tutor.reviewsCount,
+                              "отзыв",
+                              "отзыва",
+                              "отзывов"
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      className={styles.buttonContract}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // dispatch(setIsModalCreateContractByTutor(true));
+                      }}
+                      type="button"
+                    >
+                      <span className={styles.textButton}>
+                        Оставить отзыв
+                        {/* Подтвердить договоренность */}
+                      </span>
+                    </button>
+                  </div>
+                  <button
+                    className={styles.buttonContractM}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // dispatch(setIsModalCreateContractByTutor(true));
+                    }}
+                    type="button"
+                  >
+                    <span className={styles.textButton}>
+                      Оставить отзыв
+                      {/* Подтвердить договоренность */}
+                    </span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         className={clsx(
           generalStyles.content_block,

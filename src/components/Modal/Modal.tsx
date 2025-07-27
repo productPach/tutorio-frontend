@@ -12,6 +12,8 @@ import { useAppDispatch } from "@/store/store";
 import {
   setIsModalAcceptResponse,
   setIsModalBalanceBoost,
+  setIsModalCreateContractByStudent,
+  setIsModalCreateContractByTutor,
   setIsModalDelete,
   setIsModalEditEducation,
   setIsModalEditSubjectPrices,
@@ -21,6 +23,7 @@ import {
   setIsModalExit,
   setIsModalExperience,
   setIsModalFio,
+  setIsModalHiddenOrder,
   setIsModalPhone,
   setIsModalProfileInfo,
   setIsModalRejectResponse,
@@ -154,6 +157,21 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "acceptResponse") {
       dispatch(setIsModalAcceptResponse(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "createContractByTutor") {
+      dispatch(setIsModalCreateContractByTutor(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "createContractByStudent") {
+      dispatch(setIsModalCreateContractByStudent(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "hiddenOrder") {
+      dispatch(setIsModalHiddenOrder(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }

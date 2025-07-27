@@ -23,6 +23,15 @@ import { EmojiPicker } from "./EmojiPicker";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { SendHorizontal } from "lucide-react";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import {
+  setIsModalCreateContractByStudent,
+  setIsSheetCreateContractByStudent,
+  setIsSheetHiddenOrder,
+} from "@/store/features/modalSlice";
+import { useChat } from "@/context/ChatContext";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
+import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -59,6 +68,12 @@ export const ChatComponent = ({
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
   const chat = useAppSelector((state) => state.chat.chat);
+  const isSheetCreateContractByStudent = useAppSelector(
+    (state) => state.modal.isSheetCreateContractByStudent
+  );
+  const isSheetHiddenOrder = useAppSelector(
+    (state) => state.modal.isSheetHiddenOrder
+  );
 
   // Стейт для текста сообщения
   const [inputValue, setInputValue] = useState("");
@@ -244,9 +259,9 @@ export const ChatComponent = ({
     };
   }, []);
 
-  useEffect(() => {
-    console.log("все загрузилось");
-  }, [chat, chat?.tutor, student, orderById]);
+  // useEffect(() => {
+  //   console.log("все загрузилось");
+  // }, [chat, chat?.tutor, student, orderById]);
 
   if (loading || !chat || !chat.tutor || !student || !orderById) {
     return (
@@ -312,6 +327,8 @@ export const ChatComponent = ({
         createdAt: new Date().toISOString(),
         isRead: false,
         pending: true, // Это временное поле
+        type: "user",
+        recipientRole: "null",
       };
 
       // Закрываем блок с эмодзи
@@ -570,49 +587,101 @@ export const ChatComponent = ({
           ))}
 
         {chat?.tutorHasAccess && (
-          <div className={clsx(chatStyles.inputMessageBlock)}>
-            {/* Родительский блок с границами */}
-            <div ref={wrapperRef} className={chatStyles.wrapperRef}>
-              <textarea
-                ref={textareaRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Начните вводить сообщение"
-                rows={1}
-                className={chatStyles.textarea}
-                onBlur={() => {
-                  // Задержка позволяет дождаться закрытия клавиатуры
-                  setTimeout(() => {
-                    document.activeElement?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "end",
-                    });
-                  }, 100);
-                }}
-              />
-            </div>
+          <>
+            {chat?.order?.contracts?.some((c) => c.tutorId === chat.tutorId) ? (
+              <div className={chatStyles.actionChatBlock}>
+                <button
+                  className={chatStyles.buttonContract}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(setIsModalCreateContractByStudent(true));
+                  }}
+                  type="button"
+                >
+                  <span className={chatNoAccessStyles.textButton}>
+                    Оставить отзыв
+                    {/* Подтвердить договоренность */}
+                  </span>
+                </button>
+              </div>
+            ) : (
+              <div className={chatStyles.actionChatBlock}>
+                <button
+                  className={chatStyles.buttonContract}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (window.innerWidth < 769) {
+                      dispatch(setIsSheetCreateContractByStudent(true)); // Открываем шторку
+                    } else {
+                      // Логика для больших экранов
+                      dispatch(setIsModalCreateContractByStudent(true));
+                    }
+                  }}
+                  type="button"
+                >
+                  <span className={chatNoAccessStyles.textButton}>
+                    Выбрать репетитора
+                    {/* Подтвердить договоренность */}
+                  </span>
+                </button>
+              </div>
+            )}
+            <div className={clsx(chatStyles.inputMessageBlock)}>
+              {/* Родительский блок с границами */}
+              <div ref={wrapperRef} className={chatStyles.wrapperRef}>
+                <textarea
+                  ref={textareaRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Начните вводить сообщение"
+                  rows={1}
+                  className={chatStyles.textarea}
+                  onBlur={() => {
+                    // Задержка позволяет дождаться закрытия клавиатуры
+                    setTimeout(() => {
+                      document.activeElement?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "end",
+                      });
+                    }, 100);
+                  }}
+                />
+              </div>
 
-            <div
-              onMouseDown={preHandleSendMessage}
-              className={`${chatStyles.wrapperIM} ${isActiveIcon ? chatStyles.activeWrapperIM : ""}`}
-            >
-              <SendHorizontal
-                size={24}
-                className={`${chatStyles.iconIM} ${isActiveIcon ? chatStyles.activeIconIM : ""}`}
-                color={isActiveIcon ? "white" : "#777777"}
-                strokeWidth={isActiveIcon ? 1.5 : 1.25}
+              <div
+                onMouseDown={preHandleSendMessage}
+                className={`${chatStyles.wrapperIM} ${isActiveIcon ? chatStyles.activeWrapperIM : ""}`}
+              >
+                <SendHorizontal
+                  size={24}
+                  className={`${chatStyles.iconIM} ${isActiveIcon ? chatStyles.activeIconIM : ""}`}
+                  color={isActiveIcon ? "white" : "#777777"}
+                  strokeWidth={isActiveIcon ? 1.5 : 1.25}
+                />
+              </div>
+              <EmojiPicker
+                onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
+                textareaRef={textareaRef}
+                visibleEmoji={visibleEmoji}
+                setVisibleEmoji={setVisibleEmoji}
               />
             </div>
-            <EmojiPicker
-              onSelect={(emoji) => setInputValue((prev) => prev + emoji)}
-              textareaRef={textareaRef}
-              visibleEmoji={visibleEmoji}
-              setVisibleEmoji={setVisibleEmoji}
-            />
-          </div>
+          </>
         )}
       </div>
+      <BottomSheet
+        isOpen={isSheetCreateContractByStudent}
+        onClose={() => dispatch(setIsSheetCreateContractByStudent(false))}
+      >
+        <CreateContractByStudentModal />
+      </BottomSheet>
+      <BottomSheet
+        isOpen={isSheetHiddenOrder}
+        onClose={() => dispatch(setIsSheetHiddenOrder(false))}
+      >
+        <HiddenOrderModal />
+      </BottomSheet>
     </>
   );
 };

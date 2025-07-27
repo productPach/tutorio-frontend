@@ -9,14 +9,8 @@ import clsx from "clsx";
 import Image from "next/image";
 import chatStyles from "./Chat.module.css"; // путь к стилям поправь под себя
 import styles from "../Order/Order.module.css";
-
-type Message = {
-  id: string;
-  text: string;
-  createdAt: string;
-  senderId: string;
-  isRead?: boolean;
-};
+import { Message } from "@/types/types";
+import DOMPurify from "dompurify";
 
 type Props = {
   chatId: string;
@@ -76,11 +70,24 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
       );
   }, [messages]);
 
+  const filteredMessages = useMemo(() => {
+    return sortedMessages.filter((message) => {
+      if (message.type === "service") {
+        return (
+          message.recipientRole === undefined ||
+          message.recipientRole === null ||
+          message.recipientRole === "student"
+        );
+      }
+      return true; // user-сообщения всегда отображаются
+    });
+  }, [sortedMessages]);
+
   const visibleMessages = useMemo(() => {
-    return sortedMessages.slice(
-      Math.max(0, sortedMessages.length - visibleCount)
+    return filteredMessages.slice(
+      Math.max(0, filteredMessages.length - visibleCount)
     );
-  }, [sortedMessages, visibleCount]);
+  }, [filteredMessages, visibleCount]);
 
   // Скроллим вниз при первой загрузке после рендера сообщений
   useEffect(() => {
@@ -106,8 +113,42 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
             ? new Date(allMessages[index - 1].createdAt).toDateString()
             : null;
 
+        // Функция для замены ссылок на <a> теги
+        const formatTextWithLinks = (text: string) => {
+          const urlRegex = /(https?:\/\/[^\s]+)/g;
+          const htmlText = text
+            .split(urlRegex)
+            .map((part, index) => {
+              if (part.match(urlRegex)) {
+                return `<a key=${index} style="color: blue; text-decoration: underline;" href="${part}" target="_blank" rel="noopener noreferrer">${part}</a>`;
+              }
+              return part;
+            })
+            .join("");
+
+          // Очищаем потенциально опасный HTML
+          return DOMPurify.sanitize(htmlText, {
+            ALLOWED_TAGS: ["a"],
+            ALLOWED_ATTR: ["href", "target", "rel", "style"],
+          });
+        };
+
         const shouldShowDate = currentDate !== prevDate;
+
+        const isServiceMessage = message.type === "service";
+        const isServiceForStudent =
+          isServiceMessage && message.recipientRole === "student";
         const isFromStudent = message.senderId === studentId;
+
+        // Выбираем класс в зависимости от условий
+        const messageClassName = clsx(
+          chatStyles.chat__message,
+          isServiceForStudent
+            ? chatStyles.chat__message__service
+            : isFromStudent
+              ? chatStyles.chat__message__right
+              : chatStyles.chat__message__left
+        );
 
         if (shouldShowDate) {
           acc.push(
@@ -124,35 +165,38 @@ const GroupedMessages: React.FC<Props> = ({ chatId, messages, studentId }) => {
           <div
             key={message.id}
             ref={index === allMessages.length - 1 ? lastMessageRef : null}
-            className={clsx(
-              chatStyles.chat__message,
-              isFromStudent
-                ? chatStyles.chat__message__right
-                : chatStyles.chat__message__left
-            )}
+            className={messageClassName}
           >
-            {message.text}
-            <div className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}>
-              <span>
-                {new Date(message.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-              {isFromStudent && (
-                <Image
-                  className={styles.studentChatIcon}
-                  src={
-                    message.isRead
-                      ? "/../img/icon/isRead.svg"
-                      : "/../img/icon/noRead.svg"
-                  }
-                  width={18}
-                  height={18}
-                  alt=""
-                />
-              )}
-            </div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: formatTextWithLinks(message.text),
+              }}
+            />
+            {!isServiceForStudent && (
+              <div
+                className={clsx(chatStyles.flxRow, chatStyles.jstContFlxEnd)}
+              >
+                <span>
+                  {new Date(message.createdAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                {isFromStudent && (
+                  <Image
+                    className={styles.studentChatIcon}
+                    src={
+                      message.isRead
+                        ? "/../img/icon/isRead.svg"
+                        : "/../img/icon/noRead.svg"
+                    }
+                    width={18}
+                    height={18}
+                    alt=""
+                  />
+                )}
+              </div>
+            )}
           </div>
         );
 

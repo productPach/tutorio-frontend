@@ -10,6 +10,7 @@
   transition: all 0.3s;
   background-color: #fad949;
   color: black;
+  white-space: nowrap;
 }
 
 .buttonYlw:disabled {
@@ -29,6 +30,7 @@
   transition: all 0.3s;
   background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0, rgba(69, 72, 77, 1));
   color: #dddddd;
+  white-space: nowrap;
 }
 
 .buttonGr {
@@ -58,7 +60,9 @@
   background-color: #fb8484;
   color: rgb(66, 0, 0);
 }
-
+.pdng36 {
+  padding: 18px 36px;
+}
 /* ******************************************************
 ******************************************************
 ******************************************************

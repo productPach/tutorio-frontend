@@ -71,7 +71,11 @@ const LeftBar: React.FC<{
         ))}
       <div className={styles.left_menu}>
         <ul>
-          <Link href={"/tutor/orders"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/tutor/orders"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/orders.svg"
@@ -88,7 +92,11 @@ const LeftBar: React.FC<{
               </span>
             </li>
           </Link>
-          <Link href={"/tutor/responses"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/tutor/responses"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/response.svg"
@@ -112,7 +120,11 @@ const LeftBar: React.FC<{
               )}
             </li>
           </Link>
-          <Link href={"/tutor/profile"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/tutor/profile"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/profile.svg"
@@ -129,7 +141,11 @@ const LeftBar: React.FC<{
               </span>
             </li>
           </Link>
-          <Link href={"/tutor/wallet"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/tutor/wallet"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/balance.svg"
@@ -146,7 +162,11 @@ const LeftBar: React.FC<{
               </span>
             </li>
           </Link>
-          <Link href={"/tutor/settings"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/tutor/settings"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/settings.svg"
@@ -163,7 +183,11 @@ const LeftBar: React.FC<{
               </span>
             </li>
           </Link>
-          <Link href={"/tutor/wiki"} prefetch={true}>
+          <Link
+            className={styles.linkLeftBar}
+            href={"/tutor/wiki"}
+            prefetch={true}
+          >
             <li>
               <Image
                 src="/../img/icon/tutor/base.svg"

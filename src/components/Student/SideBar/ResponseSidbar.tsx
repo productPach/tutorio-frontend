@@ -27,6 +27,7 @@ import { formatTimeAgo } from "@/utils/date/date";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { SpinnerChats } from "@/components/Spinner/SpinnerChats";
+import { getVisibleMessagesForRole } from "@/utils/chat/getVisibleMessagesForRole";
 
 type ResponseSidbarProps = {
   chats: Chat[];
@@ -102,25 +103,37 @@ export const ResponseSidbar = ({
     }
   };
 
+  useEffect(() => {
+    if (orderById) {
+      setIsChecked(
+        orderById.status === "Active" ||
+          orderById.status === "Pending" ||
+          orderById.status === "Sending"
+      );
+    }
+  }, [orderById]);
   // Мемоизация сортировки чатов
   const sortedChats = useMemo(() => {
-    return [...chats].sort((a, b) => {
-      const lastA = a.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
-      const lastB = b.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
+    const chatsWithLastMessage = chats.map((chat) => {
+      const visibleMessages = getVisibleMessagesForRole(
+        chat.messages,
+        "student"
+      );
 
+      const sortedMessages = [...visibleMessages].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      const lastVisibleMessage = sortedMessages[0];
+
+      return { ...chat, lastVisibleMessage, visibleMessages };
+    });
+
+    return chatsWithLastMessage.sort((a, b) => {
       return (
-        new Date(lastB?.createdAt || 0).getTime() -
-        new Date(lastA?.createdAt || 0).getTime()
+        new Date(b.lastVisibleMessage?.createdAt || 0).getTime() -
+        new Date(a.lastVisibleMessage?.createdAt || 0).getTime()
       );
     });
   }, [chats]);
@@ -250,25 +263,18 @@ export const ResponseSidbar = ({
                 <div className={styles.sidebar_filterForChat}>
                   <div className={styles.studentChatWrap}>
                     {sortedChats.map((chat, index, array) => {
-                      if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
-                      // Мемоизируем сортировку сообщений для каждого чата
-                      const sortedMessages = [...chat.messages].sort(
-                        (a, b) =>
-                          new Date(b.createdAt).getTime() -
-                          new Date(a.createdAt).getTime()
-                      );
+                      if (!chat.tutor) return null;
 
-                      const lastMessage = sortedMessages[0];
+                      const lastMessage = chat.lastVisibleMessage;
                       const isFirst = index === 0;
                       const isLast = index === array.length - 1;
 
                       const noReadMessagesFromOther =
                         student &&
-                        chat.messages.filter(
+                        chat.visibleMessages.filter(
                           (message) =>
                             !message.isRead && message.senderId !== student.id
                         );
-
                       return (
                         <div
                           onClick={() => {
@@ -286,7 +292,7 @@ export const ResponseSidbar = ({
                               [styles.firstChat]: isFirst, // Дополнительный стиль для первого элемента
                               [styles.lastChat]: isLast, // Дополнительный стиль для последнего элемента
                               [styles.isNotReadTutorsMessageContainerBg]:
-                                lastMessage?.senderId !== student?.id &&
+                                chat.lastMessage?.senderId !== student?.id &&
                                 chat.messages.some(
                                   (msg) =>
                                     !msg.isRead && msg.senderId !== student?.id
@@ -314,7 +320,8 @@ export const ResponseSidbar = ({
                               <div className={styles.studentChatMessageText}>
                                 {lastMessage?.text}
                               </div>
-                              {lastMessage.senderId === student?.id ? (
+                              {lastMessage &&
+                              lastMessage.senderId === student?.id ? (
                                 lastMessage.isRead ? (
                                   <Image
                                     className={styles.studentChatIcon}
@@ -333,26 +340,22 @@ export const ResponseSidbar = ({
                                   />
                                 )
                               ) : (
-                                !lastMessage.isRead && (
+                                noReadMessagesFromOther &&
+                                noReadMessagesFromOther?.length > 0 && (
                                   <div
                                     className={
                                       styles.isNotReadTutorsMessageCount
                                     }
                                   >
-                                    {
-                                      chat.messages.filter(
-                                        (msg) =>
-                                          !msg.isRead &&
-                                          msg.senderId !== student?.id
-                                      ).length
-                                    }
+                                    {noReadMessagesFromOther?.length}
                                   </div>
                                 )
                               )}
                             </div>
 
                             <div className={styles.studentChatMessageDate}>
-                              {formatTimeAgo(lastMessage?.createdAt)}
+                              {lastMessage &&
+                                formatTimeAgo(lastMessage?.createdAt)}
                             </div>
                           </div>
                         </div>

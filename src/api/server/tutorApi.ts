@@ -37,6 +37,24 @@ export const fetchCurrentTutor = async (token: string) => {
   return data;
 };
 
+// Получение телефона ученика по ID
+export const fetchTutorPhoneById = async (token: string, id: string) => {
+  const response = await fetch(`${baseUrl}tutors/${id}/phone`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Не удалось получить номер телефона репетитора");
+  }
+
+  const data = await response.json();
+  return data.phone as string;
+};
+
 // Изменение репетитора
 export const fetchUpdateTutor = async (data: {
   id: string;
