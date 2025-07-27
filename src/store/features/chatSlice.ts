@@ -107,8 +107,8 @@ export const updateMessage = createAsyncThunk<
 // Получение всех чатов по заказу
 export const getChatsByOrderId = createAsyncThunk<
   Chat[], // что возвращаем
-  { orderId: string; role: string, token: string } // что принимаем
->("chat/getByOrderId", async ({ orderId, role, token }) => {
+  { orderId: string; token: string } // что принимаем
+>("chat/getByOrderId", async ({ orderId, token }) => {
   const response = await fetchGetChatsByOrderId(orderId, token);
   return response;
 });

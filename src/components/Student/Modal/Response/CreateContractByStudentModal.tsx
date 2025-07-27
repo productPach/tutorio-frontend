@@ -8,6 +8,9 @@ import componentStyles from "../../../Tutor/Modal/Profil/Education/Education.mod
 import {
   setIsModalCreateContractByStudent,
   setIsModalHiddenOrder,
+  setIsSheetCreateContractByStudent,
+  setIsSheetHiddenOrder,
+  setIsSheetOpen,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
@@ -16,6 +19,8 @@ import { sendMessage, updateChatForContract } from "@/store/features/chatSlice";
 import { getOrderById, updateOrder } from "@/store/features/orderSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { fetchStudentPhoneById } from "@/api/server/studentApi";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 export const CreateContractByStudentModal = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +30,8 @@ export const CreateContractByStudentModal = () => {
   const subjects = useAppSelector((state) => state.subject.subjects);
   const orderById = useAppSelector((state) => state.orders.orderById);
   const { loadChats } = useChat();
+  // Состояние для лоадера
+  const [isLoading, setIsLoading] = useState(false);
 
   const [step, setStep] = useState<"initial" | "success">("initial");
   const { sendMessageSocket } = useChatSocket(chat?.id ? chat.id : "");
@@ -32,7 +39,7 @@ export const CreateContractByStudentModal = () => {
   const handleCreateContract = async () => {
     try {
       if (!token || !chat?.orderId || !chat?.tutorId) return;
-
+      setIsLoading(true);
       const contract = await dispatch(
         createContract({
           token,
@@ -60,13 +67,24 @@ export const CreateContractByStudentModal = () => {
           (item) => item.id_p === orderById?.subject
         )?.for_request;
 
+        // Получаем телефон ученика
+        const phoneStudent = await fetchStudentPhoneById(
+          token,
+          orderById.studentId
+        );
+
         const actionResult = await dispatch(
           sendMessage({
             chatId: chat.id,
             senderId: chat.studentId,
             orderId: orderById.id,
             themeOrder: `${orderById.goal} по ${subjectForRequest}`,
-            text: "Ученик выбрал вас в качестве репетитора",
+            text: orderById.autoContactsOnResponse
+              ? `Победа! Ученик выбрал вас\u00A0—\u00A0теперь вы в\u00A0одной команде!
+Желаем классных уроков и\u00A0крутых достижений\u00A0🎯`
+              : `Победа! Ученик выбрал вас\u00A0—\u00A0теперь вы в\u00A0одной команде!
+            Телефон ученика: <a href="tel:+7${phoneStudent}">+7${phoneStudent}</a>\n\n\
+Желаем классных уроков и\u00A0крутых достижений\u00A0🎯`,
             token,
             type: "service",
             recipientRole: "tutor",
@@ -81,15 +99,23 @@ export const CreateContractByStudentModal = () => {
       }
 
       //setStep("success");
-      dispatch(setIsModalCreateContractByStudent(false));
-      dispatch(setIsModalHiddenOrder(true));
+      handleClose();
+      setIsLoading(false);
+      if (window.innerWidth < 769) {
+        dispatch(setIsSheetHiddenOrder(true));
+      } else {
+        // Логика для больших экранов
+        dispatch(setIsModalHiddenOrder(true)); // Открываем шторку
+      }
     } catch (err) {
       console.error("Ошибка при создании контракта:", err);
+      setIsLoading(false);
     }
   };
 
   const handleClose = () => {
     dispatch(setIsModalCreateContractByStudent(false));
+    dispatch(setIsSheetCreateContractByStudent(false));
     dispatch(setScrollY(0));
   };
 
@@ -131,11 +157,17 @@ export const CreateContractByStudentModal = () => {
 
           <div className={componentStyles.containerFlxRw}>
             <button
+              disabled={isLoading}
               className={buttonStyles.buttonYlw}
               onClick={handleCreateContract}
               type="button"
             >
               Выбрать
+              {isLoading && (
+                <div className={styles.buttonYlSpinner}>
+                  <Spinner />
+                </div>
+              )}
             </button>
             <button
               className={buttonStyles.buttonBlc}

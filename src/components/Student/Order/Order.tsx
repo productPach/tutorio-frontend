@@ -31,11 +31,11 @@ export const OrderComponent = ({
   error,
   locations,
 }: OrderProps) => {
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 0,
+  //   });
+  // }, []);
 
   // Стейт для предметов
   const dispatch = useAppDispatch();

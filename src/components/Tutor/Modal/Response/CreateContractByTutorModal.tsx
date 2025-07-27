@@ -13,6 +13,8 @@ import { createContract } from "@/store/features/contractSlice";
 import { sendMessage } from "@/store/features/chatSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { Spinner } from "@/components/Spinner/Spinner";
+import { useState } from "react";
 
 export const CreateContractByTutorModal = () => {
   const dispatch = useAppDispatch();
@@ -20,11 +22,13 @@ export const CreateContractByTutorModal = () => {
   const chat = useAppSelector((state) => state.chat.chat);
   const { loadChats } = useChat();
   const { sendMessageSocket } = useChatSocket(chat?.id ? chat.id : "");
+  // Состояние для лоадера
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateContract = async () => {
     try {
       if (!token || !chat || !chat.orderId || !chat.tutorId) return;
-
+      setIsLoading(true);
       await dispatch(
         createContract({
           token,
@@ -39,10 +43,11 @@ export const CreateContractByTutorModal = () => {
       const actionResult = await dispatch(
         sendMessage({
           chatId: chat.id,
-          senderId: chat.studentId,
+          senderId: chat.tutorId,
           orderId: "какой-то айди",
           themeOrder: "какая-то тема",
-          text: "Репетитор сообщил, что вы договорились с ним о занятии",
+          text: `Репетитор сообщил, что\u00A0вы договорились о\u00A0занятии!\u00A0🎉
+Желаем продуктивных уроков! После занятий, пожалуйста, оставьте отзыв\u00A0—\u00A0это поможет репетитору и\u00A0другим ученикам\u00A0🙌`,
           token,
           type: "service",
           recipientRole: "student",
@@ -57,6 +62,7 @@ export const CreateContractByTutorModal = () => {
     } catch (err) {
       console.error("Ошибка при создании контракта:", err);
     } finally {
+      setIsLoading(false);
       dispatch(setIsModalCreateContractByTutor(false));
       dispatch(setScrollY(0));
     }
@@ -82,11 +88,17 @@ export const CreateContractByTutorModal = () => {
 
       <div className={componentStyles.containerFlxRw}>
         <button
+          disabled={isLoading}
           className={buttonStyles.buttonYlw}
           onClick={handleCreateContract}
           type="button"
         >
           Договорились
+          {isLoading && (
+            <div className={styles.buttonYlSpinner}>
+              <Spinner />
+            </div>
+          )}
         </button>
         <button
           className={buttonStyles.buttonBlc}

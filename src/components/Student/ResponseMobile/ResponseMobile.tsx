@@ -27,6 +27,7 @@ import { formatTimeAgo } from "@/utils/date/date";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { SpinnerChats } from "@/components/Spinner/SpinnerChats";
+import { getVisibleMessagesForRole } from "@/utils/chat/getVisibleMessagesForRole";
 
 type ResponseSidbarProps = {
   chats: Chat[];
@@ -105,23 +106,26 @@ export const ResponseSidbarMobile = ({
 
   // Мемоизация сортировки чатов
   const sortedChats = useMemo(() => {
-    return [...chats].sort((a, b) => {
-      const lastA = a.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
-      const lastB = b.messages
-        .filter((m) => m.createdAt)
-        .sort(
-          (x, y) =>
-            new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-        )[0];
+    const chatsWithLastMessage = chats.map((chat) => {
+      const visibleMessages = getVisibleMessagesForRole(
+        chat.messages,
+        "student"
+      );
 
+      const sortedMessages = [...visibleMessages].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      const lastVisibleMessage = sortedMessages[0];
+
+      return { ...chat, lastVisibleMessage, visibleMessages };
+    });
+
+    return chatsWithLastMessage.sort((a, b) => {
       return (
-        new Date(lastB?.createdAt || 0).getTime() -
-        new Date(lastA?.createdAt || 0).getTime()
+        new Date(b.lastVisibleMessage?.createdAt || 0).getTime() -
+        new Date(a.lastVisibleMessage?.createdAt || 0).getTime()
       );
     });
   }, [chats]);
@@ -234,37 +238,14 @@ export const ResponseSidbarMobile = ({
                 <div className={styles.studentChatWrap}>
                   {sortedChats.map((chat, index, array) => {
                     if (!chat.tutor) return null; // ✅ не рендерим, если нет tutor
-                    // Мемоизируем сортировку сообщений для каждого чата
-                    // const sortedMessages = [...chat.messages].sort(
-                    //   (a, b) =>
-                    //     new Date(b.createdAt).getTime() -
-                    //     new Date(a.createdAt).getTime()
-                    // );
 
-                    const filteredMessages = chat.messages.filter((message) => {
-                      if (message.type === "service") {
-                        return (
-                          message.recipientRole === null ||
-                          message.recipientRole === undefined ||
-                          message.recipientRole === "student"
-                        );
-                      }
-                      return true;
-                    });
-
-                    const sortedMessages = [...filteredMessages].sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime()
-                    );
-
-                    const lastMessage = sortedMessages[0];
+                    const lastMessage = chat.lastVisibleMessage;
                     const isFirst = index === 0;
                     const isLast = index === array.length - 1;
 
                     const noReadMessagesFromOther =
                       student &&
-                      sortedMessages.filter(
+                      chat.visibleMessages.filter(
                         (message) =>
                           !message.isRead && message.senderId !== student.id
                       );

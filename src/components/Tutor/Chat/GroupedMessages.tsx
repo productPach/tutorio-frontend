@@ -132,7 +132,7 @@ const GroupedMessages: React.FC<Props> = ({
         const messageClassName = clsx(
           chatStyles.chat__message,
           isServiceForTutor
-            ? chatStyles.chat__message__serviceTutor
+            ? chatStyles.chat__message__service
             : isFromTutor
               ? chatStyles.chat__message__right
               : chatStyles.chat__message__left

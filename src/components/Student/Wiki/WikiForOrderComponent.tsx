@@ -22,11 +22,11 @@ export const WikiForOrderComponent = ({
   themes: Theme[];
   topicTitle: string;
 }) => {
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 0,
+  //   });
+  // }, []);
 
   return (
     <>

@@ -110,16 +110,16 @@
   color: #888888;
   margin-right: 2px;
 }
-.chat__message__serviceTutor {
+.chat__message__service {
   background-color: #fff;
   border: 1px solid #e9e9e9;
   align-self: anchor-center;
   white-space: pre-line;
 }
-.chat__message__serviceTutor svg {
+.chat__message__service svg {
   display: none;
 }
-.chat__message__serviceTutor span {
+.chat__message__service span {
   color: #888;
   font-weight: 500;
 }

@@ -18,9 +18,13 @@ import {
   fetchGetChatsByOrderId,
   fetchGetChatsByUserIdAndRole,
 } from "@/api/server/chatApi";
-import { setChat, setChats } from "@/store/features/chatSlice";
+import {
+  setChat,
+  setChats,
+  updateChatForContract,
+} from "@/store/features/chatSlice";
 import { useIsMounted } from "@/utils/chat/useIsMounted";
-import { addChatToOrder } from "@/store/features/orderSlice";
+import { addChatToOrder, updateOrder } from "@/store/features/orderSlice";
 
 type ChatContextType = {
   chats: Chat[];
@@ -122,20 +126,36 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       if (!isMountedRef.current) return;
 
       // Если обычное сообщение — просто добавляем
+      // if (message.type !== "service") {
+      //   setChatsState((prev) => {
+      //     const updatedChats = prev.map((chat) =>
+      //       chat.id === message.chatId
+      //         ? {
+      //             ...chat,
+      //             messages: [...chat.messages, message],
+      //             lastMessage: message,
+      //           }
+      //         : chat
+      //     );
+      //     dispatch(setChats(updatedChats));
+      //     return updatedChats;
+      //   });
+
+      // 🔹 Обычное сообщение — просто добавляем в чат
       if (message.type !== "service") {
-        setChatsState((prev) => {
-          const updatedChats = prev.map((chat) =>
-            chat.id === message.chatId
-              ? {
-                  ...chat,
-                  messages: [...chat.messages, message],
-                  lastMessage: message,
-                }
-              : chat
-          );
-          dispatch(setChats(updatedChats));
-          return updatedChats;
-        });
+        const updatedChats = chats.map((chat) =>
+          chat.id === message.chatId
+            ? {
+                ...chat,
+                messages: [...chat.messages, message],
+                lastMessage: message,
+              }
+            : chat
+        );
+
+        setChatsState(updatedChats); // обновляем локальный стейт
+        dispatch(setChats(updatedChats)); // обновляем Redux
+
         playNotificationSound();
         return;
       }
@@ -169,7 +189,16 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           dispatch(setChats(updatedChats));
           const currentChat = updatedChats.find((c) => c.id === message.chatId);
           if (currentChat) {
-            dispatch(setChat(currentChat));
+            dispatch(updateChatForContract(currentChat));
+            if (currentChat.orderId && token) {
+              dispatch(
+                updateOrder({
+                  id: currentChat.orderId,
+                  token,
+                  status: "Hidden",
+                })
+              ).unwrap();
+            }
           }
         }, 0); // или можно 100, если надо ждать, но лучше 0
 

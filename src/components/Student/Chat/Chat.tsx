@@ -23,8 +23,15 @@ import { EmojiPicker } from "./EmojiPicker";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { SendHorizontal } from "lucide-react";
 import { getAllSubjects } from "@/store/features/subjectSlice";
-import { setIsModalCreateContractByStudent } from "@/store/features/modalSlice";
+import {
+  setIsModalCreateContractByStudent,
+  setIsSheetCreateContractByStudent,
+  setIsSheetHiddenOrder,
+} from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
+import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -61,6 +68,12 @@ export const ChatComponent = ({
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
   const chat = useAppSelector((state) => state.chat.chat);
+  const isSheetCreateContractByStudent = useAppSelector(
+    (state) => state.modal.isSheetCreateContractByStudent
+  );
+  const isSheetHiddenOrder = useAppSelector(
+    (state) => state.modal.isSheetHiddenOrder
+  );
 
   // Стейт для текста сообщения
   const [inputValue, setInputValue] = useState("");
@@ -575,7 +588,7 @@ export const ChatComponent = ({
 
         {chat?.tutorHasAccess && (
           <>
-            {chat?.order?.contracts && chat.order.contracts.length > 0 ? (
+            {chat?.order?.contracts?.some((c) => c.tutorId === chat.tutorId) ? (
               <div className={chatStyles.actionChatBlock}>
                 <button
                   className={chatStyles.buttonContract}
@@ -597,7 +610,12 @@ export const ChatComponent = ({
                   className={chatStyles.buttonContract}
                   onClick={(e) => {
                     e.preventDefault();
-                    dispatch(setIsModalCreateContractByStudent(true));
+                    if (window.innerWidth < 769) {
+                      dispatch(setIsSheetCreateContractByStudent(true)); // Открываем шторку
+                    } else {
+                      // Логика для больших экранов
+                      dispatch(setIsModalCreateContractByStudent(true));
+                    }
                   }}
                   type="button"
                 >
@@ -652,6 +670,18 @@ export const ChatComponent = ({
           </>
         )}
       </div>
+      <BottomSheet
+        isOpen={isSheetCreateContractByStudent}
+        onClose={() => dispatch(setIsSheetCreateContractByStudent(false))}
+      >
+        <CreateContractByStudentModal />
+      </BottomSheet>
+      <BottomSheet
+        isOpen={isSheetHiddenOrder}
+        onClose={() => dispatch(setIsSheetHiddenOrder(false))}
+      >
+        <HiddenOrderModal />
+      </BottomSheet>
     </>
   );
 };

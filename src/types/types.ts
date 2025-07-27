@@ -314,6 +314,7 @@ export type Chat = {
     name: string;
     avatarUrl: string;
     lastOnline: string | null;
+    contracts: { id: string }[];
   };
   student: {
     id: string;
@@ -322,6 +323,7 @@ export type Chat = {
     lastOnline: string | null;
   };
   order: {
+    status: string;
     contracts: {
       tutorId: string;
     }[];
@@ -356,5 +358,5 @@ export type Contract = {
   tutorId: string;
   selectedBy: SelectedBy;
   selectedAt: Date;
-  canceledAt: Date;
+  canceledAt: Date | null;
 }

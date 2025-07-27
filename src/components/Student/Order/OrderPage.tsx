@@ -69,9 +69,12 @@ const OrderPage: React.FC = () => {
       dispatch(clearOrderById());
     };
   }, []);
-
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const timeout = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50); // Можно увеличить до 100-200 если нужно
+
+    return () => clearTimeout(timeout);
   }, [component]);
 
   const tutorsForOrder = tutorsForOrderNotFilter
@@ -202,7 +205,6 @@ const OrderPage: React.FC = () => {
       dispatch(
         getChatsByOrderId({
           orderId: orderById?.id,
-          role: "student",
           token: token,
         })
       );

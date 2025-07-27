@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useChat } from "@/context/ChatContext";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { fetchTutorPhoneById } from "@/api/server/tutorApi";
 
 export const ResponseTutorToStudentModal = () => {
   const dispatch = useAppDispatch();
@@ -93,6 +94,43 @@ export const ResponseTutorToStudentModal = () => {
               token,
             })
           ).unwrap();
+
+          if (isChecked) {
+            // Получаем телефон репетитора
+            const phoneTutor = await fetchTutorPhoneById(token, tutor.id);
+
+            await dispatch(
+              sendMessage({
+                chatId: chat.id,
+                senderId: tutor.id,
+                orderId: order.id,
+                themeOrder: themeOrder,
+                text: `Репетитор откликнулся на\u00A0ваш заказ!\n\
+                      Вы можете связаться с\u00A0ним напрямую: 📞\u00A0<a href="tel:+7${phoneTutor}">+7${phoneTutor}</a> или продолжить общение прямо в\u00A0этом чате.\n\n\
+                      Если договоритесь о\u00A0занятиях или выполнении заказа\u00A0—\u00A0нажмите кнопку «Выбрать репетитора»\u00A0✅\n\
+                      После этого вы сможете оставить отзыв о\u00A0сотрудничестве\u00A0⭐`,
+                token,
+                type: "service",
+                recipientRole: "student",
+              })
+            ).unwrap();
+          } else {
+            await dispatch(
+              sendMessage({
+                chatId: chat.id,
+                senderId: tutor.id,
+                orderId: order.id,
+                themeOrder: themeOrder,
+                text: `Репетитор откликнулся на\u00A0ваш заказ!\n\
+                      Вы можете продолжить общение в\u00A0этом чате.\n\n\
+                      Если договоритесь о\u00A0занятиях или выполнении заказа\u00A0—\u00A0нажмите кнопку «Выбрать репетитора»\u00A0✅\n\
+                      После этого вы сможете оставить отзыв о\u00A0сотрудничестве\u00A0⭐`,
+                token,
+                type: "service",
+                recipientRole: "student",
+              })
+            ).unwrap();
+          }
 
           // Даем рендеру отработать — и только потом пуш и сет
           setTimeout(async () => {

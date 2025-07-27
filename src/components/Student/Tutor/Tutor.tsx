@@ -42,12 +42,12 @@ export const TutorComponent = ({
   locations,
   tutor, // принимаем tutorId
 }: OrderProps) => {
-  useEffect(() => {
-    //dispatch(setComponentMenu(4));
-    window.scrollTo({
-      top: 0,
-    });
-  }, []);
+  // useEffect(() => {
+  //   //dispatch(setComponentMenu(4));
+  //   window.scrollTo({
+  //     top: 0,
+  //   });
+  // }, []);
   const page = "Tutor";
   const route = useRouter();
   const dispatch = useAppDispatch();
