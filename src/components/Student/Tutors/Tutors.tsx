@@ -6,10 +6,10 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { Chat, City, Order, Student, Tutor } from "@/types/types";
 import Image from "next/image";
-import { getBackendUrl, host, port } from "@/api/server/configApi";
+import { getBackendUrl, host } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
@@ -18,10 +18,7 @@ import {
   setTutorIdForResponseStudentToTutor,
 } from "@/store/features/modalSlice";
 import Link from "next/link";
-import {
-  setComponentMenu,
-  updateScrollPosition,
-} from "@/store/features/orderSlice";
+import { setComponentMenu } from "@/store/features/orderSlice";
 import { setChat } from "@/store/features/chatSlice";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";

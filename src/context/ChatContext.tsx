@@ -51,6 +51,14 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     (state) => state.tutor.tutor?.userId ?? null
   );
   const tutorId = useAppSelector((state) => state.tutor.tutor?.id ?? null);
+
+  let userRole;
+  if (studentId) {
+    userRole = "student";
+  } else {
+    userRole = "tutor";
+  }
+
   const orderId = useAppSelector((state) => state.orders.orderById);
   const dispatch = useAppDispatch();
 
@@ -190,21 +198,24 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           const currentChat = updatedChats.find((c) => c.id === message.chatId);
           if (currentChat) {
             dispatch(updateChatForContract(currentChat));
-            if (currentChat.orderId && token) {
-              dispatch(
-                updateOrder({
-                  id: currentChat.orderId,
-                  token,
-                  status: "Hidden",
-                })
-              ).unwrap();
-            }
+            // if (currentChat.orderId && token) {
+            //   dispatch(
+            //     updateOrder({
+            //       id: currentChat.orderId,
+            //       token,
+            //       status: "Hidden",
+            //     })
+            //   ).unwrap();
+            // }
           }
         }, 0); // или можно 100, если надо ждать, но лучше 0
 
         return updatedChats;
       });
-
+      // чтобы звук не приходил отправителю сервисного сообщения
+      if (message.type === "service" && message.recipientRole !== userRole) {
+        return;
+      }
       playNotificationSound();
     };
 

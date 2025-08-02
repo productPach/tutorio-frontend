@@ -1,0 +1,45 @@
+.reviewItem {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #f1f2f4;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* .name {
+  color: #333;
+} */
+
+.date {
+  font-size: 13px;
+  color: #888;
+}
+
+.rating {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  width: 20px;
+  height: 20px;
+  stroke: #ddd;
+  fill: #ddd;
+}
+
+.active {
+  stroke: #f79009;
+  fill: #f79009;
+}
+
+/* .message {
+  color: #444;
+  line-height: 1.4;
+} */

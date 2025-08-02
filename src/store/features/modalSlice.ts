@@ -32,6 +32,14 @@ type ModalStateType = {
   isSheetCreateContractByStudent: boolean;
   isModalHiddenOrder: boolean;
   isSheetHiddenOrder: boolean;
+  isModalCreateReviewByStudent: boolean;
+  isSheetCreateReviewByStudent: boolean;
+  isModalUpdateReviewByStudent: boolean;
+  isSheetUpdateReviewByStudent: boolean;
+  isModalCreateReviewByTutor: boolean;
+  isSheetCreateReviewByTutor: boolean;
+  isValueCreateReview: string | null;
+  isReviewIdCreateReview: string | null;
 };
 
 const initialState: ModalStateType = {
@@ -66,6 +74,14 @@ const initialState: ModalStateType = {
   isSheetCreateContractByStudent: false,
   isModalHiddenOrder: false,
   isSheetHiddenOrder: false,
+  isModalCreateReviewByStudent: false,
+  isSheetCreateReviewByStudent: false,
+  isModalUpdateReviewByStudent: false,
+  isSheetUpdateReviewByStudent: false,
+  isModalCreateReviewByTutor: false,
+  isSheetCreateReviewByTutor: false,
+  isValueCreateReview: null,
+  isReviewIdCreateReview: null,
 };
 
 const modalSlice = createSlice({
@@ -165,6 +181,30 @@ const modalSlice = createSlice({
     setIsSheetHiddenOrder(state, action: PayloadAction<boolean>) {
       state.isSheetHiddenOrder = action.payload;
     },
+    setIsModalCreateReviewByStudent(state, action: PayloadAction<boolean>) {
+      state.isModalCreateReviewByStudent = action.payload;
+    },
+    setIsSheetCreateReviewByStudent(state, action: PayloadAction<boolean>) {
+      state.isSheetCreateReviewByStudent = action.payload;
+    },
+    setIsModalUpdateReviewByStudent(state, action: PayloadAction<boolean>) {
+      state.isModalUpdateReviewByStudent = action.payload;
+    },
+    setIsSheetUpdateReviewByStudent(state, action: PayloadAction<boolean>) {
+      state.isSheetUpdateReviewByStudent = action.payload;
+    },
+    setIsModalCreateReviewByTutor(state, action: PayloadAction<boolean>) {
+      state.isModalCreateReviewByTutor = action.payload;
+    },
+    setIsSheetCreateReviewByTutor(state, action: PayloadAction<boolean>) {
+      state.isSheetCreateReviewByTutor = action.payload;
+    },
+    setIsValueCreateReview(state, action: PayloadAction<string>) {
+      state.isValueCreateReview = action.payload;
+    },
+    setIsReviewIdCreateReview(state, action: PayloadAction<string>) {
+      state.isReviewIdCreateReview = action.payload;
+    },
   },
 });
 
@@ -200,5 +240,13 @@ export const {
   setIsSheetCreateContractByStudent,
   setIsModalHiddenOrder,
   setIsSheetHiddenOrder,
+  setIsModalCreateReviewByStudent,
+  setIsSheetCreateReviewByStudent,
+  setIsModalUpdateReviewByStudent,
+  setIsSheetUpdateReviewByStudent,
+  setIsModalCreateReviewByTutor,
+  setIsSheetCreateReviewByTutor,
+  setIsValueCreateReview,
+  setIsReviewIdCreateReview,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

@@ -22,7 +22,7 @@ import { useChatSocket } from "@/hooks/useChatSocket";
 import { fetchStudentPhoneById } from "@/api/server/studentApi";
 import { Spinner } from "@/components/Spinner/Spinner";
 
-export const CreateContractByStudentModal = () => {
+export const ReviewsTutorModal = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const chat = useAppSelector((state) => state.chat.chat);
@@ -142,8 +142,8 @@ export const CreateContractByStudentModal = () => {
       {step === "initial" ? (
         <>
           <div className={styles.description2}>
-            ✅&nbsp;Выбирайте репетитора, <strong>только если</strong> вы
-            уже&nbsp;назначили дату занятия или&nbsp;договорились
+            ✅ Выбирайте репетитора, <strong>только если</strong>{" "}
+            вы&nbsp;уже&nbsp; назначили дату занятия или&nbsp;договорились
             о&nbsp;выполнении задачи.
             <br />
             <br />
@@ -151,7 +151,7 @@ export const CreateContractByStudentModal = () => {
               <li>Это помогает нам делать сервис честным и&nbsp;полезным</li>
               <li>Вы сможете оставить отзыв о&nbsp;занятиях</li>
               <li>
-                Выбор влияет на&nbsp;рейтинг репетитора и&nbsp;его&nbsp;доверие
+                Выбор влияет на&nbsp;рейтинг репетитора и&nbsp;его доверие
                 на&nbsp;платформе
               </li>
             </ul>

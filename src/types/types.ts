@@ -54,6 +54,7 @@ export type Student = {
 };
 
 export type Tutor = {
+  [x: string]: any;
   id: string;
   userId: string;
   user: User;
@@ -99,6 +100,7 @@ export type Tutor = {
   response: Response[];
   publicRating: number;
   reviewsCount: number;
+  reviews: Review[];
 };
 
 // Возможные значения длительности занятия
@@ -215,9 +217,19 @@ export type Order = {
   autoContactsOnResponse: boolean,
   responseCost: string;
   chats: Chat[];
-  selectedTutors: Tutor[];
+  selectedTutors: SelectedTutors[];
   [key: string]: any;
   status: string;
+};
+
+export type SelectedTutors = {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  publicRating: number;
+  reviewsCount: number;
+  reviewId: string;
+  reviewStatus: string;
 };
 
 export type Response = {};
@@ -360,3 +372,55 @@ export type Contract = {
   selectedAt: Date;
   canceledAt: Date | null;
 }
+
+export type Review = {
+  id: string;
+  orderId: string;
+  tutorId?: string;
+  studentId?: string;
+  authorRole: "student" | "tutor";
+  name?: string;
+  message?: string;
+  rating: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  comments: Comment[];
+  tutor?: {
+    id: string;
+    name: string;
+  };
+  student?: {
+    id: string;
+    name: string;
+  };
+  order?: {
+    id: string;
+    subject: string;
+    goal: string;
+  };
+};
+
+export type Comment = {
+  id: string;
+  reviewId?: string;
+  contractId?: string;
+  senderId: string;
+  senderRole: "student" | "tutor" | "admin";
+  text: string;
+  createdAt: string;
+};
+
+export type CreateReviewPayload = {
+  orderId: string;
+  tutorId: string;
+  studentId: string;
+  message?: string;
+  rating: number;
+  authorRole: "student" | "tutor";
+};
+
+export type CreateCommentPayload = {
+  reviewId: string;
+  text: string;
+};

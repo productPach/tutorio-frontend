@@ -22,6 +22,9 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getAllSubjects } from "@/store/features/subjectSlice";
 import { useRouter } from "next/navigation";
+import { ReviewItem } from "../Review/ReviewItem";
+import { pluralize } from "numeralize-ru";
+import Link from "next/link";
 
 type OrderProps = {
   chats: Chat[];
@@ -200,6 +203,10 @@ export const TutorComponent = ({
 
   const chat = chats.find((chat) => chat.tutorId === tutor.id);
 
+  const reviews = tutor.reviews.filter((r) => r.status === "Active");
+  // Количество отзывов
+  const reviewsCount = reviews.length;
+
   return (
     <div
       className={clsx(
@@ -247,8 +254,18 @@ export const TutorComponent = ({
               styles.lnHgt18
             )}
           >
-            <div>&nbsp;4.7&nbsp;рейтинг</div>
-            <div>&nbsp;32&nbsp;отзыва</div>
+            <div>&nbsp;{tutor.publicRating}&nbsp;рейтинг</div>
+            {reviewsCount > 0 && (
+              <Link
+                // className={componentStyle.itemThemesList}
+                href={"#отзывы"}
+              >
+                <div>
+                  {reviewsCount}&nbsp;
+                  {pluralize(reviewsCount, "отзыв", "отзыва", "отзывов")}
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -495,6 +512,22 @@ export const TutorComponent = ({
               {isExpanded ? "Скрыть" : "Читать полностью"}
             </button>
           )}
+        </div>
+      )}
+
+      {reviews.length > 0 && (
+        <div id={"#отзывы"} className={styles.containerOrderInfo}>
+          <span className={styles.titleTutorInfo}>Отзывы</span>
+
+          <div
+            className={clsx(
+              styles.reviewWrapper // используйте gap, если он не ломает в nowrap
+            )}
+          >
+            {reviews.map((r) => (
+              <ReviewItem key={r.id} review={r} />
+            ))}
+          </div>
         </div>
       )}
 
