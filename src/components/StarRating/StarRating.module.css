@@ -1,0 +1,42 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  height: 351px;
+}
+.starRating {
+  display: flex;
+  gap: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
+
+.star {
+  width: 32px;
+  height: 32px;
+  stroke: #ddd; /* обводка мягко-серая по умолчанию */
+  fill: #ddd; /* заливка мягко-серая по умолчанию */
+  transition:
+    fill 0.2s ease,
+    stroke 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.star:hover,
+.star.hovered {
+  stroke: #f79009; /* обводка оранжевая при наведении */
+  fill: #f79009; /* заливка оранжевая при наведении */
+}
+
+.active {
+  stroke: #f79009; /* обводка оранжевая при выборе */
+  fill: #f79009; /* заливка оранжевая при выборе */
+}

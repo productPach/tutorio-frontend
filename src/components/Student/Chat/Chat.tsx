@@ -25,13 +25,19 @@ import { SendHorizontal } from "lucide-react";
 import { getAllSubjects } from "@/store/features/subjectSlice";
 import {
   setIsModalCreateContractByStudent,
+  setIsModalCreateReviewByStudent,
+  setIsModalUpdateReviewByStudent,
+  setIsReviewIdCreateReview,
   setIsSheetCreateContractByStudent,
+  setIsSheetCreateReviewByStudent,
   setIsSheetHiddenOrder,
+  setIsSheetUpdateReviewByStudent,
+  setIsValueCreateReview,
 } from "@/store/features/modalSlice";
-import { useChat } from "@/context/ChatContext";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
 import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
+import { CreateReviewByStudentModal } from "../Modal/Review/CreateReviewByStudentModal";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -589,21 +595,54 @@ export const ChatComponent = ({
         {chat?.tutorHasAccess && (
           <>
             {chat?.order?.contracts?.some((c) => c.tutorId === chat.tutorId) ? (
-              <div className={chatStyles.actionChatBlock}>
-                <button
-                  className={chatStyles.buttonContract}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    dispatch(setIsModalCreateContractByStudent(true));
-                  }}
-                  type="button"
-                >
-                  <span className={chatNoAccessStyles.textButton}>
-                    Оставить отзыв
-                    {/* Подтвердить договоренность */}
-                  </span>
-                </button>
-              </div>
+              (() => {
+                const reviewData = orderById?.selectedTutors?.find(
+                  (t) => t.id === chat.tutorId
+                );
+                const tutorId = reviewData?.id;
+                const tutorReviewId = reviewData?.reviewId;
+                const tutorReviewStatus = reviewData?.reviewStatus;
+                if (tutorReviewStatus === "withMessage") {
+                  return null;
+                }
+                const buttonText =
+                  tutorReviewStatus === "noReview"
+                    ? "Оставить отзыв"
+                    : "Дополнить отзыв";
+                const isMobile = window.innerWidth < 769;
+                return (
+                  <div className={chatStyles.actionChatBlock}>
+                    <button
+                      className={chatStyles.buttonContract}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (tutorReviewStatus === "noReview") {
+                          tutorId && dispatch(setIsValueCreateReview(tutorId));
+                          if (isMobile) {
+                            dispatch(setIsSheetCreateReviewByStudent(true)); // Открываем шторку
+                          } else {
+                            dispatch(setIsModalCreateReviewByStudent(true));
+                          }
+                        } else {
+                          tutorId && dispatch(setIsValueCreateReview(tutorId));
+                          tutorReviewId &&
+                            dispatch(setIsReviewIdCreateReview(tutorReviewId));
+                          if (isMobile) {
+                            dispatch(setIsSheetUpdateReviewByStudent(true));
+                          } else {
+                            dispatch(setIsModalUpdateReviewByStudent(true));
+                          }
+                        }
+                      }}
+                      type="button"
+                    >
+                      <span className={chatNoAccessStyles.textButton}>
+                        {buttonText}
+                      </span>
+                    </button>
+                  </div>
+                );
+              })()
             ) : (
               <div className={chatStyles.actionChatBlock}>
                 <button
@@ -613,7 +652,6 @@ export const ChatComponent = ({
                     if (window.innerWidth < 769) {
                       dispatch(setIsSheetCreateContractByStudent(true)); // Открываем шторку
                     } else {
-                      // Логика для больших экранов
                       dispatch(setIsModalCreateContractByStudent(true));
                     }
                   }}
@@ -621,7 +659,6 @@ export const ChatComponent = ({
                 >
                   <span className={chatNoAccessStyles.textButton}>
                     Выбрать репетитора
-                    {/* Подтвердить договоренность */}
                   </span>
                 </button>
               </div>

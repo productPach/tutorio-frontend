@@ -14,6 +14,8 @@ import {
   setIsModalBalanceBoost,
   setIsModalCreateContractByStudent,
   setIsModalCreateContractByTutor,
+  setIsModalCreateReviewByStudent,
+  setIsModalCreateReviewByTutor,
   setIsModalDelete,
   setIsModalEditEducation,
   setIsModalEditSubjectPrices,
@@ -32,6 +34,7 @@ import {
   setIsModalResponseTutorToStudentWithContakt,
   setIsModalSkype,
   setIsModalTelegram,
+  setIsModalUpdateReviewByStudent,
   setLoadingPage,
   setModalSelectCity,
   setScrollY,
@@ -175,6 +178,26 @@ export const Modal: React.FC<ModalProps> = ({
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
+    if (modalId === "createReviewByStudent") {
+      dispatch(setIsModalCreateReviewByStudent(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "createReviewByTutor") {
+      dispatch(setIsModalCreateReviewByTutor(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "updateReviewByStudent") {
+      dispatch(setIsModalUpdateReviewByStudent(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    // if (modalId === "updateReviewByTutor") {
+    //   dispatch(setIsModalUpdateReviewByTutor(false));
+    //   // Обнуляем значение top в leftbar
+    //   dispatch(setScrollY(0));
+    // }
   };
 
   useEffect(() => {

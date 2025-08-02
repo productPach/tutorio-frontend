@@ -3,10 +3,9 @@ import styles from "../../../app/student/layout.module.css";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
-import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
 import { Student } from "@/types/types";
-import { useSelector } from "react-redux";
 import { clearOrderById, getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
 import { OrderComponent } from "@/components/Student/Order/Order";
@@ -17,16 +16,20 @@ import { getAllTutors } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
 import { ChatComponent } from "@/components/Student/Chat/Chat";
-import { host, port } from "@/api/server/configApi";
-import { io } from "socket.io-client";
 import { getChatsByOrderId } from "@/store/features/chatSlice";
-import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
 import { useChat } from "@/context/ChatContext";
 import { getThemesByTopic } from "@/store/features/wikiSlice";
 import { ResponseSidbarMobile } from "../ResponseMobile/ResponseMobile";
 import OrderMenuMobile from "../OrderMenuMobile/OrderMenuMobile";
 import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
 import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
+import { CreateReviewByStudentModal } from "../Modal/Review/CreateReviewByStudentModal";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import {
+  setIsSheetCreateReviewByStudent,
+  setIsSheetUpdateReviewByStudent,
+} from "@/store/features/modalSlice";
+import { UpdateReviewByStudentModal } from "../Modal/Review/UpdateReviewByStudentModal";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -39,6 +42,18 @@ const OrderPage: React.FC = () => {
   );
   const isModalHiddenOrder = useAppSelector(
     (state) => state.modal.isModalHiddenOrder
+  );
+  const isModalCreateReviewByStudent = useAppSelector(
+    (state) => state.modal.isModalCreateReviewByStudent
+  );
+  const isSheetCreateReviewByStudent = useAppSelector(
+    (state) => state.modal.isSheetCreateReviewByStudent
+  );
+  const isModalUpdateReviewByStudent = useAppSelector(
+    (state) => state.modal.isModalUpdateReviewByStudent
+  );
+  const isSheetUpdateReviewByStudent = useAppSelector(
+    (state) => state.modal.isSheetUpdateReviewByStudent
   );
 
   const dispatch = useAppDispatch();
@@ -313,6 +328,30 @@ const OrderPage: React.FC = () => {
         isModal={isModalHiddenOrder}
         modalId={"hiddenOrder"}
       ></Modal>
+      <Modal
+        titleModal={""}
+        contentModal={<CreateReviewByStudentModal />}
+        isModal={isModalCreateReviewByStudent}
+        modalId={"createReviewByStudent"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetCreateReviewByStudent}
+        onClose={() => dispatch(setIsSheetCreateReviewByStudent(false))}
+      >
+        <CreateReviewByStudentModal />
+      </BottomSheet>
+      <Modal
+        titleModal={""}
+        contentModal={<UpdateReviewByStudentModal />}
+        isModal={isModalUpdateReviewByStudent}
+        modalId={"updateReviewByStudent"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetUpdateReviewByStudent}
+        onClose={() => dispatch(setIsSheetUpdateReviewByStudent(false))}
+      >
+        <UpdateReviewByStudentModal />
+      </BottomSheet>
     </>
   );
 };

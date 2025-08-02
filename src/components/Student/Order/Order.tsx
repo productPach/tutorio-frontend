@@ -15,6 +15,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBackendUrl } from "@/api/server/configApi";
 import { pluralize } from "numeralize-ru";
+import {
+  setIsModalCreateReviewByStudent,
+  setIsModalUpdateReviewByStudent,
+  setIsReviewIdCreateReview,
+  setIsSheetCreateReviewByStudent,
+  setIsSheetUpdateReviewByStudent,
+  setIsValueCreateReview,
+} from "@/store/features/modalSlice";
 
 type OrderProps = {
   loading: boolean;
@@ -95,16 +103,13 @@ export const OrderComponent = ({
                         target="_blank"
                       >
                         <Image
-                          className={clsx(
-                            styles.tutorImgMini,
-                            styles.tutorImgMMini
-                          )}
+                          className={clsx(styles.tutorImg, styles.tutorImgM)}
                           src={
                             `${getBackendUrl()}${tutor.avatarUrl}` ||
                             "/img/avatar-default.jpg"
                           }
-                          width={66}
-                          height={66}
+                          width={120}
+                          height={120}
                           alt={tutor.name}
                         />
                       </Link>
@@ -144,46 +149,93 @@ export const OrderComponent = ({
                           &nbsp;рейтинг
                         </div>
                         {tutor.reviewsCount > 0 && (
-                          <div>
-                            {tutor.reviewsCount}&nbsp;
-                            {pluralize(
-                              tutor.reviewsCount,
-                              "отзыв",
-                              "отзыва",
-                              "отзывов"
-                            )}
-                          </div>
+                          <Link
+                            href={`./${orderById.id}/tutor/${tutor.id}#отзывы`}
+                            target="_blank"
+                          >
+                            <div>
+                              {tutor.reviewsCount}&nbsp;
+                              {pluralize(
+                                tutor.reviewsCount,
+                                "отзыв",
+                                "отзыва",
+                                "отзывов"
+                              )}
+                            </div>
+                          </Link>
                         )}
                       </div>
                     </div>
+                    {tutor.reviewStatus !== "withMessage" && (
+                      <button
+                        className={styles.buttonContract}
+                        onClick={(e) => {
+                          e.preventDefault();
 
+                          const isMobile = window.innerWidth < 769;
+
+                          if (tutor.reviewStatus === "noReview") {
+                            dispatch(setIsValueCreateReview(tutor.id));
+                            if (isMobile) {
+                              dispatch(setIsSheetCreateReviewByStudent(true));
+                            } else {
+                              dispatch(setIsModalCreateReviewByStudent(true));
+                            }
+                          } else {
+                            // "ratingOnly"
+                            dispatch(setIsValueCreateReview(tutor.id));
+                            dispatch(setIsReviewIdCreateReview(tutor.reviewId));
+                            if (isMobile) {
+                              dispatch(setIsSheetUpdateReviewByStudent(true));
+                            } else {
+                              dispatch(setIsModalUpdateReviewByStudent(true));
+                            }
+                          }
+                        }}
+                        type="button"
+                      >
+                        <span className={styles.textButton}>
+                          {tutor.reviewStatus === "noReview"
+                            ? "Оставить отзыв"
+                            : "Дополнить отзыв"}
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                  {tutor.reviewStatus !== "withMessage" && (
                     <button
-                      className={styles.buttonContract}
+                      className={styles.buttonContractM}
                       onClick={(e) => {
                         e.preventDefault();
-                        // dispatch(setIsModalCreateContractByTutor(true));
+                        dispatch(setIsValueCreateReview(tutor.id));
+
+                        const isMobile = window.innerWidth < 769;
+
+                        if (tutor.reviewStatus === "noReview") {
+                          if (isMobile) {
+                            dispatch(setIsSheetCreateReviewByStudent(true));
+                          } else {
+                            dispatch(setIsModalCreateReviewByStudent(true));
+                          }
+                        } else {
+                          // "ratingOnly"
+                          if (isMobile) {
+                            dispatch(setIsSheetUpdateReviewByStudent(true));
+                          } else {
+                            dispatch(setIsModalUpdateReviewByStudent(true));
+                          }
+                        }
                       }}
                       type="button"
                     >
                       <span className={styles.textButton}>
-                        Оставить отзыв
+                        {tutor.reviewStatus === "noReview"
+                          ? "Оставить отзыв"
+                          : "Дополнить отзыв"}
                         {/* Подтвердить договоренность */}
                       </span>
                     </button>
-                  </div>
-                  <button
-                    className={styles.buttonContractM}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // dispatch(setIsModalCreateContractByTutor(true));
-                    }}
-                    type="button"
-                  >
-                    <span className={styles.textButton}>
-                      Оставить отзыв
-                      {/* Подтвердить договоренность */}
-                    </span>
-                  </button>
+                  )}
                 </div>
               ))}
             </div>
