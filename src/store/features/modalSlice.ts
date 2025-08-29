@@ -22,7 +22,9 @@ type ModalStateType = {
   isModalResponseStudentToTutor: boolean;
   tutorIdForResponseStudentToTutor: string | null;
   isModalResponseTutorToStudent: boolean;
+  isSheetResponseTutorToStudent: boolean;
   isModalResponseTutorToStudentWithContakt: boolean;
+  isSheetResponseTutorToStudentWithContakt: boolean;
   loadingPage: boolean;
   isModalRejectResponse: boolean;
   isModalAcceptResponse: boolean;
@@ -40,6 +42,7 @@ type ModalStateType = {
   isSheetCreateReviewByTutor: boolean;
   isValueCreateReview: string | null;
   isReviewIdCreateReview: string | null;
+  isSheetFiltersOrdersForTutor: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -64,7 +67,9 @@ const initialState: ModalStateType = {
   isModalResponseStudentToTutor: false,
   tutorIdForResponseStudentToTutor: null,
   isModalResponseTutorToStudent: false,
+  isSheetResponseTutorToStudent: false,
   isModalResponseTutorToStudentWithContakt: false,
+  isSheetResponseTutorToStudentWithContakt: false,
   loadingPage: false,
   isModalRejectResponse: false,
   isModalAcceptResponse: false,
@@ -82,6 +87,7 @@ const initialState: ModalStateType = {
   isSheetCreateReviewByTutor: false,
   isValueCreateReview: null,
   isReviewIdCreateReview: null,
+  isSheetFiltersOrdersForTutor: false,
 };
 
 const modalSlice = createSlice({
@@ -151,8 +157,14 @@ const modalSlice = createSlice({
     setIsModalResponseTutorToStudent(state, action: PayloadAction<boolean>) {
       state.isModalResponseTutorToStudent = action.payload;
     },
+    setIsSheetResponseTutorToStudent(state, action: PayloadAction<boolean>) {
+      state.isSheetResponseTutorToStudent = action.payload;
+    },
     setIsModalResponseTutorToStudentWithContakt(state, action: PayloadAction<boolean>) {
       state.isModalResponseTutorToStudentWithContakt = action.payload;
+    },
+    setIsSheetResponseTutorToStudentWithContakt(state, action: PayloadAction<boolean>) {
+      state.isSheetResponseTutorToStudentWithContakt = action.payload;
     },
     setLoadingPage: (state, action: PayloadAction<boolean>) => {
       state.loadingPage = action.payload;
@@ -205,6 +217,9 @@ const modalSlice = createSlice({
     setIsReviewIdCreateReview(state, action: PayloadAction<string>) {
       state.isReviewIdCreateReview = action.payload;
     },
+    setIsSheetFiltersOrdersForTutor(state, action: PayloadAction<boolean>) {
+      state.isSheetFiltersOrdersForTutor = action.payload;
+    },
   },
 });
 
@@ -230,7 +245,9 @@ export const {
   setIsModalResponseStudentToTutor,
   setTutorIdForResponseStudentToTutor,
   setIsModalResponseTutorToStudent,
+  setIsSheetResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetResponseTutorToStudentWithContakt,
   setLoadingPage,
   setIsModalRejectResponse,
   setIsModalAcceptResponse,
@@ -248,5 +265,6 @@ export const {
   setIsSheetCreateReviewByTutor,
   setIsValueCreateReview,
   setIsReviewIdCreateReview,
+  setIsSheetFiltersOrdersForTutor,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

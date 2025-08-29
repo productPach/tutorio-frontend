@@ -18,6 +18,8 @@ const ResponsesPage: React.FC = () => {
   const page = "Responses";
 
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const chat = useAppSelector((state) => state.chat.chat);
+
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
   );
@@ -53,7 +55,11 @@ const ResponsesPage: React.FC = () => {
     <>
       <section className={clsx(styles.container, styles.center)}>
         <LeftBar page={page} />
-        <div className={clsx(styles.contentChat)}>
+        <div
+          className={clsx(styles.contentChat, {
+            [styles.hiddenListChatM]: chat === null,
+          })}
+        >
           <ChatComponent
             visibleEmoji={visibleEmoji}
             setVisibleEmoji={setVisibleEmoji}

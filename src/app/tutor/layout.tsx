@@ -20,6 +20,8 @@ import { getChatsByUserId } from "@/store/features/chatSlice";
 import Link from "next/link";
 import { getBackendUrl } from "@/api/server/configApi";
 import { District, Metro, RegionalCity } from "@/types/types";
+import MenuMobile from "@/components/Tutor/MenuMobile/MenuMobile";
+import BottomMenuMobile from "@/components/Tutor/BottomMenuMobile/BottomMenuMobile";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -222,30 +224,34 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         <>
           <header>
             <div className={clsx(styles.header, styles.center)}>
-              <Link href="/tutor/orders">
-                <div className={styles.header__logo}>
-                  tutorio
-                  <span className={styles.header__underLogo}>
-                    Онлайн-сервис подбора репетиторов
-                  </span>
-                </div>
-              </Link>
-              <Link href="/tutor/orders">
-                <div className={styles.header__menu}>
-                  {tutor && (
-                    <>
-                      <span>{tutor.name}</span>
-                      <Image
-                        className={styles.header__menu_avatar}
-                        src={avatarSrc}
-                        alt={`${tutor?.name}`}
-                        width={42}
-                        height={42}
-                        priority
-                      />
-                    </>
-                  )}
-                </div>
+              <div className={styles.headerM}>
+                <MenuMobile />
+                <Link href="/tutor/orders">
+                  <div className={styles.header__logo}>
+                    tutorio
+                    <span className={styles.header__underLogo}>
+                      Онлайн-сервис подбора репетиторов
+                    </span>
+                  </div>
+                </Link>
+              </div>
+              <Link href="/tutor/orders" className={styles.header_menu}>
+                {tutor && (
+                  <>
+                    <div className={styles.titleWrap}>
+                      <span className={styles.ellipsis}>{tutor.name}</span>
+                    </div>
+
+                    <Image
+                      className={styles.header__menu_avatar}
+                      src={avatarSrc}
+                      alt={`${tutor?.name}`}
+                      width={42}
+                      height={42}
+                      priority
+                    />
+                  </>
+                )}
               </Link>
             </div>
           </header>
@@ -253,6 +259,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           <footer className={clsx(styles.center)}>
             {/* Добавьте здесь другие элементы подвала */}
           </footer>
+          <BottomMenuMobile />
         </>
       )}
     </>

@@ -121,10 +121,13 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
                 </Link>
               </div>
 
-              <div className={styles.header__menu}>
+              <div className={styles.header_menu}>
                 {student && (
                   <>
-                    <span className={styles.name}>{student.name}</span>
+                    <div className={styles.titleWrap}>
+                      <span className={styles.ellipsis}>{student.name}</span>
+                    </div>
+                    {/* <span className={styles.name}>{student.name}</span> */}
                     <Image
                       className={styles.header__menu_avatar}
                       src={

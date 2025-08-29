@@ -10,21 +10,24 @@ import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import { getAllOrders, setOrderByIdDefault } from "@/store/features/orderSlice";
 import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import { getYearWord } from "@/utils/words/getYearWord";
-import {
-  findLocTitleById,
-  findLocTitleByIdWithDistrict,
-} from "@/utils/locations/getTitleLocationById";
+import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocationById";
 import { Order, Tutor } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetFiltersOrdersForTutor,
+  setIsSheetResponseTutorToStudent,
+  setIsSheetResponseTutorToStudentWithContakt,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { getAllSubjects } from "@/store/features/subjectSlice";
 import { useViewedOrders } from "@/hooks/useViewedOrders";
+import { ListFilter } from "lucide-react";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import SideBar from "../SideBar/SideBar";
 
 const Orders = () => {
   const route = useRouter();
@@ -39,6 +42,12 @@ const Orders = () => {
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
   const { selectedPlaceFilters, selectedGoalFilters } = filters;
   const { chats, chatsLoading, setChatsLoaded } = useChat();
+
+  const isSheetFiltersOrdersForTutor = useAppSelector(
+    (state) => state.modal.isSheetFiltersOrdersForTutor
+  );
+
+  const isMobile = window.innerWidth < 769;
 
   // Стейт для предметов
   const subjects = useAppSelector((state) => state.subject.subjects);
@@ -223,6 +232,18 @@ const Orders = () => {
 
   return (
     <>
+      <div
+        onClick={() => dispatch(setIsSheetFiltersOrdersForTutor(true))}
+        className={clsx(
+          styles.content_block,
+          styles.order_block,
+          styles.crsr_pntr,
+          styles.sidebarM
+        )}
+      >
+        <ListFilter />
+        Фильтры
+      </div>
       {activeOrders.length > 0
         ? activeOrders.map((order) => {
             if (
@@ -310,7 +331,7 @@ const Orders = () => {
 
             // Выводим город ученика
             if (studentPlace?.includes("Дистанционно")) {
-              remoteLessons = `Дистанционно — ${studentRegion}`;
+              remoteLessons = `Дистанционно: ${studentRegion}`;
             }
 
             // Сделать вывод ближайших локаций к адресу ученика
@@ -339,13 +360,13 @@ const Orders = () => {
             // Выводим цену
             let price;
             if (tutorType === "1") {
-              price = "до 1000 ₽";
+              price = "до\u00A01000\u00A0₽";
             }
             if (tutorType === "2") {
-              price = "1000 — 1500 ₽";
+              price = "1000\u00A0—\u00A01500\u00A0₽";
             }
             if (tutorType === "3") {
-              price = "1500 — 2500 ₽";
+              price = "1500\u00A0—\u00A02500\u00A0₽";
             }
 
             const studentWishes = order.studentWishes
@@ -429,9 +450,7 @@ const Orders = () => {
                           fill="#2A2A2A"
                         />
                       </svg>
-                      <span className={styles.order_block_flx_rw_flxstrt_text}>
-                        {remoteLessons}
-                      </span>
+                      {remoteLessons}
                     </div>
                   )}
 
@@ -462,44 +481,42 @@ const Orders = () => {
                           fill="#2A2A2A"
                         />
                       </svg>
-                      <span className={styles.order_block_flx_rw_flxstrt_text}>
-                        Занятия у ученика
-                        {studentHomeLoc && studentHomeLoc?.length > 0 && (
-                          <> — </>
-                        )}
-                        <div className={locationsStyles.crcl_mtr_wrap}>
-                          {firstLocationHome?.lineNumber && (
-                            <div className={locationsStyles.crcl_mtr_container}>
-                              <div
-                                className={clsx(
-                                  styles.order_block,
-                                  locationsStyles.crcl_mtr,
-                                  locationsStyles[
-                                    `crcl_mtr_msk_${firstLocationHome?.lineNumber}`
-                                  ]
-                                )}
-                              ></div>
-                              {/* <div
+                      Занятия у ученика
+                      {studentHomeLoc && studentHomeLoc?.length > 0 && (
+                        <>&nbsp;:&nbsp;</>
+                      )}
+                      <div className={locationsStyles.crcl_mtr_wrap_order}>
+                        {firstLocationHome?.lineNumber && (
+                          <div className={locationsStyles.crcl_mtr_container}>
+                            <div
+                              className={clsx(
+                                styles.order_block,
+                                locationsStyles.crcl_mtr,
+                                locationsStyles[
+                                  `crcl_mtr_msk_${firstLocationHome?.lineNumber}`
+                                ]
+                              )}
+                            ></div>
+                            {/* <div
                             className={clsx(
                               styles.order_block,
                               locationsStyles.crcl_mtr,
                               locationsStyles.crcl_mtr_msk_7
                             )}
                           ></div> */}
-                            </div>
-                          )}
-                        </div>
+                          </div>
+                        )}
                         {firstLocationHome?.title}
-                        <span
-                          className={clsx(
-                            styles.order_block_flx_rw_subtext,
-                            generalStyles.mrgnLt5
-                          )}
-                        >
-                          {studentHomeLoc &&
-                            studentHomeLoc?.length > 1 &&
-                            `и ещё ${countHome}`}
-                        </span>
+                      </div>
+                      <span
+                        className={clsx(
+                          styles.order_block_flx_rw_subtext,
+                          generalStyles.mrgnLt5
+                        )}
+                      >
+                        {studentHomeLoc &&
+                          studentHomeLoc?.length > 1 &&
+                          `и ещё ${countHome}`}
                       </span>
                     </div>
                   )}
@@ -549,41 +566,39 @@ const Orders = () => {
                           fill="#2A2A2A"
                         />
                       </svg>
-                      <span className={styles.order_block_flx_rw_flxstrt_text}>
-                        Готов приехать —
-                        <div className={locationsStyles.crcl_mtr_wrap}>
-                          {firstLocationTrip?.lineNumber && (
-                            <div className={locationsStyles.crcl_mtr_container}>
-                              <div
-                                className={clsx(
-                                  styles.order_block,
-                                  locationsStyles.crcl_mtr,
-                                  locationsStyles[
-                                    `crcl_mtr_msk_${firstLocationTrip?.lineNumber}`
-                                  ]
-                                )}
-                              ></div>
-                              {/* <div
+                      Готов приехать :
+                      <div className={locationsStyles.crcl_mtr_wrap_order}>
+                        {firstLocationTrip?.lineNumber && (
+                          <div className={locationsStyles.crcl_mtr_container}>
+                            <div
+                              className={clsx(
+                                styles.order_block,
+                                locationsStyles.crcl_mtr,
+                                locationsStyles[
+                                  `crcl_mtr_msk_${firstLocationTrip?.lineNumber}`
+                                ]
+                              )}
+                            ></div>
+                            {/* <div
                             className={clsx(
                               styles.order_block,
                               locationsStyles.crcl_mtr,
                               locationsStyles.crcl_mtr_msk_7
                             )}
                           ></div> */}
-                            </div>
-                          )}
-                        </div>
+                          </div>
+                        )}
                         {firstLocationTrip?.title}
-                        <span
-                          className={clsx(
-                            styles.order_block_flx_rw_subtext,
-                            generalStyles.mrgnLt5
-                          )}
-                        >
-                          {studentTrip &&
-                            studentTrip?.length > 1 &&
-                            `и ещё ${countTrip}`}
-                        </span>
+                      </div>
+                      <span
+                        className={clsx(
+                          styles.order_block_flx_rw_subtext,
+                          generalStyles.mrgnLt5
+                        )}
+                      >
+                        {studentTrip &&
+                          studentTrip?.length > 1 &&
+                          `и ещё ${countTrip}`}
                       </span>
                     </div>
                   )}
@@ -594,7 +609,12 @@ const Orders = () => {
                       generalStyles.mrgnTp10
                     )}
                   >
-                    <div className={styles.header__menu}>
+                    <div
+                      className={clsx(
+                        styles.order_block_action,
+                        generalStyles.width100M480px
+                      )}
+                    >
                       {chats.find((chat) => chat.orderId === order.id) &&
                         !chats.find((chat) => chat.orderId === order.id)
                           ?.tutorHasAccess && (
@@ -607,7 +627,8 @@ const Orders = () => {
                       <button
                         className={clsx(
                           styles.content_block_button,
-                          existingChat ? styles.buttonBlc : styles.buttonYlw
+                          existingChat ? styles.buttonBlc : styles.buttonYlw,
+                          generalStyles.width100M480px
                         )}
                         onClick={(e) => {
                           if (existingChat) {
@@ -617,15 +638,31 @@ const Orders = () => {
                             dispatch(setChat(existingChat));
                           } else {
                             e.preventDefault();
-                            order.autoContactsOnResponse
-                              ? dispatch(
+                            if (order.autoContactsOnResponse) {
+                              if (isMobile) {
+                                dispatch(
+                                  setIsSheetResponseTutorToStudentWithContakt(
+                                    true
+                                  )
+                                );
+                              } else {
+                                dispatch(
                                   setIsModalResponseTutorToStudentWithContakt(
                                     true
                                   )
-                                )
-                              : dispatch(
+                                );
+                              }
+                            } else {
+                              if (isMobile) {
+                                dispatch(
+                                  setIsSheetResponseTutorToStudent(true)
+                                );
+                              } else {
+                                dispatch(
                                   setIsModalResponseTutorToStudent(true)
                                 );
+                              }
+                            }
 
                             dispatch(setOrderByIdDefault(order));
                             setChatsLoaded(true);
@@ -648,7 +685,12 @@ const Orders = () => {
                       )}
                     </div>
 
-                    <span className={styles.order_block_flx_rw_subtext}>
+                    <span
+                      className={clsx(
+                        styles.order_block_flx_rw_subtext,
+                        styles.order_block_flx_rw_subtextM
+                      )}
+                    >
                       {formatTimeAgo(order.createdAt)}
                     </span>
                   </div>
@@ -678,6 +720,12 @@ const Orders = () => {
           </button> */}
             </div>
           )}
+      <BottomSheet
+        isOpen={isSheetFiltersOrdersForTutor}
+        onClose={() => dispatch(setIsSheetFiltersOrdersForTutor(false))}
+      >
+        <SideBar />
+      </BottomSheet>
     </>
   );
 };

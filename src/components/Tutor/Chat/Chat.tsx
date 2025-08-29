@@ -309,7 +309,8 @@ export const ChatComponent = React.memo(
                 generalStyles.content_block,
                 generalStyles.order_block,
                 generalStyles.crsr_pntr,
-                chatStyles.order_gap
+                chatStyles.order_gap,
+                { [chatStyles.hiddenListChatM]: chat === null } // скрываем только на мобилке
               )}
             >
               <div
@@ -488,7 +489,10 @@ export const ChatComponent = React.memo(
                 generalStyles.crsr_pntr,
                 chatStyles.order_gap,
                 chatStyles.defaultChatBlock,
-                { [chatStyles.defaultChatBlock_with_cookies]: !cookiesAccepted }
+                {
+                  [chatStyles.defaultChatBlock_with_cookies]: !cookiesAccepted,
+                },
+                { [chatStyles.hiddenListChatM]: chat === null } // скрываем только на мобилке
               )}
             >
               <div className={chatStyles.defaultChatText}>

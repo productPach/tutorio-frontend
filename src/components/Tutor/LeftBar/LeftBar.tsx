@@ -200,7 +200,7 @@ const LeftBar: React.FC<{
                   [styles.undrln]: page === "Wiki",
                 })}
               >
-                База знаний
+                Помощь
               </span>
             </li>
           </Link>

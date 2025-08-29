@@ -8,7 +8,7 @@
   align-items: flex-end;
 }
 
-.sheet {
+/* .sheet {
   width: 100%;
   background: rgba(255, 255, 255);
   border-radius: 10px 10px 0 0;
@@ -19,6 +19,19 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+} */
+
+.sheet {
+  width: 100%;
+  height: auto;
+  max-height: 90dvh;
+  background: #fff;
+  border-radius: 10px 10px 0 0;
+  padding: 24px 20px;
+  overflow-y: auto; /* auto вместо scroll */
+  -webkit-overflow-scrolling: touch; /* для iOS плавный скролл */
+  display: flex;
+  flex-direction: column;
 }
 
 .grabber {
@@ -34,4 +47,10 @@
   overflow: hidden; /* Скрываем прыжки снизу */
   display: flex;
   align-items: flex-end;
+}
+
+.sheetContent {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* плавный скролл iOS */
 }

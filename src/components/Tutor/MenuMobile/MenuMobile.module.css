@@ -1,79 +1,59 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+.menuButton {
+  display: none;
+  position: relative;
+  z-index: 100;
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 28px;
+  color: #343330;
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
-html {
-  height: 100%;
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.menuPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 85dvh; /* высота меню */
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  gap: 20px;
+  z-index: 1001;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
-body {
-  padding: 0px;
-  margin: 0;
-  font-family: "Source Sans 3", sans-serif;
-  background-color: #f1f2f4;
-  color: #444444;
-  font-size: 16px;
-  overflow: auto;
-  -ms-overflow-style: none; /* Для Internet Explorer и Edge */
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100%;
-  min-width: 280px;
-}
-body::-webkit-scrollbar {
-  display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
-}
-
-span {
-  font-family: "Source Sans 3", sans-serif;
-}
-
-a {
-  color: #333333;
+.link {
+  font-size: 20px;
+  color: #222;
   text-decoration: none;
+  transition: color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
-
-ul {
-  list-style-type: none;
-  padding-left: 0;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  list-style-type: none;
-}
-
-main {
-  padding-left: calc(50% - 600px);
-  padding-right: calc(50% - 600px);
-}
-@media (max-width: 1280px) {
-  main {
-    padding-left: calc(50% - 480px);
-    padding-right: calc(50% - 480px);
-  }
-}
-@media (max-width: 1024px) {
-  main {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-}
-@media (max-width: 480px) {
-  main {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-}
-input {
-  font-family: "Source Sans 3", sans-serif;
-}
-button:active {
-  transform: scale(0.98);
-}
-
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************
@@ -120,8 +100,8 @@ button:active {
 ******************************************************
 ****************************************************** */
 @media (max-width: 768px) {
-  body {
-    font-size: 17px;
+  .menuButton {
+    display: block;
   }
 }
 /* ******************************************************
@@ -150,6 +130,9 @@ button:active {
 ******************************************************
 ****************************************************** */
 @media (max-width: 480px) {
+  .menuPanel {
+    height: 87dvh; /* высота меню */
+  }
 }
 /* ******************************************************
 ******************************************************

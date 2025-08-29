@@ -12,8 +12,14 @@ import { WelcomeScreen } from "@/components/Tutor/WelcomeScreen/WelcomeScreen";
 import { useRouter } from "next/navigation";
 import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
 import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal";
-import { setLoadingPage, setScrollY } from "@/store/features/modalSlice";
+import {
+  setIsSheetResponseTutorToStudent,
+  setIsSheetResponseTutorToStudentWithContakt,
+  setLoadingPage,
+  setScrollY,
+} from "@/store/features/modalSlice";
 import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 
 const OrdersPage: React.FC = () => {
   const page = "Orders";
@@ -23,9 +29,16 @@ const OrdersPage: React.FC = () => {
   const isModalResponseTutorToStudent = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudent
   );
+  const isSheetResponseTutorToStudent = useAppSelector(
+    (state) => state.modal.isSheetResponseTutorToStudent
+  );
   const isModalResponseTutorToStudentWithContakt = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudentWithContakt
   );
+  const isSheetResponseTutorToStudentWithContakt = useAppSelector(
+    (state) => state.modal.isSheetResponseTutorToStudentWithContakt
+  );
+
   const isModalLoadingPage = useAppSelector((state) => state.modal.loadingPage);
 
   useEffect(() => {
@@ -55,16 +68,36 @@ const OrdersPage: React.FC = () => {
     };
   }, []);
 
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth > 1280);
+    };
+
+    // Инициализация
+    handleResize();
+
+    // Подписка на изменение размера
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
-      <section className={clsx(styles.container, styles.center)}>
+      <section
+        className={clsx(styles.container, styles.center, styles.paddingBottM)}
+      >
         <LeftBar page={page} />
         <div className={clsx(styles.content)}>
           <WelcomeScreen page={page} />
           <Orders />
         </div>
 
-        <SideBar />
+        {showSidebar && <SideBar />}
       </section>
       <Modal
         titleModal={"Пополните баланс, чтобы откликнуться"}
@@ -78,12 +111,26 @@ const OrdersPage: React.FC = () => {
         isModal={isModalResponseTutorToStudent}
         modalId={"responseTutorToStudentModal"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetResponseTutorToStudent}
+        onClose={() => dispatch(setIsSheetResponseTutorToStudent(false))}
+      >
+        <ResponseTutorToStudentModal />
+      </BottomSheet>
       <Modal
         titleModal={"Получить контакты"}
         contentModal={<ResponseTutorToStudentWithContaktModal />}
         isModal={isModalResponseTutorToStudentWithContakt}
         modalId={"responseTutorToStudentWithContaktModal"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetResponseTutorToStudentWithContakt}
+        onClose={() =>
+          dispatch(setIsSheetResponseTutorToStudentWithContakt(false))
+        }
+      >
+        <ResponseTutorToStudentWithContaktModal />
+      </BottomSheet>
       <Modal
         titleModal={""}
         contentModal={<LoadingPageModal />}
