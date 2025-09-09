@@ -31,12 +31,13 @@ import { useChat } from "@/context/ChatContext";
 import { sortMessages } from "@/utils/chat/sortMessages";
 import {
   setIsModalAcceptResponse,
-  setIsModalBalanceBoost,
   setIsModalCreateContractByTutor,
   setIsModalRejectResponse,
-  setValueModalBalanceBoost,
+  setIsSheetAcceptResponse,
+  setIsSheetCreateContractByTutor,
+  setIsSheetRejectResponse,
 } from "@/store/features/modalSlice";
-import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
+import { SendHorizontal } from "lucide-react";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -83,9 +84,17 @@ export const ChatComponent = React.memo(
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault(); // предотвращаем обычный перенос строки
-        if (inputValue.trim() !== "") {
-          handleSendMessageComp();
-        }
+        preHandleSendMessage();
+      }
+    };
+
+    const [isSending, setIsSending] = useState(false);
+
+    const preHandleSendMessage = () => {
+      if (inputValue.trim() !== "" && !isSending) {
+        setIsSending(true); // блокируем повторное нажатие
+        handleSendMessageComp();
+        setIsSending(false); // разблокируем
       }
     };
 
@@ -296,6 +305,8 @@ export const ChatComponent = React.memo(
       }
     };
 
+    const isActiveIcon = inputValue.length > 0;
+
     // const isSelectedTutor =
     //   chat?.order.contracts && chat.order.contracts.length > 0;
     // console.log(isSelectedTutor);
@@ -307,6 +318,7 @@ export const ChatComponent = React.memo(
             <div
               className={clsx(
                 generalStyles.content_block,
+                chatStyles.content_blockChatM,
                 generalStyles.order_block,
                 generalStyles.crsr_pntr,
                 chatStyles.order_gap,
@@ -332,6 +344,20 @@ export const ChatComponent = React.memo(
                     height={34}
                     alt=""
                   />
+
+                  <div
+                    onClick={() => {
+                      dispatch(setChat(null));
+                    }}
+                    className={chatStyles.backImg}
+                  >
+                    <Image
+                      src="/../img/icon/tutor/go-back.svg"
+                      alt="Назад"
+                      width={32}
+                      height={32}
+                    />
+                  </div>
                 </div>
                 <div className={chatStyles.flex4}>
                   <div
@@ -379,18 +405,24 @@ export const ChatComponent = React.memo(
               {!chat.tutorHasAccess && (
                 <div className={clsx(chatNoAccessStyles.inputMessageBlock)}>
                   <div className={chatNoAccessStyles.notAccessTextContainer}>
-                    <h3 className={chatNoAccessStyles.notAccessTitle}>
-                      Ученик предложил вам заказ 📩
-                    </h3>{" "}
-                    Ознакомьтесь с условиями — если заказ вам подходит,
-                    принимайте его. После этого сможете обсудить детали и
-                    обменяться контактами
+                    <div className={chatNoAccessStyles.dsplNone}>
+                      <h3 className={chatNoAccessStyles.notAccessTitle}>
+                        Ученик предложил вам заказ 📩
+                      </h3>{" "}
+                      Ознакомьтесь с условиями — если заказ вам подходит,
+                      принимайте его. После этого сможете обсудить детали и
+                      обменяться контактами
+                    </div>
                     <div className={chatNoAccessStyles.containerButton}>
                       <button
                         className={chatNoAccessStyles.button}
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalAcceptResponse(true));
+                          if (window.innerWidth < 769) {
+                            dispatch(setIsSheetAcceptResponse(true)); // Открываем шторку
+                          } else {
+                            dispatch(setIsModalAcceptResponse(true));
+                          }
                           // Пополнение баланса
                           // dispatch(setIsModalBalanceBoost(true));
                           // orderById?.responseCost &&
@@ -421,7 +453,11 @@ export const ChatComponent = React.memo(
                         className={chatNoAccessStyles.buttonCancel}
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalRejectResponse(true));
+                          if (window.innerWidth < 769) {
+                            dispatch(setIsSheetRejectResponse(true)); // Открываем шторку
+                          } else {
+                            dispatch(setIsModalRejectResponse(true));
+                          }
                         }}
                         type="button"
                       >
@@ -442,7 +478,11 @@ export const ChatComponent = React.memo(
                           className={chatStyles.buttonContract}
                           onClick={(e) => {
                             e.preventDefault();
-                            dispatch(setIsModalCreateContractByTutor(true));
+                            if (window.innerWidth < 769) {
+                              dispatch(setIsSheetCreateContractByTutor(true)); // Открываем шторку
+                            } else {
+                              dispatch(setIsModalCreateContractByTutor(true));
+                            }
                           }}
                           type="button"
                         >
@@ -465,6 +505,17 @@ export const ChatComponent = React.memo(
                         rows={1}
                         className={chatStyles.textarea}
                         disabled={!chat.tutorHasAccess}
+                      />
+                    </div>
+                    <div
+                      onMouseDown={preHandleSendMessage}
+                      className={`${chatStyles.wrapperIM} ${isActiveIcon ? chatStyles.activeWrapperIM : ""}`}
+                    >
+                      <SendHorizontal
+                        size={24}
+                        className={`${chatStyles.iconIM} ${isActiveIcon ? chatStyles.activeIconIM : ""}`}
+                        color={isActiveIcon ? "white" : "#777777"}
+                        strokeWidth={isActiveIcon ? 1.5 : 1.25}
                       />
                     </div>
                     <EmojiPicker

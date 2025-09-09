@@ -63,8 +63,8 @@ main {
 }
 @media (max-width: 480px) {
   main {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 input {

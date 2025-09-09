@@ -28,8 +28,11 @@ type ModalStateType = {
   loadingPage: boolean;
   isModalRejectResponse: boolean;
   isModalAcceptResponse: boolean;
+  isSheetRejectResponse: boolean;
+  isSheetAcceptResponse: boolean;
   isSheetOpen: boolean;
   isModalCreateContractByTutor: boolean;
+  isSheetCreateContractByTutor: boolean;
   isModalCreateContractByStudent: boolean;
   isSheetCreateContractByStudent: boolean;
   isModalHiddenOrder: boolean;
@@ -73,8 +76,11 @@ const initialState: ModalStateType = {
   loadingPage: false,
   isModalRejectResponse: false,
   isModalAcceptResponse: false,
+  isSheetRejectResponse: false,
+  isSheetAcceptResponse: false,
   isSheetOpen: false,
   isModalCreateContractByTutor: false,
+  isSheetCreateContractByTutor: false,
   isModalCreateContractByStudent: false,
   isSheetCreateContractByStudent: false,
   isModalHiddenOrder: false,
@@ -175,11 +181,20 @@ const modalSlice = createSlice({
     setIsModalAcceptResponse(state, action: PayloadAction<boolean>) {
       state.isModalAcceptResponse = action.payload;
     },
+    setIsSheetRejectResponse(state, action: PayloadAction<boolean>) {
+      state.isSheetRejectResponse = action.payload;
+    },
+    setIsSheetAcceptResponse(state, action: PayloadAction<boolean>) {
+      state.isSheetAcceptResponse = action.payload;
+    },
     setIsSheetOpen(state, action: PayloadAction<boolean>) {
       state.isSheetOpen = action.payload;
     },
     setIsModalCreateContractByTutor(state, action: PayloadAction<boolean>) {
       state.isModalCreateContractByTutor = action.payload;
+    },
+    setIsSheetCreateContractByTutor(state, action: PayloadAction<boolean>) {
+      state.isSheetCreateContractByTutor = action.payload;
     },
     setIsModalCreateContractByStudent(state, action: PayloadAction<boolean>) {
       state.isModalCreateContractByStudent = action.payload;
@@ -251,8 +266,11 @@ export const {
   setLoadingPage,
   setIsModalRejectResponse,
   setIsModalAcceptResponse,
+  setIsSheetRejectResponse,
+  setIsSheetAcceptResponse,
   setIsSheetOpen,
   setIsModalCreateContractByTutor,
+  setIsSheetCreateContractByTutor,
   setIsModalCreateContractByStudent,
   setIsSheetCreateContractByStudent,
   setIsModalHiddenOrder,

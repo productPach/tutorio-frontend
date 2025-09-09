@@ -33,7 +33,7 @@ const BottomMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля leftbar
   const scrollYForLeftBar = useAppSelector((state) => state.modal.scrollY);
   const [isSafari, setIsSafari] = useState(false);
-
+  const chat = useAppSelector((state) => state.chat.chat);
   const unreadCount = useTotalUnreadCount();
 
   // Определяем, используется ли Safari
@@ -45,99 +45,102 @@ const BottomMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
   }, []);
 
   return (
-    <div className={styles.containerMenu}>
-      <div
-        className={styles.wrapMenuM}
-        style={isSafari ? undefined : { top: 0 }}
-      >
-        <div className={styles.containerUlM}>
-          <ul className={styles.ulM}>
-            <li
-              className={clsx(styles.liM, {
-                [styles.activeLi]: isActive("/tutor/orders"),
-              })}
-              onClick={() => route.push("/tutor/orders")}
-            >
-              <Text
-                size={24}
-                color={isActive("/tutor/orders") ? "#343330" : "#777777"}
-                strokeWidth={isActive("/tutor/orders") ? 1.5 : 1.25}
-              />
-              <span
-                className={clsx(styles.left_menu__list_text, {
-                  [styles.boldTM]: isActive("/tutor/orders"),
+    ((isActive("/tutor/responses") && !chat) ||
+      !isActive("/tutor/responses")) && (
+      <div className={styles.containerMenu}>
+        <div
+          className={styles.wrapMenuM}
+          style={isSafari ? undefined : { top: 0 }}
+        >
+          <div className={styles.containerUlM}>
+            <ul className={styles.ulM}>
+              <li
+                className={clsx(styles.liM, {
+                  [styles.activeLi]: isActive("/tutor/orders"),
                 })}
+                onClick={() => route.push("/tutor/orders")}
               >
-                Заказы
-              </span>
-            </li>
+                <Text
+                  size={24}
+                  color={isActive("/tutor/orders") ? "#343330" : "#777777"}
+                  strokeWidth={isActive("/tutor/orders") ? 1.5 : 1.25}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.boldTM]: isActive("/tutor/orders"),
+                  })}
+                >
+                  Заказы
+                </span>
+              </li>
 
-            <li
-              className={clsx(styles.liM, {
-                [styles.activeLi]: isActive("/tutor/responses"),
-              })}
-              onClick={() => route.push("/tutor/responses")}
-            >
-              <Send
-                size={24}
-                color={isActive("/tutor/responses") ? "#343330" : "#777777"}
-                strokeWidth={isActive("/tutor/responses") ? 1.5 : 1.25}
-              />
-              {unreadCount > 0 && (
-                <span className={styles.unreadCountM}>{unreadCount}</span>
-              )}
-              <span
-                className={clsx(styles.left_menu__list_text, {
-                  [styles.boldTM]: isActive("/tutor/responses"),
+              <li
+                className={clsx(styles.liM, {
+                  [styles.activeLi]: isActive("/tutor/responses"),
                 })}
+                onClick={() => route.push("/tutor/responses")}
               >
-                Отклики
-              </span>
-            </li>
+                <Send
+                  size={24}
+                  color={isActive("/tutor/responses") ? "#343330" : "#777777"}
+                  strokeWidth={isActive("/tutor/responses") ? 1.5 : 1.25}
+                />
+                {unreadCount > 0 && (
+                  <span className={styles.unreadCountM}>{unreadCount}</span>
+                )}
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.boldTM]: isActive("/tutor/responses"),
+                  })}
+                >
+                  Отклики
+                </span>
+              </li>
 
-            <li
-              className={clsx(styles.liM, {
-                [styles.activeLi]: isActive("/tutor/wallet"),
-              })}
-              onClick={() => route.push("/tutor/wallet")}
-            >
-              <Wallet
-                size={24}
-                color={isActive("/tutor/wallet") ? "#343330" : "#777777"}
-                strokeWidth={isActive("/tutor/wallet") ? 1.5 : 1.25}
-              />
-              <span
-                className={clsx(styles.left_menu__list_text, {
-                  [styles.boldTM]: isActive("/tutor/wallet"),
+              <li
+                className={clsx(styles.liM, {
+                  [styles.activeLi]: isActive("/tutor/wallet"),
                 })}
+                onClick={() => route.push("/tutor/wallet")}
               >
-                Баланс
-              </span>
-            </li>
+                <Wallet
+                  size={24}
+                  color={isActive("/tutor/wallet") ? "#343330" : "#777777"}
+                  strokeWidth={isActive("/tutor/wallet") ? 1.5 : 1.25}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.boldTM]: isActive("/tutor/wallet"),
+                  })}
+                >
+                  Баланс
+                </span>
+              </li>
 
-            <li
-              className={clsx(styles.liM, {
-                [styles.activeLi]: isActive("/tutor/wiki"),
-              })}
-              onClick={() => route.push("/tutor/wiki")}
-            >
-              <MessageCircleQuestionMark
-                size={24}
-                color={isActive("/tutor/wiki") ? "#343330" : "#777777"}
-                strokeWidth={isActive("/tutor/wiki") ? 1.5 : 1.25}
-              />
-              <span
-                className={clsx(styles.left_menu__list_text, {
-                  [styles.boldTM]: isActive("/tutor/wiki"),
+              <li
+                className={clsx(styles.liM, {
+                  [styles.activeLi]: isActive("/tutor/wiki"),
                 })}
+                onClick={() => route.push("/tutor/wiki")}
               >
-                Помощь
-              </span>
-            </li>
-          </ul>
+                <MessageCircleQuestionMark
+                  size={24}
+                  color={isActive("/tutor/wiki") ? "#343330" : "#777777"}
+                  strokeWidth={isActive("/tutor/wiki") ? 1.5 : 1.25}
+                />
+                <span
+                  className={clsx(styles.left_menu__list_text, {
+                    [styles.boldTM]: isActive("/tutor/wiki"),
+                  })}
+                >
+                  Помощь
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

@@ -453,6 +453,13 @@
   transition: all 0.3s;
 }
 
+.sidebar_filterOrder {
+  border-radius: 10px;
+  padding: 2px 18px 18px 18px;
+  height: fit-content;
+  background-color: #ffffff;
+}
+
 .sidebar_title {
   font-weight: 600;
 }
@@ -841,6 +848,9 @@
   .contentChat {
     grid-column: span 20;
   }
+  .sidebarResponse {
+    position: initial;
+  }
   .sidebarResponseChat {
     grid-column: span 20;
   }
@@ -907,6 +917,9 @@
   }
   .paddingBottM {
     padding-bottom: 70px;
+  }
+  .headerDplNone {
+    display: none;
   }
 }
 /* ******************************************************
@@ -995,6 +1008,9 @@
   }
   .fireIcon {
     top: 0px;
+  }
+  .containerChatMrgnTp0 {
+    margin-top: 0;
   }
 }
 /* ******************************************************

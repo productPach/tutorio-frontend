@@ -36,6 +36,9 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const token = useAppSelector((state) => state.auth.token);
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
+  const chat = useAppSelector((state) => state.chat.chat);
+  // Определяем активный пункт меню на основе pathname
+  const isActive = (path: string) => pathname.startsWith(path);
 
   // Получаем токен из куки
   // Если токен в куки есть, тогда добавляем токен в Redux
@@ -212,6 +215,24 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     ? `${getBackendUrl()}${tutor.avatarUrl}`
     : "/img/tutor/avatarBasic.png";
 
+  const [showHeader, setShowHeader] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowHeader(window.innerWidth > 768);
+    };
+
+    // Инициализация
+    handleResize();
+
+    // Подписка на изменение размера
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
       {!isLoadedPage ? (
@@ -222,40 +243,45 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         </div>
       ) : (
         <>
-          <header>
-            <div className={clsx(styles.header, styles.center)}>
-              <div className={styles.headerM}>
-                <MenuMobile />
-                <Link href="/tutor/orders">
-                  <div className={styles.header__logo}>
-                    tutorio
-                    <span className={styles.header__underLogo}>
-                      Онлайн-сервис подбора репетиторов
-                    </span>
-                  </div>
+          {((isActive("/tutor/responses") && !chat) ||
+            (isActive("/tutor/responses") && chat && showHeader) ||
+            !isActive("/tutor/responses")) && (
+            <header>
+              <div className={clsx(styles.header, styles.center)}>
+                <div className={styles.headerM}>
+                  <MenuMobile />
+                  <Link href="/tutor/orders">
+                    <div className={styles.header__logo}>
+                      tutorio
+                      <span className={styles.header__underLogo}>
+                        Онлайн-сервис подбора репетиторов
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+                <Link href="/tutor/orders" className={styles.header_menu}>
+                  {tutor && (
+                    <>
+                      <div className={styles.titleWrap}>
+                        <span className={styles.ellipsis}>{tutor.name}</span>
+                      </div>
+
+                      <Image
+                        className={styles.header__menu_avatar}
+                        src={avatarSrc}
+                        alt={`${tutor?.name}`}
+                        width={42}
+                        height={42}
+                        priority
+                      />
+                    </>
+                  )}
                 </Link>
               </div>
-              <Link href="/tutor/orders" className={styles.header_menu}>
-                {tutor && (
-                  <>
-                    <div className={styles.titleWrap}>
-                      <span className={styles.ellipsis}>{tutor.name}</span>
-                    </div>
+            </header>
+          )}
 
-                    <Image
-                      className={styles.header__menu_avatar}
-                      src={avatarSrc}
-                      alt={`${tutor?.name}`}
-                      width={42}
-                      height={42}
-                      priority
-                    />
-                  </>
-                )}
-              </Link>
-            </div>
-          </header>
-          {tutor && <main>{children}</main>}
+          {tutor && <main className={styles.main}>{children}</main>}
           <footer className={clsx(styles.center)}>
             {/* Добавьте здесь другие элементы подвала */}
           </footer>

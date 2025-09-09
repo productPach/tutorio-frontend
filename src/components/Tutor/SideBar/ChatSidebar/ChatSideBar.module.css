@@ -267,7 +267,7 @@
 
 @media (max-width: 1280px) {
   .hiddenListChatM {
-    display: none;
+    display: none !important;
   }
 }
 /* ******************************************************
@@ -282,6 +282,6 @@
     padding: 10px 16px;
   }
   .paddingBottM40 {
-    padding-bottom: 40px;
+    padding-bottom: 32px;
   }
 }
