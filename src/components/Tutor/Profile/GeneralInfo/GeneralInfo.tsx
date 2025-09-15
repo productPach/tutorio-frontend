@@ -9,6 +9,8 @@ import Image from "next/image";
 import {
   setIsModalFio,
   setIsModalProfileInfo,
+  setIsSheetFio,
+  setIsSheetProfileInfo,
 } from "@/store/features/modalSlice";
 
 export const GeneralInfo = () => {
@@ -38,7 +40,11 @@ export const GeneralInfo = () => {
           <Image
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalFio(true));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetFio(true)); // Открываем шторку
+              } else {
+                dispatch(setIsModalFio(true));
+              }
             }}
             title="Изменить"
             className={componentStyle.img}
@@ -65,7 +71,11 @@ export const GeneralInfo = () => {
           <Image
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalProfileInfo(true));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetProfileInfo(true)); // Открываем шторку
+              } else {
+                dispatch(setIsModalProfileInfo(true));
+              }
             }}
             className={componentStyle.img}
             src={
@@ -84,7 +94,11 @@ export const GeneralInfo = () => {
           <span
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalProfileInfo(true));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetProfileInfo(true)); // Открываем шторку
+              } else {
+                dispatch(setIsModalProfileInfo(true));
+              }
             }}
           >
             {!tutor?.profileInfo &&
@@ -95,7 +109,11 @@ export const GeneralInfo = () => {
         <p
           onClick={(e) => {
             e.preventDefault();
-            dispatch(setIsModalProfileInfo(true));
+            if (window.innerWidth < 769) {
+              dispatch(setIsSheetProfileInfo(true)); // Открываем шторку
+            } else {
+              dispatch(setIsModalProfileInfo(true));
+            }
           }}
           className={componentStyle.profileInfo}
         >

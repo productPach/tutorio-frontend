@@ -53,7 +53,9 @@ const TopicPage: React.FC = () => {
   }, [token, topic, dispatch]);
 
   return (
-    <section className={clsx(styles.container, styles.center)}>
+    <section
+      className={clsx(styles.container, styles.center, styles.paddingBottM)}
+    >
       <LeftBar page={page} pageName={pageName} />
       <div className={styles.content}>
         {topicArr && <Topic themes={themes} topicTitle={topicArr.title} />}

@@ -5,7 +5,7 @@ import clsx from "clsx";
 import styles from "./Fio.module.css";
 import { ChangeEvent, useEffect, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
-import { setIsModalFio } from "@/store/features/modalSlice";
+import { setIsModalFio, setIsSheetFio } from "@/store/features/modalSlice";
 
 export const Fio = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +33,7 @@ export const Fio = () => {
     if (token && id) {
       dispatch(updateTutor({ id, token, name })).unwrap;
       dispatch(setIsModalFio(false));
+      dispatch(setIsSheetFio(false));
     }
   };
 
