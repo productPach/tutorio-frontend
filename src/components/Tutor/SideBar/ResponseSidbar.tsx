@@ -113,7 +113,7 @@ export const ResponseSidbar = () => {
                 /* Отклик на заказ без контактов */
                 <div
                   className={clsx(
-                    generalStyles.sidebar_filter,
+                    generalStyles.sidebar_filterOrder,
                     orderById?.status === "Closed" && generalStyles.closedFilter
                   )}
                 >
@@ -169,7 +169,7 @@ export const ResponseSidbar = () => {
                 <>
                   <div
                     className={clsx(
-                      generalStyles.sidebar_filter,
+                      generalStyles.sidebar_filterOrder,
                       orderById?.status === "Closed" &&
                         generalStyles.closedFilter
                     )}
@@ -207,7 +207,7 @@ export const ResponseSidbar = () => {
                 <>
                   <div
                     className={clsx(
-                      generalStyles.sidebar_filter,
+                      generalStyles.sidebar_filterOrder,
                       orderById?.status === "Closed" &&
                         generalStyles.closedFilter
                     )}

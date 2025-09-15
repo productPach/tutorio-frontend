@@ -78,9 +78,29 @@ const OrderPage: React.FC = () => {
     fetchStudent();
   }, [orderById, token]);
 
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth > 1280);
+    };
+
+    // Инициализация
+    handleResize();
+
+    // Подписка на изменение размера
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
-      <section className={clsx(styles.container, styles.center)}>
+      <section
+        className={clsx(styles.container, styles.center, styles.paddingBottM)}
+      >
         <LeftBar page={page} />
         <div className={styles.content}>
           <WelcomeScreen page={page} />
@@ -92,7 +112,7 @@ const OrderPage: React.FC = () => {
             locations={locations}
           />
         </div>
-        <ResponseSidbar />
+        {showSidebar && <ResponseSidbar />}
       </section>
       <Modal
         titleModal={"Пополните баланс, чтобы откликнуться"}

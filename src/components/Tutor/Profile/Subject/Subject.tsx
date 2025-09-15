@@ -10,6 +10,7 @@ import { updateTutor } from "@/store/features/tutorSlice";
 import clsx from "clsx";
 import {
   setIsModalEditSubjectPrices,
+  setIsSheetEditSubjectPrices,
   setSubjectForEditInModal,
 } from "@/store/features/modalSlice";
 import { getAllSubjects } from "@/store/features/subjectSlice";
@@ -206,8 +207,12 @@ export const Subject = () => {
                         className={componentSubjectStyle.linkToPriceSubject}
                         onClick={(e) => {
                           e.preventDefault();
-                          dispatch(setIsModalEditSubjectPrices(true));
                           dispatch(setSubjectForEditInModal(subjectId)); // Передаем ID предмета
+                          if (window.innerWidth < 769) {
+                            dispatch(setIsSheetEditSubjectPrices(true)); // Открываем шторку
+                          } else {
+                            dispatch(setIsModalEditSubjectPrices(true));
+                          }
                         }}
                       >
                         {tutor?.subjectPrices?.some(

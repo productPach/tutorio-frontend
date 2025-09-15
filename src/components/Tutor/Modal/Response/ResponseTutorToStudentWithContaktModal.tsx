@@ -6,6 +6,7 @@ import styles from "../Profil/ProfileInfo/ProfileInfo.module.css";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetResponseTutorToStudentWithContakt,
   setLoadingPage,
 } from "@/store/features/modalSlice";
 import {
@@ -137,6 +138,7 @@ export const ResponseTutorToStudentWithContaktModal = () => {
           }, 0);
         }
         dispatch(setIsModalResponseTutorToStudentWithContakt(false));
+        dispatch(setIsSheetResponseTutorToStudentWithContakt(false));
         dispatch(setLoadingPage(true));
       } catch (error: any) {
         const errorMessage = error?.message;

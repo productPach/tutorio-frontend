@@ -40,7 +40,9 @@ const SettingsPage: React.FC = () => {
 
   return (
     <>
-      <section className={clsx(styles.container, styles.center)}>
+      <section
+        className={clsx(styles.container, styles.center, styles.paddingBottM)}
+      >
         <LeftBar page={page} />
         <div className={styles.content}>
           <Settings tutor={tutor} logout={logout} />

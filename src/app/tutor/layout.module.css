@@ -295,6 +295,13 @@
   align-items: flex-end;
   justify-content: space-between;
 }
+.order_block_flx_rw_spbtw2 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  justify-content: space-between;
+}
 
 .order_block_flx_rw_spbtw_price {
   font-size: 18px;
@@ -316,6 +323,7 @@
 
 .order_block_flx_rw_flxstrt svg {
   margin-top: 0;
+  margin-left: -4px;
 }
 
 .order_block_flx_rw_subtext {
@@ -349,6 +357,9 @@
   opacity: 0; /* Начальная прозрачность */
   animation: fadeIn 0.5s forwards; /* Анимация появления */
   height: fit-content;
+}
+.sidebarM {
+  display: none;
 }
 
 .fixedSB {
@@ -447,6 +458,13 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
+}
+
+.sidebar_filterOrder {
+  border-radius: 10px;
+  padding: 2px 18px 18px 18px;
+  height: fit-content;
+  background-color: #ffffff;
 }
 
 .sidebar_title {
@@ -749,6 +767,38 @@
   width: fit-content;
   display: block;
 }
+.order_block_action {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+.header_menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 103px; /* минимальная ширина */
+  max-width: 100%; /* ограничиваем ширину родителя */
+  flex-shrink: 1; /* разрешаем сжатие */
+}
+
+.titleWrap {
+  flex: 1 1 auto; /* занимает всё доступное место */
+  min-width: 0; /* критично для сжатия внутри flex */
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+.ellipsis {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header_menuLink {
+  display: flex; /* важно, чтобы flex внутри Link работал */
+  max-width: 100%; /* теперь ограничение работает */
+  text-decoration: none; /* чтобы ссылка не подчёркивалась */
+}
 
 /* Адаптивные стили под разрешения экранов */
 
@@ -786,13 +836,33 @@
     grid-column: span 7;
   }
   .content {
-    grid-column: span 18;
+    grid-column: span 20;
   }
   .contentFull {
     grid-column: span 20;
   }
   .responseMenuM {
     display: block;
+  }
+  .sidebarM {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .contentChat {
+    grid-column: span 20;
+  }
+  .sidebarResponse {
+    position: initial;
+  }
+  .sidebarResponseChat {
+    grid-column: span 20;
+  }
+  .hiddenListChatM {
+    display: none;
   }
 }
 /* ******************************************************
@@ -807,14 +877,11 @@
     padding-left: 30px;
     padding-right: 30px;
   }
-  .leftbar {
-    grid-column: span 7;
-  }
-  .content {
-    grid-column: span 13;
-  }
   .contentFull {
     grid-column: span 20;
+  }
+  .sidebar_filter {
+    padding: 0;
   }
 }
 /* ******************************************************
@@ -845,6 +912,22 @@
     padding: 12px 12px;
     font-weight: 500;
   }
+  .container {
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: 10px;
+  }
+  .content {
+    grid-column: span 1;
+  }
+  .sidebarM {
+    margin-top: 10px;
+  }
+  .paddingBottM {
+    padding-bottom: 70px;
+  }
+  .headerDplNone {
+    display: none;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -872,10 +955,10 @@
 ******************************************************
 ****************************************************** */
 @media (max-width: 660px) {
-  .center {
+  /* .center {
     padding-left: 30px;
     padding-right: 30px;
-  }
+  } */
 }
 /* ******************************************************
 ******************************************************
@@ -890,8 +973,8 @@
     padding-right: 0px;
   }
   .main {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   .header {
     padding-left: 10px;
@@ -909,8 +992,32 @@
   .content_blockChtM {
     margin-bottom: 3px;
   }
-  .container {
+  .sidebarM {
+    margin-top: 0;
+  }
+  .order_block_flx_rw_spbtw {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .order_block_flx_rw_subtextM {
     margin-top: 10px;
+  }
+  .order_block_action {
+    flex-direction: column;
+  }
+  .blockResponseStudent {
+    max-width: 100%;
+    justify-content: center;
+  }
+  .blockAutoContakts {
+    width: 100%;
+    justify-content: center;
+  }
+  .fireIcon {
+    top: 0px;
+  }
+  .containerChatMrgnTp0 {
+    margin-top: 0;
   }
 }
 /* ******************************************************

@@ -7,7 +7,7 @@ export const Profile = () => {
     <>
       <Link href={"profile/main"} prefetch={true}>
         <div className={styles.content_block}>
-          <div className={styles.order_block_flx_rw_spbtw}>
+          <div className={styles.order_block_flx_rw_spbtw2}>
             <h3>Общая информация</h3>
             <Image
               src="../img/icon/tutor/caretRight.svg"
@@ -20,7 +20,7 @@ export const Profile = () => {
       </Link>
       <Link href={"profile/photo"} prefetch={true}>
         <div className={styles.content_block}>
-          <div className={styles.order_block_flx_rw_spbtw}>
+          <div className={styles.order_block_flx_rw_spbtw2}>
             <h3>Фотография</h3>
             <Image
               src="../img/icon/tutor/caretRight.svg"
@@ -46,7 +46,7 @@ export const Profile = () => {
       </Link> */}
       <Link href={"profile/subjects"} prefetch={true}>
         <div className={styles.content_block}>
-          <div className={styles.order_block_flx_rw_spbtw}>
+          <div className={styles.order_block_flx_rw_spbtw2}>
             <h3>Предметы и условия</h3>
             <Image
               src="../img/icon/tutor/caretRight.svg"
@@ -59,7 +59,7 @@ export const Profile = () => {
       </Link>
       <Link href={"profile/locations"} prefetch={true}>
         <div className={styles.content_block}>
-          <div className={styles.order_block_flx_rw_spbtw}>
+          <div className={styles.order_block_flx_rw_spbtw2}>
             <h3>Место занятий и локации</h3>
             <Image
               src="../img/icon/tutor/caretRight.svg"
@@ -72,7 +72,7 @@ export const Profile = () => {
       </Link>
       <Link href={"profile/educations"} prefetch={true}>
         <div className={styles.content_block}>
-          <div className={styles.order_block_flx_rw_spbtw}>
+          <div className={styles.order_block_flx_rw_spbtw2}>
             <h3>Образование и опыт</h3>
             <Image
               src="../img/icon/tutor/caretRight.svg"

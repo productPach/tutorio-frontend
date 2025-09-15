@@ -5,7 +5,7 @@ import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import { ChatComponent } from "@/components/Tutor/Chat/Chat";
 import { ChatSidbar } from "@/components/Tutor/SideBar/ChatSidebar/ChatSideBar";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useChat } from "@/context/ChatContext";
 import { useSearchParams } from "next/navigation";
 import { Modal } from "@/components/Modal/Modal";
@@ -13,11 +13,19 @@ import { RejectResponseModal } from "@/components/Tutor/Modal/Response/RejectRes
 import { BalanceBoost } from "@/components/Tutor/Modal/BalanceBoost/BalanceBoost";
 import { AcceptResponseModal } from "@/components/Tutor/Modal/Response/AcceptResponseModal";
 import { CreateContractByTutorModal } from "../Modal/Response/CreateContractByTutorModal";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import {
+  setIsSheetAcceptResponse,
+  setIsSheetCreateContractByTutor,
+  setIsSheetRejectResponse,
+} from "@/store/features/modalSlice";
 
 const ResponsesPage: React.FC = () => {
   const page = "Responses";
-
+  const dispatch = useAppDispatch();
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const chat = useAppSelector((state) => state.chat.chat);
+
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
   );
@@ -29,9 +37,19 @@ const ResponsesPage: React.FC = () => {
   const isModalRejectResponse = useAppSelector(
     (state) => state.modal.isModalRejectResponse
   );
+  const isSheetAcceptResponse = useAppSelector(
+    (state) => state.modal.isSheetAcceptResponse
+  );
+  const isSheetRejectResponse = useAppSelector(
+    (state) => state.modal.isSheetRejectResponse
+  );
   const isModalCreateContractByTutor = useAppSelector(
     (state) => state.modal.isModalCreateContractByTutor
   );
+  const isSheetCreateContractByTutor = useAppSelector(
+    (state) => state.modal.isSheetCreateContractByTutor
+  );
+
   // Стейт для эмодзи в чате
   const [visibleEmoji, setVisibleEmoji] = useState(false);
 
@@ -51,9 +69,19 @@ const ResponsesPage: React.FC = () => {
 
   return (
     <>
-      <section className={clsx(styles.container, styles.center)}>
+      <section
+        className={clsx(
+          styles.container,
+          styles.containerChatMrgnTp0,
+          styles.center
+        )}
+      >
         <LeftBar page={page} />
-        <div className={clsx(styles.contentChat)}>
+        <div
+          className={clsx(styles.contentChat, {
+            [styles.hiddenListChatM]: chat === null,
+          })}
+        >
           <ChatComponent
             visibleEmoji={visibleEmoji}
             setVisibleEmoji={setVisibleEmoji}
@@ -87,6 +115,24 @@ const ResponsesPage: React.FC = () => {
         isModal={isModalCreateContractByTutor}
         modalId={"createContractByTutor"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetAcceptResponse}
+        onClose={() => dispatch(setIsSheetAcceptResponse(false))}
+      >
+        <AcceptResponseModal />
+      </BottomSheet>
+      <BottomSheet
+        isOpen={isSheetRejectResponse}
+        onClose={() => dispatch(setIsSheetRejectResponse(false))}
+      >
+        <RejectResponseModal />
+      </BottomSheet>
+      <BottomSheet
+        isOpen={isSheetCreateContractByTutor}
+        onClose={() => dispatch(setIsSheetCreateContractByTutor(false))}
+      >
+        <CreateContractByTutorModal />
+      </BottomSheet>
     </>
   );
 };

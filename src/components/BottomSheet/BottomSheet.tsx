@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./BottomSheet.module.css";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -13,6 +13,16 @@ export const BottomSheet = ({
   onClose,
   children,
 }: BottomSheetProps) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
   return (
     <AnimatePresence>
       {isOpen && (
@@ -45,7 +55,14 @@ export const BottomSheet = ({
               onClick={(e) => e.stopPropagation()}
             >
               <div className={styles.grabber} />
-              {children}
+
+              {/* Контент с прокруткой */}
+              <div
+                className={styles.sheetContent}
+                onPointerDown={(e) => e.stopPropagation()} // блокируем drag при скролле
+              >
+                {children}
+              </div>
             </motion.div>
           </div>
         </motion.div>

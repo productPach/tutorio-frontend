@@ -12,9 +12,10 @@ import {
 } from "@/utils/locations/getTitleLocationById";
 import { City, Order, Student } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllSubjects } from "@/store/features/subjectSlice";
 import { useViewedOrders } from "@/hooks/useViewedOrders";
+import { ResponseSidbar } from "../SideBar/ResponseSidbar";
 
 type OrderProps = {
   loading: boolean;
@@ -47,6 +48,24 @@ export const OrderComponent = ({
     dispatch(getAllSubjects());
   }, [dispatch]);
 
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowSidebar(window.innerWidth > 1280);
+    };
+
+    // Инициализация
+    handleResize();
+
+    // Подписка на изменение размера
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
@@ -76,6 +95,7 @@ export const OrderComponent = ({
 
   return (
     <>
+      {!showSidebar && <ResponseSidbar />}
       {orderById?.status === "Closed" && (
         <div
           className={clsx(

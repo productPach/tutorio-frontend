@@ -6,12 +6,15 @@ type ModalStateType = {
   valueModalBalanceBoost: string;
   scrollY: number;
   isModalFio: boolean;
+  isSheetFio: boolean;
   isModalProfileInfo: boolean;
+  isSheetProfileInfo: boolean;
   isModalExperience: boolean;
   isModalEducation: boolean;
   isModalEducationItem: boolean;
   isModalEditEducation: boolean;
   isModalEditSubjectPrices: boolean;
+  isSheetEditSubjectPrices: boolean,
   subjectForEditInModal: string | null; // ID предмета или объект предмета
   isModalPhone: boolean,
   isModalEmail: boolean,
@@ -22,12 +25,17 @@ type ModalStateType = {
   isModalResponseStudentToTutor: boolean;
   tutorIdForResponseStudentToTutor: string | null;
   isModalResponseTutorToStudent: boolean;
+  isSheetResponseTutorToStudent: boolean;
   isModalResponseTutorToStudentWithContakt: boolean;
+  isSheetResponseTutorToStudentWithContakt: boolean;
   loadingPage: boolean;
   isModalRejectResponse: boolean;
   isModalAcceptResponse: boolean;
+  isSheetRejectResponse: boolean;
+  isSheetAcceptResponse: boolean;
   isSheetOpen: boolean;
   isModalCreateContractByTutor: boolean;
+  isSheetCreateContractByTutor: boolean;
   isModalCreateContractByStudent: boolean;
   isSheetCreateContractByStudent: boolean;
   isModalHiddenOrder: boolean;
@@ -40,6 +48,7 @@ type ModalStateType = {
   isSheetCreateReviewByTutor: boolean;
   isValueCreateReview: string | null;
   isReviewIdCreateReview: string | null;
+  isSheetFiltersOrdersForTutor: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -48,12 +57,15 @@ const initialState: ModalStateType = {
   valueModalBalanceBoost: "",
   scrollY: 0,
   isModalFio: false,
+  isSheetFio: false,
   isModalProfileInfo: false,
+  isSheetProfileInfo: false,
   isModalExperience: false,
   isModalEducation: false,
   isModalEducationItem: false,
   isModalEditEducation: false,
   isModalEditSubjectPrices: false,
+  isSheetEditSubjectPrices: false,
   subjectForEditInModal: null,
   isModalPhone: false,
   isModalEmail: false,
@@ -64,12 +76,17 @@ const initialState: ModalStateType = {
   isModalResponseStudentToTutor: false,
   tutorIdForResponseStudentToTutor: null,
   isModalResponseTutorToStudent: false,
+  isSheetResponseTutorToStudent: false,
   isModalResponseTutorToStudentWithContakt: false,
+  isSheetResponseTutorToStudentWithContakt: false,
   loadingPage: false,
   isModalRejectResponse: false,
   isModalAcceptResponse: false,
+  isSheetRejectResponse: false,
+  isSheetAcceptResponse: false,
   isSheetOpen: false,
   isModalCreateContractByTutor: false,
+  isSheetCreateContractByTutor: false,
   isModalCreateContractByStudent: false,
   isSheetCreateContractByStudent: false,
   isModalHiddenOrder: false,
@@ -82,6 +99,7 @@ const initialState: ModalStateType = {
   isSheetCreateReviewByTutor: false,
   isValueCreateReview: null,
   isReviewIdCreateReview: null,
+  isSheetFiltersOrdersForTutor: false,
 };
 
 const modalSlice = createSlice({
@@ -103,8 +121,14 @@ const modalSlice = createSlice({
     setIsModalFio: (state, action: PayloadAction<boolean>) => {
       state.isModalFio = action.payload;
     },
+    setIsSheetFio: (state, action: PayloadAction<boolean>) => {
+      state.isSheetFio = action.payload;
+    },
     setIsModalProfileInfo: (state, action: PayloadAction<boolean>) => {
       state.isModalProfileInfo = action.payload;
+    },
+    setIsSheetProfileInfo: (state, action: PayloadAction<boolean>) => {
+      state.isSheetProfileInfo = action.payload;
     },
     setIsModalExperience: (state, action: PayloadAction<boolean>) => {
       state.isModalExperience = action.payload;
@@ -120,6 +144,9 @@ const modalSlice = createSlice({
     },
     setIsModalEditSubjectPrices: (state, action: PayloadAction<boolean>) => {
       state.isModalEditSubjectPrices = action.payload;
+    },
+    setIsSheetEditSubjectPrices: (state, action: PayloadAction<boolean>) => {
+      state.isSheetEditSubjectPrices = action.payload;
     },
     setSubjectForEditInModal(state, action: PayloadAction<string | null>) {
       state.subjectForEditInModal = action.payload;
@@ -151,8 +178,14 @@ const modalSlice = createSlice({
     setIsModalResponseTutorToStudent(state, action: PayloadAction<boolean>) {
       state.isModalResponseTutorToStudent = action.payload;
     },
+    setIsSheetResponseTutorToStudent(state, action: PayloadAction<boolean>) {
+      state.isSheetResponseTutorToStudent = action.payload;
+    },
     setIsModalResponseTutorToStudentWithContakt(state, action: PayloadAction<boolean>) {
       state.isModalResponseTutorToStudentWithContakt = action.payload;
+    },
+    setIsSheetResponseTutorToStudentWithContakt(state, action: PayloadAction<boolean>) {
+      state.isSheetResponseTutorToStudentWithContakt = action.payload;
     },
     setLoadingPage: (state, action: PayloadAction<boolean>) => {
       state.loadingPage = action.payload;
@@ -163,11 +196,20 @@ const modalSlice = createSlice({
     setIsModalAcceptResponse(state, action: PayloadAction<boolean>) {
       state.isModalAcceptResponse = action.payload;
     },
+    setIsSheetRejectResponse(state, action: PayloadAction<boolean>) {
+      state.isSheetRejectResponse = action.payload;
+    },
+    setIsSheetAcceptResponse(state, action: PayloadAction<boolean>) {
+      state.isSheetAcceptResponse = action.payload;
+    },
     setIsSheetOpen(state, action: PayloadAction<boolean>) {
       state.isSheetOpen = action.payload;
     },
     setIsModalCreateContractByTutor(state, action: PayloadAction<boolean>) {
       state.isModalCreateContractByTutor = action.payload;
+    },
+    setIsSheetCreateContractByTutor(state, action: PayloadAction<boolean>) {
+      state.isSheetCreateContractByTutor = action.payload;
     },
     setIsModalCreateContractByStudent(state, action: PayloadAction<boolean>) {
       state.isModalCreateContractByStudent = action.payload;
@@ -205,6 +247,9 @@ const modalSlice = createSlice({
     setIsReviewIdCreateReview(state, action: PayloadAction<string>) {
       state.isReviewIdCreateReview = action.payload;
     },
+    setIsSheetFiltersOrdersForTutor(state, action: PayloadAction<boolean>) {
+      state.isSheetFiltersOrdersForTutor = action.payload;
+    },
   },
 });
 
@@ -214,12 +259,15 @@ export const {
   setValueModalBalanceBoost,
   setScrollY,
   setIsModalFio,
+  setIsSheetFio,
   setIsModalProfileInfo,
+  setIsSheetProfileInfo,
   setIsModalExperience,
   setIsModalEducation,
   setIsModalEducationItem,
   setIsModalEditEducation,
   setIsModalEditSubjectPrices,
+  setIsSheetEditSubjectPrices,
   setSubjectForEditInModal,
   setIsModalExit,
   setIsModalPhone,
@@ -230,12 +278,17 @@ export const {
   setIsModalResponseStudentToTutor,
   setTutorIdForResponseStudentToTutor,
   setIsModalResponseTutorToStudent,
+  setIsSheetResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetResponseTutorToStudentWithContakt,
   setLoadingPage,
   setIsModalRejectResponse,
   setIsModalAcceptResponse,
+  setIsSheetRejectResponse,
+  setIsSheetAcceptResponse,
   setIsSheetOpen,
   setIsModalCreateContractByTutor,
+  setIsSheetCreateContractByTutor,
   setIsModalCreateContractByStudent,
   setIsSheetCreateContractByStudent,
   setIsModalHiddenOrder,
@@ -248,5 +301,6 @@ export const {
   setIsSheetCreateReviewByTutor,
   setIsValueCreateReview,
   setIsReviewIdCreateReview,
+  setIsSheetFiltersOrdersForTutor,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

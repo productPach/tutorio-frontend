@@ -6,6 +6,7 @@ import buttonStyles from "../../../../app/tutor/button.module.css";
 import componentStyles from "../Profil/Education/Education.module.css";
 import {
   setIsModalRejectResponse,
+  setIsSheetRejectResponse,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { resetChat, sendMessage, updateChat } from "@/store/features/chatSlice";
@@ -44,6 +45,7 @@ export const RejectResponseModal = () => {
       console.error("Ошибка при обновлении чата:", err);
     } finally {
       dispatch(setIsModalRejectResponse(false));
+      dispatch(setIsSheetRejectResponse(false));
       dispatch(setScrollY(0));
     }
   };
@@ -91,6 +93,7 @@ export const RejectResponseModal = () => {
           onClick={(e) => {
             e.preventDefault();
             dispatch(setIsModalRejectResponse(false));
+            dispatch(setIsSheetRejectResponse(false));
             dispatch(setScrollY(0));
           }}
           type="button"

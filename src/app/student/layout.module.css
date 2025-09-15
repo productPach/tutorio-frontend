@@ -785,6 +785,19 @@
 .stPlcSvg {
   min-width: 32px;
 }
+.titleWrap {
+  flex: 1 1 auto; /* занимает всё доступное место */
+  min-width: 0; /* критично для сжатия внутри flex */
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+.ellipsis {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************

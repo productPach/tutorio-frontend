@@ -569,6 +569,8 @@
   cursor: pointer;
   border-radius: 10px;
   color: #777777;
+  padding: 20px;
+  text-align: center;
 }
 
 .dropzone.active {

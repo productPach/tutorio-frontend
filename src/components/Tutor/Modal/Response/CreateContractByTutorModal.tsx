@@ -6,6 +6,7 @@ import buttonStyles from "../../../../app/tutor/button.module.css";
 import componentStyles from "../Profil/Education/Education.module.css";
 import {
   setIsModalCreateContractByTutor,
+  setIsSheetCreateContractByTutor,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
@@ -64,6 +65,7 @@ export const CreateContractByTutorModal = () => {
     } finally {
       setIsLoading(false);
       dispatch(setIsModalCreateContractByTutor(false));
+      dispatch(setIsSheetCreateContractByTutor(false));
       dispatch(setScrollY(0));
     }
   };
@@ -109,6 +111,7 @@ export const CreateContractByTutorModal = () => {
           onClick={(e) => {
             e.preventDefault();
             dispatch(setIsModalCreateContractByTutor(false));
+            dispatch(setIsSheetCreateContractByTutor(false));
             dispatch(setScrollY(0));
           }}
           type="button"

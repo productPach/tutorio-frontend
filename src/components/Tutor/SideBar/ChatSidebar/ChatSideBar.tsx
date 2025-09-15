@@ -45,6 +45,7 @@ export const ChatSidbar = ({
   const token = useAppSelector((state) => state.auth.token);
   const selectChat = useAppSelector((state) => state.chat.chat);
   const student = useAppSelector((state) => state.student.student);
+  const chat = useAppSelector((state) => state.chat.chat);
   const scrollYForSidebarResponse = useAppSelector(
     (state) => state.modal.scrollY
   );
@@ -127,7 +128,9 @@ export const ChatSidbar = ({
     <>
       {!loading && (
         <div
-          className={generalStyles.sidebarResponseChat}
+          className={clsx(generalStyles.sidebarResponseChat, {
+            [styles.hiddenListChatM]: chat !== null, // скрываем только на мобилке
+          })}
           style={
             isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
           }
@@ -167,6 +170,7 @@ export const ChatSidbar = ({
                     <div
                       className={clsx(
                         styles.studentChatWrap,
+                        styles.paddingBottM40,
                         activeTab === "Closed" && styles.closedChat
                       )}
                     >

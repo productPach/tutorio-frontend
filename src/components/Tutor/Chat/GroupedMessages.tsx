@@ -180,6 +180,7 @@ const GroupedMessages: React.FC<Props> = ({
             className={messageClassName}
           >
             <div
+              className={chatStyles.breakWord}
               dangerouslySetInnerHTML={{
                 __html: formatTextWithLinks(text),
               }}

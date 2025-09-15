@@ -5,7 +5,10 @@ import clsx from "clsx";
 import styles from "./ProfileInfo.module.css";
 import { ChangeEvent, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
-import { setIsModalProfileInfo } from "@/store/features/modalSlice";
+import {
+  setIsModalProfileInfo,
+  setIsSheetProfileInfo,
+} from "@/store/features/modalSlice";
 
 export const ProfileInfo = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +35,7 @@ export const ProfileInfo = () => {
     if (token && id) {
       dispatch(updateTutor({ id, token, profileInfo })).unwrap;
       dispatch(setIsModalProfileInfo(false));
+      dispatch(setIsSheetProfileInfo(false));
     }
   };
 

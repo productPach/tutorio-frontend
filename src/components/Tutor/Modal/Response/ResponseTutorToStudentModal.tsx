@@ -8,6 +8,7 @@ import generalStyles from "../../../../app/student/layout.module.css";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   setIsModalResponseTutorToStudent,
+  setIsSheetResponseTutorToStudent,
   setLoadingPage,
 } from "@/store/features/modalSlice";
 import {
@@ -154,6 +155,7 @@ export const ResponseTutorToStudentModal = () => {
           }, 0);
         }
         dispatch(setIsModalResponseTutorToStudent(false));
+        dispatch(setIsSheetResponseTutorToStudent(false));
         dispatch(setLoadingPage(true));
       } catch (error: any) {
         const errorMessage = error?.message;
