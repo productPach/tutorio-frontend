@@ -5,13 +5,19 @@ import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import { Location } from "@/components/Tutor/Profile/Location/Location";
 import { Modal } from "@/components/Modal/Modal";
 import { SelectCity } from "@/components/SelectCity/SelectCity";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import { setIsSheetSelectCity } from "@/store/features/modalSlice";
 
 const LocationsPage: React.FC = () => {
   const page = "Main";
+  const dispatch = useAppDispatch();
   // Получаем значение isModalSelectCity из Redux
   const isModalSelectCity = useAppSelector(
     (state) => state.modal.isModalSelectCity
+  );
+  const isSheetSelectCity = useAppSelector(
+    (state) => state.modal.isSheetSelectCity
   );
 
   return (
@@ -30,6 +36,12 @@ const LocationsPage: React.FC = () => {
         isModal={isModalSelectCity}
         modalId={"selectCity"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetSelectCity}
+        onClose={() => dispatch(setIsSheetSelectCity(false))}
+      >
+        <SelectCity />
+      </BottomSheet>
     </>
   );
 };

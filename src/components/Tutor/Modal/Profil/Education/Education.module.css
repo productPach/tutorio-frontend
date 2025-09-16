@@ -12,6 +12,12 @@
   justify-content: space-between;
   gap: 30px;
 }
+.containerFlxRw2 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
 .containerYear {
   width: 100%;
 }
@@ -20,6 +26,7 @@
   flex-direction: column;
   align-items: center;
   row-gap: 5px;
+  position: relative;
 }
 .deleteFile {
   position: absolute;
@@ -138,6 +145,72 @@
   position: absolute;
   margin-left: 10px;
 }
+.containerEntityShow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin: 25px 0 6px 0;
+  align-items: center;
+}
+.iosSwitch {
+  position: relative;
+  display: inline-block;
+  /* width: 60px;
+  height: 32px; */
+  width: 54px;
+  height: 28px;
+}
+
+.iosSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.iosSwitch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e5ea; /* Серый цвет */
+  /* border-radius: 32px; */
+  border-radius: 28px;
+  transition: background-color 0.3s ease;
+  -webkit-tap-highlight-color: transparent; /* Убирает эффект выделения при тапе в WebKit (Safari, Chrome) */
+  outline: none; /* Убирает контур при фокусе */
+  user-select: none; /* Запрещает выделение текста */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+}
+
+.iosSwitch .slider::before {
+  content: "";
+  position: absolute;
+  /* height: 28px;
+  width: 28px; */
+  height: 24px;
+  width: 24px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.iosSwitch input:checked + .slider {
+  /*background-color: #34c759; /* Зеленый цвет iOS */
+  background-color: #66bb6a;
+}
+
+.iosSwitch input:checked + .slider::before {
+  transform: translateX(26px);
+}
 /* ******************************************************
 ******************************************************
 ******************************************************
@@ -149,5 +222,11 @@
   .containerFlxRw {
     flex-direction: column;
     gap: 0px;
+  }
+  .containerEducationYears {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px 0 10px 0;
   }
 }

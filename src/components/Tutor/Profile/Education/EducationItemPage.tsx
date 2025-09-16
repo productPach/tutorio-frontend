@@ -9,6 +9,11 @@ import { EducationItem } from "@/components/Tutor/Profile/Education/EducationIte
 import { Modal } from "@/components/Modal/Modal";
 import { EducationItemModal } from "@/components/Tutor/Modal/Profil/Education/EducationItemModal";
 import { EditEducationModal } from "@/components/Tutor/Modal/Profil/Education/EditEducationModal";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import {
+  setIsSheetDeleteEducationItem,
+  setIsSheetEditEducation,
+} from "@/store/features/modalSlice";
 
 const EducationItemPage: React.FC = () => {
   const page = "Main";
@@ -20,8 +25,14 @@ const EducationItemPage: React.FC = () => {
   const isModalEducationItem = useAppSelector(
     (state) => state.modal.isModalEducationItem
   );
+  const isSheetDeleteEducationItem = useAppSelector(
+    (state) => state.modal.isSheetDeleteEducationItem
+  );
   const isModalEditEducation = useAppSelector(
     (state) => state.modal.isModalEditEducation
+  );
+  const isSheetEditEducation = useAppSelector(
+    (state) => state.modal.isSheetEditEducation
   );
 
   const { education } = useParams();
@@ -61,6 +72,12 @@ const EducationItemPage: React.FC = () => {
         isModal={isModalEducationItem}
         modalId={"educationItem"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetDeleteEducationItem}
+        onClose={() => dispatch(setIsSheetDeleteEducationItem(false))}
+      >
+        <EducationItemModal />
+      </BottomSheet>
       <Modal
         titleModal={"Образование"}
         contentModal={
@@ -72,6 +89,15 @@ const EducationItemPage: React.FC = () => {
         isModal={isModalEditEducation}
         modalId={"editEducation"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetEditEducation}
+        onClose={() => dispatch(setIsSheetEditEducation(false))}
+      >
+        <EditEducationModal
+          educationId={educationId as string}
+          educationIndex={educationIndex}
+        />
+      </BottomSheet>
     </>
   );
 };

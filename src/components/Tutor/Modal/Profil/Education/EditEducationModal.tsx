@@ -8,7 +8,10 @@ import {
   deletePhotoTutorEducation,
   updateTutorEducation,
 } from "@/store/features/tutorSlice";
-import { setIsModalEditEducation } from "@/store/features/modalSlice";
+import {
+  setIsModalEditEducation,
+  setIsSheetEditEducation,
+} from "@/store/features/modalSlice";
 import { getBackendUrl, host, port } from "@/api/server/configApi";
 import Image from "next/image";
 
@@ -162,6 +165,7 @@ export const EditEducationModal = ({
       .unwrap()
       .then(() => {
         dispatch(setIsModalEditEducation(false)); // Закрытие модального окна после успешного обновления
+        dispatch(setIsSheetEditEducation(false));
       })
       .catch((error) => {
         console.error("Ошибка при обновлении образования:", error);
@@ -298,7 +302,7 @@ export const EditEducationModal = ({
       <div className={styles.description}>
         Диплом, сертификат и другие документы!
       </div>
-      <div className={componentStyles.containerFlxRw}>
+      <div className={componentStyles.containerFlxRw2}>
         {selectedFiles.map((file, index) => (
           <div className={componentStyles.fileWrap} key={index}>
             <div className={componentStyles.fileContainer}>

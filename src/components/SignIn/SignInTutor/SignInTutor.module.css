@@ -407,7 +407,8 @@
   flex-wrap: nowrap;
   align-items: center;
   gap: 10px;
-  min-width: fit-content;
+  /* min-width: fit-content; */
+  overflow: hidden;
 }
 
 .checkboxRightContent {
@@ -637,6 +638,11 @@
   padding: 10px;
   text-align: center;
 }
+.answerTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 /* Адаптивные стили под разрешения экранов */
 
 /* ******************************************************
@@ -726,6 +732,9 @@
   .wrapAdress {
     padding: 6px;
     border: 1px solid #f1f2f4;
+  }
+  .sticky {
+    margin-top: -10px;
   }
 }
 /* ******************************************************

@@ -5,7 +5,11 @@ import clsx from "clsx";
 import styles from "../Profil/Fio/Fio.module.css";
 import { ChangeEvent, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
-import { setIsModalTelegram, setScrollY } from "@/store/features/modalSlice";
+import {
+  setIsModalTelegram,
+  setIsSheetTelegram,
+  setScrollY,
+} from "@/store/features/modalSlice";
 
 export const TelegramModal = () => {
   const dispatch = useAppDispatch();
@@ -42,6 +46,7 @@ export const TelegramModal = () => {
     if (token && id) {
       dispatch(updateTutor({ id, token, telegram })).unwrap;
       dispatch(setIsModalTelegram(false));
+      dispatch(setIsSheetTelegram(false));
       dispatch(setScrollY(0));
     }
   };

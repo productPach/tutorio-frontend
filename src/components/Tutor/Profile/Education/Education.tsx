@@ -9,6 +9,8 @@ import Image from "next/image";
 import {
   setIsModalEducation,
   setIsModalExperience,
+  setIsSheetEducation,
+  setIsSheetExperience,
 } from "@/store/features/modalSlice";
 import { getYearWord } from "@/utils/words/getYearWord";
 import Link from "next/link";
@@ -32,7 +34,11 @@ export const Education = () => {
             <h2
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalExperience(true));
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetExperience(true)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalExperience(true));
+                }
               }}
               title="Изменить"
             >
@@ -46,7 +52,11 @@ export const Education = () => {
           <Image
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalExperience(true));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetExperience(true)); // Открываем шторку
+              } else {
+                dispatch(setIsModalExperience(true));
+              }
             }}
             title="Изменить"
             className={componentStyle.img}
@@ -64,7 +74,11 @@ export const Education = () => {
             <h2
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalEducation(true));
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetEducation(true)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalEducation(true));
+                }
               }}
             >
               Образование
@@ -73,7 +87,11 @@ export const Education = () => {
           <Image
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalEducation(true));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetEducation(true)); // Открываем шторку
+              } else {
+                dispatch(setIsModalEducation(true));
+              }
             }}
             className={componentStyle.img}
             src={"/../img/icon/tutor/plus.svg"}
@@ -89,7 +107,11 @@ export const Education = () => {
           <span
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalEducation(true));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetEducation(true)); // Открываем шторку
+              } else {
+                dispatch(setIsModalEducation(true));
+              }
             }}
           >
             {educationLength === 0 && (

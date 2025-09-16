@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ModalStateType = {
   isModalSelectCity: boolean;
+  isSheetSelectCity: boolean;
   isModalBalanceBoost: boolean;
   valueModalBalanceBoost: string;
   scrollY: number;
@@ -10,18 +11,27 @@ type ModalStateType = {
   isModalProfileInfo: boolean;
   isSheetProfileInfo: boolean;
   isModalExperience: boolean;
+  isSheetExperience: boolean;
   isModalEducation: boolean;
+  isSheetEducation: boolean;
   isModalEducationItem: boolean;
+  isSheetDeleteEducationItem: boolean;
   isModalEditEducation: boolean;
+  isSheetEditEducation: boolean;
   isModalEditSubjectPrices: boolean;
   isSheetEditSubjectPrices: boolean,
   subjectForEditInModal: string | null; // ID предмета или объект предмета
-  isModalPhone: boolean,
-  isModalEmail: boolean,
+  isModalPhone: boolean;
+  isSheetPhone: boolean;
+  isModalEmail: boolean;
+  isSheetEmail: boolean;
   isModalTelegram: boolean;
+  isSheetTelegram: boolean;
   isModalSkype: boolean;
   isModalExit: boolean;
+  isSheetExit: boolean;
   isModalDelete: boolean;
+  isSheetDelete: boolean;
   isModalResponseStudentToTutor: boolean;
   tutorIdForResponseStudentToTutor: string | null;
   isModalResponseTutorToStudent: boolean;
@@ -53,6 +63,7 @@ type ModalStateType = {
 
 const initialState: ModalStateType = {
   isModalSelectCity: false,
+  isSheetSelectCity: false,
   isModalBalanceBoost: false,
   valueModalBalanceBoost: "",
   scrollY: 0,
@@ -61,18 +72,27 @@ const initialState: ModalStateType = {
   isModalProfileInfo: false,
   isSheetProfileInfo: false,
   isModalExperience: false,
+  isSheetExperience: false,
   isModalEducation: false,
+  isSheetEducation: false,
   isModalEducationItem: false,
+  isSheetDeleteEducationItem: false,
   isModalEditEducation: false,
+  isSheetEditEducation: false,
   isModalEditSubjectPrices: false,
   isSheetEditSubjectPrices: false,
   subjectForEditInModal: null,
   isModalPhone: false,
+  isSheetPhone: false,
   isModalEmail: false,
+  isSheetEmail: false,
   isModalTelegram: false,
+  isSheetTelegram: false,
   isModalSkype: false,
   isModalExit: false,
+  isSheetExit: false,
   isModalDelete: false,
+  isSheetDelete: false,
   isModalResponseStudentToTutor: false,
   tutorIdForResponseStudentToTutor: null,
   isModalResponseTutorToStudent: false,
@@ -109,6 +129,9 @@ const modalSlice = createSlice({
     setModalSelectCity: (state, action: PayloadAction<boolean>) => {
       state.isModalSelectCity = action.payload;
     },
+    setIsSheetSelectCity: (state, action: PayloadAction<boolean>) => {
+      state.isSheetSelectCity = action.payload;
+    },
     setIsModalBalanceBoost: (state, action: PayloadAction<boolean>) => {
       state.isModalBalanceBoost = action.payload;
     },
@@ -133,14 +156,26 @@ const modalSlice = createSlice({
     setIsModalExperience: (state, action: PayloadAction<boolean>) => {
       state.isModalExperience = action.payload;
     },
+    setIsSheetExperience: (state, action: PayloadAction<boolean>) => {
+      state.isSheetExperience = action.payload;
+    },
     setIsModalEducation: (state, action: PayloadAction<boolean>) => {
       state.isModalEducation = action.payload;
+    },
+    setIsSheetEducation: (state, action: PayloadAction<boolean>) => {
+      state.isSheetEducation = action.payload;
     },
     setIsModalEducationItem: (state, action: PayloadAction<boolean>) => {
       state.isModalEducationItem = action.payload;
     },
+    setIsSheetDeleteEducationItem: (state, action: PayloadAction<boolean>) => {
+      state.isSheetDeleteEducationItem = action.payload;
+    },
     setIsModalEditEducation: (state, action: PayloadAction<boolean>) => {
       state.isModalEditEducation = action.payload;
+    },
+    setIsSheetEditEducation: (state, action: PayloadAction<boolean>) => {
+      state.isSheetEditEducation = action.payload;
     },
     setIsModalEditSubjectPrices: (state, action: PayloadAction<boolean>) => {
       state.isModalEditSubjectPrices = action.payload;
@@ -154,11 +189,20 @@ const modalSlice = createSlice({
     setIsModalPhone: (state, action: PayloadAction<boolean>) => {
       state.isModalPhone = action.payload;
     },
+    setIsSheetPhone: (state, action: PayloadAction<boolean>) => {
+      state.isSheetPhone = action.payload;
+    },
     setIsModalEmail: (state, action: PayloadAction<boolean>) => {
       state.isModalEmail = action.payload;
     },
+    setIsSheetEmail: (state, action: PayloadAction<boolean>) => {
+      state.isSheetEmail = action.payload;
+    },
     setIsModalTelegram: (state, action: PayloadAction<boolean>) => {
       state.isModalTelegram = action.payload;
+    },
+    setIsSheetTelegram: (state, action: PayloadAction<boolean>) => {
+      state.isSheetTelegram = action.payload;
     },
     setIsModalSkype: (state, action: PayloadAction<boolean>) => {
       state.isModalSkype = action.payload;
@@ -166,8 +210,14 @@ const modalSlice = createSlice({
     setIsModalExit: (state, action: PayloadAction<boolean>) => {
       state.isModalExit = action.payload;
     },
+    setIsSheetExit: (state, action: PayloadAction<boolean>) => {
+      state.isSheetExit = action.payload;
+    },
     setIsModalDelete: (state, action: PayloadAction<boolean>) => {
       state.isModalDelete = action.payload;
+    },
+    setIsSheetDelete: (state, action: PayloadAction<boolean>) => {
+      state.isSheetDelete = action.payload;
     },
     setIsModalResponseStudentToTutor: (state, action: PayloadAction<boolean>) => {
       state.isModalResponseStudentToTutor = action.payload;
@@ -255,6 +305,7 @@ const modalSlice = createSlice({
 
 export const {
   setModalSelectCity,
+  setIsSheetSelectCity,
   setIsModalBalanceBoost,
   setValueModalBalanceBoost,
   setScrollY,
@@ -263,18 +314,27 @@ export const {
   setIsModalProfileInfo,
   setIsSheetProfileInfo,
   setIsModalExperience,
+  setIsSheetExperience,
   setIsModalEducation,
+  setIsSheetEducation,
   setIsModalEducationItem,
+  setIsSheetDeleteEducationItem,
   setIsModalEditEducation,
+  setIsSheetEditEducation,
   setIsModalEditSubjectPrices,
   setIsSheetEditSubjectPrices,
   setSubjectForEditInModal,
   setIsModalExit,
+  setIsSheetExit,
   setIsModalPhone,
+  setIsSheetPhone,
   setIsModalEmail,
+  setIsSheetEmail,
   setIsModalTelegram,
+  setIsSheetTelegram,
   setIsModalSkype,
   setIsModalDelete,
+  setIsSheetDelete,
   setIsModalResponseStudentToTutor,
   setTutorIdForResponseStudentToTutor,
   setIsModalResponseTutorToStudent,

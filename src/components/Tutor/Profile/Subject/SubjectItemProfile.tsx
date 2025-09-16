@@ -3,13 +3,7 @@ import { Subject } from "@/types/types";
 import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
 import componentSubjectStyle from "./Subject.module.css";
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import {
-  setIsModalEditSubjectPrices,
-  setSubjectForEditInModal,
-} from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import Link from "next/link";
 
 interface ComponentProps {
   id: number;

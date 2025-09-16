@@ -896,7 +896,7 @@
     display: none;
   }
   .contentFull {
-    grid-column: span 27;
+    grid-column: span 10;
   }
   .dsplNone {
     display: none;
@@ -917,7 +917,8 @@
     margin-top: 10px;
   }
   .content {
-    grid-column: span 1;
+    /* grid-column: span 1; */
+    grid-column: span 10;
   }
   .sidebarM {
     margin-top: 10px;

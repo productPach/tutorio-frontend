@@ -12,6 +12,8 @@ import "yet-another-react-lightbox/styles.css";
 import {
   setIsModalEditEducation,
   setIsModalEducationItem,
+  setIsSheetDeleteEducationItem,
+  setIsSheetEditEducation,
 } from "@/store/features/modalSlice";
 import { getBackendUrl, host, port } from "@/api/server/configApi";
 
@@ -80,11 +82,15 @@ export const EducationItem = ({
             </div>
           </div>
 
-          <div>
+          <div className={componentEducationStyle.iconContainer}>
             <Image
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalEditEducation(true));
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetEditEducation(true)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalEditEducation(true));
+                }
               }}
               title="Изменить"
               className={componentStyle.img}
@@ -96,7 +102,11 @@ export const EducationItem = ({
             <Image
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalEducationItem(true));
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetDeleteEducationItem(true)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalEducationItem(true));
+                }
               }}
               title="Удалить"
               className={componentStyle.img}

@@ -239,7 +239,10 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                   />
                   <Link
                     href="#"
-                    className={componentSubjectStyle.linkToPriceSubject}
+                    className={clsx(
+                      componentSubjectStyle.linkToPriceSubject,
+                      componentSubjectStyle.dsplNone
+                    )}
                     onClick={(e) => {
                       e.preventDefault();
                       dispatch(setIsModalEditSubjectPrices(true));
@@ -256,7 +259,12 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                 {tutor?.subjectPrices.some(
                   (item) => item.subjectId === subject.id_p
                 ) && (
-                  <div className={componentSubjectStyle.subjectPrises}>
+                  <div
+                    className={clsx(
+                      componentSubjectStyle.subjectPrises,
+                      componentSubjectStyle.dsplNone
+                    )}
+                  >
                     {tutor.subjectPrices
                       .filter(
                         (item) => item.subjectId === subject.id_p && item.price

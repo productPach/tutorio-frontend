@@ -4,7 +4,11 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import styles from "../Profil/Fio/Fio.module.css";
 import buttonStyles from "../../../../app/tutor/button.module.css";
 import componentStyles from "../Profil/Education/Education.module.css";
-import { setIsModalExit, setScrollY } from "@/store/features/modalSlice";
+import {
+  setIsModalExit,
+  setIsSheetExit,
+  setScrollY,
+} from "@/store/features/modalSlice";
 
 export const ExitModal = ({ logout }: { logout: () => void }) => {
   const dispatch = useAppDispatch();
@@ -24,6 +28,7 @@ export const ExitModal = ({ logout }: { logout: () => void }) => {
             if (tutor) {
               logout();
               dispatch(setIsModalExit(false));
+              dispatch(setIsSheetExit(false));
               dispatch(setScrollY(0));
             }
           }}
@@ -36,6 +41,7 @@ export const ExitModal = ({ logout }: { logout: () => void }) => {
           onClick={(e) => {
             e.preventDefault();
             dispatch(setIsModalExit(false));
+            dispatch(setIsSheetExit(false));
             dispatch(setScrollY(0));
           }}
           type="button"

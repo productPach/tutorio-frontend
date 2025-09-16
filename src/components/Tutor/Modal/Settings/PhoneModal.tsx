@@ -6,7 +6,11 @@ import styles from "../Profil/Fio/Fio.module.css";
 import componentStyles from "./Settings.module.css";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { getCurrentTutor } from "@/store/features/tutorSlice";
-import { setIsModalPhone, setScrollY } from "@/store/features/modalSlice";
+import {
+  setIsModalPhone,
+  setIsSheetPhone,
+  setScrollY,
+} from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import {
   getToken,
@@ -267,6 +271,7 @@ export const PhoneModal = () => {
 
   const close = () => {
     dispatch(setIsModalPhone(false));
+    dispatch(setIsSheetPhone(false));
     dispatch(setScrollY(0));
     dispatch(setStatusUpdateUser(false));
   };
