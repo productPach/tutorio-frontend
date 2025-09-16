@@ -20,9 +20,6 @@ export const Subject = () => {
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
-  // Получаем значение loading из Redux
-  const isLoading = useAppSelector((state) => state.tutor.loading);
-  const updateStatus = useAppSelector((state) => state.tutor.updateStatus);
 
   // Стейт для предметов
   const subjects = useAppSelector((state) => state.subject.subjects);
@@ -31,14 +28,8 @@ export const Subject = () => {
     dispatch(getAllSubjects());
   }, [dispatch]);
 
-  const [successUpdateTutor, setSuccessUpdateTutor] = useState(true);
-
   // Импортируем предметы
   const listSubjects = subjects;
-  // Предметы-категории
-  const listCategorySubjects = listSubjects.filter(
-    (subject) => subject.general
-  );
 
   // Состояние для свитча
   const [isChecked, setIsChecked] = useState(tutor?.isGroup || false);
@@ -58,19 +49,6 @@ export const Subject = () => {
       ).unwrap();
     }
   }, [isChecked]);
-
-  const update = (isGroup: boolean) => {
-    if (tutor && token) {
-      const id = tutor.id;
-      dispatch(
-        updateTutor({
-          id,
-          token,
-          isGroup,
-        })
-      ).unwrap();
-    }
-  };
 
   return (
     <>

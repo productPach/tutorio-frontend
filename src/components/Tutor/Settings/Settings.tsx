@@ -11,6 +11,11 @@ import {
   setIsModalPhone,
   setIsModalSkype,
   setIsModalTelegram,
+  setIsSheetDelete,
+  setIsSheetEmail,
+  setIsSheetExit,
+  setIsSheetPhone,
+  setIsSheetTelegram,
 } from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
@@ -413,7 +418,11 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  dispatch(setIsModalPhone(true));
+                  if (window.innerWidth < 769) {
+                    dispatch(setIsSheetPhone(true)); // Открываем шторку
+                  } else {
+                    dispatch(setIsModalPhone(true));
+                  }
                 }}
                 className={componentStyle.img}
                 src={
@@ -449,7 +458,11 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  dispatch(setIsModalEmail(true));
+                  if (window.innerWidth < 769) {
+                    dispatch(setIsSheetEmail(true)); // Открываем шторку
+                  } else {
+                    dispatch(setIsModalEmail(true));
+                  }
                 }}
                 className={componentStyle.img}
                 src={
@@ -477,7 +490,11 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               <Image
                 onClick={(e) => {
                   e.preventDefault();
-                  dispatch(setIsModalTelegram(true));
+                  if (window.innerWidth < 769) {
+                    dispatch(setIsSheetTelegram(true)); // Открываем шторку
+                  } else {
+                    dispatch(setIsModalTelegram(true));
+                  }
                 }}
                 className={componentStyle.img}
                 src={
@@ -528,13 +545,27 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           <div className={componentStyle.containerEntityLink}>
             <div
               className={componentStyle.link}
-              onClick={() => dispatch(setIsModalExit(true))}
+              onClick={(e) => {
+                e.preventDefault();
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetExit(true)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalExit(true));
+                }
+              }}
             >
               Выйти из аккаунта
             </div>
             <div
               className={componentStyle.link}
-              onClick={() => dispatch(setIsModalDelete(true))}
+              onClick={(e) => {
+                e.preventDefault();
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetDelete(true)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalDelete(true));
+                }
+              }}
             >
               Удалить аккаунт
             </div>

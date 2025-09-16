@@ -3,9 +3,12 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "../Fio/Fio.module.css";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
-import { setIsModalExperience } from "@/store/features/modalSlice";
+import {
+  setIsModalExperience,
+  setIsSheetExperience,
+} from "@/store/features/modalSlice";
 
 export const ExperienceModal = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +36,7 @@ export const ExperienceModal = () => {
     if (token && id) {
       dispatch(updateTutor({ id, token, experience })).unwrap;
       dispatch(setIsModalExperience(false));
+      dispatch(setIsSheetExperience(false));
     }
   };
 

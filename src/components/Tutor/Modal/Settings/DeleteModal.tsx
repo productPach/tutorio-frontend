@@ -5,7 +5,11 @@ import styles from "../Profil/Fio/Fio.module.css";
 import buttonStyles from "../../../../app/tutor/button.module.css";
 import componentStyles from "../Profil/Education/Education.module.css";
 import profileInfoStyles from "../Profil/ProfileInfo/ProfileInfo.module.css";
-import { setIsModalDelete, setScrollY } from "@/store/features/modalSlice";
+import {
+  setIsModalDelete,
+  setIsSheetDelete,
+  setScrollY,
+} from "@/store/features/modalSlice";
 import { ChangeEvent, useState } from "react";
 import clsx from "clsx";
 import {
@@ -98,8 +102,12 @@ export const DeleteModal = ({ logout }: { logout: () => void }) => {
               className={buttonStyles.buttonBlc}
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(setIsModalDelete(false));
                 dispatch(setScrollY(0));
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetDelete(false)); // Открываем шторку
+                } else {
+                  dispatch(setIsModalDelete(false));
+                }
               }}
               type="button"
             >
@@ -124,8 +132,12 @@ export const DeleteModal = ({ logout }: { logout: () => void }) => {
             className={buttonStyles.buttonBlc}
             onClick={(e) => {
               e.preventDefault();
-              dispatch(setIsModalDelete(false));
               dispatch(setScrollY(0));
+              if (window.innerWidth < 769) {
+                dispatch(setIsSheetDelete(false)); // Открываем шторку
+              } else {
+                dispatch(setIsModalDelete(false));
+              }
               resetDeleteRequest();
               logout();
             }}

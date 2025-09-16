@@ -2777,7 +2777,7 @@ export const data: Subject[] = [
     id_cat: "12",
     general: false,
     nextPage: "/match/goal/path",
-    id_p: "208",
+    id_p: "207",
   },
   {
     id: "262",

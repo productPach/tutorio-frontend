@@ -2,7 +2,10 @@
 import styles from "../../../../app/tutor/layout.module.css";
 import componentLocationStyle from "./Location.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setModalSelectCity } from "@/store/features/modalSlice";
+import {
+  setIsSheetSelectCity,
+  setModalSelectCity,
+} from "@/store/features/modalSlice";
 import React, { useEffect, useState } from "react";
 import { District, Metro } from "@/types/types";
 import { getAllLocations } from "@/store/features/locationSlice";
@@ -293,8 +296,13 @@ export const Location = () => {
                   <div className={componentLocationStyle.description}>
                     Регион:{" "}
                     <span
-                      onClick={() => {
-                        dispatch(setModalSelectCity(true));
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (window.innerWidth < 769) {
+                          dispatch(setIsSheetSelectCity(true)); // Открываем шторку
+                        } else {
+                          dispatch(setModalSelectCity(true));
+                        }
                       }}
                       style={{ textDecoration: "underline", cursor: "pointer" }}
                     >

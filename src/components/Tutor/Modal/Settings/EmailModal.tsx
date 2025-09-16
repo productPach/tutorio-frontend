@@ -8,6 +8,7 @@ import { updateTutor } from "@/store/features/tutorSlice";
 import {
   setIsModalEmail,
   setIsModalTelegram,
+  setIsSheetEmail,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { sendEmail, sendVerificationEmail } from "@/api/server/tutorApi";
@@ -63,6 +64,7 @@ export const EmailModal = () => {
         );
 
       dispatch(setIsModalEmail(false));
+      dispatch(setIsSheetEmail(false));
       dispatch(setScrollY(0));
     }
   };

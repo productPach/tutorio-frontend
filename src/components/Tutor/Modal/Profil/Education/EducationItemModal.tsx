@@ -5,7 +5,10 @@ import styles from "../Fio/Fio.module.css";
 import buttonStyles from "../../../../../app/tutor/button.module.css";
 import componentStyles from "./Education.module.css";
 import { deleteTutorEducation } from "@/store/features/tutorSlice";
-import { setIsModalEducationItem } from "@/store/features/modalSlice";
+import {
+  setIsModalEducationItem,
+  setIsSheetDeleteEducationItem,
+} from "@/store/features/modalSlice";
 import { useParams, useRouter } from "next/navigation";
 
 export const EducationItemModal = () => {
@@ -24,6 +27,7 @@ export const EducationItemModal = () => {
       dispatch(deleteTutorEducation({ tutorId, educationId, token })).then(
         () => {
           dispatch(setIsModalEducationItem(false));
+          dispatch(setIsSheetDeleteEducationItem(false));
           route.push("/tutor/profile/educations");
         }
       );
@@ -48,7 +52,10 @@ export const EducationItemModal = () => {
         </button>
         <button
           className={buttonStyles.buttonBlc}
-          onClick={() => dispatch(setIsModalEducationItem(false))}
+          onClick={() => {
+            dispatch(setIsModalEducationItem(false));
+            dispatch(setIsSheetDeleteEducationItem(false));
+          }}
           type="button"
         >
           Отмена

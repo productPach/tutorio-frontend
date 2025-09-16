@@ -6,7 +6,10 @@ import styles from "../Fio/Fio.module.css";
 import componentStyles from "./Education.module.css";
 import { ChangeEvent, useState, useEffect } from "react";
 import { createTutorEducation } from "@/store/features/tutorSlice";
-import { setIsModalEducation } from "@/store/features/modalSlice";
+import {
+  setIsModalEducation,
+  setIsSheetEducation,
+} from "@/store/features/modalSlice";
 import { host, port } from "@/api/server/configApi";
 
 interface EducationModalProps {
@@ -139,6 +142,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
       })
     ).unwrap();
     dispatch(setIsModalEducation(false));
+    dispatch(setIsSheetEducation(false));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -243,7 +247,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
       <div className={styles.description}>
         Диплом, сертификат и другие документы
       </div>
-      <div className={componentStyles.containerFlxRw}>
+      <div className={componentStyles.containerFlxRw2}>
         {selectedFiles.map((file, index) => (
           <div className={componentStyles.fileWrap} key={index}>
             <div className={componentStyles.fileContainer}>
@@ -283,7 +287,7 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
       </div>
 
       {selectedFiles.some((file) => file !== null) && (
-        <div className={componentStyles.containerEducationShow}>
+        <div className={componentStyles.containerEntityShow}>
           <div className={styles.inputContainer}>
             <label className={componentStyles.iosSwitch}>
               <input
