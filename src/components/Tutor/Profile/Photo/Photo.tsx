@@ -37,8 +37,8 @@ export const Photo = () => {
       return;
     }
 
-    if (selectedFile.size > 2 * 1024 * 1024) {
-      setUploadError("Размер файла не должен превышать 2MB.");
+    if (selectedFile.size > 5 * 1024 * 1024) {
+      setUploadError("Размер файла не должен превышать 5MB.");
       return;
     }
 

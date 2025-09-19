@@ -37,6 +37,15 @@
 .itemThemesList:hover {
   text-decoration: underline;
 }
+.list ul {
+  display: flex;
+  margin-left: 20px;
+  gap: 10px;
+  flex-direction: column;
+}
+.list li {
+  list-style-type: square;
+}
 
 /* Адаптивные стили под разрешения экранов */
 

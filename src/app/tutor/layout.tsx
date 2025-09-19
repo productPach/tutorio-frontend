@@ -101,11 +101,22 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         const district = city.districts.find(
           (district) => district.id === cityId
         );
+        let displayType;
         if (district) {
           // Если нашли district, добавляем его с типами District
+          // if (district.type === "District") {
+          //   displayType = "округ";
+          // }
+          if (district.type === "Area") {
+            displayType = "район";
+          }
+          if (district.type === "Microarea") {
+            displayType = "микрорайон";
+          }
           selectedItems.push({
             id: district.id,
             title: district.title,
+            displayType: displayType,
           } as District);
         }
 
@@ -118,6 +129,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           selectedItems.push({
             id: metroItem.id,
             title: metroItem.title,
+            displayType: "метро",
           } as Metro);
         });
 

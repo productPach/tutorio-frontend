@@ -455,6 +455,35 @@
   position: relative;
   transition: all 0.3s;
 }
+.selectedItemLkT {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  background-color: rgb(241, 242, 244);
+  border: 1px solid #e9e9e9;
+  border-radius: 10px;
+  width: max-content;
+  padding: 10px;
+  font-size: 15px;
+  position: relative;
+  transition: all 0.3s;
+}
+.selectedItemText {
+  display: flex;
+  flex-direction: column;
+}
+.selectedItemText2 {
+  display: flex;
+  flex-direction: row;
+}
+.selectedItemTextType {
+  font-size: 13px;
+  color: #777;
+}
+.selectedItemTextTypeTop {
+  margin: -1px 0px 0px 6px;
+}
 
 .removeButton {
   border: none;

@@ -26,52 +26,110 @@ export const getAdressDadata = async (query: string) => {
 };
 
 // Метод для получения данных из районов и станций метро
+// export const getLocation = async (
+//   query: string,
+//   city: string, // Новый параметр для фильтрации по городу
+//   selectedValues: (District | Metro | RegionalCity)[],
+//   locations: { title: string; districts: District[]; regionalCities: RegionalCity[] }[] // Добавляем параметр locations
+// ): Promise<{ districts: District[]; metros: Metro[]; regionalCities: RegionalCity[] }> => {
+//   const normalizedQuery = query.toLowerCase();
+//   const normalizedCity = city.toLowerCase();
+
+//   // Находим город по названию
+//   const cityData = locations.find(
+//     (location) => location.title.toLowerCase() === normalizedCity
+//   );
+
+//   // Если город не найден, возвращаем пустой массив
+//   if (!cityData) {
+//     return { districts: [], metros: [], regionalCities: [] };
+//   }
+
+//   // Фильтруем районы, которые соответствуют запросу
+//   const filteredDistricts: District[] = cityData.districts.filter((district) =>
+//     district.title.toLowerCase().includes(normalizedQuery)
+//   );
+
+//   // Собираем станции метро, которые соответствуют запросу
+//   const filteredMetros: Metro[] = cityData.districts
+//     .flatMap((district) => district.metros)
+//     .filter(
+//       (metro) => metro.title.toLowerCase().includes(normalizedQuery)
+//       // Поиск по линиям метро
+//       //||
+//       //metro.lineName.toLowerCase().includes(normalizedQuery)
+//     );
+
+//   // Фильтруем областные города, которые соответствуют запросу
+//   const filteredRegionalCities: RegionalCity[] = cityData.regionalCities.filter((regionalCity) =>
+//     regionalCity.title.toLowerCase().includes(normalizedQuery)
+//   );
+
+//   // Объединяем результаты и фильтруем выбранные значения
+//   // const combinedResults = [...filteredDistricts, ...filteredMetros].filter(
+//   //   (location) =>
+//   //     !selectedValues.some((selected) => selected.id === location.id)
+//   // );
+
+//   // return combinedResults.slice(0, 10); // Возвращаем не более 10 элементов
+
+//   return {
+//     districts: filteredDistricts,
+//     metros: filteredMetros,
+//     regionalCities: filteredRegionalCities,
+//   };
+// };
+// Метод для получения данных из районов и станций метро
 export const getLocation = async (
   query: string,
-  city: string, // Новый параметр для фильтрации по городу
+  city: string,
   selectedValues: (District | Metro | RegionalCity)[],
-  locations: { title: string; districts: District[]; regionalCities: RegionalCity[] }[] // Добавляем параметр locations
-): Promise<{ districts: District[]; metros: Metro[]; regionalCities: RegionalCity[] }> => {
+  locations: { title: string; districts: District[]; regionalCities: RegionalCity[] }[]
+): Promise<{
+  districts: (District & { title: string; displayType: string })[];
+  metros: (Metro & { displayTitle: string; displayType: string })[];
+  regionalCities: (RegionalCity & { displayTitle: string; displayType: string })[];
+}> => {
   const normalizedQuery = query.toLowerCase();
   const normalizedCity = city.toLowerCase();
 
-  // Находим город по названию
   const cityData = locations.find(
     (location) => location.title.toLowerCase() === normalizedCity
   );
 
-  // Если город не найден, возвращаем пустой массив
   if (!cityData) {
     return { districts: [], metros: [], regionalCities: [] };
   }
 
-  // Фильтруем районы, которые соответствуют запросу
-  const filteredDistricts: District[] = cityData.districts.filter((district) =>
-    district.title.toLowerCase().includes(normalizedQuery)
-  );
+  const filteredDistricts = cityData.districts
+    .filter((district) => district.title.toLowerCase().includes(normalizedQuery))
+    .map((district) => ({
+      ...district,
+      title: district.title,
+      displayType:
+        district.type === "Area"
+          ? "район"
+          : district.type === "Microarea"
+          ? "микрорайон"
+          : "",
+    }));
 
-  // Собираем станции метро, которые соответствуют запросу
-  const filteredMetros: Metro[] = cityData.districts
-    .flatMap((district) => district.metros)
-    .filter(
-      (metro) => metro.title.toLowerCase().includes(normalizedQuery)
-      // Поиск по линиям метро
-      //||
-      //metro.lineName.toLowerCase().includes(normalizedQuery)
-    );
+  const filteredMetros = cityData.districts
+    .flatMap((district) => district.metros ?? [])
+    .filter((metro) => metro.title.toLowerCase().includes(normalizedQuery))
+    .map((metro) => ({
+      ...metro,
+      displayTitle: metro.title,
+      displayType: "метро",
+    }));
 
-  // Фильтруем областные города, которые соответствуют запросу
-  const filteredRegionalCities: RegionalCity[] = cityData.regionalCities.filter((regionalCity) =>
-    regionalCity.title.toLowerCase().includes(normalizedQuery)
-  );
-
-  // Объединяем результаты и фильтруем выбранные значения
-  // const combinedResults = [...filteredDistricts, ...filteredMetros].filter(
-  //   (location) =>
-  //     !selectedValues.some((selected) => selected.id === location.id)
-  // );
-
-  // return combinedResults.slice(0, 10); // Возвращаем не более 10 элементов
+  const filteredRegionalCities = cityData.regionalCities
+    .filter((rc) => rc.title.toLowerCase().includes(normalizedQuery))
+    .map((rc) => ({
+      ...rc,
+      displayTitle: rc.title,
+      displayType: "город",
+    }));
 
   return {
     districts: filteredDistricts,
@@ -79,6 +137,9 @@ export const getLocation = async (
     regionalCities: filteredRegionalCities,
   };
 };
+
+
+
 
 
 
@@ -103,6 +164,7 @@ export const getLocationForCity = async (
   const filteredDistricts: District[] = cityData.districts.map((district) => ({
     id: district.id,
     title: district.title,
+    type: district.type,
     metros: district.metros
     // Добавьте другие поля, если необходимо
   }));

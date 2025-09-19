@@ -5,6 +5,7 @@ import componentStyle from "./Wiki.module.css";
 import { memo } from "react";
 import { Theme } from "@/types/types";
 import Link from "next/link";
+import clsx from "clsx";
 
 export const Topic = memo(
   ({ themes, topicTitle }: { themes: Theme[]; topicTitle: string }) => {
@@ -31,7 +32,11 @@ export const Topic = memo(
         </div>
 
         {themes.map((theme) => (
-          <div id={theme.id} key={theme.id} className={styles.content_block}>
+          <div
+            id={theme.id}
+            key={theme.id}
+            className={clsx(styles.content_block, componentStyle.list)}
+          >
             <h3>{theme.title}</h3>
             {/* <div dangerouslySetInnerHTML={{ __html: theme.content }} /> */}
             <ReactMarkdown>{theme.content}</ReactMarkdown>
