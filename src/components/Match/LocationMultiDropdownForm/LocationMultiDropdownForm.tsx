@@ -285,7 +285,19 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
                     itemRefs.current[index] = el;
                   }}
                 >
-                  {item.title}
+                  <div className={styles.selectedItemText2}>
+                    <div className={styles.itemTitle}>{item.title}</div>
+                    {item.displayType && (
+                      <div
+                        className={clsx(
+                          styles.selectedItemTextType,
+                          styles.selectedItemTextTypeTop
+                        )}
+                      >
+                        {item.displayType}
+                      </div>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -294,8 +306,15 @@ export const LocationMultiDropdownForm: React.FC<ComponentRenderProps> = ({
 
         <div className={styles.selectedValues}>
           {selectedValues.map((item, index) => (
-            <div key={index} className={styles.selectedItem}>
-              {item.title}
+            <div key={index} className={styles.selectedItemLkT}>
+              <div className={styles.selectedItemText}>
+                <div className={styles.itemTitle}>{item.title}</div>
+                {item.displayType && (
+                  <div className={styles.selectedItemTextType}>
+                    {item.displayType}
+                  </div>
+                )}
+              </div>
               <button
                 className={styles.removeButton}
                 onClick={() => handleRemoveItem(index)}

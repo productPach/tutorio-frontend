@@ -64,6 +64,8 @@ export const Location = () => {
   const selectedValuesCity: (District | Metro)[] = useAppSelector(
     (state) => state.tutor.selectedValuesCity
   );
+  console.log(selectedValuesCity);
+
   // Получаем значение selectedValuesArea из Redux
   const selectedValuesArea = useAppSelector(
     (state) => state.tutor.selectedValuesArea
