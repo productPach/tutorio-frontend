@@ -203,7 +203,7 @@ export const TutorComponent = ({
 
   const chat = chats.find((chat) => chat.tutorId === tutor.id);
 
-  const reviews = tutor.reviews.filter((r) => r.status === "Active");
+  const reviews = tutor.reviews?.filter((r) => r.status === "Active") || [];
   // Количество отзывов
   const reviewsCount = reviews.length;
 

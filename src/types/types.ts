@@ -254,6 +254,7 @@ export type City = {
   title: string;
   area: string;
   shortTitle: string;
+  metros: Metro[];
   districts: District[];
   regionalCities: RegionalCity[]
 };
@@ -262,7 +263,7 @@ export type District = {
   id: string;
   title: string;
   type: string;
-  metros: Metro[];
+  metros?: Metro[]; // надо убрать
   displayTitle?: string; displayType?: string // для UI
 };
 
@@ -272,12 +273,14 @@ export type Metro = {
   color: string;
   lineName: string;
   lineNumber: string;
+  cityPrefix?: string;
   displayTitle?: string; displayType?: string // для UI
 };
 
 export type RegionalCity = {
   id: string;
   title: string;
+  type?: string;
   displayTitle?: string; displayType?: string // для UI
 }
 

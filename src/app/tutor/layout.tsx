@@ -88,31 +88,79 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   }, [tutor, locations, dispatch]);
 
   // Устанавилваем локации города
+  // useEffect(() => {
+  //   const initialTutorTripCity = tutor?.tutorTripCity || [];
+  //   if (!locations.length || !initialTutorTripCity.length) return; // Если данных нет, не выполняем
+
+  //   // Преобразуем ID в объекты District и Metro
+  //   const transformedCityData = initialTutorTripCity.flatMap((cityId) => {
+  //     return locations.flatMap((city) => {
+  //       const selectedItems: (District | Metro)[] = []; // Типизируем массив как (District | Metro)
+
+  //       // Ищем в districts для совпадения с cityId
+  //       const district = city.districts.find(
+  //         (district) => district.id === cityId
+  //       );
+  //       let displayType;
+  //       if (district) {
+  //         // Если нашли district, добавляем его с типами District
+  //         // if (district.type === "District") {
+  //         //   displayType = "округ";
+  //         // }
+  //         if (district.type === "Area") {
+  //           displayType = "район";
+  //         }
+  //         if (district.type === "Microarea") {
+  //           displayType = "микрорайон";
+  //         }
+  //         selectedItems.push({
+  //           id: district.id,
+  //           title: district.title,
+  //           displayType: displayType,
+  //         } as District);
+  //       }
+
+  //       // Ищем метро (Metro) отдельно в каждом district
+  //       const metro = city.districts.flatMap((district) =>
+  //         district.metros.filter((metro) => metro.id === cityId)
+  //       );
+  //       metro.forEach((metroItem) => {
+  //         // Если нашли metro, добавляем его с типами Metro
+  //         selectedItems.push({
+  //           id: metroItem.id,
+  //           title: metroItem.title,
+  //           displayType: "метро",
+  //         } as Metro);
+  //       });
+
+  //       return selectedItems; // Возвращаем массив с найденными District и Metro
+  //     });
+  //   });
+
+  //   // Отправляем преобразованные данные в редуктор
+  //   dispatch(setSelectedValuesCity(transformedCityData));
+  // }, [locations, dispatch, tutor]); // Зависимости для useEffect
+
   useEffect(() => {
     const initialTutorTripCity = tutor?.tutorTripCity || [];
     if (!locations.length || !initialTutorTripCity.length) return; // Если данных нет, не выполняем
 
     // Преобразуем ID в объекты District и Metro
-    const transformedCityData = initialTutorTripCity.flatMap((cityId) => {
+    const transformedCityData = initialTutorTripCity.flatMap((id) => {
       return locations.flatMap((city) => {
         const selectedItems: (District | Metro)[] = []; // Типизируем массив как (District | Metro)
 
-        // Ищем в districts для совпадения с cityId
-        const district = city.districts.find(
-          (district) => district.id === cityId
-        );
-        let displayType;
+        // Ищем в districts для совпадения с id
+        const district = city.districts.find((d) => d.id === id);
         if (district) {
+          let displayType;
           // Если нашли district, добавляем его с типами District
-          // if (district.type === "District") {
-          //   displayType = "округ";
-          // }
-          if (district.type === "Area") {
-            displayType = "район";
+          if (district.type === "District") {
+            displayType = "округ";
           }
-          if (district.type === "Microarea") {
-            displayType = "микрорайон";
-          }
+          if (district.type === "Area") displayType = "район";
+          if (district.type === "Microarea") displayType = "микрорайон";
+
           selectedItems.push({
             id: district.id,
             title: district.title,
@@ -120,26 +168,23 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           } as District);
         }
 
-        // Ищем метро (Metro) отдельно в каждом district
-        const metro = city.districts.flatMap((district) =>
-          district.metros.filter((metro) => metro.id === cityId)
-        );
-        metro.forEach((metroItem) => {
-          // Если нашли metro, добавляем его с типами Metro
+        // Ищем метро напрямую у города
+        const metro = city.metros.find((m) => m.id === id);
+        if (metro) {
           selectedItems.push({
-            id: metroItem.id,
-            title: metroItem.title,
+            id: metro.id,
+            title: metro.title,
             displayType: "метро",
           } as Metro);
-        });
+        }
 
-        return selectedItems; // Возвращаем массив с найденными District и Metro
+        return selectedItems;
       });
     });
 
     // Отправляем преобразованные данные в редуктор
     dispatch(setSelectedValuesCity(transformedCityData));
-  }, [locations, dispatch, tutor]); // Зависимости для useEffect
+  }, [locations, dispatch, tutor]);
 
   // Устанавилваем локации региона
   useEffect(() => {

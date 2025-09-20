@@ -14,10 +14,16 @@ import { Student } from "@/types/types";
 import { useSelector } from "react-redux";
 import { clearOrderById, getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
-import { setLoadingPage, setScrollY } from "@/store/features/modalSlice";
+import {
+  setIsSheetResponseTutorToStudent,
+  setIsSheetResponseTutorToStudentWithContakt,
+  setLoadingPage,
+  setScrollY,
+} from "@/store/features/modalSlice";
 import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal";
 import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
 import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 
 const OrderPage: React.FC = () => {
   const page = "Order";
@@ -30,8 +36,14 @@ const OrderPage: React.FC = () => {
   const isModalResponseTutorToStudent = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudent
   );
+  const isSheetResponseTutorToStudent = useAppSelector(
+    (state) => state.modal.isSheetResponseTutorToStudent
+  );
   const isModalResponseTutorToStudentWithContakt = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudentWithContakt
+  );
+  const isSheetResponseTutorToStudentWithContakt = useAppSelector(
+    (state) => state.modal.isSheetResponseTutorToStudentWithContakt
   );
   const isModalLoadingPage = useAppSelector((state) => state.modal.loadingPage);
 
@@ -128,12 +140,26 @@ const OrderPage: React.FC = () => {
         isModal={isModalResponseTutorToStudent}
         modalId={"responseTutorToStudentModal"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetResponseTutorToStudent}
+        onClose={() => dispatch(setIsSheetResponseTutorToStudent(false))}
+      >
+        <ResponseTutorToStudentModal />
+      </BottomSheet>
       <Modal
         titleModal={"Получить контакты"}
         contentModal={<ResponseTutorToStudentWithContaktModal />}
         isModal={isModalResponseTutorToStudentWithContakt}
         modalId={"responseTutorToStudentWithContaktModal"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetResponseTutorToStudentWithContakt}
+        onClose={() =>
+          dispatch(setIsSheetResponseTutorToStudentWithContakt(false))
+        }
+      >
+        <ResponseTutorToStudentWithContaktModal />
+      </BottomSheet>
       <Modal
         titleModal={""}
         contentModal={<LoadingPageModal />}
