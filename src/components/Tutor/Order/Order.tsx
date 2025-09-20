@@ -321,7 +321,7 @@ export const OrderComponent = ({
                               styles.order_block,
                               locationsStyles.crcl_mtr,
                               locationsStyles[
-                                `crcl_mtr_msk_${location.lineNumber}`
+                                `crcl_mtr_${location.cityPrefix}_${location.lineNumber}`
                               ]
                             )}
                           ></div>

@@ -1020,6 +1020,12 @@
   .containerChatMrgnTp0 {
     margin-top: 0;
   }
+  .sidebar_filterOrder {
+    border-radius: 0px;
+  }
+  .sidebar_filterBlack {
+    border-radius: 0px;
+  }
 }
 /* ******************************************************
 ******************************************************

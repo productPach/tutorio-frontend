@@ -8,6 +8,8 @@ import {
   setIsModalBalanceBoost,
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetResponseTutorToStudent,
+  setIsSheetResponseTutorToStudentWithContakt,
   setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
 import { SpinnerSingleOrange } from "@/components/Spinner/SpinnerSingleOrange";
@@ -81,9 +83,15 @@ export const ResponseSidbar = () => {
                           //dispatch(
                           //</div>setValueModalBalanceBoost(orderById?.responseCost)
                           //);
-                          dispatch(
-                            setIsModalResponseTutorToStudentWithContakt(true)
-                          );
+                          if (window.innerWidth < 769) {
+                            dispatch(
+                              setIsSheetResponseTutorToStudentWithContakt(true)
+                            );
+                          } else {
+                            dispatch(
+                              setIsModalResponseTutorToStudentWithContakt(true)
+                            );
+                          }
                           orderById && dispatch(setOrderByIdDefault(orderById));
                           setChatsLoaded(true);
                         }}
@@ -137,7 +145,11 @@ export const ResponseSidbar = () => {
                           //dispatch(
                           //</div>setValueModalBalanceBoost(orderById?.responseCost)
                           //);
-                          dispatch(setIsModalResponseTutorToStudent(true));
+                          if (window.innerWidth < 769) {
+                            dispatch(setIsSheetResponseTutorToStudent(true));
+                          } else {
+                            dispatch(setIsModalResponseTutorToStudent(true));
+                          }
                           orderById && dispatch(setOrderByIdDefault(orderById));
                           setChatsLoaded(true);
                         }}
