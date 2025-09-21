@@ -1,6 +1,10 @@
+// Возможные значения ролей
+export type Role = "student" |"tutor" | "admin";
+
 export type SignInFormType = {
   phone: string;
   secretCode: string;
+  role?: Role;
 };
 
 export type UpdatePhoneUser = {

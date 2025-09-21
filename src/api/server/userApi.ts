@@ -2,7 +2,7 @@ import { SignInFormType, UpdatePhoneUser } from "@/types/types";
 import { baseUrl } from "./configApi";
 
 // Получение токена
-export const fetchGetToken = async ({ phone, secretCode }: SignInFormType) => {
+export const fetchGetToken = async ({ phone, secretCode, role }: SignInFormType) => {
   const response = await fetch(`${baseUrl}login`, {
     method: "POST",
     headers: {
@@ -12,6 +12,7 @@ export const fetchGetToken = async ({ phone, secretCode }: SignInFormType) => {
     body: JSON.stringify({
       phone: phone,
       secretSMS: secretCode,
+      role: role,
     }),
   });
 

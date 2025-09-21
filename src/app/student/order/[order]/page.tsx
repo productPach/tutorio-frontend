@@ -1,6 +1,7 @@
 import { fetchGetPublicOrderById } from "@/api/server/orderApi";
 import { fetchGetAllSubjects } from "@/api/server/subjectApi";
 import OrderPage from "@/components/Student/Order/OrderPage";
+import { Subject } from "@/types/types";
 import type { Metadata } from "next";
 
 export async function generateMetadata(context: any): Promise<Metadata> {
@@ -9,7 +10,15 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   const orderId = params.order;
 
   const order = await fetchGetPublicOrderById(orderId);
-  const subjects = await fetchGetAllSubjects();
+  //const subjects = await fetchGetAllSubjects();
+
+  let subjects: Subject[] = [];
+  try {
+    subjects = await fetchGetAllSubjects();
+  } catch (err) {
+    console.error("Ошибка загрузки subjects:", err);
+    subjects = []; // безопасный fallback
+  }
 
   if (!order) {
     return {

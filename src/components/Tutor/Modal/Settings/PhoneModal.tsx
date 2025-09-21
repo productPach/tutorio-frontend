@@ -21,6 +21,7 @@ import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerato
 import { userExistence } from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
 import { sendSms } from "@/utils/sensSms/sendSms";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { Role } from "@/types/types";
 
 export const PhoneModal = () => {
   const dispatch = useAppDispatch();
@@ -244,11 +245,12 @@ export const PhoneModal = () => {
     const userId = tutor?.userId;
     const phone = to;
     const oldPhone = tutor?.phone;
+    const role: Role = "tutor";
 
     if (id && userId && oldPhone) {
       try {
         const token = await dispatch(
-          getToken({ phone: oldPhone, secretCode })
+          getToken({ phone: oldPhone, secretCode, role })
         ).unwrap();
         setErrorInput(false);
         setError(true);

@@ -64,7 +64,7 @@ const SideBar = () => {
   // Чтобы выводить в сайдбаре те цели занятий, которые подходят под предметы репетитора, делаем следующее
   // Вытаскиваем объекты предметов по предметам репетитора
   const subjectObj = subjects.filter((subject) =>
-    tutor?.subject.includes(subject.id_p)
+    tutor?.subject?.includes(subject.id_p)
   );
   // Преобразуем полученные объекты в массив айдишников целей
   const goalIdArr = subjectObj.map((subject) => subject.goal_id);
