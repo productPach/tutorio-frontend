@@ -15,6 +15,7 @@ import {
   resetDeleteRequest,
   updateStudent,
 } from "@/store/features/studentSlice";
+import { Role } from "@/types/types";
 
 interface ComponentRenderProps {
   id: number;
@@ -144,10 +145,13 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+      const role: Role = "student";
 
       if (phone) {
         // Получаем токен с обработкой ошибок
-        const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+        const token = await dispatch(
+          getToken({ phone, secretCode, role })
+        ).unwrap();
 
         if (token) {
           setIsSuccess(true);

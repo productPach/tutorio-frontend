@@ -17,6 +17,8 @@ import {
 import Link from "next/link";
 import { useSocket } from "@/context/SocketContext";
 import MenuMobile from "@/components/Student/MenuMobile/MenuMobile";
+import { Role } from "@/types/types";
+import { jwtDecode } from "jwt-decode";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -34,6 +36,15 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   useEffect(() => {
     const token = getTokenFromCookie();
     if (token) {
+      // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
+      // в личный кабинет не активной роли для мультипользователя
+      // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
+      const payload: { activeRole: Role; userID: string } = jwtDecode(token);
+      if (payload.activeRole !== "student") {
+        // Если токен существует, но активная роль не репетитор → редирект
+        router.push("/");
+        return;
+      }
       dispatch(setToken(token));
       dispatch(getCurrentStudent(token));
     } else {

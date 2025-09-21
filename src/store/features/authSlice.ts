@@ -14,9 +14,9 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const getToken = createAsyncThunk<string, SignInFormType>(
   "auth/getToken",
-  async ({ phone, secretCode }) => {
+  async ({ phone, secretCode, role }) => {
     try {
-      const response = await fetchGetToken({ phone, secretCode });
+      const response = await fetchGetToken({ phone, secretCode, role });
       return response.token;
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку

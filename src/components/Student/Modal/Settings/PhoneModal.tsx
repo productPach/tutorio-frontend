@@ -19,6 +19,7 @@ import { sendSms } from "@/utils/sensSms/sendSms";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getCurrentStudent } from "@/store/features/studentSlice";
+import { Role } from "@/types/types";
 
 export const PhoneModal = () => {
   const dispatch = useAppDispatch();
@@ -243,11 +244,12 @@ export const PhoneModal = () => {
     const phone = to;
     const oldPhone = student?.phone;
     const status = student?.status;
+    const role: Role = "student";
 
     if (id && userId && oldPhone && status) {
       try {
         const token = await dispatch(
-          getToken({ phone: oldPhone, secretCode })
+          getToken({ phone: oldPhone, secretCode, role })
         ).unwrap();
         setErrorInput(false);
         setError(true);

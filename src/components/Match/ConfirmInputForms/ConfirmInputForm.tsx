@@ -7,7 +7,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { TimerSms } from "@/components/TimerSms/TimerSms";
 import { fetchCreateOrder } from "@/api/server/orderApi";
-import { Order } from "@/types/types";
+import { Order, Role } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { getToken } from "@/store/features/authSlice";
 import { Spinner } from "@/components/Spinner/Spinner";
@@ -77,6 +77,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+      const role: Role = "student";
       if (!phone) {
         console.warn("Телефон не найден в localStorage");
         setErrorInput(true);
@@ -84,7 +85,9 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
       }
 
       // Получаем токен
-      const token = await dispatch(getToken({ phone, secretCode })).unwrap();
+      const token = await dispatch(
+        getToken({ phone, secretCode, role })
+      ).unwrap();
       setErrorInput(false);
 
       if (!token) {

@@ -9,7 +9,7 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   const orderId = params.order;
 
   const order = await fetchGetPublicOrderById(orderId);
-  const subjects = await fetchGetAllSubjects();
+  const subjects = await fetchGetAllSubjects(); // тут надо поставить try catch!
 
   if (!order) {
     return {

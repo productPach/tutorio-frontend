@@ -19,9 +19,10 @@ import { usePathname } from "next/navigation"; // Правильный импо�
 import { getChatsByUserId } from "@/store/features/chatSlice";
 import Link from "next/link";
 import { getBackendUrl } from "@/api/server/configApi";
-import { District, Metro, RegionalCity } from "@/types/types";
+import { District, Metro, RegionalCity, Role } from "@/types/types";
 import MenuMobile from "@/components/Tutor/MenuMobile/MenuMobile";
 import BottomMenuMobile from "@/components/Tutor/BottomMenuMobile/BottomMenuMobile";
+import { jwtDecode } from "jwt-decode";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -46,6 +47,15 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   useEffect(() => {
     const token = getTokenFromCookie();
     if (token) {
+      // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
+      // в личный кабинет не активной роли для мультипользователя
+      // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
+      const payload: { activeRole: Role; userID: string } = jwtDecode(token);
+      if (payload.activeRole !== "tutor") {
+        // Если токен существует, но активная роль не репетитор → редирект
+        router.push("/");
+        return;
+      }
       dispatch(setToken(token));
       dispatch(getCurrentTutor(token))
         .unwrap()
@@ -88,59 +98,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   }, [tutor, locations, dispatch]);
 
   // Устанавилваем локации города
-  // useEffect(() => {
-  //   const initialTutorTripCity = tutor?.tutorTripCity || [];
-  //   if (!locations.length || !initialTutorTripCity.length) return; // Если данных нет, не выполняем
-
-  //   // Преобразуем ID в объекты District и Metro
-  //   const transformedCityData = initialTutorTripCity.flatMap((cityId) => {
-  //     return locations.flatMap((city) => {
-  //       const selectedItems: (District | Metro)[] = []; // Типизируем массив как (District | Metro)
-
-  //       // Ищем в districts для совпадения с cityId
-  //       const district = city.districts.find(
-  //         (district) => district.id === cityId
-  //       );
-  //       let displayType;
-  //       if (district) {
-  //         // Если нашли district, добавляем его с типами District
-  //         // if (district.type === "District") {
-  //         //   displayType = "округ";
-  //         // }
-  //         if (district.type === "Area") {
-  //           displayType = "район";
-  //         }
-  //         if (district.type === "Microarea") {
-  //           displayType = "микрорайон";
-  //         }
-  //         selectedItems.push({
-  //           id: district.id,
-  //           title: district.title,
-  //           displayType: displayType,
-  //         } as District);
-  //       }
-
-  //       // Ищем метро (Metro) отдельно в каждом district
-  //       const metro = city.districts.flatMap((district) =>
-  //         district.metros.filter((metro) => metro.id === cityId)
-  //       );
-  //       metro.forEach((metroItem) => {
-  //         // Если нашли metro, добавляем его с типами Metro
-  //         selectedItems.push({
-  //           id: metroItem.id,
-  //           title: metroItem.title,
-  //           displayType: "метро",
-  //         } as Metro);
-  //       });
-
-  //       return selectedItems; // Возвращаем массив с найденными District и Metro
-  //     });
-  //   });
-
-  //   // Отправляем преобразованные данные в редуктор
-  //   dispatch(setSelectedValuesCity(transformedCityData));
-  // }, [locations, dispatch, tutor]); // Зависимости для useEffect
-
   useEffect(() => {
     const initialTutorTripCity = tutor?.tutorTripCity || [];
     if (!locations.length || !initialTutorTripCity.length) return; // Если данных нет, не выполняем
