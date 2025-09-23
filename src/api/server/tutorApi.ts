@@ -1,41 +1,70 @@
 import { LessonDuration, Tutor, TutorSubjectPriceInput } from "@/types/types";
 import { baseUrl, getBackendUrl } from "./configApi";
+import httpClient from "./httpClient";
+
+// // Регистрация репетитора
+// export const fetchCreateTutor = async (phone: string, token: string) => {
+//   const response = await fetch(`${baseUrl}tutors`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${token}`,
+//     },
+//     body: JSON.stringify({
+//       phone: phone,
+//       status: "Rega: Fullname",
+//     }),
+//   });
+
+//   const data = await response.json();
+//   return data;
+// };
 
 // Регистрация репетитора
-export const fetchCreateTutor = async (phone: string, token: string) => {
-  const response = await fetch(`${baseUrl}tutors`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      phone: phone,
-      status: "Rega: Fullname",
-    }),
+export const fetchCreateTutor = async (phone: string) => {
+  // ❌ УДАЛЕНО: token из аргументов
+  const response = await httpClient.post(`/tutors`, {
+    phone: phone,
+    status: "Rega: Fullname",
   });
 
-  const data = await response.json();
-  return data;
+  // ✅ ОБНОВЛЕНО: axios сам парсит JSON → сразу response.data
+  return response.data;
 };
 
 // Получение репетитора по токену
-export const fetchCurrentTutor = async (token: string) => {
-  const response = await fetch(`${baseUrl}currentTutor`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+// export const fetchCurrentTutor = async (token: string) => {
+//   const response = await fetch(`${baseUrl}currentTutor`, {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
 
-  if (!response.ok) {
-    throw new Error("Репетитора не существует");
+//   if (!response.ok) {
+//     throw new Error("Репетитора не существует");
+//   }
+
+//   const data = await response.json();
+//   return data;
+// };
+
+// Получение репетитора по токену
+export const fetchCurrentTutor = async () => {
+  try {
+    const response = await httpClient.get(`currentTutor`);
+    console.log('✅ Сервер вернул JSON:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Ошибка запроса currentTutor:', error.response?.status, error.response?.data || error.message);
+    if (error.response?.status === 404) {
+      throw new Error("Репетитора не существует");
+    }
+    throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
+
 
 // Получение телефона ученика по ID
 export const fetchTutorPhoneById = async (token: string, id: string) => {
@@ -56,9 +85,58 @@ export const fetchTutorPhoneById = async (token: string, id: string) => {
 };
 
 // Изменение репетитора
+// export const fetchUpdateTutor = async (data: {
+//   id: string;
+//   token: string;
+//   status?: string;
+//   name?: string;
+//   email?: string;
+//   phone?: string;
+//   isVerifedEmail?: boolean;
+//   telegram?: string;
+//   skype?: string;
+//   subject?: string[];
+//   subjectComments?: { subjectId: string; comment: string }[];
+//   region?: string;
+//   tutorPlace?: string[];
+//   tutorAdress?: string;
+//   tutorTrip?: string[];
+//   tutorTripCity?: string[];
+//   tutorTripCityData?: string;
+//   tutorTripArea?: string[];
+//   profileInfo?: string;
+//   experience?: string;
+//   isGroup?: boolean;
+//   isPublicProfile?: boolean;
+//   isStudentResponses?: boolean;
+//   isNotifications?: boolean;
+//   isNotificationsOrders?: boolean;
+//   isNotificationsResponse?: boolean;
+//   isNotificationsPromo?: boolean;
+//   isNotificationsSms?: boolean;
+//   isNotificationsEmail?: boolean;
+//   isNotificationsTelegram?: boolean;
+//   isNotificationsVk?: boolean;
+//   lastOnline?: Date;
+// }) => {
+//   const { id, token, ...fields } = data;
+
+//   const response = await fetch(`${baseUrl}tutors/${id}`, {
+//     method: "PATCH",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: `Bearer ${token}`,
+//     },
+//     body: JSON.stringify(fields), // Отправляем только переданные поля
+//   });
+
+//   const responseData = await response.json();
+//   return responseData;
+// };
+
+// Изменение репетитора
 export const fetchUpdateTutor = async (data: {
   id: string;
-  token: string;
   status?: string;
   name?: string;
   email?: string;
@@ -72,9 +150,9 @@ export const fetchUpdateTutor = async (data: {
   tutorPlace?: string[];
   tutorAdress?: string;
   tutorTrip?: string[];
-  tutorTripCity?: string[];
+  tutorTripCity?: string;
   tutorTripCityData?: string;
-  tutorTripArea?: string[];
+  tutorTripArea?: string;
   profileInfo?: string;
   experience?: string;
   isGroup?: boolean;
@@ -90,19 +168,12 @@ export const fetchUpdateTutor = async (data: {
   isNotificationsVk?: boolean;
   lastOnline?: Date;
 }) => {
-  const { id, token, ...fields } = data;
+  const { id, ...fields } = data;
 
-  const response = await fetch(`${baseUrl}tutors/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(fields), // Отправляем только переданные поля
-  });
+  // ❌ Убрали token из headers
+  const response = await httpClient.patch(`/tutors/${id}`, fields); // ✅ через httpClient
 
-  const responseData = await response.json();
-  return responseData;
+  return response.data; // ✅ axios сразу возвращает JSON
 };
 
 export const fetchDeleteRequest = async (

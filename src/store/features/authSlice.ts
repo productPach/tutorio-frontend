@@ -1,3 +1,4 @@
+import { removeAccessToken, setAccessToken } from "@/api/server/auth";
 import { fetchGetToken, fetchUpdatePhoneUser } from "@/api/server/userApi";
 import {
   SignInFormType,
@@ -12,16 +13,32 @@ import {
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export const getToken = createAsyncThunk<string, SignInFormType>(
+// ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
+// export const getToken = createAsyncThunk<string, SignInFormType>(
+//   "auth/getToken",
+//   async ({ phone, secretCode, role }) => {
+//     try {
+//       const response = await fetchGetToken({ phone, secretCode, role });
+//       return response.token;
+//     } catch (error) {
+//       // Здесь можно вернуть undefined или обработать ошибку
+//       console.error(error);
+//       return undefined; // Или выбросить ошибку, если это необходимо
+//     }
+//   }
+// );
+
+export const getToken = createAsyncThunk(
   "auth/getToken",
-  async ({ phone, secretCode, role }) => {
+  async ({ phone, secretCode, role }: SignInFormType, { rejectWithValue }) => {
     try {
       const response = await fetchGetToken({ phone, secretCode, role });
-      return response.token;
-    } catch (error) {
-      // Здесь можно вернуть undefined или обработать ошибку
-      console.error(error);
-      return undefined; // Или выбросить ошибку, если это необходимо
+      // добавляем accessToken в localStorage
+      setAccessToken(response);
+      
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Ошибка авторизации");
     }
   }
 );
@@ -73,6 +90,7 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
+      setAccessToken(action.payload); // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
     },
     setRegionUser: (state, action: PayloadAction<UserRegion>) => {
       state.regionUser = action.payload;
@@ -85,6 +103,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isLoggedIn = false;
       state.loadingAuth = false;
+      removeAccessToken(); // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
       removeCookie("user");
       removeLocalStorage("student");
       removeLocalStorage("tutor");
@@ -92,25 +111,25 @@ const authSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getToken.fulfilled, (state, action: PayloadAction<string>) => {
-        if (action.payload) {
+      .addCase(getToken.fulfilled, (state, action) => {
           // Проверяем на наличие токена
           state.token = action.payload;
+          //state.user = action.payload.user; // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
           state.isLoggedIn = true;
+          state.loadingAuth = false; // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
           // По идее теперь для прода это не нужно, тк устанавливается на бэке
-          setCookie("user", state.token, 30, {});
-        } else {
-          // Обработка ситуации, когда токен отсутствует
-          state.isLoggedIn = false; // Не авторизован
-          state.token = null; // Обнуляем токен
-        }
-        state.loadingAuth = false; // Завершаем загрузку
+          // setCookie("user", state.token, 30, {});
       })
       .addCase(getToken.pending, (state) => {
         state.loadingAuth = true;
+        state.errorMessage = null;
       })
-      .addCase(getToken.rejected, (state) => {
+      .addCase(getToken.rejected, (state, action) => {
         state.loadingAuth = false;
+        state.errorMessage = action.payload as string;
+        state.isLoggedIn = false;
+        state.token = null;
+        state.user = null;
       })
       .addCase(updatePhoneUser.rejected, (state, action) => {
         state.updateUser = false;

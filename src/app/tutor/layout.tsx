@@ -23,6 +23,7 @@ import { District, Metro, RegionalCity, Role } from "@/types/types";
 import MenuMobile from "@/components/Tutor/MenuMobile/MenuMobile";
 import BottomMenuMobile from "@/components/Tutor/BottomMenuMobile/BottomMenuMobile";
 import { jwtDecode } from "jwt-decode";
+import { getAccessToken } from "@/api/server/auth";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -41,35 +42,74 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   // Определяем активный пункт меню на основе pathname
   const isActive = (path: string) => pathname.startsWith(path);
 
+  console.log(tutor);
+
   // Получаем токен из куки
   // Если токен в куки есть, тогда добавляем токен в Redux
   // Если токена в куках нет, тогда делаем редирект на главную
+  // useEffect(() => {
+  //   const token = getTokenFromCookie();
+  //   if (token) {
+  //     // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
+  //     // в личный кабинет не активной роли для мультипользователя
+  //     // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
+  //     const payload: { activeRole: Role; userID: string } = jwtDecode(token);
+  //     if (payload.activeRole !== "tutor") {
+  //       // Если токен существует, но активная роль не репетитор → редирект
+  //       router.push("/");
+  //       return;
+  //     }
+  //     dispatch(setToken(token));
+  //     dispatch(getCurrentTutor())
+  //       .unwrap()
+  //       // Разворачиваем Promise для обработки отклонённого случая
+  //       .catch(() => {
+  //         // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
+  //         dispatch(setLogout());
+  //         router.push("/");
+  //       });
+  //   } else {
+  //     router.push("/");
+  //     return;
+  //   }
+  //   setIsLoadedPage(true);
+  // }, [dispatch, router]);
+
   useEffect(() => {
-    const token = getTokenFromCookie();
-    if (token) {
-      // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
-      // в личный кабинет не активной роли для мультипользователя
-      // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
-      const payload: { activeRole: Role; userID: string } = jwtDecode(token);
-      if (payload.activeRole !== "tutor") {
-        // Если токен существует, но активная роль не репетитор → редирект
-        router.push("/");
+    const initAuth = () => {
+      const token = getAccessToken(); // берём из localStorage
+      if (!token) {
+        router.push("/"); // токена нет → редирект
         return;
       }
-      dispatch(setToken(token));
-      dispatch(getCurrentTutor(token))
-        .unwrap()
-        // Разворачиваем Promise для обработки отклонённого случая
-        .catch(() => {
-          // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
-          dispatch(setLogout());
+
+      try {
+        const payload: { activeRole: Role; userID: string } = jwtDecode(token);
+
+        if (payload.activeRole !== "tutor") {
           router.push("/");
-        });
-    } else {
-      router.push("/");
-      return;
-    }
-    setIsLoadedPage(true);
+          return;
+        }
+
+        dispatch(setToken(token));
+        dispatch(getCurrentTutor())
+          .unwrap()
+          // Разворачиваем Promise для обработки отклонённого случая
+          .catch(() => {
+            // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
+            dispatch(setLogout());
+            router.push("/");
+          });
+
+        setIsLoadedPage(true);
+      } catch (error) {
+        // Некорректный токен → разлогиниваем
+        dispatch(setLogout());
+        router.push("/");
+      }
+    };
+
+    initAuth();
   }, [dispatch, router]);
 
   // Устанавилваем регион
@@ -192,7 +232,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         dispatch(
           updateTutor({
             id: tutor.id,
-            token,
             lastOnline: new Date(), // Обновляем дату последнего посещения
           })
         );
@@ -203,7 +242,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         dispatch(
           updateTutor({
             id: tutor.id,
-            token,
             lastOnline: new Date(), // Устанавливаем время первого входа
           })
         );

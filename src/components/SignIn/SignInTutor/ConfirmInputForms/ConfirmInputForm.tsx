@@ -152,26 +152,26 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         const token = await dispatch(
           getToken({ phone, secretCode, role })
         ).unwrap();
+        console.log("token:" + token);
 
         if (token) {
           setIsSuccess(true);
           setErrorInput(false);
           try {
+            console.log("Пытаемся получить репетитора");
+
             // Пытаемся получить данные репетитора
-            await dispatch(getCurrentTutor(token)).unwrap();
+            await dispatch(getCurrentTutor()).unwrap();
           } catch {
             // Если репетитор не существует, создаем нового
             await dispatch(
               createTutor({
                 phone: phone,
-                token,
               })
             ).unwrap();
           } finally {
             // Повторно получаем статус репетитора после создания
-            const updatedTutor = await dispatch(
-              getCurrentTutor(token)
-            ).unwrap();
+            const updatedTutor = await dispatch(getCurrentTutor()).unwrap();
 
             switch (updatedTutor?.status) {
               case "Rega: Fullname":
@@ -198,11 +198,10 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 dispatch(
                   updateTutor({
                     id: updatedTutor?.id,
-                    token,
                     status: "Canceled delete",
                   })
                 );
-                fetchCancelDeleteRequest({ token, role: "tutor" });
+                //fetchCancelDeleteRequest({ token, role: "tutor" });
                 dispatch(resetDeleteRequest());
                 handleNextStep("../tutor/orders");
                 break;
