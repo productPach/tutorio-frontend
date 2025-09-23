@@ -31,7 +31,7 @@ export const DeleteModal = ({ logout }: { logout: () => void }) => {
       dispatch(
         deleteTutorRequest({ tutorId: tutor?.id, answer: inputValue, token })
       );
-      dispatch(updateTutor({ id: tutor?.id, token, status: "Deleted" }));
+      dispatch(updateTutor({ id: tutor?.id, status: "Deleted" }));
     }
   };
   // Стейт для знаения инпута с суммой пополнения

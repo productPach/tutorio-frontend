@@ -31,7 +31,7 @@ export const Fio = () => {
     const id = tutor?.id;
     const name = inputValue;
     if (token && id) {
-      dispatch(updateTutor({ id, token, name })).unwrap;
+      dispatch(updateTutor({ id, name })).unwrap;
       dispatch(setIsModalFio(false));
       dispatch(setIsSheetFio(false));
     }

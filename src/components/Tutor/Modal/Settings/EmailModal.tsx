@@ -56,7 +56,7 @@ export const EmailModal = () => {
       //   html, // Передаём HTML-версию письма
       // });
 
-      dispatch(updateTutor({ id, token, email, isVerifedEmail }))
+      dispatch(updateTutor({ id, email, isVerifedEmail }))
         .unwrap()
         .then(() => sendVerificationEmail(id, token))
         .catch((error) =>

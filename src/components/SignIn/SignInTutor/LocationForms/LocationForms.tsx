@@ -128,7 +128,6 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
       dispatch(
         updateTutor({
           id,
-          token,
           status,
           region,
           tutorPlace,

@@ -33,7 +33,7 @@ export const ProfileInfo = () => {
     const id = tutor?.id;
     const profileInfo = inputValue;
     if (token && id) {
-      dispatch(updateTutor({ id, token, profileInfo })).unwrap;
+      dispatch(updateTutor({ id, profileInfo })).unwrap;
       dispatch(setIsModalProfileInfo(false));
       dispatch(setIsSheetProfileInfo(false));
     }

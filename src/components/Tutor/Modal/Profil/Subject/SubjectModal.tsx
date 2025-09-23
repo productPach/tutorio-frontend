@@ -183,7 +183,6 @@ export const SubjectModal = () => {
     dispatch(
       updateTutor({
         id: tutor.id,
-        token,
         subjectComments: updatedComments,
       })
     );
