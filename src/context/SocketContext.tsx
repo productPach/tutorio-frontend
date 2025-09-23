@@ -63,7 +63,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         if (studentId) {
           dispatch(getCurrentStudent(token)); // Диспатчим для студента
         } else if (tutorId) {
-          dispatch(getCurrentTutor(token)); // Диспатчим для репетитора
+          dispatch(getCurrentTutor()); // Диспатчим для репетитора
         }
       });
 
