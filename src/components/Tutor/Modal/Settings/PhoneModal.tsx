@@ -260,7 +260,7 @@ export const PhoneModal = () => {
           ).unwrap();
 
           if (updatePhone) {
-            dispatch(getCurrentTutor(token));
+            dispatch(getCurrentTutor());
           }
         } else {
           setErrorInput(true);
