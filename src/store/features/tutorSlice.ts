@@ -36,11 +36,11 @@ import {
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export const getCurrentTutor = createAsyncThunk<Tutor, string>(
+export const getCurrentTutor = createAsyncThunk<Tutor, void>(
   "tutor/current",
-  async (token) => {
+  async () => {
     try {
-      const response = await fetchCurrentTutor(token);
+      const response = await fetchCurrentTutor();
       return response;
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку
@@ -80,10 +80,10 @@ export const getTutorById = createAsyncThunk<Tutor, { id: string; token: string 
 
 export const createTutor = createAsyncThunk<
   Tutor,
-  { phone: string; token: string }
->("tutor/create", async ({ phone, token }) => {
+  { phone: string; }
+>("tutor/create", async ({ phone }) => {
   try {
-    const response = await fetchCreateTutor(phone, token);
+    const response = await fetchCreateTutor(phone);
     return response;
   } catch (error) {
     // Здесь можно вернуть undefined или обработать ошибку
@@ -92,11 +92,62 @@ export const createTutor = createAsyncThunk<
   }
 });
 
+// export const updateTutor = createAsyncThunk<
+//   Tutor,
+//   {
+//     id: string;
+//     token: string;
+//     status?: string;
+//     name?: string;
+//     phone?: string;
+//     email?: string;
+//     isVerifedEmail?: boolean;
+//     telegram?: string;
+//     skype?: string;
+//     subject?: string[];
+//     subjectComments?: { subjectId: string; comment: string }[];
+//     region?: string;
+//     tutorPlace?: string[];
+//     tutorAdress?: string;
+//     tutorTrip?: string[];
+//     tutorTripCity?: string[];
+//     tutorTripCityData?: string;
+//     tutorTripArea?: string[];
+//     profileInfo?: string;
+//     experience?: string;
+//     isGroup?: boolean;
+//     isPublicProfile?: boolean;
+//     isStudentResponses?: boolean;
+//     isNotifications?: boolean;
+//     isNotificationsOrders?: boolean;
+//     isNotificationsResponse?: boolean;
+//     isNotificationsPromo?: boolean;
+//     isNotificationsSms?: boolean;
+//     isNotificationsEmail?: boolean;
+//     isNotificationsTelegram?: boolean;
+//     isNotificationsVk?: boolean;
+//     lastOnline?: Date;
+//   }
+// >("tutor/update", async ({ id, token, ...optionalFields }) => {
+//   try {
+//     const dataToUpdate = {
+//       id,
+//       token,
+//       ...optionalFields,
+//     };
+
+//     const response = await fetchUpdateTutor(dataToUpdate);
+//     return response;
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// });
+// Изменение репетитора
 export const updateTutor = createAsyncThunk<
   Tutor,
   {
     id: string;
-    token: string;
     status?: string;
     name?: string;
     phone?: string;
@@ -110,9 +161,9 @@ export const updateTutor = createAsyncThunk<
     tutorPlace?: string[];
     tutorAdress?: string;
     tutorTrip?: string[];
-    tutorTripCity?: string[];
+    tutorTripCity?: string;
     tutorTripCityData?: string;
-    tutorTripArea?: string[];
+    tutorTripArea?: string;
     profileInfo?: string;
     experience?: string;
     isGroup?: boolean;
@@ -128,21 +179,20 @@ export const updateTutor = createAsyncThunk<
     isNotificationsVk?: boolean;
     lastOnline?: Date;
   }
->("tutor/update", async ({ id, token, ...optionalFields }) => {
-  try {
-    const dataToUpdate = {
-      id,
-      token,
-      ...optionalFields,
-    };
+>(
+  "tutor/update",
+  async (optionalFields) => {
+    try {
+      const { id, ...fields } = optionalFields;
 
-    const response = await fetchUpdateTutor(dataToUpdate);
-    return response;
-  } catch (error) {
-    console.error(error);
-    throw error;
+      const response = await fetchUpdateTutor({ id, ...fields }); // ✅ токен не передаём
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
-});
+);
 
 // Создание новой цены по предмету
 export const addSubjectPrice = createAsyncThunk<
@@ -214,9 +264,9 @@ export const updateTutorAvatar = createAsyncThunk<
 // Получение велком-скринов для репетитора
 export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], string>(
   "tutor/welcomeScreen",
-  async (token) => {
+  async () => {
     try {
-      const response = await fetchWelcomeScreens(token);
+      const response = await fetchWelcomeScreens();
       return response;
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку
@@ -232,7 +282,7 @@ export const showWelcomeScreen = createAsyncThunk<
   { token: string; id: string } // Параметры функции
 >("tutor/showWelcomeScreen", async ({ token, id }) => {
   try {
-    const response = await fetchShowWelcomeScreen(token, id);
+    const response = await fetchShowWelcomeScreen(id);
     return { success: response.success, id }; // Возвращаем успешность и ID
   } catch (error) {
     console.error(error);

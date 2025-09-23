@@ -206,9 +206,11 @@ const Orders = () => {
               ? order.studentWishes
               : null;
 
-            const activeChats = order.chats.filter(
-              (chat) => chat.status === "Active"
-            );
+            // const activeChats = order.chats.filter(
+            //   (chat) => chat.status === "Active"
+            // ); // Небезопасно. Ниже исправления от 21.09.2025
+            const activeChats =
+              order?.chats?.filter((chat) => chat.status === "Active") ?? [];
 
             return (
               <div
