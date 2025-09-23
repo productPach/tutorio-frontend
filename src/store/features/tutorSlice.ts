@@ -264,9 +264,9 @@ export const updateTutorAvatar = createAsyncThunk<
 // Получение велком-скринов для репетитора
 export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], string>(
   "tutor/welcomeScreen",
-  async () => {
+  async (token) => {
     try {
-      const response = await fetchWelcomeScreens();
+      const response = await fetchWelcomeScreens(token);
       return response;
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку
@@ -282,7 +282,7 @@ export const showWelcomeScreen = createAsyncThunk<
   { token: string; id: string } // Параметры функции
 >("tutor/showWelcomeScreen", async ({ token, id }) => {
   try {
-    const response = await fetchShowWelcomeScreen(id);
+    const response = await fetchShowWelcomeScreen(token, id);
     return { success: response.success, id }; // Возвращаем успешность и ID
   } catch (error) {
     console.error(error);
