@@ -34,7 +34,7 @@ export const ExperienceModal = () => {
     const id = tutor?.id;
     const experience = inputValue;
     if (token && id) {
-      dispatch(updateTutor({ id, token, experience })).unwrap;
+      dispatch(updateTutor({ id, experience })).unwrap;
       dispatch(setIsModalExperience(false));
       dispatch(setIsSheetExperience(false));
     }

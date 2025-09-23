@@ -44,7 +44,7 @@ export const TelegramModal = () => {
     const id = tutor?.id;
     const telegram = inputValue;
     if (token && id) {
-      dispatch(updateTutor({ id, token, telegram })).unwrap;
+      dispatch(updateTutor({ id, telegram })).unwrap;
       dispatch(setIsModalTelegram(false));
       dispatch(setIsSheetTelegram(false));
       dispatch(setScrollY(0));

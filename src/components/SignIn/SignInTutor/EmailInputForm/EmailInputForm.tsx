@@ -77,7 +77,7 @@ export const EmailInputForms: React.FC<ComponentRenderProps> = ({
   const updateDataTutor = (email: string) => {
     const id = tutor?.id;
     if (token && id) {
-      dispatch(updateTutor({ id, token, status, email })).unwrap;
+      dispatch(updateTutor({ id, status, email })).unwrap;
       handleNextStep(nextPage, email);
     } else {
       console.log("Нет токена");

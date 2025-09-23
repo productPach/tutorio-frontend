@@ -71,7 +71,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
   const updateDataTutor = (name: string) => {
     const id = tutor?.id;
     if (token && id) {
-      dispatch(updateTutor({ id, token, status, name })).unwrap;
+      dispatch(updateTutor({ id, status, name })).unwrap;
       handleNextStep(nextPage, name);
     } else {
       console.log("Нет токена");

@@ -81,7 +81,7 @@ export const SubjectsSettings = () => {
     const id = tutor?.id;
     if (token && id) {
       const subject = listSubjectChecked;
-      dispatch(updateTutor({ id, token, subject })).unwrap;
+      dispatch(updateTutor({ id, subject })).unwrap;
       setIsDisabled(true);
       setIsVisible(false);
     } else {

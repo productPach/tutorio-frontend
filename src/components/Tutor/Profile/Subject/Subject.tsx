@@ -43,7 +43,6 @@ export const Subject = () => {
       dispatch(
         updateTutor({
           id: tutor.id,
-          token,
           isGroup: isChecked,
         })
       ).unwrap();

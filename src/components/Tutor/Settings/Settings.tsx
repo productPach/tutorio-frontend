@@ -168,7 +168,6 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
       dispatch(
         updateTutor({
           id,
-          token,
           ...updates, // Передаем только измененные поля
         })
       ).unwrap();

@@ -46,7 +46,7 @@ export const SelectCity = () => {
     if (token && tutor) {
       const id = tutor.id;
       const region = city;
-      dispatch(updateTutor({ id, token, region })).unwrap;
+      dispatch(updateTutor({ id, region })).unwrap;
     }
 
     // Удаляем данные о городе из Local Storage, если выбран другой регион

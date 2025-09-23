@@ -70,7 +70,7 @@ export const Photo = () => {
             croppedAreaPixels,
           })
         ).unwrap();
-        dispatch(updateTutor({ id, token })).unwrap;
+        dispatch(updateTutor({ id })).unwrap;
       } catch (error) {
         console.error("Ошибка при обновлении аватара:", error);
       }

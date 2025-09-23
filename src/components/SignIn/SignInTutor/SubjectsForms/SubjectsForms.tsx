@@ -74,7 +74,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
     const id = tutor?.id;
     if (token && id) {
       const subject = listSubjectChecked;
-      dispatch(updateTutor({ id, token, status, subject })).unwrap;
+      dispatch(updateTutor({ id, status, subject })).unwrap;
       handleNextStep(nextPage);
     } else {
       console.log("Нет токена");

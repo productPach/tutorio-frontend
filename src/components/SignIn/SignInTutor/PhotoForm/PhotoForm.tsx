@@ -98,7 +98,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
             croppedAreaPixels, // передаем croppedAreaPixels
           })
         ).unwrap();
-        dispatch(updateTutor({ id, token, status })).unwrap;
+        dispatch(updateTutor({ id, status })).unwrap;
 
         // После успешного обновления аватара перенаправляем пользователя
         route.push("/tutor/orders");
