@@ -134,8 +134,8 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
           tutorAdress,
           tutorTrip,
           tutorTripCityData,
-          tutorTripCity,
-          tutorTripArea,
+          tutorTripCity: tutorTripCity.join(", "),
+          tutorTripArea: tutorTripArea.join(", "),
         })
       ).unwrap;
       handleNextStep();

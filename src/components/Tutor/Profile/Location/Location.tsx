@@ -89,14 +89,13 @@ export const Location = () => {
       dispatch(
         updateTutor({
           id,
-          token,
           region,
           tutorPlace,
           tutorAdress,
           tutorTrip,
           tutorTripCityData,
-          tutorTripCity,
-          tutorTripArea,
+          tutorTripCity: tutorTripCity.join(", "),
+          tutorTripArea: tutorTripArea.join(", "),
         })
       ).unwrap;
       localStorage.setItem(
