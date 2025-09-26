@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { host, port } from "@/api/server/configApi";
+import { host, port, socketHost } from "@/api/server/configApi";
 import { useAppSelector, useAppDispatch } from "@/store/store";
 import { getCurrentStudent } from "@/store/features/studentSlice";
 import { getCurrentTutor } from "@/store/features/tutorSlice"; // Получаем экшен для репетитора
@@ -34,7 +34,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!initialized && token && (student?.id || tutor?.id)) {
-      const socket = io(`${host}${port}`, {
+      const socket = io(`${socketHost}`, {
         auth: { token },
         transports: ["websocket"], // 🧠 важно
       });
