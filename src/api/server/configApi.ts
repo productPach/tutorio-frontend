@@ -4,6 +4,7 @@ import "dotenv/config";
 //export const host = `https://51.250.20.10:`;
 export const host = `https://dev-tutorio.ru:`;
 export const port = `3000`;
+export const socketHost = `https://dev-tutorio.ru`;
 export const getBackendUrl = () => {
   if (typeof window !== "undefined") {
     // Клиент
@@ -24,6 +25,7 @@ export const baseUrl = `${host}/api/`;
 // Для окружения фронт локально, сервер удаленно
 // export const host = `http://${process.env.NEXT_PUBLIC_IP}:`;
 // export const port = process.env.NEXT_PUBLIC_PORT;
+// export const socketHost = `https://dev-tutorio.ru`;
 // export const getBackendUrl = () => {
 //     // Клиент (браузер)
 //     return `${host}${port}` || "http://localhost:3000";
@@ -35,6 +37,7 @@ export const baseUrl = `${host}/api/`;
 // // Для окружения фронт локально + бэк локально в Docker
 // export const host = `http://localhost:`; 
 // export const port = "3000"; // т.к. в docker-compose проброшен 3000 наружу
+// export const socketHost = `http://localhost:3000`;
 
 // export const getBackendUrl = () => {
 //   // и фронт, и бэк работают на твоей машине

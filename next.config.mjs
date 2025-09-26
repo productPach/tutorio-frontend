@@ -40,7 +40,7 @@ const nextConfig = {
 
 // export default nextConfig;
 
-// // Для окружения фронт локально, сервер локально в докере
+// Для окружения фронт локально, сервер локально в докере
 // const nextConfig = {
 //   images: {
 //     domains: ["localhost"], // разрешаем загрузку картинок с localhost
@@ -55,4 +55,4 @@ const nextConfig = {
 //   },
 // };
 
-export default nextConfig;
+// export default nextConfig;
