@@ -15,6 +15,7 @@ import { getCroppedImg } from "@/utils/images/getCroppedImg";
 import { updateTutor, updateTutorAvatar } from "@/store/features/tutorSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
+import { getAccessToken } from "@/api/server/auth";
 
 interface ComponentRenderProps {
   id: number;
@@ -42,7 +43,8 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken();
   const tutor = useAppSelector((state) => state.tutor.tutor);
   const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   const [file, setFile] = useState<File | null>(null);
@@ -87,7 +89,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
     croppedAreaPixels: CroppedAreaPixels
   ) => {
     const id = tutor?.id;
-    if (id) {
+    if (id && token) {
       try {
         const status = "Pending";
         await dispatch(
