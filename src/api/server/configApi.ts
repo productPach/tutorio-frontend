@@ -34,7 +34,7 @@ export const baseUrl = `${host}/api/`;
 // export const baseUrl = `${host}${port}/api/`;
 
 
-// // Для окружения фронт локально + бэк локально в Docker
+// // Для окружения фронт локально + бэк локально в Docker!
 // export const host = `http://localhost:`; 
 // export const port = "3000"; // т.к. в docker-compose проброшен 3000 наружу
 // export const socketHost = `http://localhost:3000`;
