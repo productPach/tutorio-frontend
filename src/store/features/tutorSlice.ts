@@ -262,7 +262,7 @@ export const updateTutorAvatar = createAsyncThunk<
 });
 
 // Получение велком-скринов для репетитора
-export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], string>(
+export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], void>(
   "tutor/welcomeScreen",
   async () => {
     try {
@@ -279,7 +279,7 @@ export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], string>(
 // Просмотор велком-скрина
 export const showWelcomeScreen = createAsyncThunk<
   { success: boolean; id: string }, // Возвращаемое значение
-  { token: string; id: string } // Параметры функции
+  { id: string } // Параметры функции
 >("tutor/showWelcomeScreen", async ({ id }) => {
   try {
     const response = await fetchShowWelcomeScreen(id);

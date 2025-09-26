@@ -10,11 +10,13 @@ import {
   setIsSheetDeleteEducationItem,
 } from "@/store/features/modalSlice";
 import { useParams, useRouter } from "next/navigation";
+import { getAccessToken } from "@/api/server/auth";
 
 export const EducationItemModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken(); // берём из localStorage
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
   const route = useRouter();
@@ -24,13 +26,11 @@ export const EducationItemModal = () => {
 
   const deleteEducation = (tutorId: string) => {
     if (token && educationId) {
-      dispatch(deleteTutorEducation({ tutorId, educationId, token })).then(
-        () => {
-          dispatch(setIsModalEducationItem(false));
-          dispatch(setIsSheetDeleteEducationItem(false));
-          route.push("/tutor/profile/educations");
-        }
-      );
+      dispatch(deleteTutorEducation({ tutorId, educationId })).then(() => {
+        dispatch(setIsModalEducationItem(false));
+        dispatch(setIsSheetDeleteEducationItem(false));
+        route.push("/tutor/profile/educations");
+      });
     } else {
       console.error("educationId or token is missing");
     }

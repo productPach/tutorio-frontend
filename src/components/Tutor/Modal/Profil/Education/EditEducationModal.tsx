@@ -14,6 +14,7 @@ import {
 } from "@/store/features/modalSlice";
 import { getBackendUrl, host, port } from "@/api/server/configApi";
 import Image from "next/image";
+import { getAccessToken } from "@/api/server/auth";
 
 interface EducationModalProps {
   educationId: string | null;
@@ -25,7 +26,8 @@ export const EditEducationModal = ({
   educationIndex,
 }: EducationModalProps) => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken(); // берём из localStorage
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
   // Состояния для ввода
@@ -158,7 +160,6 @@ export const EditEducationModal = ({
         educationStartYear,
         educationEndYear,
         isShowDiplom,
-        token,
         diploma: nonEmptyFiles, // Загружаем все файлы, старые и новые
       })
     )
@@ -196,7 +197,6 @@ export const EditEducationModal = ({
               tutorId,
               educationId,
               fileUrl,
-              token,
             })
           ).unwrap();
         }

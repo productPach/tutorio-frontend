@@ -11,6 +11,7 @@ import {
   setIsSheetEducation,
 } from "@/store/features/modalSlice";
 import { host, port } from "@/api/server/configApi";
+import { getAccessToken } from "@/api/server/auth";
 
 interface EducationModalProps {
   educationId: string | null;
@@ -18,7 +19,8 @@ interface EducationModalProps {
 
 export const EducationModal = ({ educationId }: EducationModalProps) => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken();
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
   const [inputEducationInfo, setInputEducationInfo] = useState(() => {
@@ -137,7 +139,6 @@ export const EducationModal = ({ educationId }: EducationModalProps) => {
         educationStartYear,
         educationEndYear,
         isShowDiplom,
-        token,
         diploma: nonEmptyFiles, // Передаем файлы
       })
     ).unwrap();
