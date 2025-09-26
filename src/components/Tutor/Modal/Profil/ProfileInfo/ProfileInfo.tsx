@@ -9,11 +9,13 @@ import {
   setIsModalProfileInfo,
   setIsSheetProfileInfo,
 } from "@/store/features/modalSlice";
+import { getAccessToken } from "@/api/server/auth";
 
 export const ProfileInfo = () => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken(); // берём из localStorage
   const tutor = useAppSelector((state) => state.tutor.tutor);
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState(tutor?.profileInfo);

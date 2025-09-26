@@ -18,19 +18,18 @@ import {
   updateTutor,
 } from "@/store/features/tutorSlice";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { getAccessToken } from "@/api/server/auth";
 
 export const DeleteModal = ({ logout }: { logout: () => void }) => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  // const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
   const deleteRequest = useAppSelector((state) => state.tutor.deleteRequest);
   const loading = useAppSelector((state) => state.tutor.loading);
 
   const handleDeleteRequest = () => {
-    if (tutor && token) {
-      dispatch(
-        deleteTutorRequest({ tutorId: tutor?.id, answer: inputValue, token })
-      );
+    if (tutor) {
+      dispatch(deleteTutorRequest({ tutorId: tutor?.id, answer: inputValue }));
       dispatch(updateTutor({ id: tutor?.id, status: "Deleted" }));
     }
   };

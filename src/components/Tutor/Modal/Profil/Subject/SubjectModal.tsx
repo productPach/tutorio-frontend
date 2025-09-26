@@ -14,10 +14,12 @@ import {
 } from "@/store/features/tutorSlice";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { getAccessToken } from "@/api/server/auth";
 
 export const SubjectModal = () => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken(); // берём из localStorage
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
   // Получаем значение loading из Redux
@@ -153,13 +155,11 @@ export const SubjectModal = () => {
         return existingPrice
           ? updateSubjectPrice({
               id: existingPrice.id,
-              token,
               price: Number(price),
               duration,
             })
           : addSubjectPrice({
               tutorId: tutor.id,
-              token,
               subjectId: editSubjectId,
               format,
               price: Number(price),

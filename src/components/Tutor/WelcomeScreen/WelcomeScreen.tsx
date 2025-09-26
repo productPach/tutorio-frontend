@@ -11,6 +11,7 @@ import {
   showWelcomeScreen,
 } from "@/store/features/tutorSlice";
 import Link from "next/link";
+import { getAccessToken } from "@/api/server/auth";
 
 interface WelcomeScreenProps {
   page: string; // Ожидаем, что в пропс придет строка
@@ -18,20 +19,21 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ page }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.auth.token);
+  // const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken(); // берём из localStorage
   const welcomeScreens = useAppSelector((state) => state.tutor.welcomeScreens);
   const hiddenScreens = useAppSelector((state) => state.tutor.hiddenScreens);
 
   useEffect(() => {
     if (token) {
-      dispatch(getWelcomeScreens(token)); // Загружаем велком скрины
+      dispatch(getWelcomeScreens()); // Загружаем велком скрины
     }
   }, [dispatch, token]);
 
   const handleHideScreen = (id: string) => {
     // Обновляем состояние скрытого экрана в Redux
     dispatch(addHiddenScreen(id));
-    token && dispatch(showWelcomeScreen({ token, id }));
+    token && dispatch(showWelcomeScreen({ id }));
   };
 
   // Фильтруем экраны, чтобы скрыть те, которые уже были скрыты
