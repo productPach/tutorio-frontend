@@ -45,11 +45,10 @@ export const getToken = createAsyncThunk(
 
 export const updatePhoneUser = createAsyncThunk<boolean, UpdatePhoneUser>(
   "user/updatePhoneUser",
-  async ({ id: userId, token, phone, secretCode }, { rejectWithValue }) => {
+  async ({ id: userId, phone, secretCode }, { rejectWithValue }) => {
     try {
       return await fetchUpdatePhoneUser({
         id: userId,
-        token,
         phone,
         secretCode,
       });

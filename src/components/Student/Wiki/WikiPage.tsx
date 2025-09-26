@@ -10,16 +10,13 @@ import { WikiComponent } from "@/components/Student/Wiki/WikiComponent";
 const WikiPage: React.FC = () => {
   const page = "Wiki";
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   const topics = useAppSelector((state) => state.wiki.topics).filter((topic) =>
     topic.visibleToRoles.includes("student")
   );
 
   useEffect(() => {
-    if (token) {
-      dispatch(getAllTopics(token));
-    }
-  }, [token, dispatch]);
+    dispatch(getAllTopics());
+  }, [dispatch]);
 
   return (
     <>

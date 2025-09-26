@@ -70,7 +70,6 @@ export const ChatComponent = ({
   }, []);
 
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
   const chat = useAppSelector((state) => state.chat.chat);
@@ -315,7 +314,6 @@ export const ChatComponent = ({
       chat.tutor?.id &&
       orderById?.studentId &&
       orderById?.id &&
-      token &&
       messageResponse
     ) {
       const subjectForRequest = subjects.find(
@@ -372,7 +370,6 @@ export const ChatComponent = ({
             orderId: orderById.id,
             themeOrder,
             text: messageResponse,
-            token,
           })
         );
 
@@ -469,6 +466,8 @@ export const ChatComponent = ({
     }
   };
   const isActiveIcon = inputValue.length > 0;
+
+  // console.log(chat);
 
   return (
     <>
@@ -599,6 +598,11 @@ export const ChatComponent = ({
                 const reviewData = orderById?.selectedTutors?.find(
                   (t) => t.id === chat.tutorId
                 );
+                //console.log(orderById);
+                console.log(chat);
+                // const reviewData = chat?.order.contracts?.find(
+                //   (c) => c.tutorId === chat.tutorId
+                // );
                 const tutorId = reviewData?.id;
                 const tutorReviewId = reviewData?.reviewId;
                 const tutorReviewStatus = reviewData?.reviewStatus;
@@ -606,9 +610,9 @@ export const ChatComponent = ({
                   return null;
                 }
                 const buttonText =
-                  tutorReviewStatus === "noReview"
-                    ? "Оставить отзыв"
-                    : "Дополнить отзыв";
+                  tutorReviewStatus === "ratingOnly"
+                    ? "Дополнить отзыв"
+                    : "Оставить отзыв";
                 const isMobile = window.innerWidth < 769;
                 return (
                   <div className={chatStyles.actionChatBlock}>

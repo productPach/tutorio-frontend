@@ -48,8 +48,6 @@ const OrderPage: React.FC = () => {
   const isModalLoadingPage = useAppSelector((state) => state.modal.loadingPage);
 
   const dispatch = useAppDispatch();
-
-  const token = useAppSelector((state) => state.auth.token);
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
 
@@ -60,10 +58,10 @@ const OrderPage: React.FC = () => {
   );
 
   useEffect(() => {
-    if (token && typeof order === "string") {
-      dispatch(getOrderById({ token, id: order }));
+    if (typeof order === "string") {
+      dispatch(getOrderById({ id: order }));
     }
-  }, [dispatch, token, order]);
+  }, [dispatch, order]);
 
   useEffect(() => {
     return () => {
@@ -77,10 +75,8 @@ const OrderPage: React.FC = () => {
     const fetchStudent = async () => {
       if (orderById?.studentId) {
         try {
-          if (token) {
-            const data = await fetchStudentById(token, orderById.studentId);
-            setStudent(data);
-          }
+          const data = await fetchStudentById(orderById.studentId);
+          setStudent(data);
         } catch (error) {
           console.error("Ошибка при загрузке данных студента:", error);
         }
@@ -88,7 +84,7 @@ const OrderPage: React.FC = () => {
     };
 
     fetchStudent();
-  }, [orderById, token]);
+  }, [orderById]);
 
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
 

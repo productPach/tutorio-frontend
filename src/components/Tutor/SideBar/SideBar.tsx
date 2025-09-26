@@ -140,8 +140,7 @@ const SideBar = () => {
         setInputRegionValue("");
         setRegionList(regionList);
       }, 500);
-
-      token && dispatch(getAllOrders(token));
+      dispatch(getAllOrders());
     }
   };
 

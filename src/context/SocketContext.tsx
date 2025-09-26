@@ -12,6 +12,7 @@ import { host, port } from "@/api/server/configApi";
 import { useAppSelector, useAppDispatch } from "@/store/store";
 import { getCurrentStudent } from "@/store/features/studentSlice";
 import { getCurrentTutor } from "@/store/features/tutorSlice"; // Получаем экшен для репетитора
+import { getAccessToken } from "@/api/server/auth";
 
 type SocketContextType = {
   socket: Socket | null;
@@ -27,19 +28,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const student = useAppSelector((state) => state.student.student);
   const tutor = useAppSelector((state) => state.tutor.tutor); // Получаем данные репетитора
-  const token = useAppSelector((state) => state.auth.token);
+  // const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!initialized && token && (student?.id || tutor?.id)) {
-      // const socket = io(`${host}${port}`, {
-      //   auth: { token },
-      //   transports: ["websocket"], // 🧠 важно
-      // });
-      const socket = io("https://dev-tutorio.ru", {
+      const socket = io(`${host}${port}`, {
         auth: { token },
-        transports: ["websocket"],
+        transports: ["websocket"], // 🧠 важно
       });
+      // const socket = io("http://localhost:3000", {
+      //   auth: { token },
+      //   transports: ["websocket"],
+      // });
 
       socket.on("connect", () => {
         //console.log("✅ Socket connected:", socket.id);
@@ -61,7 +63,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         //console.log("📩 Email verified:", studentId || tutorId);
 
         if (studentId) {
-          dispatch(getCurrentStudent(token)); // Диспатчим для студента
+          dispatch(getCurrentStudent()); // Диспатчим для студента
         } else if (tutorId) {
           dispatch(getCurrentTutor()); // Диспатчим для репетитора
         }

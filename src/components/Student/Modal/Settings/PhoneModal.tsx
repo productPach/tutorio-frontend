@@ -255,11 +255,11 @@ export const PhoneModal = () => {
         setError(true);
         if (token) {
           const updatePhone = await dispatch(
-            updatePhoneUser({ id: userId, token, phone, secretCode })
+            updatePhoneUser({ id: userId, phone, secretCode })
           ).unwrap();
 
           if (updatePhone) {
-            dispatch(getCurrentStudent(token));
+            dispatch(getCurrentStudent());
           }
         } else {
           setErrorInput(true);

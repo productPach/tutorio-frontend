@@ -124,7 +124,7 @@ export const LocationForms: React.FC<ComponentRenderProps> = ({
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
-    if (token && id) {
+    if (id) {
       dispatch(
         updateTutor({
           id,

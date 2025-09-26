@@ -25,6 +25,7 @@ import {
 } from "@/store/features/chatSlice";
 import { useIsMounted } from "@/utils/chat/useIsMounted";
 import { addChatToOrder, updateOrder } from "@/store/features/orderSlice";
+import { getAccessToken } from "@/api/server/auth";
 
 type ChatContextType = {
   chats: Chat[];
@@ -43,7 +44,8 @@ const ChatContext = createContext<ChatContextType | null>(null);
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const { socket } = useSocket();
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken();
   const studentId = useAppSelector(
     (state) => state.student.student?.id ?? null
   );
@@ -86,15 +88,14 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       let combinedChats: Chat[] = [];
 
       if (studentId && orderId) {
-        const studentChats = await fetchGetChatsByOrderId(orderId.id, token);
+        const studentChats = await fetchGetChatsByOrderId(orderId.id);
         combinedChats = [...combinedChats, ...studentChats];
       }
 
       if (tutorUserId) {
         const tutorChats = await fetchGetChatsByUserIdAndRole(
           tutorUserId,
-          "tutor",
-          token
+          "tutor"
         );
 
         combinedChats = [...combinedChats, ...tutorChats];
@@ -198,15 +199,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           const currentChat = updatedChats.find((c) => c.id === message.chatId);
           if (currentChat) {
             dispatch(updateChatForContract(currentChat));
-            // if (currentChat.orderId && token) {
-            //   dispatch(
-            //     updateOrder({
-            //       id: currentChat.orderId,
-            //       token,
-            //       status: "Hidden",
-            //     })
-            //   ).unwrap();
-            // }
+            // Обновляем заказ, чтобы студенту подгрузить выбранного репетитора
+            if (currentChat.orderId && studentId) {
+              dispatch(
+                updateOrder({
+                  id: currentChat.orderId,
+                  status: "Hidden",
+                })
+              ).unwrap();
+            }
           }
         }, 0); // или можно 100, если надо ждать, но лучше 0
 
@@ -261,10 +262,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         if (token) {
           // Подгружаем полный чат с сервера по id
-          const fullChats: Chat[] = await fetchGetChatsByOrderId(
-            data.orderId,
-            token
-          );
+          const fullChats: Chat[] = await fetchGetChatsByOrderId(data.orderId);
           const fullChat = fullChats.find((c) => c.id === data.id);
 
           if (!fullChat) {

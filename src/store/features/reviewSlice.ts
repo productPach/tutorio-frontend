@@ -12,11 +12,11 @@ import { Comment, CreateCommentPayload, CreateReviewPayload, Review } from "@/ty
 
 export const createReview = createAsyncThunk<
   Review,
-  { token: string; payload: CreateReviewPayload },
+  { payload: CreateReviewPayload },
   { rejectValue: string }
->("review/createReview", async ({ token, payload }, { rejectWithValue }) => {
+>("review/createReview", async ({ payload }, { rejectWithValue }) => {
   try {
-    return await fetchCreateReview(token, payload);
+    return await fetchCreateReview(payload);
   } catch (error: any) {
     console.error("Ошибка создания отзыва:", error);
     return rejectWithValue(error.message || "Ошибка при создании отзыва");
@@ -25,11 +25,11 @@ export const createReview = createAsyncThunk<
 
 export const createComment = createAsyncThunk<
   Comment,
-  { token: string; payload: CreateCommentPayload },
+  { payload: CreateCommentPayload },
   { rejectValue: string }
->("review/createComment", async ({ token, payload }, { rejectWithValue }) => {
+>("review/createComment", async ({ payload }, { rejectWithValue }) => {
   try {
-    return await fetchCreateComment(token, payload);
+    return await fetchCreateComment(payload);
   } catch (error: any) {
     console.error("Ошибка создания комментария:", error);
     return rejectWithValue(error.message || "Ошибка при создании комментария");
@@ -38,11 +38,11 @@ export const createComment = createAsyncThunk<
 
 export const updateReview = createAsyncThunk<
   Review,
-  { token: string; id: string; payload: { message?: string; rating?: number } },
+  { id: string; payload: { message?: string; rating?: number } },
   { rejectValue: string }
->("review/updateReview", async ({ token, id, payload }, { rejectWithValue }) => {
+>("review/updateReview", async ({ id, payload }, { rejectWithValue }) => {
   try {
-    return await fetchUpdateReview(token, id, payload);
+    return await fetchUpdateReview(id, payload);
   } catch (error: any) {
     console.error("Ошибка обновления отзыва:", error);
     return rejectWithValue(error.message || "Ошибка при обновлении отзыва");

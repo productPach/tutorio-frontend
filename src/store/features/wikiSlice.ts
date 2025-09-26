@@ -19,11 +19,10 @@ export const createTopic = createAsyncThunk<
   Topic,
   {
     topic: Omit<Topic, "id" | "createdAt" | "updatedAt" | "themes">;
-    token: string;
   }
->("wiki/createTopic", async ({ topic, token }) => {
+>("wiki/createTopic", async ({ topic }) => {
   try {
-    return await fetchCreateTopic(token, topic);
+    return await fetchCreateTopic(topic);
   } catch (error) {
     console.error("Ошибка создания топика:", error);
     throw error;
@@ -33,11 +32,11 @@ export const createTopic = createAsyncThunk<
 // Получение всех топиков
 export const getAllTopics = createAsyncThunk<
   Topic[],
-  string,
+  void,
   { rejectValue: string }
->("wiki/getAllTopics", async (token, { rejectWithValue }) => {
+>("wiki/getAllTopics", async (_, { rejectWithValue }) => {
   try {
-    return await fetchGetAllTopics(token);
+    return await fetchGetAllTopics();
   } catch (error: any) {
     console.error("Ошибка загрузки топиков:", error);
     return rejectWithValue(error.message || "Ошибка при загрузке топиков");
@@ -47,11 +46,11 @@ export const getAllTopics = createAsyncThunk<
 // Получение топика по ID
 export const getTopicById = createAsyncThunk<
   Topic,
-  { id: string; token: string },
+  { id: string; },
   { rejectValue: string }
->("wiki/getTopicById", async ({ id, token }, { rejectWithValue }) => {
+>("wiki/getTopicById", async ({ id }, { rejectWithValue }) => {
   try {
-    return await fetchGetTopicById(id, token);
+    return await fetchGetTopicById(id);
   } catch (error: any) {
     console.error("Ошибка загрузки топика:", error);
     return rejectWithValue(error.message || "Ошибка при загрузке топика");
@@ -61,12 +60,12 @@ export const getTopicById = createAsyncThunk<
 // Обновление топика
 export const updateTopic = createAsyncThunk<
   Topic,
-  { id: string; updatedTopic: Partial<Topic>; token: string }
+  { id: string; updatedTopic: Partial<Topic>; }
 >(
   "wiki/updateTopic",
-  async ({ id, updatedTopic, token }, { rejectWithValue }) => {
+  async ({ id, updatedTopic }, { rejectWithValue }) => {
     try {
-      return await fetchUpdateTopic(id, updatedTopic, token);
+      return await fetchUpdateTopic(id, updatedTopic);
     } catch (error: any) {
       console.error("Ошибка обновления топика:", error);
       return rejectWithValue(error.message || "Ошибка при обновлении топика");
@@ -77,10 +76,10 @@ export const updateTopic = createAsyncThunk<
 // Удаление топика
 export const deleteTopic = createAsyncThunk<
   string,
-  { id: string; token: string }
->("wiki/deleteTopic", async ({ id, token }, { rejectWithValue }) => {
+  { id: string; }
+>("wiki/deleteTopic", async ({ id }, { rejectWithValue }) => {
   try {
-    await fetchDeleteTopic(id, token);
+    await fetchDeleteTopic(id);
     return id;
   } catch (error: any) {
     console.error("Ошибка удаления топика:", error);
@@ -91,10 +90,10 @@ export const deleteTopic = createAsyncThunk<
 // Получение тем для конкретного топика
 export const getThemesByTopic = createAsyncThunk<
   { topicId: string; themes: Theme[] },
-  { topicId: string; token: string }
->("wiki/getThemesByTopic", async ({ topicId, token }, { rejectWithValue }) => {
+  { topicId: string; }
+>("wiki/getThemesByTopic", async ({ topicId }, { rejectWithValue }) => {
   try {
-    const themes = await fetchGetThemesByTopic(topicId, token);
+    const themes = await fetchGetThemesByTopic(topicId);
     return { topicId, themes };
   } catch (error: any) {
     console.error("Ошибка загрузки тем:", error);
@@ -108,13 +107,12 @@ export const createTheme = createAsyncThunk<
   {
     topicId: string;
     newTheme: Omit<Theme, "id" | "createdAt" | "updatedAt">;
-    token: string;
   }
 >(
   "wiki/createTheme",
-  async ({ topicId, newTheme, token }, { rejectWithValue }) => {
+  async ({ topicId, newTheme }, { rejectWithValue }) => {
     try {
-      return await fetchCreateTheme(topicId, newTheme, token);
+      return await fetchCreateTheme(topicId, newTheme);
     } catch (error: any) {
       console.error("Ошибка создания темы:", error);
       return rejectWithValue(error.message || "Ошибка при создании темы");
@@ -125,10 +123,10 @@ export const createTheme = createAsyncThunk<
 // Получение темы по ID
 export const getThemeById = createAsyncThunk<
   Theme,
-  { themeId: string; token: string }
->("wiki/getThemeById", async ({ themeId, token }, { rejectWithValue }) => {
+  { themeId: string; }
+>("wiki/getThemeById", async ({ themeId }, { rejectWithValue }) => {
   try {
-    return await fetchGetThemeById(themeId, token);
+    return await fetchGetThemeById(themeId);
   } catch (error: any) {
     return rejectWithValue(error.message);
   }
@@ -137,12 +135,12 @@ export const getThemeById = createAsyncThunk<
 // Обновление темы
 export const updateTheme = createAsyncThunk<
   Theme,
-  { themeId: string; updatedTheme: Partial<Theme>; token: string }
+  { themeId: string; updatedTheme: Partial<Theme>; }
 >(
   "wiki/updateTheme",
-  async ({ themeId, updatedTheme, token }, { rejectWithValue }) => {
+  async ({ themeId, updatedTheme }, { rejectWithValue }) => {
     try {
-      return await fetchUpdateTheme(themeId, updatedTheme, token);
+      return await fetchUpdateTheme(themeId, updatedTheme);
     } catch (error: any) {
       console.error("Ошибка обновления темы:", error);
       return rejectWithValue(error.message || "Ошибка при обновлении темы");
@@ -153,12 +151,12 @@ export const updateTheme = createAsyncThunk<
 // Удаление темы
 export const deleteTheme = createAsyncThunk<
   { topicId: string; themeId: string },
-  { topicId: string; themeId: string; token: string }
+  { topicId: string; themeId: string; }
 >(
   "wiki/deleteTheme",
-  async ({ topicId, themeId, token }, { rejectWithValue }) => {
+  async ({ topicId, themeId }, { rejectWithValue }) => {
     try {
-      await fetchDeleteTheme(themeId, token);
+      await fetchDeleteTheme(themeId);
       return { topicId, themeId };
     } catch (error: any) {
       console.error("Ошибка удаления темы:", error);

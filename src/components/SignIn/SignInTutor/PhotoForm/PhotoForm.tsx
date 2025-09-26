@@ -87,7 +87,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
     croppedAreaPixels: CroppedAreaPixels
   ) => {
     const id = tutor?.id;
-    if (token && id) {
+    if (id) {
       try {
         const status = "Pending";
         await dispatch(

@@ -70,7 +70,7 @@ export const FioInputForms: React.FC<ComponentRenderProps> = ({
   // Обновление данных репетитора
   const updateDataTutor = (name: string) => {
     const id = tutor?.id;
-    if (token && id) {
+    if (id) {
       dispatch(updateTutor({ id, status, name })).unwrap;
       handleNextStep(nextPage, name);
     } else {

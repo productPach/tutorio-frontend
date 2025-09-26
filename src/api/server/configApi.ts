@@ -30,3 +30,15 @@ export const baseUrl = `${host}/api/`;
 // };
 
 // export const baseUrl = `${host}${port}/api/`;
+
+
+// // Для окружения фронт локально + бэк локально в Docker
+// export const host = `http://localhost:`; 
+// export const port = "3000"; // т.к. в docker-compose проброшен 3000 наружу
+
+// export const getBackendUrl = () => {
+//   // и фронт, и бэк работают на твоей машине
+//   return `${host}${port}`;
+// };
+
+// export const baseUrl = `${host}${port}/api/`;

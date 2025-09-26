@@ -6,14 +6,14 @@ import { RootState } from "../store";
 
 export const getAllOrders = createAsyncThunk<
   Order[], // Тип возвращаемых данных - массив заказов
-  string,  // Тип ожидаемого аргумента - токен
+  void,
   { rejectValue: string } // Тип для ошибки
 >(
   'order/getAllOrders',
-  async (token, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       // Запрос списка заказов
-      const orders = await fetchGetAllOrders(token);
+      const orders = await fetchGetAllOrders();
       return orders; // Возвращаем массив заказов
     } catch (error) {
       // Обрабатываем ошибку и передаем ее сообщение через rejectWithValue
@@ -25,13 +25,13 @@ export const getAllOrders = createAsyncThunk<
 
 export const getOrdersByStudentId = createAsyncThunk<
   Order[], // Тип возвращаемых данных - массив заказов
-  { token: string; studentId: string }, // Тип ожидаемого аргумента
+  { studentId: string }, // Тип ожидаемого аргумента
   { rejectValue: string } // Тип для ошибки
 >(
   'order/getOrdersByStudentId',
-  async ({ token, studentId }, { rejectWithValue }) => {
+  async ({ studentId }, { rejectWithValue }) => {
     try {
-      const orders = await fetchOrdersByStudentId(token, studentId);
+      const orders = await fetchOrdersByStudentId( studentId);
       return orders;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Ошибка при получении заказов студента';
@@ -43,14 +43,14 @@ export const getOrdersByStudentId = createAsyncThunk<
 
 export const getOrderById = createAsyncThunk<
   Order, // Тип возвращаемых данных
-  { token: string; id: string },  // Тип ожидаемого аргумента - токен
+  { id: string },  // Тип ожидаемого аргумента - токен
   { rejectValue: string } // Тип для ошибки
 >(
   'order/getOrdersById',
-  async ({token, id}, { rejectWithValue }) => {
+  async ({id}, { rejectWithValue }) => {
     try {
       // Запрос списка заказов
-      const order = await fetchGetOrderById(token, id);
+      const order = await fetchGetOrderById(id);
       return order; // Возвращаем массив заказов
     } catch (error) {
       // Обрабатываем ошибку и передаем ее сообщение через rejectWithValue
@@ -66,7 +66,6 @@ export const updateOrder = createAsyncThunk<
   Order, // Возвращаемый объект — обновленный заказ
   {
     id: string;
-    token: string;
     studentType?: string;
     studentYears?: string;
     studentClass?: string;
@@ -89,11 +88,10 @@ export const updateOrder = createAsyncThunk<
     responseCost?: number;
     status?: string;
   }
->("order/update", async ({ id, token, ...optionalFields }) => {
+>("order/update", async ({ id, ...optionalFields }) => {
   try {
     const dataToUpdate = {
       id,
-      token,
       ...optionalFields,
     };
 

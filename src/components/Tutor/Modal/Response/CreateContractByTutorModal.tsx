@@ -19,7 +19,7 @@ import { useState } from "react";
 
 export const CreateContractByTutorModal = () => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
+  //const token = useAppSelector((state) => state.auth.token);
   const chat = useAppSelector((state) => state.chat.chat);
   const { loadChats } = useChat();
   const { sendMessageSocket } = useChatSocket(chat?.id ? chat.id : "");
@@ -28,11 +28,10 @@ export const CreateContractByTutorModal = () => {
 
   const handleCreateContract = async () => {
     try {
-      if (!token || !chat || !chat.orderId || !chat.tutorId) return;
+      if (!chat || !chat.orderId || !chat.tutorId) return;
       setIsLoading(true);
       await dispatch(
         createContract({
-          token,
           payload: {
             orderId: chat.orderId,
             tutorId: chat.tutorId,
@@ -49,7 +48,6 @@ export const CreateContractByTutorModal = () => {
           themeOrder: "какая-то тема",
           text: `Репетитор сообщил, что\u00A0вы договорились о\u00A0занятии!\u00A0🎉
 Желаем продуктивных уроков! После занятий, пожалуйста, оставьте отзыв\u00A0—\u00A0это поможет репетитору и\u00A0другим ученикам\u00A0🙌`,
-          token,
           type: "service",
           recipientRole: "student",
         })

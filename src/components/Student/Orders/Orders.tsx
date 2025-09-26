@@ -41,10 +41,10 @@ const Orders = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (token && student) {
-      dispatch(getOrdersByStudentId({ token, studentId: student?.id }));
+    if (student) {
+      dispatch(getOrdersByStudentId({ studentId: student?.id }));
     }
-  }, [dispatch, token]);
+  }, [dispatch]);
 
   useEffect(() => {
     setActiveOrders(

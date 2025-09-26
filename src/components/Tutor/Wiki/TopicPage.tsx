@@ -19,7 +19,6 @@ const TopicPage: React.FC = () => {
   const page = "Main";
   const pageName = "ThemesByTopic";
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.auth.token);
 
   // Используем shallowEqual, чтобы предотвратить лишние ререндеры
   const topics = useAppSelector(
@@ -39,18 +38,16 @@ const TopicPage: React.FC = () => {
   );
 
   useEffect(() => {
-    if (token) {
-      dispatch(getAllTopics(token));
-    }
-  }, [token, dispatch]);
+    dispatch(getAllTopics());
+  }, [dispatch]);
 
   useEffect(() => {
-    if (token && topic) {
+    if (topic) {
       // Очищаем темы перед загрузкой новых
       dispatch(clearThemes());
-      dispatch(getThemesByTopic({ topicId: topic, token }));
+      dispatch(getThemesByTopic({ topicId: topic }));
     }
-  }, [token, topic, dispatch]);
+  }, [topic, dispatch]);
 
   return (
     <section

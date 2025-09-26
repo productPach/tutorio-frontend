@@ -142,6 +142,8 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
   // Авторизация пользователя
   // НОВАЯ ВЕРСИЯ ОТ 25.01.2025
   const handleGetToken = async (secretCode: string) => {
+    console.log("handleGetToken");
+
     try {
       const jsonPhone = localStorage.getItem("origin-phone");
       const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
@@ -163,6 +165,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
             // Пытаемся получить данные репетитора
             await dispatch(getCurrentTutor()).unwrap();
           } catch {
+            console.log("Дергаем createTutor");
             // Если репетитор не существует, создаем нового
             await dispatch(
               createTutor({
@@ -170,6 +173,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
               })
             ).unwrap();
           } finally {
+            console.log("Блок финала");
             // Повторно получаем статус репетитора после создания
             const updatedTutor = await dispatch(getCurrentTutor()).unwrap();
 
@@ -201,7 +205,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                     status: "Canceled delete",
                   })
                 );
-                //fetchCancelDeleteRequest({ token, role: "tutor" });
+                //fetchCancelDeleteRequest({ role: "tutor" });
                 dispatch(resetDeleteRequest());
                 handleNextStep("../tutor/orders");
                 break;

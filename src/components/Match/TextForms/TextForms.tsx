@@ -229,7 +229,6 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
 
       // Создание заказа
       fetchCreateOrder(
-        token,
         subjectDataMatch,
         goalDataMatch,
         classDataMatch,
@@ -284,7 +283,6 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
             phone: tutor.phone,
             avatarUrl: randomAvatar,
             region,
-            token,
           })
         );
         //createOrder();

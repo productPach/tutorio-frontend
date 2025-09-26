@@ -11,7 +11,6 @@ import { sendVerificationEmail } from "@/api/server/studentApi";
 export const EmailModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
   const student = useAppSelector((state) => state.student.student);
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState(student?.email || "");
@@ -44,7 +43,7 @@ export const EmailModal = () => {
     const status = student?.status;
     const isVerifedEmail = false;
 
-    if (token && id && status) {
+    if (id && status) {
       // sendEmail({
       //   to: email,
       //   subject: "Подтверждение почты",
@@ -52,9 +51,9 @@ export const EmailModal = () => {
       //   html, // Передаём HTML-версию письма
       // });
 
-      dispatch(updateStudent({ id, token, status, email, isVerifedEmail }))
+      dispatch(updateStudent({ id, status, email, isVerifedEmail }))
         .unwrap()
-        .then(() => sendVerificationEmail(id, token))
+        .then(() => sendVerificationEmail(id))
         .catch((error) => console.error("Ошибка обновления ученика:", error));
 
       dispatch(setIsModalEmail(false));

@@ -19,6 +19,7 @@ import { useSocket } from "@/context/SocketContext";
 import MenuMobile from "@/components/Student/MenuMobile/MenuMobile";
 import { Role } from "@/types/types";
 import { jwtDecode } from "jwt-decode";
+import { getAccessToken } from "@/api/server/auth";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -34,7 +35,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   const component = useAppSelector((state) => state.orders.componentMenu);
 
   useEffect(() => {
-    const token = getTokenFromCookie();
+    const token = getAccessToken(); // берём из localStorage
     if (token) {
       // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
       // в личный кабинет не активной роли для мультипользователя
@@ -46,7 +47,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
         return;
       }
       dispatch(setToken(token));
-      dispatch(getCurrentStudent(token));
+      dispatch(getCurrentStudent());
     } else {
       router.push("/");
       return;
@@ -66,16 +67,15 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       ? new Date(student.lastOnline).getTime()
       : null;
 
-    const token = getTokenFromCookie();
+    // const token = getTokenFromCookie();
 
     // Если lastOnline существует, проверяем, прошло ли больше 5 минут
     if (lastOnlineTime && currentTime - lastOnlineTime > 5 * 60 * 1000) {
-      if (token && student) {
+      if (student) {
         // Отправляем данные на сервер, если прошло больше 5 минут
         dispatch(
           updateStudent({
             id: student.id,
-            token,
             status: student.status,
             lastOnline: new Date(), // Обновляем дату последнего посещения
           })
@@ -83,11 +83,10 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       }
     } else if (!lastOnlineTime) {
       // Если lastOnline нет, считаем, что это первый вход
-      if (token && student) {
+      if (student) {
         dispatch(
           updateStudent({
             id: student.id,
-            token,
             status: student.status,
             lastOnline: new Date(), // Устанавливаем время первого входа
           })

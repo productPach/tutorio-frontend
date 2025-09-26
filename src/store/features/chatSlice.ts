@@ -21,7 +21,6 @@ export const createChat = createAsyncThunk<
     initiatorRole: "student" | "tutor";
     themeOrder: string;
     status: string;
-    token: string;
   },
   {
     rejectValue: {
@@ -32,7 +31,7 @@ export const createChat = createAsyncThunk<
 >(
   "chat/create",
   async (
-    { tutorId, studentId, orderId, initiatorRole, themeOrder, status, token },
+    { tutorId, studentId, orderId, initiatorRole, themeOrder, status },
     { rejectWithValue }
   ) => {
     try {
@@ -43,7 +42,6 @@ export const createChat = createAsyncThunk<
         initiatorRole,
         themeOrder,
         status,
-        token
       );
       return response;
     } catch (error: any) {
@@ -62,10 +60,9 @@ export const updateChat = createAsyncThunk<
     chatId: string;
     tutorHasAccess?: boolean;
     status?: string;
-    token: string;
   }
->("chat/update", async ({ chatId, tutorHasAccess, status, token }) => {
-  const response = await fetchUpdateChat(chatId, tutorHasAccess, status, token);
+>("chat/update", async ({ chatId, tutorHasAccess, status }) => {
+  const response = await fetchUpdateChat(chatId, tutorHasAccess, status);
   return response;
 });
 
@@ -79,12 +76,11 @@ export const sendMessage = createAsyncThunk<
     orderId: string;
     themeOrder: string;
     text: string;
-    token: string;
     type?: TypeMessage;
     recipientRole?: TypeRecipientRoleMessage;
   }
->("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, token, type, recipientRole }) => {
-  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, token, type, recipientRole);
+>("chat/sendMessage", async ({ chatId, senderId, orderId, themeOrder, text, type, recipientRole }) => {
+  const response = await fetchSendMessage(chatId, senderId, orderId, themeOrder, text, type, recipientRole);
   return response;
 });
 
@@ -97,19 +93,18 @@ export const updateMessage = createAsyncThunk<
     studentId: string;
     tutorId?: string;
     isRead?: boolean;
-    token: string;
   }
->("chat/updateMessage", async ({ messageId, text, studentId, tutorId, isRead, token }) => {
-  const response = await fetchUpdateMessage(messageId, text, studentId, tutorId, isRead, token);
+>("chat/updateMessage", async ({ messageId, text, studentId, tutorId, isRead }) => {
+  const response = await fetchUpdateMessage(messageId, text, studentId, tutorId, isRead);
   return response;
 });
 
 // Получение всех чатов по заказу
 export const getChatsByOrderId = createAsyncThunk<
   Chat[], // что возвращаем
-  { orderId: string; token: string } // что принимаем
->("chat/getByOrderId", async ({ orderId, token }) => {
-  const response = await fetchGetChatsByOrderId(orderId, token);
+  { orderId: string; } // что принимаем
+>("chat/getByOrderId", async ({ orderId }) => {
+  const response = await fetchGetChatsByOrderId(orderId);
   return response;
 });
 
@@ -117,18 +112,18 @@ export const getChatsByOrderId = createAsyncThunk<
 // Получение чата по ID
 export const getChatById = createAsyncThunk<
   Chat, // что возвращаем
-  { chatId: string; token: string } // что принимаем
->("chat/getById", async ({ chatId, token }) => {
-  const response = await fetchGetChatById(chatId, token);
+  { chatId: string; } // что принимаем
+>("chat/getById", async ({ chatId }) => {
+  const response = await fetchGetChatById(chatId);
   return response;
 });
 
 // Получение всех чатов для пользователя (студента или репетитора)
 export const getChatsByUserId = createAsyncThunk<
   Chat[], // что возвращаем
-  { userId: string; role: "student" | "tutor"; token: string } // что принимаем
->("chat/getByUserId", async ({ userId, role, token }) => {
-  const response = await fetchGetChatsByUserIdAndRole(userId, role, token);
+  { userId: string; role: "student" | "tutor"; } // что принимаем
+>("chat/getByUserId", async ({ userId, role }) => {
+  const response = await fetchGetChatsByUserIdAndRole(userId, role);
   return response;
 });
 

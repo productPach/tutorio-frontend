@@ -34,7 +34,6 @@ export const RejectResponseModal = () => {
         updateChat({
           chatId: chat.id,
           status: "Rejected",
-          token,
         })
       ).unwrap();
 
@@ -62,7 +61,6 @@ export const RejectResponseModal = () => {
             orderId: "какой-то айди",
             themeOrder: "какая-то тема",
             text: messageResponse,
-            token,
           })
         );
         const newMessage = unwrapResult(actionResult);

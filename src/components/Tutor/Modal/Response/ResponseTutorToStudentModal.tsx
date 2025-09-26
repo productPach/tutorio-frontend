@@ -80,7 +80,6 @@ export const ResponseTutorToStudentModal = () => {
             initiatorRole: "tutor",
             themeOrder: themeOrder,
             status: "Active",
-            token,
           })
         ).unwrap(); // Получаем результат из createChat
 
@@ -92,13 +91,12 @@ export const ResponseTutorToStudentModal = () => {
               orderId: order.id,
               themeOrder: themeOrder,
               text: messageResponse,
-              token,
             })
           ).unwrap();
 
           if (isChecked) {
             // Получаем телефон репетитора
-            const phoneTutor = await fetchTutorPhoneById(token, tutor.id);
+            const phoneTutor = await fetchTutorPhoneById(tutor.id);
 
             await dispatch(
               sendMessage({
@@ -110,7 +108,6 @@ export const ResponseTutorToStudentModal = () => {
                       Вы можете связаться с\u00A0ним напрямую: 📞\u00A0<a href="tel:+7${phoneTutor}">+7${phoneTutor}</a> или продолжить общение прямо в\u00A0этом чате.\n\n\
                       Если договоритесь о\u00A0занятиях или выполнении заказа\u00A0—\u00A0нажмите кнопку «Выбрать репетитора»\u00A0✅\n\
                       После этого вы сможете оставить отзыв о\u00A0сотрудничестве\u00A0⭐`,
-                token,
                 type: "service",
                 recipientRole: "student",
               })
@@ -126,7 +123,6 @@ export const ResponseTutorToStudentModal = () => {
                       Вы можете продолжить общение в\u00A0этом чате.\n\n\
                       Если договоритесь о\u00A0занятиях или выполнении заказа\u00A0—\u00A0нажмите кнопку «Выбрать репетитора»\u00A0✅\n\
                       После этого вы сможете оставить отзыв о\u00A0сотрудничестве\u00A0⭐`,
-                token,
                 type: "service",
                 recipientRole: "student",
               })
@@ -138,7 +134,7 @@ export const ResponseTutorToStudentModal = () => {
             try {
               //sendMessageContext(chat.id, messageResponse);
               const data = await dispatch(
-                getChatsByUserId({ userId: tutor.userId, role: "tutor", token })
+                getChatsByUserId({ userId: tutor.userId, role: "tutor" })
               ).unwrap(); // Ждем ответа и получаем результат
 
               // Найдем нужный чат

@@ -42,8 +42,8 @@ const TutorPage: React.FC = () => {
     (state) => state.orders.hasChatWithTutor
   );
   useEffect(() => {
-    if (token && typeof tutor === "string") {
-      dispatch(getTutorById({ id: tutor, token }));
+    if (typeof tutor === "string") {
+      dispatch(getTutorById({ id: tutor }));
     }
   }, [dispatch, tutor, token]);
 
@@ -56,8 +56,8 @@ const TutorPage: React.FC = () => {
   useEffect(() => {
     dispatch({ type: "orders/resetHasChatWithTutor" });
 
-    if (token && typeof order === "string") {
-      dispatch(getOrderById({ token, id: order }))
+    if (typeof order === "string") {
+      dispatch(getOrderById({ id: order }))
         .unwrap()
         .then(() => {
           // Только после загрузки заказа проверяем наличие чата

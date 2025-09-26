@@ -7,16 +7,14 @@ import { ChangeEvent, useState } from "react";
 import { updateTutor } from "@/store/features/tutorSlice";
 import {
   setIsModalEmail,
-  setIsModalTelegram,
   setIsSheetEmail,
   setScrollY,
 } from "@/store/features/modalSlice";
-import { sendEmail, sendVerificationEmail } from "@/api/server/tutorApi";
+import { sendVerificationEmail } from "@/api/server/tutorApi";
 
 export const EmailModal = () => {
   const dispatch = useAppDispatch();
   // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState(tutor?.email || "");
@@ -48,7 +46,7 @@ export const EmailModal = () => {
     const email = inputValue;
     const isVerifedEmail = false;
 
-    if (token && id) {
+    if (id) {
       // sendEmail({
       //   to: email,
       //   subject: "Подтверждение почты",
@@ -58,7 +56,7 @@ export const EmailModal = () => {
 
       dispatch(updateTutor({ id, email, isVerifedEmail }))
         .unwrap()
-        .then(() => sendVerificationEmail(id, token))
+        .then(() => sendVerificationEmail(id))
         .catch((error) =>
           console.error("Ошибка обновления репетитора:", error)
         );

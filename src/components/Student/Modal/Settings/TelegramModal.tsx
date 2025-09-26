@@ -9,8 +9,7 @@ import { updateStudent } from "@/store/features/studentSlice";
 
 export const TelegramModal = () => {
   const dispatch = useAppDispatch();
-  // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
+  // Получаем значение student из Redux
   const student = useAppSelector((state) => state.student.student);
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState(student?.telegram || "");
@@ -40,8 +39,8 @@ export const TelegramModal = () => {
     const id = student?.id;
     const telegram = inputValue;
     const status = student?.status;
-    if (token && id && status) {
-      dispatch(updateStudent({ id, token, status, telegram })).unwrap;
+    if (id && status) {
+      dispatch(updateStudent({ id, status, telegram })).unwrap;
       dispatch(setIsModalTelegram(false));
       dispatch(setScrollY(0));
     }
