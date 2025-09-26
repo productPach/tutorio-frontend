@@ -4,13 +4,15 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { addMessageToChat, getChatById, markMessagesAsRead, updateChatForAccept, updateChatForReject } from "@/store/features/chatSlice";
 import { fetchGetChatById } from "@/api/server/chatApi";
 import { Message } from "@/types/types";
+import { getAccessToken } from "@/api/server/auth";
 
 
 
 export const useChatSocket = (chatId: string) => {
   const { socket } = useSocket();
   const dispatch = useAppDispatch();
-    const token = useAppSelector((state) => state.auth.token);
+    // const token = useAppSelector((state) => state.auth.token);
+  const token = getAccessToken();
   const studentId = useAppSelector((state) => state.student.student?.id);
   const tutorUserId: string | null = useAppSelector(
     (state) => state.tutor.tutor?.userId ?? null
@@ -34,7 +36,7 @@ export const useChatSocket = (chatId: string) => {
         try {
           if (!token) return;
           // Подписываемся на чат через Redux
-          const response = await fetchGetChatById(chatId, token);
+          const response = await fetchGetChatById(chatId);
           setMessages(response.messages); // <-- напрямую из payload
           markAsRead(response.messages);
         } catch (error) {

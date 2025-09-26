@@ -31,7 +31,6 @@ export const AcceptResponseModal = () => {
           chatId: chat.id,
           status: "Active",
           tutorHasAccess: true,
-          token,
         })
       ).unwrap();
 

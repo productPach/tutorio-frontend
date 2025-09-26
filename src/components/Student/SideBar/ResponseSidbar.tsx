@@ -90,13 +90,12 @@ export const ResponseSidbar = ({
   };
 
   const update = (newState: boolean) => {
-    if (orderById && token) {
+    if (orderById) {
       const id = orderById.id;
       let status = newState ? "Active" : "Hidden";
       dispatch(
         updateOrder({
           id,
-          token,
           status,
         })
       ).unwrap();

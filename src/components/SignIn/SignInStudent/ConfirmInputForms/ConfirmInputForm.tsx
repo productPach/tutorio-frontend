@@ -158,15 +158,13 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           setErrorInput(false);
           try {
             // Пытаемся получить данные ученика
-            await dispatch(getCurrentStudent(token)).unwrap();
+            await dispatch(getCurrentStudent()).unwrap();
           } catch {
             // Если ученик не существует, создаем нового
             console.log("Такого пользователя нет");
           } finally {
             // Повторно получаем статус ученика после создания
-            const updatedStudent = await dispatch(
-              getCurrentStudent(token)
-            ).unwrap();
+            const updatedStudent = await dispatch(getCurrentStudent()).unwrap();
 
             switch (updatedStudent?.status) {
               case "Rega: Order":
@@ -181,11 +179,10 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
                 dispatch(
                   updateStudent({
                     id: updatedStudent?.id,
-                    token,
                     status: "Canceled delete",
                   })
                 );
-                fetchCancelDeleteRequest({ token, role: "student" });
+                fetchCancelDeleteRequest({ role: "student" });
                 dispatch(resetDeleteRequest());
                 handleNextStep("../student/orders");
                 break;

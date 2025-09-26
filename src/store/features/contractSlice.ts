@@ -7,11 +7,11 @@ import { Contract, SelectedBy } from "@/types/types";
 // Создание контракта
 export const createContract = createAsyncThunk<
   Contract,
-  { token: string; payload: { orderId: string; tutorId: string; selectedBy: SelectedBy } },
+  { payload: { orderId: string; tutorId: string; selectedBy: SelectedBy } },
   { rejectValue: string }
->("contract/createContract", async ({ token, payload }, { rejectWithValue }) => {
+>("contract/createContract", async ({ payload }, { rejectWithValue }) => {
   try {
-    return await fetchCreateContract(token, payload);
+    return await fetchCreateContract(payload);
   } catch (error: any) {
     console.error("Ошибка создания контракта:", error);
     return rejectWithValue(error.message || "Ошибка при создании контракта");
@@ -21,11 +21,11 @@ export const createContract = createAsyncThunk<
 // Отмена контракта
 export const cancelContract = createAsyncThunk<
   Contract,
-  { token: string; contractId: string },
+  { contractId: string },
   { rejectValue: string }
->("contract/cancelContract", async ({ token, contractId }, { rejectWithValue }) => {
+>("contract/cancelContract", async ({ contractId }, { rejectWithValue }) => {
   try {
-    return await fetchCancelContract(token, contractId);
+    return await fetchCancelContract(contractId);
   } catch (error: any) {
     console.error("Ошибка отмены контракта:", error);
     return rejectWithValue(error.message || "Ошибка при отмене контракта");

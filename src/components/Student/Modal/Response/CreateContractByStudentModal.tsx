@@ -10,7 +10,6 @@ import {
   setIsModalHiddenOrder,
   setIsSheetCreateContractByStudent,
   setIsSheetHiddenOrder,
-  setIsSheetOpen,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
@@ -24,7 +23,6 @@ import { Spinner } from "@/components/Spinner/Spinner";
 
 export const CreateContractByStudentModal = () => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   const chat = useAppSelector((state) => state.chat.chat);
   // Стейт для предметов
   const subjects = useAppSelector((state) => state.subject.subjects);
@@ -38,11 +36,10 @@ export const CreateContractByStudentModal = () => {
 
   const handleCreateContract = async () => {
     try {
-      if (!token || !chat?.orderId || !chat?.tutorId) return;
+      if (!chat?.orderId || !chat?.tutorId) return;
       setIsLoading(true);
       const contract = await dispatch(
         createContract({
-          token,
           payload: {
             orderId: chat.orderId,
             tutorId: chat.tutorId,
@@ -58,7 +55,6 @@ export const CreateContractByStudentModal = () => {
         await dispatch(
           updateOrder({
             id: orderById.id,
-            token,
             status: "Hidden",
           })
         ).unwrap();
@@ -68,10 +64,7 @@ export const CreateContractByStudentModal = () => {
         )?.for_request;
 
         // Получаем телефон ученика
-        const phoneStudent = await fetchStudentPhoneById(
-          token,
-          orderById.studentId
-        );
+        const phoneStudent = await fetchStudentPhoneById(orderById.studentId);
 
         const actionResult = await dispatch(
           sendMessage({
@@ -85,7 +78,6 @@ export const CreateContractByStudentModal = () => {
               : `Победа! Ученик выбрал вас\u00A0—\u00A0теперь вы в\u00A0одной команде!
             Телефон ученика: <a href="tel:+7${phoneStudent}">+7${phoneStudent}</a>\n\n\
 Желаем классных уроков и\u00A0крутых достижений\u00A0🎯`,
-            token,
             type: "service",
             recipientRole: "tutor",
           })
@@ -120,16 +112,15 @@ export const CreateContractByStudentModal = () => {
   };
 
   const handleReopenOrder = async () => {
-    if (!orderById || !token) return;
+    if (!orderById) return;
     try {
       await dispatch(
         updateOrder({
           id: orderById.id,
-          token,
           status: "Active",
         })
       ).unwrap();
-      dispatch(getOrderById({ token, id: orderById.id }));
+      dispatch(getOrderById({ id: orderById.id }));
     } catch (err) {
       console.error("Ошибка при открытии заказа:", err);
     } finally {

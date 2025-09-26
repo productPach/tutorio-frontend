@@ -76,7 +76,7 @@ export const EmailInputForms: React.FC<ComponentRenderProps> = ({
   // Обновление данных репетитора
   const updateDataTutor = (email: string) => {
     const id = tutor?.id;
-    if (token && id) {
+    if (id) {
       dispatch(updateTutor({ id, status, email })).unwrap;
       handleNextStep(nextPage, email);
     } else {

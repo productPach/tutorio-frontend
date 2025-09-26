@@ -119,8 +119,8 @@ export const ChatComponent = React.memo(
       dispatch(setComponentMenu(5));
       textareaRef.current?.focus();
       setInputValue("");
-      token && chat && dispatch(getOrderById({ token, id: chat?.orderId }));
-    }, [dispatch, chat?.id, token]);
+      chat && dispatch(getOrderById({ id: chat?.orderId }));
+    }, [dispatch, chat?.id]);
 
     const { orderById } = useAppSelector((state) => state.orders);
 
@@ -221,7 +221,6 @@ export const ChatComponent = React.memo(
               orderId: "какой-то айди",
               themeOrder: "какая-то тема",
               text: messageResponse,
-              token,
             })
           );
 

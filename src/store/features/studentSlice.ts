@@ -13,11 +13,11 @@ import {
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export const getCurrentStudent = createAsyncThunk<Student, string>(
+export const getCurrentStudent = createAsyncThunk<Student, void>(
   "student/current",
-  async (token) => {
+  async () => {
     try {
-      const response = await fetchCurrentStudent(token);
+      const response = await fetchCurrentStudent();
       return response;
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку
@@ -34,16 +34,14 @@ export const createStudent = createAsyncThunk<
     phone: string;
     avatarUrl: string;
     region: string;
-    token: string;
   }
->("student/create", async ({ name, phone, avatarUrl, region, token }) => {
+>("student/create", async ({ name, phone, avatarUrl, region }) => {
   try {
     const response = await fetchCreateStudent(
       name,
       phone,
       avatarUrl,
-      region,
-      token
+      region
     );
     return response;
   } catch (error) {
@@ -58,7 +56,6 @@ export const updateStudent = createAsyncThunk<
   Student,
   {
     id: string;
-    token: string;
     status: string;
     name?: string;
     phone?: string;
@@ -76,11 +73,10 @@ export const updateStudent = createAsyncThunk<
     isNotificationsVk?: boolean;
     lastOnline?: Date;
   }
->("student/update", async ({ id, token, status, ...optionalFields }) => {
+>("student/update", async ({ id, status, ...optionalFields }) => {
   try {
     const dataToUpdate = {
       id,
-      token,
       status,
       ...optionalFields,
     };
@@ -96,12 +92,12 @@ export const updateStudent = createAsyncThunk<
 // Удаление запроса об удалении!! НЕДОДЕЛАНО!!!
 export const deleteStudentRequest = createAsyncThunk<
   boolean, // Возвращаем true при успешном запросе
-  { studentId: string; answer: string; token: string } // Входные параметры
+  { studentId: string; answer: string; } // Входные параметры
 >(
   "student/deleteRequest",
-  async ({ studentId, answer, token }, { rejectWithValue }) => {
+  async ({ studentId, answer }, { rejectWithValue }) => {
     try {
-      await fetchDeleteRequest(studentId, answer, token);
+      await fetchDeleteRequest(studentId, answer);
       return true; // Успешный запрос
     } catch (error) {
       console.error("Ошибка удаления ученика:", error);

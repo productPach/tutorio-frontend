@@ -17,21 +17,19 @@ import {
 
 export const DeleteModal = ({ logout }: { logout: () => void }) => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   const student = useAppSelector((state) => state.student.student); // Получаем tutor из Redux
   const deleteRequest = useAppSelector((state) => state.student.deleteRequest);
   const loading = useAppSelector((state) => state.student.loading);
 
   const handleDeleteRequest = () => {
-    if (student && token) {
+    if (student) {
       dispatch(
         deleteStudentRequest({
           studentId: student?.id,
           answer: inputValue,
-          token,
         })
       );
-      dispatch(updateStudent({ id: student?.id, token, status: "Deleted" }));
+      dispatch(updateStudent({ id: student?.id, status: "Deleted" }));
     }
   };
   // Стейт для знаения инпута с суммой пополнения

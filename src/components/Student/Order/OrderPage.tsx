@@ -57,8 +57,6 @@ const OrderPage: React.FC = () => {
   );
 
   const dispatch = useAppDispatch();
-
-  const token = useAppSelector((state) => state.auth.token);
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
   // Получаем стейт храниения компонента для отображения
@@ -182,19 +180,15 @@ const OrderPage: React.FC = () => {
   const citiesAndRegions = useAppSelector((state) => state.locations.city);
 
   useEffect(() => {
-    if (token && typeof order === "string") {
-      dispatch(getOrderById({ token, id: order }));
+    if (typeof order === "string") {
+      dispatch(getOrderById({ id: order }));
     }
-  }, [dispatch, token, order]);
+  }, [dispatch, order]);
 
   useEffect(() => {
-    if (token) {
-      dispatch(getAllTutors(token));
-      dispatch(
-        getThemesByTopic({ topicId: "67d090b401144e8d6f4eba88", token })
-      );
-    }
-  }, [dispatch, token]);
+    dispatch(getAllTutors());
+    dispatch(getThemesByTopic({ topicId: "67d090b401144e8d6f4eba88" }));
+  }, [dispatch]);
 
   const [isDataLoaded, setIsDataLoaded] = useState(false); // флаг для загрузки данны
 
@@ -204,23 +198,20 @@ const OrderPage: React.FC = () => {
       if (orderById?.studentId && !isDataLoaded) {
         // Проверяем, был ли уже выполнен запрос
         try {
-          if (token) {
-            const data = await fetchStudentById(token, orderById.studentId);
-            setStudent(data);
-            setIsDataLoaded(true); // После успешной загрузки данных ставим флаг в true
-          }
+          const data = await fetchStudentById(orderById.studentId);
+          setStudent(data);
+          setIsDataLoaded(true); // После успешной загрузки данных ставим флаг в true
         } catch (error) {
           console.error("Ошибка при загрузке данных студента:", error);
         }
       }
     };
 
-    if (orderById && token && !isDataLoaded) {
+    if (orderById && !isDataLoaded) {
       fetchStudent();
       dispatch(
         getChatsByOrderId({
           orderId: orderById?.id,
-          token: token,
         })
       );
       setIsChecked(
@@ -229,7 +220,7 @@ const OrderPage: React.FC = () => {
           orderById.status === "Sending"
       );
     }
-  }, [orderById, token, dispatch, isDataLoaded]);
+  }, [orderById, dispatch, isDataLoaded]);
 
   // Состояние для свитча
   const [isChecked, setIsChecked] = useState<boolean>(true); // всегда стартуем с true

@@ -9,7 +9,6 @@ export type SignInFormType = {
 
 export type UpdatePhoneUser = {
   id: string;
-  token: string;
   phone: string;
   secretCode: string;
 };

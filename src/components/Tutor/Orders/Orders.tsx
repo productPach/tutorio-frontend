@@ -59,10 +59,8 @@ const Orders = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (token) {
-      dispatch(getAllOrders(token));
-    }
-  }, [dispatch, token]);
+    dispatch(getAllOrders());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!tutor) {

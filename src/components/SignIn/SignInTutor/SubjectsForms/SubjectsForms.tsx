@@ -72,7 +72,7 @@ export const SubjectsForms: React.FC<ComponentProps> = ({
   // Обновление данных репетитора
   const updateDataTutor = () => {
     const id = tutor?.id;
-    if (token && id) {
+    if (id) {
       const subject = listSubjectChecked;
       dispatch(updateTutor({ id, status, subject })).unwrap;
       handleNextStep(nextPage);

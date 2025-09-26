@@ -21,7 +21,6 @@ import { useChatSocket } from "@/hooks/useChatSocket";
 
 export const CreateReviewByStudentModal = () => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -44,12 +43,11 @@ export const CreateReviewByStudentModal = () => {
 
   const handleRatingChange = async (value: number) => {
     setRatingNumb(value);
-    if (!token || !orderById?.id || !tutorId || createdReviewId) return;
+    if (!orderById?.id || !tutorId || createdReviewId) return;
     try {
       setIsLoading(true);
       const review = await dispatch(
         createReview({
-          token,
           payload: {
             orderId: orderById?.id,
             studentId: orderById.studentId,
@@ -63,7 +61,6 @@ export const CreateReviewByStudentModal = () => {
         await dispatch(
           updateOrder({
             id: orderById.id,
-            token,
             status: orderById.status,
           })
         ).unwrap();
@@ -96,7 +93,6 @@ export const CreateReviewByStudentModal = () => {
           themeOrder: `не нужно`,
           text: `🌟\u00A0Ученик оценил вашу помощь\n\
             Вы\u00A0получили ${value}\u00A0из\u00A05\u00A0звёзд. ${customMessage}`,
-          token,
           type: "service",
           recipientRole: "tutor",
         })
@@ -116,11 +112,10 @@ export const CreateReviewByStudentModal = () => {
 
   const handleUpdateReview = async () => {
     try {
-      if (!token || !createdReviewId) return;
+      if (!createdReviewId) return;
       setIsLoading(true);
       await dispatch(
         updateReview({
-          token,
           id: createdReviewId,
           payload: {
             message: inputValue,
@@ -132,7 +127,6 @@ export const CreateReviewByStudentModal = () => {
         await dispatch(
           updateOrder({
             id: orderById.id,
-            token,
             status: orderById.status,
           })
         ).unwrap();
@@ -146,7 +140,6 @@ export const CreateReviewByStudentModal = () => {
             themeOrder: `не нужно`,
             text: `💬\u00A0Ученик оставил отзыв\n\
             Вы\u00A0получили комментарий к\u00A0оценке: \n"${inputValue}"`,
-            token,
             type: "service",
             recipientRole: "tutor",
           })

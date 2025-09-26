@@ -38,4 +38,21 @@ const nextConfig = {
 //   },
 // };
 
+// export default nextConfig;
+
+// // Для окружения фронт локально, сервер локально в докере
+// const nextConfig = {
+//   images: {
+//     domains: ["localhost"], // разрешаем загрузку картинок с localhost
+//     remotePatterns: [
+//       {
+//         protocol: "http",
+//         hostname: "localhost",
+//         port: "3000", // тот же порт, что проброшен в docker-compose
+//         pathname: "/uploads/**", // доступ к картинкам в uploads
+//       },
+//     ],
+//   },
+// };
+
 export default nextConfig;

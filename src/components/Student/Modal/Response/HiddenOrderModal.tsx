@@ -23,12 +23,11 @@ export const HiddenOrderModal = () => {
 
   const handleOpenOrder = async () => {
     try {
-      if (!orderById || !token) return;
+      if (!orderById) return;
       setIsLoading(true);
       await dispatch(
         updateOrder({
           id: orderById?.id,
-          token,
           status: "Active",
         })
       ).unwrap();

@@ -44,49 +44,24 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
 
   console.log(tutor);
 
-  // Получаем токен из куки
-  // Если токен в куки есть, тогда добавляем токен в Redux
-  // Если токена в куках нет, тогда делаем редирект на главную
-  // useEffect(() => {
-  //   const token = getTokenFromCookie();
-  //   if (token) {
-  //     // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
-  //     // в личный кабинет не активной роли для мультипользователя
-  //     // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
-  //     const payload: { activeRole: Role; userID: string } = jwtDecode(token);
-  //     if (payload.activeRole !== "tutor") {
-  //       // Если токен существует, но активная роль не репетитор → редирект
-  //       router.push("/");
-  //       return;
-  //     }
-  //     dispatch(setToken(token));
-  //     dispatch(getCurrentTutor())
-  //       .unwrap()
-  //       // Разворачиваем Promise для обработки отклонённого случая
-  //       .catch(() => {
-  //         // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
-  //         dispatch(setLogout());
-  //         router.push("/");
-  //       });
-  //   } else {
-  //     router.push("/");
-  //     return;
-  //   }
-  //   setIsLoadedPage(true);
-  // }, [dispatch, router]);
-
   useEffect(() => {
     const initAuth = () => {
       const token = getAccessToken(); // берём из localStorage
       if (!token) {
+        console.log("Токена нет");
         router.push("/"); // токена нет → редирект
         return;
       }
 
       try {
-        const payload: { activeRole: Role; userID: string } = jwtDecode(token);
+        const payload: any = jwtDecode(token); // Используйте any для отладки
+        console.log("Полный payload токена:", payload);
+        console.log("activeRole из токена:", payload.activeRole);
+        console.log("Все свойства токена:", Object.keys(payload));
 
         if (payload.activeRole !== "tutor") {
+          console.log("Не та роль. Роль пользователя:", payload.activeRole);
+          console.log("Ожидаемая роль: tutor");
           router.push("/");
           return;
         }
@@ -96,14 +71,17 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
           .unwrap()
           // Разворачиваем Promise для обработки отклонённого случая
           .catch(() => {
+            console.log("Ошибка");
             // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
             dispatch(setLogout());
+
             router.push("/");
           });
 
         setIsLoadedPage(true);
       } catch (error) {
         // Некорректный токен → разлогиниваем
+        console.log("Некорректный токен");
         dispatch(setLogout());
         router.push("/");
       }
@@ -258,9 +236,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   useEffect(() => {
     tutor &&
       token &&
-      dispatch(
-        getChatsByUserId({ userId: tutor?.userId, role: "tutor", token: token })
-      );
+      dispatch(getChatsByUserId({ userId: tutor?.userId, role: "tutor" }));
   }, [tutor?.userId, token]);
 
   const avatarSrc = tutor?.avatarUrl

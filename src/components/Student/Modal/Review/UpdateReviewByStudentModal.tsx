@@ -5,31 +5,21 @@ import styles from "../../../Tutor/Modal/Profil/Fio/Fio.module.css";
 import buttonStyles from "../../../../app/tutor/button.module.css";
 import componentStyles from "../../../Tutor/Modal/Profil/Education/Education.module.css";
 import {
-  setIsModalCreateReviewByStudent,
   setIsModalUpdateReviewByStudent,
-  setIsSheetCreateReviewByStudent,
   setIsSheetUpdateReviewByStudent,
   setScrollY,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
-import { createContract } from "@/store/features/contractSlice";
-import { sendMessage, updateChatForContract } from "@/store/features/chatSlice";
-import {
-  getOrderById,
-  setOrderById,
-  updateOrder,
-} from "@/store/features/orderSlice";
+import { sendMessage } from "@/store/features/chatSlice";
+import { updateOrder } from "@/store/features/orderSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { Spinner } from "@/components/Spinner/Spinner";
 import clsx from "clsx";
-import { createReview, updateReview } from "@/store/features/reviewSlice";
-import { StarRating } from "@/components/StarRating/StarRating";
-import { fetchGetOrderById } from "@/api/server/orderApi";
+import { updateReview } from "@/store/features/reviewSlice";
 
 export const UpdateReviewByStudentModal = () => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   const reviewId = useAppSelector(
     (state) => state.modal.isReviewIdCreateReview
   );
@@ -54,11 +44,10 @@ export const UpdateReviewByStudentModal = () => {
 
   const handleUpdateReview = async () => {
     try {
-      if (!token || !reviewId) return;
+      if (!reviewId) return;
       setIsLoading(true);
       await dispatch(
         updateReview({
-          token,
           id: reviewId,
           payload: {
             message: inputValue,
@@ -70,7 +59,6 @@ export const UpdateReviewByStudentModal = () => {
         await dispatch(
           updateOrder({
             id: orderById.id,
-            token,
             status: orderById.status,
           })
         ).unwrap();
@@ -83,7 +71,6 @@ export const UpdateReviewByStudentModal = () => {
             themeOrder: `не нужно`,
             text: `💬\u00A0Ученик оставил отзыв\n\
             Вы\u00A0получили комментарий к\u00A0оценке: \n"${inputValue}"`,
-            token,
             type: "service",
             recipientRole: "tutor",
           })

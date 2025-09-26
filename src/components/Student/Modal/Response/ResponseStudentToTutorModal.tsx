@@ -72,7 +72,6 @@ export const ResponseStudentToTutorModal = () => {
             initiatorRole: "student",
             themeOrder: themeOrder,
             status: "Pending",
-            token,
           })
         ).unwrap(); // Получаем результат из createChat
 
@@ -84,14 +83,13 @@ export const ResponseStudentToTutorModal = () => {
               orderId: orderById.id,
               themeOrder: themeOrder,
               text: messageResponse,
-              token,
             })
           ).unwrap();
 
           // Даем рендеру отработать — и только потом пуш и сет
           setTimeout(async () => {
             try {
-              dispatch(getOrderById({ token, id: orderById?.id }));
+              dispatch(getOrderById({ id: orderById?.id }));
               newChat(chat.id);
             } catch (error) {
               console.error("Ошибка при загрузке чатов:", error);

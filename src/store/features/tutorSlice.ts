@@ -51,11 +51,11 @@ export const getCurrentTutor = createAsyncThunk<Tutor, void>(
 );
 
 // Получение всех репетиторов
-export const getAllTutors = createAsyncThunk<Tutor[], string>(
+export const getAllTutors = createAsyncThunk<Tutor[]>(
   "tutor/all",
-  async (token, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await fetchAllTutors(token);
+      const response = await fetchAllTutors();
       return response;
     } catch (error) {
       console.error("Ошибка при получении всех репетиторов:", error);
@@ -65,11 +65,11 @@ export const getAllTutors = createAsyncThunk<Tutor[], string>(
 );
 
 // Получение репетитора по ID
-export const getTutorById = createAsyncThunk<Tutor, { id: string; token: string }>(
+export const getTutorById = createAsyncThunk<Tutor, { id: string; }>(
   "tutor/getById",
-  async ({ id, token }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await fetchTutorById(id, token);
+      const response = await fetchTutorById(id);
       return response.tutor;
     } catch (error) {
       console.error(`Ошибка при получении репетитора с ID ${id}:`, error);
@@ -197,10 +197,10 @@ export const updateTutor = createAsyncThunk<
 // Создание новой цены по предмету
 export const addSubjectPrice = createAsyncThunk<
   Tutor, // API возвращает обновленного репетитора
-  TutorSubjectPriceInput & { tutorId: string; token: string }
->("subjectPrice/add", async ({ tutorId, token, ...fields }) => {
+  TutorSubjectPriceInput & { tutorId: string; }
+>("subjectPrice/add", async ({ tutorId, ...fields }) => {
   try {
-    const response = await fetchAddSubjectPrice({ tutorId, token, ...fields }); 
+    const response = await fetchAddSubjectPrice({ tutorId, ...fields }); 
     return response; // Теперь response — это объект Tutor
   } catch (error) {
     console.error(error);
@@ -211,10 +211,10 @@ export const addSubjectPrice = createAsyncThunk<
 // Обновление цены по предмету
 export const updateSubjectPrice = createAsyncThunk<
   Tutor, // API возвращает обновленного репетитора
-  { id: string; token: string; price: number; duration: LessonDuration }
->("subjectPrice/update", async ({ id, token, ...fields }) => {
+  { id: string; price: number; duration: LessonDuration }
+>("subjectPrice/update", async ({ id, ...fields }) => {
   try {
-    const response = await fetchUpdateSubjectPrice({ id, token, ...fields });
+    const response = await fetchUpdateSubjectPrice({ id, ...fields });
     return response; // Теперь response — это объект Tutor
   } catch (error) {
     console.error(error);
@@ -264,9 +264,9 @@ export const updateTutorAvatar = createAsyncThunk<
 // Получение велком-скринов для репетитора
 export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], string>(
   "tutor/welcomeScreen",
-  async (token) => {
+  async () => {
     try {
-      const response = await fetchWelcomeScreens(token);
+      const response = await fetchWelcomeScreens();
       return response;
     } catch (error) {
       // Здесь можно вернуть undefined или обработать ошибку
@@ -280,9 +280,9 @@ export const getWelcomeScreens = createAsyncThunk<WelcomeScreen[], string>(
 export const showWelcomeScreen = createAsyncThunk<
   { success: boolean; id: string }, // Возвращаемое значение
   { token: string; id: string } // Параметры функции
->("tutor/showWelcomeScreen", async ({ token, id }) => {
+>("tutor/showWelcomeScreen", async ({ id }) => {
   try {
-    const response = await fetchShowWelcomeScreen(token, id);
+    const response = await fetchShowWelcomeScreen(id);
     return { success: response.success, id }; // Возвращаем успешность и ID
   } catch (error) {
     console.error(error);
@@ -299,7 +299,6 @@ export const createTutorEducation = createAsyncThunk<
     educationStartYear: string;
     educationEndYear: string | null;
     isShowDiplom: boolean;
-    token: string;
     diploma: (File | null)[];
   }
 >(
@@ -310,7 +309,6 @@ export const createTutorEducation = createAsyncThunk<
     educationStartYear,
     educationEndYear,
     isShowDiplom,
-    token,
     diploma,
   }) => {
     try {
@@ -320,7 +318,6 @@ export const createTutorEducation = createAsyncThunk<
         educationStartYear,
         educationEndYear,
         isShowDiplom,
-        token,
         diploma
       );
       return response;
@@ -341,12 +338,11 @@ export const updateTutorEducation = createAsyncThunk<
     educationStartYear: string;
     educationEndYear: string | null;
     isShowDiplom: boolean;
-    token: string;
     diploma?: (File | null)[];  // Диплом (не обязательный)
   }
 >(
   "tutor/updateEducation",  // Название действия
-  async ({ tutorId, educationId, token, educationInfo, educationStartYear, educationEndYear, isShowDiplom, diploma }) => {
+  async ({ tutorId, educationId, educationInfo, educationStartYear, educationEndYear, isShowDiplom, diploma }) => {
     try {
       // Отправляем запрос на сервер с правильными параметрами
       const updatedEducation = await fetchUpdateTutorEducation(
@@ -356,7 +352,6 @@ export const updateTutorEducation = createAsyncThunk<
         educationStartYear,  // educationStartYear
         educationEndYear,    // educationEndYear
         isShowDiplom,        // isShowDiplom
-        token,               // token
         diploma || []        // Массив дипломов (может быть пустым)
       );
 
@@ -371,13 +366,12 @@ export const updateTutorEducation = createAsyncThunk<
 // Удаление образования
 export const deleteTutorEducation = createAsyncThunk<
   Tutor,
-  { tutorId: string; educationId: string; token: string }
->("tutor/deleteEducation", async ({ tutorId, educationId, token }) => {
+  { tutorId: string; educationId: string; }
+>("tutor/deleteEducation", async ({ tutorId, educationId }) => {
   try {
     const response = await fetchDeleteTutorEducation(
       tutorId,
       educationId,
-      token
     );
     return response;
   } catch (error) {
@@ -390,14 +384,13 @@ export const deleteTutorEducation = createAsyncThunk<
 // Удаление фото образования
 export const deletePhotoTutorEducation = createAsyncThunk<
   Tutor,
-  { tutorId: string; educationId: string; fileUrl: string; token: string }
->("tutor/deletePhotoEducation", async ({ tutorId, educationId, fileUrl, token }) => {
+  { tutorId: string; educationId: string; fileUrl: string; }
+>("tutor/deletePhotoEducation", async ({ tutorId, educationId, fileUrl }) => {
   try {
     const response = await fetchDeletePhotoTutorEducation(
       tutorId,
       educationId,
-      fileUrl,
-      token
+      fileUrl
     );
     return response;
   } catch (error) {
@@ -437,10 +430,10 @@ export const verifyEmail = createAsyncThunk<
 
 export const deleteTutorRequest = createAsyncThunk<
   boolean, // Возвращаем true при успешном запросе
-  { tutorId: string; answer: string; token: string } // Входные параметры
->("tutor/deleteRequest", async ({ tutorId, answer, token }, { rejectWithValue }) => {
+  { tutorId: string; answer: string; } // Входные параметры
+>("tutor/deleteRequest", async ({ tutorId, answer }, { rejectWithValue }) => {
   try {
-    await fetchDeleteRequest(tutorId, answer, token);
+    await fetchDeleteRequest(tutorId, answer);
     return true; // Успешный запрос
   } catch (error) {
     console.error("Ошибка удаления репетитора:", error);

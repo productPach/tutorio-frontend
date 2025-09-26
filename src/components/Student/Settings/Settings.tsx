@@ -8,7 +8,6 @@ import {
   setIsModalEmail,
   setIsModalExit,
   setIsModalPhone,
-  setIsModalSkype,
   setIsModalTelegram,
 } from "@/store/features/modalSlice";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
@@ -23,9 +22,7 @@ type SettingsProps = {
 
 export const Settings: FC<SettingsProps> = ({ student, logout }) => {
   const dispatch = useAppDispatch();
-  // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
-
+  // Получаем значение student из Redux
   const student2 = useAppSelector((state) => state.student.student); // Получаем tutor из Redux
   const isVerifiedEmail = student?.isVerifedEmail;
 
@@ -120,13 +117,12 @@ export const Settings: FC<SettingsProps> = ({ student, logout }) => {
       isNotificationsVk: boolean;
     }>
   ) => {
-    if (student && token) {
+    if (student) {
       const id = student.id;
       const status = student?.status;
       dispatch(
         updateStudent({
           id,
-          token,
           status,
           ...updates, // Передаем только измененные поля
         })

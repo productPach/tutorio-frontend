@@ -25,7 +25,6 @@ export const ResponseTutorToStudentWithContaktModal = () => {
   const dispatch = useAppDispatch();
   const route = useRouter();
   // Получаем значение tutor из Redux
-  const token = useAppSelector((state) => state.auth.token);
   const order = useAppSelector((state) => state.orders.orderByIdDefault);
   const tutor = useAppSelector((state) => state.tutor.tutor);
   const { newChat } = useChat();
@@ -61,13 +60,7 @@ export const ResponseTutorToStudentWithContaktModal = () => {
     setIsLoading(true);
     const messageResponse = inputValue;
 
-    if (
-      tutor?.id &&
-      order?.studentId &&
-      order?.id &&
-      token &&
-      messageResponse
-    ) {
+    if (tutor?.id && order?.studentId && order?.id && messageResponse) {
       try {
         const themeOrder = `${order.goal} по ${subjectForRequest}`;
         const chat = await dispatch(
@@ -78,7 +71,6 @@ export const ResponseTutorToStudentWithContaktModal = () => {
             initiatorRole: "tutor",
             themeOrder: themeOrder,
             status: "Active",
-            token,
           })
         ).unwrap(); // Получаем результат из createChat
 
@@ -90,15 +82,11 @@ export const ResponseTutorToStudentWithContaktModal = () => {
               orderId: order.id,
               themeOrder: themeOrder,
               text: messageResponse,
-              token,
             })
           ).unwrap();
 
           // Получаем телефон ученика
-          const phoneStudent = await fetchStudentPhoneById(
-            token,
-            order.studentId
-          );
+          const phoneStudent = await fetchStudentPhoneById(order.studentId);
 
           await dispatch(
             sendMessage({
@@ -110,7 +98,6 @@ export const ResponseTutorToStudentWithContaktModal = () => {
 Постарайтесь связаться с\u00A0учеником как можно скорее и\u00A0обязательно скажите, что\u00A0нашли его через сервис Tutorio.\n\n\
 Чем раньше вы выйдете на\u00A0связь, тем выше шанс, что\u00A0именно вы станете его репетитором!\u00A0🌟\n\n\
 Удачи в общении с учеником!\u00A0🚀`,
-              token,
               type: "service",
               recipientRole: "tutor",
             })
@@ -121,7 +108,7 @@ export const ResponseTutorToStudentWithContaktModal = () => {
             try {
               //sendMessageContext(chat.id, messageResponse);
               const data = await dispatch(
-                getChatsByUserId({ userId: tutor.userId, role: "tutor", token })
+                getChatsByUserId({ userId: tutor.userId, role: "tutor" })
               ).unwrap(); // Ждем ответа и получаем результат
 
               // Найдем нужный чат

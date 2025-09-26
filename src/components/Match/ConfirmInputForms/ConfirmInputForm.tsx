@@ -99,7 +99,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
       try {
         // Пробуем получить студента
-        await dispatch(getCurrentStudent(token)).unwrap();
+        await dispatch(getCurrentStudent()).unwrap();
       } catch (error) {
         // Массив аватарок для случайного выбора
         const avatars = [
@@ -127,12 +127,11 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
             phone,
             avatarUrl: randomAvatar,
             region: region,
-            token,
           })
         ).unwrap();
 
         // После создания снова пробуем получить студента
-        await dispatch(getCurrentStudent(token)).unwrap();
+        await dispatch(getCurrentStudent()).unwrap();
       }
 
       // После получения студента — создаём заказ
@@ -218,7 +217,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         const infoDataMatch = dataMatch.find((obj) => obj.id == "18")?.info;
 
         const orderData = await fetchCreateOrder(
-          token,
           subjectDataMatch,
           goalDataMatch,
           classDataMatch,
