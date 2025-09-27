@@ -161,9 +161,9 @@ export const updateTutor = createAsyncThunk<
     tutorPlace?: string[];
     tutorAdress?: string;
     tutorTrip?: string[];
-    tutorTripCity?: string;
+    tutorTripCity?: string[];
     tutorTripCityData?: string;
-    tutorTripArea?: string;
+    tutorTripArea?: string[];
     profileInfo?: string;
     experience?: string;
     isGroup?: boolean;

@@ -78,7 +78,7 @@ export const EditEducationModal = ({
         setSelectedFiles(fileArray); // Обновляем состояние с 5 элементами (фотографии или null)
       }
     }
-  }, [educationId, tutor?.educations, host, port]);
+  }, [educationId]);
 
   const handleInputEducationInfo = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ.\s]/g, ""); // Разрешаем только буквы, точки и пробелы
