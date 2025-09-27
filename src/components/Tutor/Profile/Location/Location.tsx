@@ -94,8 +94,10 @@ export const Location = () => {
           tutorAdress,
           tutorTrip,
           tutorTripCityData,
-          tutorTripCity: tutorTripCity.join(", "),
-          tutorTripArea: tutorTripArea.join(", "),
+          tutorTripCity,
+          tutorTripArea,
+          // tutorTripCity: tutorTripCity.join(", "),
+          // tutorTripArea: tutorTripArea.join(", "),
         })
       ).unwrap;
       localStorage.setItem(
