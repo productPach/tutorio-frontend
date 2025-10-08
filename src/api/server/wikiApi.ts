@@ -28,7 +28,6 @@ import httpClient from "./httpClient";
   ): Promise<Topic> => {
     try {
       const response = await httpClient.post("topics", topic);
-      console.log(`✅ Топик "${topic.title}" создан:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -64,7 +63,6 @@ import httpClient from "./httpClient";
   export const fetchGetAllTopics = async (): Promise<Topic[]> => {
     try {
       const response = await httpClient.get("topics");
-      console.log("✅ Все топики получены:", response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -100,7 +98,6 @@ import httpClient from "./httpClient";
   export const fetchGetTopicById = async (id: string): Promise<Topic> => {
     try {
       const response = await httpClient.get(`topics/${id}`);
-      console.log(`✅ Топик ${id} получен:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -139,7 +136,6 @@ import httpClient from "./httpClient";
   export const fetchUpdateTopic = async (id: string, updatedTopic: Partial<Topic>): Promise<Topic> => {
     try {
       const response = await httpClient.patch(`topics/${id}`, updatedTopic);
-      console.log(`✅ Топик ${id} обновлён:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -176,7 +172,6 @@ import httpClient from "./httpClient";
   export const fetchDeleteTopic = async (id: string): Promise<{ message: string }> => {
     try {
       const response = await httpClient.delete(`topics/${id}`);
-      console.log(`✅ Топик ${id} удалён:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -212,7 +207,6 @@ import httpClient from "./httpClient";
   export const fetchGetAllThemes = async (): Promise<Theme[]> => {
     try {
       const response = await httpClient.get('themes');
-      console.log(`✅ Темы получены:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -247,7 +241,6 @@ import httpClient from "./httpClient";
   export const fetchGetThemesByTopic = async (topicId: string): Promise<Theme[]> => {
     try {
       const response = await httpClient.get(`topics/${topicId}/themes`);
-      console.log(`✅ Темы для топика ${topicId} получены:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(`❌ Ошибка при получении тем для топика ${topicId}:`, error.response?.status, error.response?.data || error.message);
@@ -285,7 +278,6 @@ import httpClient from "./httpClient";
   ): Promise<Theme> => {
     try {
       const response = await httpClient.post(`topics/${topicId}/themes`, newTheme);
-      console.log(`✅ Тема создана в топике ${topicId}:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -324,7 +316,6 @@ import httpClient from "./httpClient";
   export const fetchGetThemeById = async (themeId: string): Promise<Theme> => {
     try {
       const response = await httpClient.get(`themes/${themeId}`);
-      console.log(`✅ Тема ${themeId} получена:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -364,7 +355,6 @@ import httpClient from "./httpClient";
   export const fetchUpdateTheme = async (themeId: string, updatedTheme: Partial<Theme>): Promise<Theme> => {
     try {
       const response = await httpClient.patch(`themes/${themeId}`, updatedTheme);
-      console.log(`✅ Тема ${themeId} обновлена:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -403,7 +393,6 @@ import httpClient from "./httpClient";
   export const fetchDeleteTheme = async (themeId: string): Promise<{ message: string }> => {
     try {
       const response = await httpClient.delete(`themes/${themeId}`);
-      console.log(`✅ Тема ${themeId} удалена:`, response.data);
       return response.data;
     } catch (error: any) {
       console.error(

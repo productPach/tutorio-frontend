@@ -145,7 +145,7 @@ export const OrderComponent = ({
                         )}
                       >
                         <div>
-                          &nbsp;{tutor.publicRating?.toFixed(1) || "—"}
+                          &nbsp;{tutor.userRating?.toFixed(1) || "—"}
                           &nbsp;рейтинг
                         </div>
                         {tutor.reviewsCount > 0 && (

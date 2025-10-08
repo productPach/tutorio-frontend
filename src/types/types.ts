@@ -71,6 +71,7 @@ export type Tutor = {
   subject: string[]; // Список id предметов, которые преподает репетитор
   subjectComments: { subjectId: string; comment: string }[]; // Комментарии к предметам
   subjectPrices: TutorSubjectPrice[]; // Новый формат хранения цен (связанные данные)
+  tutorGoals: TutorGoal[];
   region: string;
   tutorPlace: string[];
   tutorAdress: string;
@@ -96,12 +97,14 @@ export type Tutor = {
   isNotificationsWebPush: boolean;
   isNotificationsMobilePush: boolean;
   telegram: string;
+  telegramConnectToken: string;
+  telegramId: string;
   skype: string;
   status: string;
   badges: string[];
   lastOnline: Date | null;
   response: Response[];
-  publicRating: number;
+  userRating: number;
   reviewsCount: number;
   reviews: Review[];
 };
@@ -161,6 +164,19 @@ export type TutorEducation = {
   updatedAt: string;
 }
 
+export type TutorGoal = {
+  id: string;
+  tutorId: string;
+  subjectId: string;
+  goalId: string;
+}
+
+export type DisplayTutorGoal = { 
+  id: string; 
+  title: string 
+  selected?: boolean;
+};
+
 export type Employee = {
   id: string;
   userId: string;
@@ -183,6 +199,15 @@ export type Subject = {
   nextPage: string;
   id_p: string;
   goal_id?: string;
+};
+
+export type Goal = {
+  id: string;
+  title: string;
+  subjectId: string;
+  isGoalInOrder: boolean;
+  isTutorFilter: boolean;
+  selected: boolean;
 };
 
 export type GoalForSubject = {
@@ -229,7 +254,7 @@ export type SelectedTutors = {
   id: string;
   name: string;
   avatarUrl: string;
-  publicRating: number;
+  userRating: number;
   reviewsCount: number;
   reviewId: string;
   reviewStatus: string;

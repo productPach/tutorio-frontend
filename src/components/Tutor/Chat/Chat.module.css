@@ -24,7 +24,13 @@
 }
 .content__chat_with_cookies {
   /* height: calc(100dvh - 283px); */
-  height: calc(100dvh - 275px);
+  height: calc(100dvh - 290px);
+}
+.content__chat_with_warning {
+  height: calc(100dvh - 260px);
+}
+.content__chat_with_cookiesAndWarning {
+  height: calc(100dvh - 355px);
 }
 .flx1 {
   flex: 1;

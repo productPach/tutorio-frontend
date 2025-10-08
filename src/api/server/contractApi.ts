@@ -35,7 +35,6 @@ type CreateContractPayload = {
 export const fetchCreateContract = async (payload: CreateContractPayload) => {
   try {
     const response = await httpClient.post(`contract`, payload);
-    console.log('✅ Контракт создан:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при создании контракта:', error.response?.status, error.response?.data || error.message);
@@ -70,7 +69,6 @@ export const fetchCreateContract = async (payload: CreateContractPayload) => {
 export const fetchCancelContract = async (contractId: string) => {
   try {
     const response = await httpClient.post(`contract/${contractId}/cancel`);
-    console.log('✅ Контракт отменён:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при отмене контракта:', error.response?.status, error.response?.data || error.message);

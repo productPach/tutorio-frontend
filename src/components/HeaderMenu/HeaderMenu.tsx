@@ -1,15 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useRouter } from "next/navigation";
 import styles from "./HeaderMenu.module.css";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
+import { setTutorLogout } from "@/store/features/tutorSlice";
+import { setStudentLogout } from "@/store/features/studentSlice";
 
 export const HeaderMenu = () => {
-  const token = getTokenFromCookie();
+  const dispatch = useAppDispatch();
 
   // Получаем студента из Redux
   const student: Student | null = useAppSelector(
@@ -62,9 +65,11 @@ export const HeaderMenu = () => {
 
     if (!token) {
       console.log("Токен отсутствует. Очищаем localStorage...");
+      dispatch(setTutorLogout());
+      dispatch(setStudentLogout());
       localStorage.removeItem("tutor");
       localStorage.removeItem("student");
-      name = "";
+      //name = "";
     }
   }, []);
 

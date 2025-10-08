@@ -254,7 +254,7 @@ export const TutorComponent = ({
               styles.lnHgt18
             )}
           >
-            <div>&nbsp;{tutor.publicRating}&nbsp;рейтинг</div>
+            <div>&nbsp;{tutor.userRating}&nbsp;рейтинг</div>
             {reviewsCount > 0 && (
               <Link
                 // className={componentStyle.itemThemesList}

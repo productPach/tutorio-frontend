@@ -41,7 +41,6 @@ export const fetchCreateWelcomeScreen = async (
       order,
     });
 
-    console.log(`✅ Велком-скрин "${title}" создан:`, response.data);
     return response.data;
   } catch (error: any) {
     console.error(

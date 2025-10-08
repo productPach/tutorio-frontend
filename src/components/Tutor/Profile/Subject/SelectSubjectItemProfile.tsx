@@ -6,7 +6,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
+  setIsModalEditSubject,
   setIsModalEditSubjectPrices,
+  setIsSheetEditSubject,
   setSubjectForEditInModal,
 } from "@/store/features/modalSlice";
 import Link from "next/link";
@@ -222,8 +224,12 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                   <Image
                     onClick={(e) => {
                       e.preventDefault();
-                      dispatch(setIsModalEditSubjectPrices(true));
                       dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                      if (window.innerWidth < 769) {
+                        dispatch(setIsSheetEditSubject(true)); // Открываем шторку
+                      } else {
+                        dispatch(setIsModalEditSubject(true));
+                      }
                     }}
                     className={componentSubjectStyle.img}
                     src={
@@ -245,15 +251,20 @@ export const SelectSubjectItemProfile: React.FC<ComponentProps> = ({
                     )}
                     onClick={(e) => {
                       e.preventDefault();
-                      dispatch(setIsModalEditSubjectPrices(true));
                       dispatch(setSubjectForEditInModal(subject.id_p)); // Передаем ID предмета
+                      if (window.innerWidth < 769) {
+                        dispatch(setIsSheetEditSubject(true)); // Открываем шторку
+                      } else {
+                        dispatch(setIsModalEditSubject(true));
+                      }
                     }}
                   >
-                    {tutor?.subjectPrices?.some(
+                    {/* {tutor?.subjectPrices?.some(
                       (item) => subject.id_p === item.subjectId
                     )
                       ? "редактировать"
-                      : "добавить стоимость"}
+                      : "добавить стоимость"} */}
+                    редактировать
                   </Link>
                 </div>
                 {tutor?.subjectPrices.some(

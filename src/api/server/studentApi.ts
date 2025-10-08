@@ -42,7 +42,6 @@ export const fetchCreateStudent = async (
       region,
       status: "Active",
     });
-    console.log('✅ Студент создан:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при создании студента:', error.response?.status, error.response?.data || error.message);
@@ -72,7 +71,6 @@ export const fetchCreateStudent = async (
 export const fetchCurrentStudent = async () => {
   try {
     const response = await httpClient.get(`currentStudent`);
-    console.log('✅ Текущий студент получен:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при получении текущего студента:', error.response?.status, error.response?.data || error.message);
@@ -102,7 +100,6 @@ export const fetchCurrentStudent = async () => {
 export const fetchStudentPhoneById = async (id: string): Promise<string> => {
   try {
     const response = await httpClient.get(`students/${id}/phone`);
-    console.log(`✅ Телефон студента ${id} получен:`, response.data);
     return response.data.phone as string;
   } catch (error: any) {
     console.error(`❌ Ошибка при получении телефона студента ${id}:`, error.response?.status, error.response?.data || error.message);
@@ -132,7 +129,6 @@ export const fetchStudentPhoneById = async (id: string): Promise<string> => {
 export const fetchStudentById = async (id: string) => {
   try {
     const response = await httpClient.get(`students/${id}`);
-    console.log(`✅ Студент ${id} получен:`, response.data);
     return response.data.student;
   } catch (error: any) {
     console.error(`❌ Ошибка при получении студента ${id}:`, error.response?.status, error.response?.data || error.message);
@@ -180,7 +176,6 @@ export const fetchUpdateStudent = async (data: {
 
   try {
     const response = await httpClient.patch(`students/${id}`, fields);
-    console.log(`✅ Студент ${id} обновлён:`, response.data);
     return response.data;
   } catch (error: any) {
     console.error(`❌ Ошибка при обновлении студента ${id}:`, error.response?.status, error.response?.data || error.message);
@@ -211,7 +206,6 @@ export const fetchUpdateStudent = async (data: {
 export const fetchDeleteRequest = async (studentId: string, answer: string): Promise<void> => {
   try {
     await httpClient.post(`students/delete-request/${studentId}`, { answer });
-    console.log(`✅ Запрос на удаление ученика ${studentId} создан`);
   } catch (error: any) {
     console.error(`❌ Ошибка при создании запроса на удаление ученика ${studentId}:`, error.response?.status, error.response?.data || error.message);
     throw new Error("Ошибка при создании запроса на удаление ученика");
@@ -249,7 +243,6 @@ export const sendVerificationEmail = async (studentId: string) => {
       id: studentId,
       userType: "student",
     });
-    console.log(`✅ Письмо для подтверждения email отправлено студенту ${studentId}`);
     return response.data;
   } catch (error: any) {
     console.error(`❌ Ошибка при отправке письма студенту ${studentId}:`, error.response?.status, error.response?.data || error.message);

@@ -6,10 +6,15 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { updateTutor } from "@/store/features/tutorSlice";
+import {
+  getTutorSelectedGoalsGrouped,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 import clsx from "clsx";
 import {
+  setIsModalEditSubject,
   setIsModalEditSubjectPrices,
+  setIsSheetEditSubject,
   setIsSheetEditSubjectPrices,
   setSubjectForEditInModal,
 } from "@/store/features/modalSlice";
@@ -20,6 +25,17 @@ export const Subject = () => {
   // Получаем значение tutor из Redux
   const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+
+  const tutorGoalsGrouped = useAppSelector(
+    (state) => state.tutor.tutorGoalsGrouped
+  );
+
+  useEffect(() => {
+    dispatch(getAllSubjects());
+    if (tutor?.id) {
+      dispatch(getTutorSelectedGoalsGrouped({ tutorId: tutor.id }));
+    }
+  }, [dispatch, tutor?.id]);
 
   // Стейт для предметов
   const subjects = useAppSelector((state) => state.subject.subjects);
@@ -127,6 +143,10 @@ export const Subject = () => {
               (item) => item.subjectId === subjectId && item.price
             );
 
+            // берём цели для этого предмета
+            const goals = tutorGoalsGrouped[subjectId] || [];
+            const selectedGoals = goals.filter((g) => g.selected);
+
             return (
               <li
                 key={index}
@@ -186,22 +206,39 @@ export const Subject = () => {
                           e.preventDefault();
                           dispatch(setSubjectForEditInModal(subjectId)); // Передаем ID предмета
                           if (window.innerWidth < 769) {
-                            dispatch(setIsSheetEditSubjectPrices(true)); // Открываем шторку
+                            dispatch(setIsSheetEditSubject(true)); // Открываем шторку
                           } else {
-                            dispatch(setIsModalEditSubjectPrices(true));
+                            dispatch(setIsModalEditSubject(true));
                           }
                         }}
                       >
-                        {tutor?.subjectPrices?.some(
+                        {/* {tutor?.subjectPrices?.some(
                           (item) => subjectId === item.subjectId
                         )
                           ? "редактировать"
-                          : "добавить стоимость"}
+                          : "добавить стоимость"} */}
+                        редактировать
                       </Link>
                     </div>
                   </div>
                 </div>
 
+                {/* Цели */}
+                {selectedGoals.length > 0 ? (
+                  <div className={componentSubjectStyle.subjectPrisesStart}>
+                    {/* 🎯 Выбранные цели <br /> */}
+                    {selectedGoals.map((g) => g.title).join(", ")}
+                  </div>
+                ) : (
+                  <div
+                    className={clsx(
+                      componentSubjectStyle.subjectPrisesStart,
+                      componentSubjectStyle.textColorRed
+                    )}
+                  >
+                    Выберите цели
+                  </div>
+                )}
                 {subjectPrices.length > 0 ? (
                   <div className={componentSubjectStyle.subjectPrisesStart}>
                     {subjectPrices
@@ -216,10 +253,10 @@ export const Subject = () => {
                       )
                       .map(({ format, price, duration }) => (
                         <div key={format}>
-                          {format === "online" && "Онлайн"}
-                          {format === "group" && "Группа"}
-                          {format === "travel" && "Выезд"}
-                          {format === "home" && "Дома"}:{" "}
+                          {format === "online" && "🖥️ Дистанционно"}
+                          {format === "group" && "👫 Группа"}
+                          {format === "travel" && "📍Выезд"}
+                          {format === "home" && "🏠 Дома"}:{" "}
                           {new Intl.NumberFormat("ru-RU").format(price)} ₽ /{" "}
                           {duration === "day" ? "за день" : `${duration} мин`}
                         </div>

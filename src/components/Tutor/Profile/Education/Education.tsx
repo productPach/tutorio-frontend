@@ -71,7 +71,7 @@ export const Education = () => {
       <div className={styles.content_block}>
         <div className={clsx(generalStyle.dplFlxRwNwrAiCntrJcBtwn)}>
           <div className={componentStyle.container}>
-            <h2
+            <span
               onClick={(e) => {
                 e.preventDefault();
                 if (window.innerWidth < 769) {
@@ -82,7 +82,7 @@ export const Education = () => {
               }}
             >
               Образование
-            </h2>
+            </span>
           </div>
           <Image
             onClick={(e) => {

@@ -18,8 +18,12 @@ type ModalStateType = {
   isSheetDeleteEducationItem: boolean;
   isModalEditEducation: boolean;
   isSheetEditEducation: boolean;
+  isModalEditSubject: boolean;
+  isSheetEditSubject: boolean,
   isModalEditSubjectPrices: boolean;
   isSheetEditSubjectPrices: boolean,
+  isModalEditSubjectGoal: boolean;
+  isSheetEditSubjectGoal: boolean,
   subjectForEditInModal: string | null; // ID предмета или объект предмета
   isModalPhone: boolean;
   isSheetPhone: boolean;
@@ -27,6 +31,8 @@ type ModalStateType = {
   isSheetEmail: boolean;
   isModalTelegram: boolean;
   isSheetTelegram: boolean;
+  isModalConnectTelegram: boolean;
+  isSheetConnectTelegram: boolean;
   isModalSkype: boolean;
   isModalExit: boolean;
   isSheetExit: boolean;
@@ -79,8 +85,12 @@ const initialState: ModalStateType = {
   isSheetDeleteEducationItem: false,
   isModalEditEducation: false,
   isSheetEditEducation: false,
+  isModalEditSubject: false,
+  isSheetEditSubject: false,
   isModalEditSubjectPrices: false,
   isSheetEditSubjectPrices: false,
+  isModalEditSubjectGoal: false,
+  isSheetEditSubjectGoal: false,
   subjectForEditInModal: null,
   isModalPhone: false,
   isSheetPhone: false,
@@ -88,6 +98,8 @@ const initialState: ModalStateType = {
   isSheetEmail: false,
   isModalTelegram: false,
   isSheetTelegram: false,
+  isModalConnectTelegram: false,
+  isSheetConnectTelegram: false,
   isModalSkype: false,
   isModalExit: false,
   isSheetExit: false,
@@ -177,11 +189,23 @@ const modalSlice = createSlice({
     setIsSheetEditEducation: (state, action: PayloadAction<boolean>) => {
       state.isSheetEditEducation = action.payload;
     },
+    setIsModalEditSubject: (state, action: PayloadAction<boolean>) => {
+      state.isModalEditSubject = action.payload;
+    },
+    setIsSheetEditSubject: (state, action: PayloadAction<boolean>) => {
+      state.isSheetEditSubject = action.payload;
+    },
     setIsModalEditSubjectPrices: (state, action: PayloadAction<boolean>) => {
       state.isModalEditSubjectPrices = action.payload;
     },
     setIsSheetEditSubjectPrices: (state, action: PayloadAction<boolean>) => {
       state.isSheetEditSubjectPrices = action.payload;
+    },
+    setIsModalEditSubjectGoal: (state, action: PayloadAction<boolean>) => {
+      state.isModalEditSubjectGoal = action.payload;
+    },
+    setIsSheetEditSubjectGoal: (state, action: PayloadAction<boolean>) => {
+      state.isSheetEditSubjectGoal = action.payload;
     },
     setSubjectForEditInModal(state, action: PayloadAction<string | null>) {
       state.subjectForEditInModal = action.payload;
@@ -204,6 +228,14 @@ const modalSlice = createSlice({
     setIsSheetTelegram: (state, action: PayloadAction<boolean>) => {
       state.isSheetTelegram = action.payload;
     },
+
+    setIsModalConnectTelegram: (state, action: PayloadAction<boolean>) => {
+      state.isModalConnectTelegram = action.payload;
+    },
+    setIsSheetConnectTelegram: (state, action: PayloadAction<boolean>) => {
+      state.isSheetConnectTelegram = action.payload;
+    },
+
     setIsModalSkype: (state, action: PayloadAction<boolean>) => {
       state.isModalSkype = action.payload;
     },
@@ -321,8 +353,12 @@ export const {
   setIsSheetDeleteEducationItem,
   setIsModalEditEducation,
   setIsSheetEditEducation,
+  setIsModalEditSubject,
+  setIsSheetEditSubject,
   setIsModalEditSubjectPrices,
   setIsSheetEditSubjectPrices,
+  setIsModalEditSubjectGoal,
+  setIsSheetEditSubjectGoal,
   setSubjectForEditInModal,
   setIsModalExit,
   setIsSheetExit,
@@ -332,6 +368,8 @@ export const {
   setIsSheetEmail,
   setIsModalTelegram,
   setIsSheetTelegram,
+  setIsModalConnectTelegram,
+  setIsSheetConnectTelegram,
   setIsModalSkype,
   setIsModalDelete,
   setIsSheetDelete,
