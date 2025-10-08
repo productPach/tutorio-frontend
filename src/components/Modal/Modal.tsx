@@ -12,12 +12,15 @@ import { useAppDispatch } from "@/store/store";
 import {
   setIsModalAcceptResponse,
   setIsModalBalanceBoost,
+  setIsModalConnectTelegram,
   setIsModalCreateContractByStudent,
   setIsModalCreateContractByTutor,
   setIsModalCreateReviewByStudent,
   setIsModalCreateReviewByTutor,
   setIsModalDelete,
   setIsModalEditEducation,
+  setIsModalEditSubject,
+  setIsModalEditSubjectGoal,
   setIsModalEditSubjectPrices,
   setIsModalEducation,
   setIsModalEducationItem,
@@ -38,6 +41,7 @@ import {
   setLoadingPage,
   setModalSelectCity,
   setScrollY,
+  setSubjectForEditInModal,
 } from "@/store/features/modalSlice";
 import { createPortal } from "react-dom";
 
@@ -98,8 +102,20 @@ export const Modal: React.FC<ModalProps> = ({
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
+    if (modalId === "editSubject") {
+      dispatch(setIsModalEditSubject(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
     if (modalId === "editSubjectPrices") {
       dispatch(setIsModalEditSubjectPrices(false));
+      dispatch(setSubjectForEditInModal(null));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "editSubjectGoal") {
+      dispatch(setIsModalEditSubjectGoal(false));
+      dispatch(setSubjectForEditInModal(null));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
@@ -115,6 +131,11 @@ export const Modal: React.FC<ModalProps> = ({
     }
     if (modalId === "telegram") {
       dispatch(setIsModalTelegram(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "telegramConnect") {
+      dispatch(setIsModalConnectTelegram(false));
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }

@@ -1,0 +1,14 @@
+.listUl {
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+  padding-left: 20px;
+  margin-bottom: 4px;
+}
+.listUl li {
+  list-style: decimal !important;
+  list-style-type: decimal !important;
+}
+.success {
+  padding: 20px 0 0 0;
+}

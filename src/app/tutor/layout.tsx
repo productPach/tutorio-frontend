@@ -9,8 +9,11 @@ import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
 import {
   getCurrentTutor,
+  getTutorIncompletePrices,
+  getTutorSubjectsWithGoals,
   setSelectedValuesArea,
   setSelectedValuesCity,
+  syncSubjectsWithGoalsState,
   updateTutor,
 } from "@/store/features/tutorSlice";
 import Image from "next/image";
@@ -24,6 +27,8 @@ import MenuMobile from "@/components/Tutor/MenuMobile/MenuMobile";
 import BottomMenuMobile from "@/components/Tutor/BottomMenuMobile/BottomMenuMobile";
 import { jwtDecode } from "jwt-decode";
 import { getAccessToken } from "@/api/server/auth";
+import { WarningNotification } from "@/components/Tutor/WarningNotification/WarningNotification";
+import { useTutorWarningsNotification } from "@/hooks/tutor/useTutorWarningsNotification";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -42,8 +47,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   // Определяем активный пункт меню на основе pathname
   const isActive = (path: string) => pathname.startsWith(path);
 
-  console.log(tutor);
-
   useEffect(() => {
     const initAuth = () => {
       const token = getAccessToken(); // берём из localStorage
@@ -55,13 +58,14 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
 
       try {
         const payload: any = jwtDecode(token); // Используйте any для отладки
-        console.log("Полный payload токена:", payload);
-        console.log("activeRole из токена:", payload.activeRole);
-        console.log("Все свойства токена:", Object.keys(payload));
+        // console.log("Полный payload токена:", payload);
+        // console.log("activeRole из токена:", payload.activeRole);
+        // console.log("Все свойства токена:", Object.keys(payload));
 
         if (payload.activeRole !== "tutor") {
           console.log("Не та роль. Роль пользователя:", payload.activeRole);
           console.log("Ожидаемая роль: tutor");
+          dispatch(setLogout());
           router.push("/");
           return;
         }
@@ -261,6 +265,23 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     };
   }, []);
 
+  // По идее можно убрать
+  useEffect(() => {
+    if (tutor?.id) {
+      dispatch(getTutorSubjectsWithGoals({ tutorId: tutor.id }));
+      dispatch(getTutorIncompletePrices({ id: tutor.id }));
+    }
+  }, [dispatch, tutor?.id]);
+
+  useEffect(() => {
+    if (tutor?.id) {
+      // Синхронизируем subjectsWithGoals при изменении tutor.subject
+      dispatch(syncSubjectsWithGoalsState());
+    }
+  }, [tutor?.subject?.join(","), dispatch]);
+
+  const warning = useTutorWarningsNotification();
+
   return (
     <>
       {!isLoadedPage ? (
@@ -275,6 +296,12 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             (isActive("/tutor/responses") && chat && showHeader) ||
             !isActive("/tutor/responses")) && (
             <header>
+              {warning && (
+                <WarningNotification
+                  message={warning.message}
+                  href={warning.href}
+                />
+              )}
               <div className={clsx(styles.header, styles.center)}>
                 <div className={styles.headerM}>
                   <MenuMobile />

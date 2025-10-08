@@ -32,7 +32,6 @@ import httpClient from "./httpClient";
 export const fetchCreateReview = async (payload: CreateReviewPayload) => {
   try {
     const response = await httpClient.post(`review`, payload);
-    console.log('✅ Отзыв создан:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при создании отзыва:', error.response?.status, error.response?.data || error.message);
@@ -69,7 +68,6 @@ export const fetchCreateReview = async (payload: CreateReviewPayload) => {
 export const fetchCreateComment = async (payload: CreateCommentPayload) => {
   try {
     const response = await httpClient.post(`comment`, payload);
-    console.log('✅ Комментарий создан:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при создании комментария:', error.response?.status, error.response?.data || error.message);
@@ -116,7 +114,6 @@ export const fetchUpdateReview = async (
 ) => {
   try {
     const response = await httpClient.patch(`review/${reviewId}`, payload);
-    console.log(`✅ Отзыв ${reviewId} обновлён:`, response.data);
     return response.data;
   } catch (error: any) {
     console.error(`❌ Ошибка при обновлении отзыва ${reviewId}:`, error.response?.status, error.response?.data || error.message);

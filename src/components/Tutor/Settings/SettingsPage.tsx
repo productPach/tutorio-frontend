@@ -16,12 +16,14 @@ import { PhoneModal } from "@/components/Tutor/Modal/Settings/PhoneModal";
 import { DeleteModal } from "@/components/Tutor/Modal/Settings/DeleteModal";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import {
+  setIsSheetConnectTelegram,
   setIsSheetDelete,
   setIsSheetEmail,
   setIsSheetExit,
   setIsSheetPhone,
   setIsSheetTelegram,
 } from "@/store/features/modalSlice";
+import { TelegramConnectModal } from "../Modal/Settings/TelegramConnectModal";
 
 const SettingsPage: React.FC = () => {
   const page = "Settings";

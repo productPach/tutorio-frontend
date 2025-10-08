@@ -53,9 +53,6 @@ export const fetchRefreshToken = async () => {
     credentials: "include",
   });
 
-    console.log('Refresh response status:', response.status);
-  console.log('Refresh response cookies:', document.cookie);
-
   if (!response.ok) {
     throw new Error(`Ошибка обновления токена: ${response.status}`);
   }

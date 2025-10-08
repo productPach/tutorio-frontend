@@ -38,6 +38,7 @@ import {
   setIsSheetRejectResponse,
 } from "@/store/features/modalSlice";
 import { SendHorizontal } from "lucide-react";
+import { useTutorWarningsNotification } from "@/hooks/tutor/useTutorWarningsNotification";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -64,6 +65,7 @@ export const ChatComponent = React.memo(
     // Получаем чат из редакса
     const chat = useAppSelector((state) => state.chat.chat);
     const cookiesAccepted = useAppSelector((state) => state.general.cookies);
+    const warning = useTutorWarningsNotification();
 
     const { chats, setChatsState } = useChat();
 
@@ -383,7 +385,12 @@ export const ChatComponent = React.memo(
             <div
               className={clsx(
                 chatStyles.content__chat,
+                { [chatStyles.content__chat_with_warning]: warning },
                 { [chatStyles.content__chat_with_cookies]: !cookiesAccepted },
+                {
+                  [chatStyles.content__chat_with_cookiesAndWarning]:
+                    !cookiesAccepted && warning,
+                },
                 chatStyles.flx1,
                 chatStyles.flxClmn,
                 chatStyles.jstContSpcBtwn

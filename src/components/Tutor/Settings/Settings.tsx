@@ -1,16 +1,19 @@
 import { FC, useState } from "react";
 import styles from "../../../app/tutor/layout.module.css";
 import componentStyle from "./Settings.module.css";
+import buttonStyle from "../SideBar/ResponseSidbar.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { updateTutor } from "@/store/features/tutorSlice";
 import { Tutor } from "@/types/types";
 import {
+  setIsModalConnectTelegram,
   setIsModalDelete,
   setIsModalEmail,
   setIsModalExit,
   setIsModalPhone,
   setIsModalSkype,
   setIsModalTelegram,
+  setIsSheetConnectTelegram,
   setIsSheetDelete,
   setIsSheetEmail,
   setIsSheetExit,
@@ -20,6 +23,11 @@ import {
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Image from "next/image";
 import "dotenv/config";
+import clsx from "clsx";
+import { getTelegramConnectLink } from "@/store/features/notificationSlice";
+import { Modal } from "@/components/Modal/Modal";
+import { TelegramConnectModal } from "../Modal/Settings/TelegramConnectModal";
+import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 
 type SettingsProps = {
   tutor: Tutor | null;
@@ -34,16 +42,21 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   const tutor2 = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
   const isVerifiedEmail = tutor?.isVerifedEmail;
 
+  const isModalConnectTelegram = useAppSelector(
+    (state) => state.modal.isModalConnectTelegram
+  );
+  const isSheetConnectTelegram = useAppSelector(
+    (state) => state.modal.isSheetConnectTelegram
+  );
+
   // Состояние для свитча публичной анкеты
   const [isCheckedPublic, setIsCheckedPublic] = useState(
     tutor?.isPublicProfile || false
   );
   const toggleSwitchPublic = () => {
-    setIsCheckedPublic((prev) => {
-      const isPublicProfile = !prev;
-      update({ isPublicProfile }); // Передаем новое значение
-      return isPublicProfile;
-    });
+    const newValue = !isCheckedPublic; // вычисляем новое значение
+    setIsCheckedPublic(newValue); // обновляем локальное состояние
+    update({ isPublicProfile: newValue }); // вызываем dispatch после setState
   };
 
   // Состояние для свитча получения откликов
@@ -51,11 +64,9 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
     tutor?.isStudentResponses || false
   );
   const toggleSwitchResponse = () => {
-    setIsCheckedResponse((prev) => {
-      const isStudentResponses = !prev;
-      update({ isStudentResponses }); // Передаем новое значение
-      return isStudentResponses;
-    });
+    const newValue = !isCheckedResponse;
+    setIsCheckedResponse(newValue);
+    update({ isStudentResponses: newValue });
   };
 
   // Состояние для свитча получения уведомлений
@@ -63,44 +74,36 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
     tutor?.isNotifications || false
   );
   const toggleSwitchNotifications = () => {
-    setIsCheckedNotifications((prev) => {
-      const isNotifications = !prev;
-      update({ isNotifications }); // Передаем новое значение
-      return isNotifications;
-    });
+    const newValue = !isCheckedNotifications;
+    setIsCheckedNotifications(newValue);
+    update({ isNotifications: newValue });
   };
 
   // Состояние для свитча получения уведомлений о новых заказах
   const [isCheckedNotificationsOrders, setIsCheckedNotificationsOrders] =
     useState(tutor?.isNotificationsOrders || false);
   const toggleSwitchNotificationsOrders = () => {
-    setIsCheckedNotificationsOrders((prev) => {
-      const isNotificationsOrders = !prev;
-      update({ isNotificationsOrders }); // Передаем новое значение
-      return isNotificationsOrders;
-    });
+    const newValue = !isCheckedNotificationsOrders;
+    setIsCheckedNotificationsOrders(newValue);
+    update({ isNotificationsOrders: newValue });
   };
 
   // Состояние для свитча получения уведомлений об откликах учеников
   const [isCheckedNotificationsResponse, setIsCheckedNotificationsResponse] =
     useState(tutor?.isNotificationsResponse || false);
   const toggleSwitchNotificationsResponse = () => {
-    setIsCheckedNotificationsResponse((prev) => {
-      const isNotificationsResponse = !prev;
-      update({ isNotificationsResponse }); // Передаем новое значение
-      return isNotificationsResponse;
-    });
+    const newValue = !isCheckedNotificationsResponse;
+    setIsCheckedNotificationsResponse(newValue);
+    update({ isNotificationsResponse: newValue });
   };
 
   // Состояние для свитча получения уведомлений об акциях, скидках и новостях
   const [isCheckedNotificationsPromo, setIsCheckedNotificationsPromo] =
     useState(tutor?.isNotificationsPromo || false);
   const toggleSwitchNotificationsPromo = () => {
-    setIsCheckedNotificationsPromo((prev) => {
-      const isNotificationsPromo = !prev;
-      update({ isNotificationsPromo }); // Передаем новое значение
-      return isNotificationsPromo;
-    });
+    const newValue = !isCheckedNotificationsPromo;
+    setIsCheckedNotificationsPromo(newValue);
+    update({ isNotificationsPromo: newValue });
   };
 
   // Состояние для свитча получения уведомлений по смс
@@ -119,22 +122,33 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
   const [isCheckedNotificationsEmail, setIsCheckedNotificationsEmail] =
     useState(tutor?.isNotificationsEmail || false);
   const toggleSwitchNotificationsEmail = () => {
-    setIsCheckedNotificationsEmail((prev) => {
-      const isNotificationsEmail = !prev;
-      update({ isNotificationsEmail }); // Передаем новое значение
-      return isNotificationsEmail;
-    });
+    const newValue = !isCheckedNotificationsEmail;
+    setIsCheckedNotificationsEmail(newValue);
+    update({ isNotificationsEmail: newValue });
   };
 
   // Состояние для свитча получения уведомлений в телеграм
   const [isCheckedNotificationsTelegram, setIsCheckedNotificationsTelegram] =
     useState(tutor?.isNotificationsTelegram || false);
+
   const toggleSwitchNotificationsTelegram = () => {
-    setIsCheckedNotificationsTelegram((prev) => {
-      const isNotificationsTelegram = !prev;
-      update({ isNotificationsTelegram }); // Передаем новое значение
-      return isNotificationsTelegram;
-    });
+    if (!tutor?.isNotificationsTelegram) {
+      tutor && dispatch(getTelegramConnectLink(tutor.id));
+      if (window.innerWidth < 769) {
+        dispatch(setIsSheetConnectTelegram(true)); // открываем шторку
+      } else {
+        dispatch(setIsModalConnectTelegram(true)); // открываем модалку
+      }
+    } else {
+      const newValue = !isCheckedNotificationsTelegram; // вычисляем новое значение
+      setIsCheckedNotificationsTelegram(newValue); // обновляем стейт
+      update({ isNotificationsTelegram: newValue }); // отдельно вызываем update
+    }
+  };
+
+  const handleTelegramConnected = () => {
+    setIsCheckedNotificationsTelegram(true);
+    update({ isNotificationsTelegram: true });
   };
 
   // Состояние для свитча получения уведомлений в ВК
@@ -233,8 +247,16 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Получать уведомления</div>
-              <span className={componentStyle.containerSpan}>
-                Будем отправлять вам уведомления на указанные каналы связи
+              <span
+                className={
+                  tutor?.isNotifications
+                    ? componentStyle.containerSpan
+                    : componentStyle.redText
+                }
+              >
+                {tutor?.isNotifications
+                  ? "Будем отправлять вам\u00A0уведомления на\u00A0указанные каналы связи"
+                  : "⚠️\u00A0Уведомления отключены"}
               </span>
             </div>
             <div className={styles.inputContainer}>
@@ -261,9 +283,16 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Новые заказы</div>
-                <span className={componentStyle.containerSpan}>
-                  Получите уведомления о заказах, которые соответствуют вашим
-                  условиям
+                <span
+                  className={
+                    tutor?.isNotificationsOrders
+                      ? componentStyle.containerSpan
+                      : componentStyle.redText
+                  }
+                >
+                  {tutor?.isNotificationsOrders
+                    ? "Уведомления о\u00A0новых заказах"
+                    : "⚠️\u00A0Уведомления о\u00A0новых заказах отключены"}
                 </span>
               </div>
               <div className={styles.inputContainer}>
@@ -281,8 +310,16 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Отклики от учеников</div>
-                <span className={componentStyle.containerSpan}>
-                  Уведомления о новых откликах от учеников в заказах
+                <span
+                  className={
+                    tutor?.isNotificationsResponse
+                      ? componentStyle.containerSpan
+                      : componentStyle.redText
+                  }
+                >
+                  {tutor?.isNotificationsResponse
+                    ? "Уведомления о\u00A0новых откликах от\u00A0учеников в\u00A0заказах"
+                    : "⚠️\u00A0Уведомления о\u00A0новых откликах от\u00A0учеников в\u00A0заказах отключены"}
                 </span>
               </div>
               <div className={styles.inputContainer}>
@@ -326,13 +363,13 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               Куда отправлять уведомления
             </span>
 
-            <div className={styles.containerEntityShowEnd}>
+            {/* <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>СМС</div>
-                {/* <span>
+                <span>
                   Получите уведомления о заказах, которые соответствуют вашим
                   условиям
-                </span> */}
+                </span>
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -344,7 +381,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
                   <span className={styles.slider}></span>
                 </label>
               </div>
-            </div>
+            </div> */}
 
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
@@ -366,7 +403,26 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Telegram</div>
-                {/* <span>Информируем вас о скидках, акциях и важных новостях</span> */}
+                <span
+                  className={
+                    tutor?.telegramId && tutor?.isNotificationsTelegram
+                      ? componentStyle.containerSpan
+                      : componentStyle.redText
+                  }
+                >
+                  {tutor?.telegramId && tutor?.isNotificationsTelegram
+                    ? "Telegram привязан, уведомления подключены"
+                    : tutor?.telegramId && !tutor?.isNotificationsTelegram
+                      ? "⚠️\u00A0Уведомления в\u00A0Telegram отключены"
+                      : !tutor?.telegramId && tutor?.isNotificationsTelegram
+                        ? "Привяжите Telegram, чтобы\u00A0получать уведомления о\u00A0новых заказах и\u00A0откликах учеников"
+                        : "Привяжите Telegram, чтобы\u00A0получать уведомления о\u00A0новых заказах и\u00A0откликах учеников"}
+                </span>
+
+                {/* <span className={componentStyle.containerSpan}>
+                  Получайте уведомления о заказах, которые соответствуют вашим
+                  условиям
+                </span> */}
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -380,10 +436,27 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
               </div>
             </div>
 
-            <div className={styles.containerEntityShowEnd}>
+            {/* <div className={buttonStyle.button}>
+              <button
+                className={clsx(
+                  buttonStyle.jtfCntSpBtwn,
+                  buttonStyle.buttonYlw
+                )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  tutor?.id && dispatch(getTelegramConnectLink(tutor?.id));
+                }}
+                type="button"
+              >
+                <span className={styles.textButton}>
+                  Привязать аккаунт Telegram
+                </span>
+              </button>
+            </div> */}
+
+            {/* <div className={styles.containerEntityShowEnd}>
               <div className={styles.containerEntityTitleDescription}>
                 <div>Вконтакте</div>
-                {/* <span>Информируем вас о скидках, акциях и важных новостях</span> */}
               </div>
               <div className={styles.inputContainer}>
                 <label className={styles.iosSwitch}>
@@ -395,7 +468,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
                   <span className={styles.slider}></span>
                 </label>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
@@ -480,9 +553,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             <div className={styles.containerEntityTitleDescription}>
               <div>Telegram</div>
               <span className={componentStyle.containerSpan}>
-                {tutor?.telegram
-                  ? tutor?.telegram
-                  : "Не показывается в анкете. Ученик получит его только при обмене контактами"}
+                {tutor?.telegram ? tutor?.telegram : "Не показывается в анкете"}
               </span>
             </div>
             <div className={styles.inputContainer}>
@@ -571,6 +642,26 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
           </div>
         </div>
       </div>
+      <Modal
+        titleModal={"Уведомления в Telegram"}
+        contentModal={
+          <TelegramConnectModal
+            tutor={tutor}
+            onConnected={handleTelegramConnected}
+          />
+        }
+        isModal={isModalConnectTelegram}
+        modalId={"telegramConnect"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetConnectTelegram}
+        onClose={() => dispatch(setIsSheetConnectTelegram(false))}
+      >
+        <TelegramConnectModal
+          tutor={tutor}
+          onConnected={handleTelegramConnected}
+        />
+      </BottomSheet>
     </>
   );
 };

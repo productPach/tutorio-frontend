@@ -29,7 +29,6 @@ import httpClient from "./httpClient";
 export const fetchGetAllCities = async () => {
   try {
     const response = await httpClient.get(`cities`);
-    console.log('✅ Список городов получен:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при получении данных городов:', error.response?.status, error.response?.data || error.message);

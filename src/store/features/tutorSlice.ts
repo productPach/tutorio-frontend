@@ -9,17 +9,24 @@ import {
   fetchDeleteRequest,
   fetchDeleteTutorEducation,
   fetchTutorById,
+  fetchTutorGoalsBySubject,
+  fetchTutorIncompletePrices,
+  fetchTutorSelectedGoalsGrouped,
+  fetchTutorSubjectsWithGoals,
   fetchUpdateSubjectPrice,
   fetchUpdateTutor,
   fetchUpdateTutorEducation,
   fetchVerifyEmail,
+  updateTutorGoalsBySubject,
 } from "@/api/server/tutorApi";
 import {
   fetchShowWelcomeScreen,
   fetchWelcomeScreens,
 } from "@/api/server/userApi";
 import {
+  DisplayTutorGoal,
   District,
+  Goal,
   LessonDuration,
   Metro,
   RegionalCity,
@@ -35,6 +42,7 @@ import {
   setLocalStorage,
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export const getCurrentTutor = createAsyncThunk<Tutor, void>(
   "tutor/current",
@@ -441,7 +449,118 @@ export const deleteTutorRequest = createAsyncThunk<
   }
 });
 
+// Получение списка всех целей по выбранным предметам репетитора + отмечаем выбранные цели
+export const getTutorGoals = createAsyncThunk<
+  Goal[],
+  { tutorId: string; subjectId: string },
+  { rejectValue: string }
+>(
+  "tutor/getTutorGoals",
+  async ({ tutorId, subjectId }, { rejectWithValue }) => {
+    try {
+      return await fetchTutorGoalsBySubject(tutorId, subjectId);
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
+// Получение выбранных целей репетитора по каждому предмету
+export const getTutorSelectedGoalsGrouped = createAsyncThunk<
+  Record<string, { id: string; title: string; selected: boolean }[]>,
+  { tutorId: string },
+  { rejectValue: string }
+>(
+  "tutor/getSelectedGoalsGrouped",
+  async ({ tutorId }, { rejectWithValue }) => {
+    try {
+      const response = await fetchTutorSelectedGoalsGrouped(tutorId);
+
+      // Преобразуем сразу в { selected: true }
+      const grouped: Record<string, { id: string; title: string; selected: boolean }[]> =
+        Object.fromEntries(
+          Object.entries(response).map(([subjectId, goals]: [string, any]) => [
+            subjectId,
+            goals.map((g: any) => ({
+              id: g.id,
+              title: g.title, // название с бэка
+              selected: true,
+            })),
+          ])
+        );
+
+      return grouped;
+    } catch (error) {
+      console.error(`Ошибка при получении целей репетитора:`, error);
+      return rejectWithValue("Не удалось загрузить цели репетитора");
+    }
+  }
+);
+
+// Получаем предметы репетитора с целями
+export const getTutorSubjectsWithGoals = createAsyncThunk<
+  {
+    subjectId: string;
+    subjectTitle: string;
+    goals: { id: string; title: string; selected: boolean }[];
+    hasNoSelectedGoals: boolean;
+  }[],
+  { tutorId: string },
+  { rejectValue: string }
+>(
+  "tutor/getSubjectsWithGoals",
+  async ({ tutorId }, { rejectWithValue }) => {
+    try {
+      return await fetchTutorSubjectsWithGoals(tutorId);
+    } catch (error: any) {
+      console.error(`Ошибка при получении предметов с целями:`, error);
+      return rejectWithValue("Не удалось загрузить предметы с целями");
+    }
+  }
+);
+
+// Обновление целей репетитора по предмету
+export const updateTutorGoals = createAsyncThunk<
+  void,
+  { tutorId: string; subjectId: string; goalIds: string[] },
+  { rejectValue: string }
+>(
+  "tutor/updateTutorGoals",
+  async ({ tutorId, subjectId, goalIds }, { rejectWithValue }) => {
+    try {
+      await updateTutorGoalsBySubject(tutorId, subjectId, goalIds);
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const syncSubjectsWithGoals = createAsyncThunk<
+  void,
+  { tutorId: string },
+  { state: RootState }
+>("tutor/syncSubjectsWithGoals", async ({ tutorId }, { getState, dispatch }) => {
+  // Можно вызвать API для получения актуальных subjectsWithGoals или использовать локальные state
+});
+
+// Получение информации о неполных ценах репетитора
+export const getTutorIncompletePrices = createAsyncThunk<
+  { hasIncompletePrices: boolean; subjectsWithoutFullPrices: string[] },
+  { id: string }
+>(
+  "tutor/getIncompletePrices",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const data = await fetchTutorIncompletePrices(id);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+type GoalMini = { id: string; title: string };
+type GoalWithSelected = { id: string; title: string; selected: boolean };
 
 type TutorStateType = {
   tutor: null | Tutor;
@@ -456,6 +575,25 @@ type TutorStateType = {
   welcomeScreens: null | WelcomeScreen[];
   hiddenScreens: string[]; // Добавляем скрытые экраны
   deleteRequest: boolean;
+  tutorGoals: DisplayTutorGoal[];          // Цели репетитора по предмету
+  tutorGoalsLoading: boolean;  // Флаг загрузки
+  tutorGoalsError: string | null; // Ошибка при загрузке/обновлении
+  tutorGoalsSaved: boolean;
+  // только выбранные цели (группировка по предметам)
+  tutorGoalsGrouped: Record<string, { id: string; title: string; selected: boolean }[]>;
+  tutorGoalsGroupedLoading: boolean;
+  tutorGoalsGroupedError: string | null;
+
+  subjectsWithGoals: {
+    subjectId: string;
+    subjectTitle: string;
+    goals: { id: string; title: string; selected: boolean }[];
+    hasNoSelectedGoals: boolean;
+  }[];
+  subjectsWithGoalsLoading: boolean;
+  subjectsWithGoalsError: string | null;
+
+  incompletePrices: { hasIncompletePrices: boolean, subjectsWithoutFullPrices: string[] },
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -474,6 +612,21 @@ const initialState: TutorStateType = {
   welcomeScreens: null,
   hiddenScreens: [],
   deleteRequest: false,
+  tutorGoals: [],
+  tutorGoalsLoading: false,
+  tutorGoalsError: null,
+  tutorGoalsSaved: false,
+
+  // Только выбранные цели
+  tutorGoalsGrouped: {},
+  tutorGoalsGroupedLoading: false,
+  tutorGoalsGroupedError: null,
+
+  subjectsWithGoals: [],
+  subjectsWithGoalsLoading: false,
+  subjectsWithGoalsError: null,
+
+  incompletePrices: { hasIncompletePrices: false, subjectsWithoutFullPrices: [] },
 };
 
 const tutorSlice = createSlice({
@@ -506,6 +659,32 @@ const tutorSlice = createSlice({
     },
     resetDeleteRequest: (state) => {
       state.deleteRequest = false; // Сбросить состояние
+    },
+    resetTutorGoalsSaved: (state) => {
+      state.tutorGoalsSaved = false;
+    },
+    syncSubjectsWithGoalsState: (state) => {
+      const tutorSubjectIds = new Set(state.tutor?.subject || []);
+
+      // 1. Фильтруем старые предметы, которых больше нет
+      state.subjectsWithGoals = (state.subjectsWithGoals || [])
+        .filter(s => tutorSubjectIds.has(s.subjectId))
+        .map(s => ({
+          ...s,
+          hasNoSelectedGoals: s.goals.every(g => !g.selected),
+        }));
+
+      // 2. Добавляем новые предметы, которых нет в subjectsWithGoals
+      for (const subjectId of tutorSubjectIds) {
+        if (!state.subjectsWithGoals.some(s => s.subjectId === subjectId)) {
+          state.subjectsWithGoals.push({
+            subjectId,
+            subjectTitle: "", // при желании подтянуть title из subjects
+            goals: [],
+            hasNoSelectedGoals: true,
+          });
+        }
+      }
     },
   },
   extraReducers(builder) {
@@ -665,8 +844,174 @@ const tutorSlice = createSlice({
       .addCase(deleteTutorRequest.rejected, (state) => {
         state.deleteRequest = false; // Ошибка, не удалилось
         state.loading = false;
-      });
+      })
+
+      // Получение целей
+    .addCase(getTutorGoals.pending, (state) => {
+      state.tutorGoalsLoading = true;
+      state.tutorGoalsError = null;
+    })
+    .addCase(getTutorGoals.fulfilled, (state, action: PayloadAction<Goal[]>) => {
+      state.tutorGoalsLoading = false;
+      state.tutorGoals = action.payload;
+    })
+    .addCase(getTutorGoals.rejected, (state, action) => {
+      state.tutorGoalsLoading = false;
+      state.tutorGoalsError = action.payload || "Ошибка загрузки целей";
+    })
+
+    // Обновление целей
+      .addCase(updateTutorGoals.pending, (state) => {
+        state.tutorGoalsLoading = true;
+        state.tutorGoalsError = null;
+        state.tutorGoalsSaved = false;
+      })
+      .addCase(updateTutorGoals.fulfilled, (state, action) => {
+        state.tutorGoalsLoading = false;
+        state.tutorGoalsSaved = true;
+
+        const { subjectId, goalIds } = action.meta.arg as {
+          tutorId: string;
+          subjectId: string;
+          goalIds: string[];
+        };
+
+        // Обновляем tutorGoalsGrouped
+        const titleById = new Map<string, string>();
+        (state.tutorGoals || []).forEach((g: GoalMini) => titleById.set(g.id, g.title));
+
+        state.tutorGoalsGrouped[subjectId] = goalIds.map((id) => ({
+          id,
+          title: titleById.get(id) ?? "",
+          selected: true,
+        }));
+
+        // Обновляем или создаём запись в subjectsWithGoals для конкретного предмета
+        state.subjectsWithGoals = state.subjectsWithGoals || [];
+        const subjIndex = state.subjectsWithGoals.findIndex((s) => s.subjectId === subjectId);
+
+        if (subjIndex !== -1) {
+          const subj = state.subjectsWithGoals[subjIndex];
+          const selectedSet = new Set(goalIds);
+
+          subj.goals = subj.goals.map((g) => ({
+            ...g,
+            selected: selectedSet.has(g.id),
+            title: g.title || titleById.get(g.id) || "",
+          }));
+
+          // Добавляем новые цели, если их ещё нет
+          for (const id of goalIds) {
+            if (!subj.goals.some((g) => g.id === id)) {
+              subj.goals.push({
+                id,
+                title: titleById.get(id) ?? "",
+                selected: true,
+              });
+            }
+          }
+
+          subj.hasNoSelectedGoals = subj.goals.every((g) => !g.selected);
+          state.subjectsWithGoals[subjIndex] = subj;
+        } else {
+          // Создаём новый объект для subjectsWithGoals
+          const newGoals: GoalWithSelected[] = goalIds.map((id) => ({
+            id,
+            title: titleById.get(id) ?? "",
+            selected: true,
+          }));
+
+          state.subjectsWithGoals.push({
+            subjectId,
+            subjectTitle: "",
+            goals: newGoals,
+            hasNoSelectedGoals: newGoals.length === 0,
+          });
+        }
+
+        // -------------------------------
+        // Синхронизация со всем tutor.subject
+        // -------------------------------
+        const tutorSubjectIds = new Set(state.tutor?.subject || []);
+
+        // Фильтруем subjectsWithGoals — оставляем только актуальные
+        state.subjectsWithGoals = state.subjectsWithGoals
+          .filter((s) => tutorSubjectIds.has(s.subjectId))
+          .map((s) => ({
+            ...s,
+            hasNoSelectedGoals: s.goals.every((g) => !g.selected),
+          }));
+
+        // Добавляем новые предметы, которых ещё нет в subjectsWithGoals
+        for (const id of tutorSubjectIds) {
+          if (!state.subjectsWithGoals.some((s) => s.subjectId === id)) {
+            state.subjectsWithGoals.push({
+              subjectId: id,
+              subjectTitle: "",
+              goals: [],
+              hasNoSelectedGoals: true,
+            });
+          }
+        }
+      })
+      .addCase(updateTutorGoals.rejected, (state, action) => {
+        state.tutorGoalsLoading = false;
+        state.tutorGoalsError = action.payload || "Ошибка обновления целей";
+        state.tutorGoalsSaved = false;
+      })
+
+      // Получение выбранных целей репетитора
+      .addCase(getTutorSelectedGoalsGrouped.pending, (state) => {
+        state.tutorGoalsGroupedLoading = true;
+        state.tutorGoalsGroupedError = null;
+      })
+      .addCase(getTutorSelectedGoalsGrouped.fulfilled, (state, action) => {
+        state.tutorGoalsGroupedLoading = false;
+        state.tutorGoalsGrouped = action.payload;
+
+        // Обновляем tutorGoals (все доступные)
+        Object.values(action.payload).forEach((goals) => {
+          goals.forEach((g) => {
+            if (!state.tutorGoals.find((tg) => tg.id === g.id)) {
+              state.tutorGoals.push({ id: g.id, title: g.title });
+            }
+          });
+        });
+      })
+      .addCase(getTutorSelectedGoalsGrouped.rejected, (state, action) => {
+        state.tutorGoalsGroupedLoading = false;
+        state.tutorGoalsGroupedError =
+          (action.payload as string) || "Ошибка загрузки целей репетитора";
+      })
       
+      // Получаем предметы репетитора с целями
+      .addCase(getTutorSubjectsWithGoals.pending, (state) => {
+        state.subjectsWithGoalsLoading = true;
+        state.subjectsWithGoalsError = null;
+      })
+      .addCase(getTutorSubjectsWithGoals.fulfilled, (state, action) => {
+        state.subjectsWithGoalsLoading = false;
+        state.subjectsWithGoals = action.payload;
+      })
+      .addCase(getTutorSubjectsWithGoals.rejected, (state, action) => {
+        state.subjectsWithGoalsLoading = false;
+        state.subjectsWithGoalsError =
+          action.payload || "Ошибка загрузки предметов с целями";
+      })
+
+      // Проверка неполных цен
+    builder.addCase(getTutorIncompletePrices.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getTutorIncompletePrices.fulfilled, (state, action) => {
+      state.loading = false;
+      state.incompletePrices = action.payload;
+    });
+    builder.addCase(getTutorIncompletePrices.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
   },
 });
 
@@ -678,5 +1023,7 @@ export const {
   setSupportMenu,
   addHiddenScreen,
   resetDeleteRequest,
+  resetTutorGoalsSaved,
+  syncSubjectsWithGoalsState
 } = tutorSlice.actions;
 export const tutorReducer = tutorSlice.reducer;

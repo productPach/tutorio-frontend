@@ -17,6 +17,7 @@ import { chatReducer } from "./features/chatSlice";
 import { generalReducer } from "./features/generalSlice";
 import { subjectReducer } from "./features/subjectSlice";
 import { contractReducer } from "./features/contractSlice";
+import { notificationReducer } from "./features/notificationSlice";
 
 // Функция makeStore создает и возвращает хранилище Redux с помощью функции configureStore.
 export const makeStore = () => {
@@ -35,6 +36,7 @@ export const makeStore = () => {
       general: generalReducer,
       subject: subjectReducer,
       contract: contractReducer,
+      notification: notificationReducer,
     }),
   });
 };

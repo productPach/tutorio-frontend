@@ -87,6 +87,7 @@
   transition: all 0.3s;
   background-color: #fad949;
   color: black;
+  position: relative;
 }
 
 .button button:disabled {

@@ -4,7 +4,11 @@ import styles from "../../../SignIn/SignInTutor/SignInTutor.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { updateTutor } from "@/store/features/tutorSlice";
+import {
+  getTutorIncompletePrices,
+  getTutorSubjectsWithGoals,
+  updateTutor,
+} from "@/store/features/tutorSlice";
 import { Search } from "@/components/SelectSubject/Search";
 import { SubjectItemProfile } from "./SubjectItemProfile";
 import { SelectSubjectItemProfile } from "./SelectSubjectItemProfile";
@@ -81,7 +85,7 @@ export const SubjectsSettings = () => {
     const id = tutor?.id;
     if (token && id) {
       const subject = listSubjectChecked;
-      dispatch(updateTutor({ id, subject })).unwrap;
+      dispatch(updateTutor({ id, subject })).unwrap();
       setIsDisabled(true);
       setIsVisible(false);
     } else {
