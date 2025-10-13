@@ -1,32 +1,16 @@
-import { removeAccessToken, setAccessToken } from "@/api/server/auth";
-import { fetchGetToken, fetchUpdatePhoneUser } from "@/api/server/userApi";
+import { getAccessToken, removeAccessToken, setAccessToken } from "@/api/server/auth";
+import { fetchGetToken, fetchLogout, fetchRefreshToken, fetchUpdatePhoneUser } from "@/api/server/userApi";
 import {
   SignInFormType,
   UpdatePhoneUser,
   User,
   UserRegion,
 } from "@/types/types";
-import { removeCookie, setCookie } from "@/utils/cookies/cookies";
+import { removeCookie } from "@/utils/cookies/cookies";
 import {
   removeLocalStorage,
-  setLocalStorage,
 } from "@/utils/localStorage/localStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-// ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
-// export const getToken = createAsyncThunk<string, SignInFormType>(
-//   "auth/getToken",
-//   async ({ phone, secretCode, role }) => {
-//     try {
-//       const response = await fetchGetToken({ phone, secretCode, role });
-//       return response.token;
-//     } catch (error) {
-//       // Здесь можно вернуть undefined или обработать ошибку
-//       console.error(error);
-//       return undefined; // Или выбросить ошибку, если это необходимо
-//     }
-//   }
-// );
 
 export const getToken = createAsyncThunk(
   "auth/getToken",
@@ -57,6 +41,32 @@ export const updatePhoneUser = createAsyncThunk<boolean, UpdatePhoneUser>(
         return rejectWithValue(error.message);
       }
       return rejectWithValue("Произошла неизвестная ошибка");
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async ({ logoutAllDevices }: { logoutAllDevices?: boolean }, { rejectWithValue }) => {
+    try {
+      let token = getAccessToken();
+
+      // Если токена нет или он протух, дергаем refresh
+      if (!token) {
+        try {
+          token = await fetchRefreshToken(); // здесь мы получаем новый accessToken
+          token && setAccessToken(token);
+        } catch (refreshError) {
+          // refresh не сработал → просто чистим состояние
+          return rejectWithValue("Сессия истекла, необходимо авторизоваться заново");
+        }
+      }
+
+      // После этого токен точно есть
+      const response = await fetchLogout(token!, logoutAllDevices);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Ошибка при выходе из системы");
     }
   }
 );
@@ -103,9 +113,9 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.loadingAuth = false;
       removeAccessToken(); // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
-      removeCookie("user");
       removeLocalStorage("student");
       removeLocalStorage("tutor");
+      removeLocalStorage("employee");
     },
   },
   extraReducers(builder) {
@@ -113,11 +123,8 @@ const authSlice = createSlice({
       .addCase(getToken.fulfilled, (state, action) => {
           // Проверяем на наличие токена
           state.token = action.payload;
-          //state.user = action.payload.user; // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
           state.isLoggedIn = true;
-          state.loadingAuth = false; // ДОБАВЛЕНО: ИЗМЕНЕНИЯ РЕФРЕШ ТОКЕНЫ 23 09 2025
-          // По идее теперь для прода это не нужно, тк устанавливается на бэке
-          // setCookie("user", state.token, 30, {});
+          state.loadingAuth = false;
       })
       .addCase(getToken.pending, (state) => {
         state.loadingAuth = true;
@@ -145,7 +152,19 @@ const authSlice = createSlice({
             state.statusUpdateUser = true;
           }
         }
-      );
+      )
+      // === LOGOUT ===
+      .addCase(logoutUser.pending, (state) => {
+        state.loadingAuth = true;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        // Вызываем редьюсер setLogout для очистки состояния
+        authSlice.caseReducers.setLogout(state);
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loadingAuth = false;
+        state.errorMessage = action.payload as string;
+      });
   },
 });
 

@@ -61,7 +61,22 @@ export const fetchRefreshToken = async () => {
   return data.accessToken; // { accessToken }
 };
 
-// Logout
+// Logout для кейсов, когда клиент самостоятельно вызывает выход (токен есть)
+// export const fetchLogout = async (logoutAllDevices: boolean = false) => {
+//   try {
+//     const response = await httpClient.post(
+//       "logout",
+//       { logoutAllDevices },
+//       { withCredentials: true }
+//     );
+//     return response.data;
+//   } catch (error: any) {
+//     console.error("Ошибка выхода:", error);
+//     throw new Error(error.response?.data?.message || "Ошибка выхода из аккаунта");
+//   }
+// };
+
+// Logout (возможно надо удалить)
 export const fetchLogout = async (token: string, logoutAllDevices: boolean = false) => {
   const response = await fetch(`${baseUrl}logout`, {
     method: "POST",

@@ -135,7 +135,7 @@ export const ChatSidbar = ({
             isSafari ? undefined : { top: `${scrollYForSidebarResponse}px` }
           }
         >
-          {chats.length > 0 && (
+          {chats.length > 0 ? (
             <>
               <div className={styles.sidebar_chatType}>
                 <div className={styles.toggleWrapper}>
@@ -325,6 +325,44 @@ export const ChatSidbar = ({
                   </div>
                 </div>
               )}
+            </>
+          ) : (
+            <>
+              {" "}
+              <div className={styles.sidebar_chatType}>
+                <div className={styles.toggleWrapper}>
+                  <div
+                    className={`${styles.toggleOption} ${activeTab === "Active" ? styles.active : ""}`}
+                    onClick={() => setActiveTab("Active")}
+                  >
+                    Активные
+                  </div>
+                  <div
+                    className={`${styles.toggleOption} ${activeTab === "Closed" ? styles.active : ""}`}
+                    onClick={() => setActiveTab("Closed")}
+                  >
+                    Завершённые
+                  </div>
+                </div>
+              </div>
+              <div className={styles.sidebar_scrollWrapper}>
+                <div className={clsx(styles.sidebar_filterForChat)}>
+                  <div
+                    className={clsx(
+                      styles.studentChatWrap,
+                      activeTab === "Closed" && styles.closedChat
+                    )}
+                  >
+                    <div
+                      className={clsx(
+                        styles.studentChatContainerImgAndMessageNoActive
+                      )}
+                    >
+                      Тут пока нет ни одного чата
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

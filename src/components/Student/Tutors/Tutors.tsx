@@ -270,10 +270,12 @@ export const TutorsComponent = ({
                       styles.lnHgt18
                     )}
                   >
-                    <div>
-                      &nbsp;{tutor.userRating?.toFixed(1) || "—"}
-                      &nbsp;рейтинг
-                    </div>
+                    {tutor.userRating > 0.1 && (
+                      <div>
+                        &nbsp;{tutor.userRating?.toFixed(1) || "—"}
+                        &nbsp;рейтинг
+                      </div>
+                    )}
                     {tutor.reviewsCount > 0 && (
                       <div>
                         {tutor.reviewsCount}&nbsp;

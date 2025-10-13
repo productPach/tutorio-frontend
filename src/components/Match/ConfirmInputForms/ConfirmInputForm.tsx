@@ -15,6 +15,7 @@ import {
   createStudent,
   getCurrentStudent,
 } from "@/store/features/studentSlice";
+import { baseUrl } from "@/api/server/configApi";
 
 interface Answer {
   id: number;
@@ -38,70 +39,155 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 }) => {
   const route = useRouter();
   const dispatch = useAppDispatch();
-  // Получаем значение loadingAuth из Redux
   const loadingAuth = useAppSelector((state) => state.auth.loadingAuth);
-  // Получаем значение regionUser из Redux
   const regionUser = useAppSelector((state) => state.auth.regionUser);
 
   let region: string;
-  regionUser && (region = regionUser?.city);
+  regionUser ? (region = regionUser?.city) : (region = "Не определено");
 
-  // Состояние текстового поля
-  const [inputValue, setInputValue] = useState("");
-  // Состояние текстового поля с логическим выражением
-  const [isSuccess, setIsSuccess] = useState(false);
-  // Состояние для ошибки текстового поля
-  const [errorInput, setErrorInput] = useState(false);
-
-  //console.log(errorInput);
-
-  // Состояние для содержимого инпутов
   const [codes, setCodes] = useState(["", "", "", ""]);
-  // Состояние для активного инпута (нужно, чтобы отслеживать какой инпут должен быть в фокусе, при этом остальные дизейблим)
   const [activeIndex, setActiveIndex] = useState(0);
-  // Ссылки на инпуты
   const inputRefs = useRef<(HTMLInputElement | null)[]>([
     null,
     null,
     null,
     null,
   ]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorInput, setErrorInput] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
-  // Вытаскиваем актуальный массив c данными формы из LocalStorage
+  // Получаем данные формы из LocalStorage
   const getDataMatchLS = localStorage.getItem("currentMatch");
-  // Конвертируем массив c данными формы из JSON в JS объект
   const dataMatch: Order[] = getDataMatchLS ? JSON.parse(getDataMatchLS) : [];
 
-  // Авторизация пользователя
+  const phoneDataMatch = dataMatch.find((obj) => obj.id == "20");
+  const phoneValue = phoneDataMatch ? phoneDataMatch.phone : "";
+
+  // const jsonPhone = localStorage.getItem("origin-phone");
+  // const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+
+  // Убираем все нецифровые символы
+  const phoneClear = phoneValue.replace(/\D/g, "");
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  // Фокус на активный инпут
+  useEffect(() => {
+    inputRefs.current[activeIndex]?.focus();
+  }, [activeIndex]);
+
+  const handleChange = (value: string, index: number) => {
+    if (/^\d*$/.test(value) && value.length <= 1) {
+      const newCodes = [...codes];
+      newCodes[index] = value;
+      setCodes(newCodes);
+      if (value && index < 3) setActiveIndex(index + 1);
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace") {
+      if (index > 0 && !codes[index]) {
+        setActiveIndex(index - 1);
+        setErrorInput(false);
+        const newCodes = [...codes];
+        newCodes[index - 1] = "";
+        setCodes(newCodes);
+      } else {
+        const newCodes = [...codes];
+        newCodes[index] = "";
+        setCodes(newCodes);
+      }
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!/^\d$/.test(e.key)) e.preventDefault();
+  };
+
+  const handleNextStep = useCallback(
+    (link: string) => {
+      setIsDisabled(true);
+      setIsVisible(false);
+      setTimeout(() => route.push(link), 400);
+    },
+    [route]
+  );
+
+  const handlePrevStep = () => {
+    setIsDisabled(true);
+    setIsVisible(false);
+    setTimeout(() => route.back(), 400);
+  };
+
+  // Проверка кода на сервере
+  const handleVerifyCode = useCallback(
+    async (code: string) => {
+      try {
+        if (!phoneClear) {
+          console.warn("Телефон не найден в localStorage");
+          setErrorInput(true);
+          return;
+        }
+
+        const response = await fetch(`${baseUrl}sms/verify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone: phoneClear, code }),
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setErrorInput(false);
+          setIsSuccess(true);
+          await handleGetToken(code);
+        } else {
+          setErrorInput(true);
+          setIsSuccess(false);
+        }
+      } catch (err) {
+        console.error("Ошибка проверки кода:", err);
+        setErrorInput(true);
+        setIsSuccess(false);
+      }
+    },
+    [phoneClear]
+  );
+
+  useEffect(() => {
+    const inputValue = codes.join("");
+    if (inputValue.length === 4) {
+      handleVerifyCode(inputValue);
+    }
+  }, [codes]);
+
+  // Авторизация студента и создание при необходимости
   const handleGetToken = async (secretCode: string) => {
     try {
-      const jsonPhone = localStorage.getItem("origin-phone");
-      const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
+      if (!phoneClear) return;
       const role: Role = "student";
-      if (!phone) {
-        console.warn("Телефон не найден в localStorage");
-        setErrorInput(true);
-        return;
-      }
 
-      // Получаем токен
       const token = await dispatch(
-        getToken({ phone, secretCode, role })
+        getToken({ phone: phoneClear, secretCode, role })
       ).unwrap();
-      setErrorInput(false);
-
       if (!token) {
         setErrorInput(true);
         return;
       }
 
       setIsSuccess(true);
+      setErrorInput(false);
 
       try {
-        // Пробуем получить студента
         await dispatch(getCurrentStudent()).unwrap();
-      } catch (error) {
-        // Массив аватарок для случайного выбора
+      } catch {
         const avatars = [
           "/img/icon/student/avatar/animal1.svg",
           "/img/icon/student/avatar/animal2.svg",
@@ -116,25 +202,21 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
 
         const fioDataMatch = dataMatch.find((obj) => obj.id == "19");
         const fioValue = fioDataMatch ? fioDataMatch.fio : "";
-
-        if (!fioValue) {
-          return;
-        }
+        if (!fioValue) return;
 
         await dispatch(
           createStudent({
             name: fioValue,
-            phone,
+            phone: phoneClear,
             avatarUrl: randomAvatar,
-            region: region,
+            region,
           })
         ).unwrap();
 
-        // После создания снова пробуем получить студента
         await dispatch(getCurrentStudent()).unwrap();
       }
 
-      // После получения студента — создаём заказ
+      // Создание заказа
       try {
         const subjectDataMatch = dataMatch.find(
           (obj) => obj.id == "0"
@@ -184,9 +266,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
         const studentTripRaw = dataMatch.find(
           (obj) => obj.id == "16"
         )?.studentTrip;
-
         let studentTripDataMatch: string[] = [];
-
         if (Array.isArray(studentTripRaw)) {
           studentTripDataMatch = studentTripRaw
             .map((el) =>
@@ -196,24 +276,21 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
             )
             .filter((id): id is string => typeof id === "string");
         }
+
         const tutorType = dataMatch.find((obj) => obj.id == "17")?.tutorType;
         let tutorTypeDataMatch;
-        if (tutorType === "Начинающий: до\u00A01000\u00A0₽") {
+        if (tutorType === "Начинающий: до\u00A01000\u00A0₽")
           tutorTypeDataMatch = "1";
-        }
-        if (tutorType === "Репетитор со средним опытом: до\u00A01500\u00A0₽") {
+        if (tutorType === "Репетитор со средним опытом: до\u00A01500\u00A0₽")
           tutorTypeDataMatch = "2";
-        }
-        if (tutorType === "Опытный репетитор: до\u00A02500\u00A0₽") {
+        if (tutorType === "Опытный репетитор: до\u00A02500\u00A0₽")
           tutorTypeDataMatch = "3";
-        }
 
         const autoContactsString = dataMatch.find(
           (obj) => obj.id == "22"
         )?.autoContacts;
         const autoContactsBoolean =
           autoContactsString === "Да, показывать контакты";
-
         const infoDataMatch = dataMatch.find((obj) => obj.id == "18")?.info;
 
         const orderData = await fetchCreateOrder(
@@ -240,194 +317,88 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           infoDataMatch
         );
 
-        // Переход на следующий шаг с ID заказа
-        handleNextStep(nextPageProperty + orderData.id);
+        handleNextStep(answerArray[0].nextPage + orderData.id);
       } catch (error) {
         console.error("Ошибка при создании заказа:", error);
       }
     } catch (error) {
-      console.warn("Ошибка в handleGetToken:", error);
+      console.warn("Ошибка handleGetToken:", error);
       setErrorInput(true);
     }
   };
 
-  // Обновляем inputValue когда меняется содержимое отдельных инпутов
-  useEffect(() => {
-    const inputValue = codes.join("");
-    if (inputValue.length === 4) {
-      setIsSuccess(false);
-      handleGetToken(inputValue);
-    }
-  }, [codes]);
-
-  // Функция добавления значения в инпут
-  const handleChange = (value: string, index: number) => {
-    if (/^\d*$/.test(value) && value.length <= 1) {
-      const newCodes = [...codes];
-      newCodes[index] = value;
-      setCodes(newCodes);
-
-      if (value && index < 3) {
-        setActiveIndex(index + 1);
-      }
-    }
-  };
-
-  //console.log(inputValue);
-
-  // Функция удаления значения из инпута
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    if (e.key === "Backspace") {
-      // Если текущий инпут пустой и не является первым инпутом, то
-      // переходим на предыдущий инпут и очищаем его содержимое
-      if (index > 0 && !codes[index]) {
-        setActiveIndex(index - 1);
-        setErrorInput(false);
-        const newCodes = [...codes];
-        newCodes[index - 1] = "";
-        setCodes(newCodes);
-      } else if (index === 0 && !codes[index]) {
-        // Если текущий инпут первый и пустой, просто очищаем его содержимое
-        const newCodes = [...codes];
-        newCodes[index] = "";
-        setCodes(newCodes);
-      }
-    }
-  };
-
-  const handleKeyPress = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    if (!/^\d$/.test(e.key)) {
-      e.preventDefault();
-    }
-  };
-
-  // Обновляем фокус на следующий инпут при изменении активного инпута
-  useEffect(() => {
-    inputRefs.current[activeIndex]?.focus();
-  }, [activeIndex]);
-
-  // Получаем логическое значение "Содержится ли в массиве из LS свойство с typeForm текущей формы?"
-  const containsClassProperty = dataMatch.some((obj) =>
-    obj.hasOwnProperty(typeForm)
-  );
-
-  // Функция для перехода на следующий шаг
-  const handleNextStep = useCallback(
-    (link: string) => {
-      // Обновляем состояния для красивого эффекта перехода
-      setIsDisabled(true);
-      setIsVisible(false);
-      // Для красоты делаем переход через 0,4 секунды после клика
-      setTimeout(() => route.push(link), 400);
-    },
-    [route, typeForm]
-  );
-
-  // Функция для возврата на предыдущий шаг
-  const handlePrevStep = () => {
-    setIsDisabled(true);
-    setIsVisible(false);
-    // Для красоты делаем переход через 0,4 секунды после клика
-    setTimeout(() => route.back(), 400);
-  };
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-
-  // Находим объект массива с введенным телефоном
-  const phoneDataMatch = dataMatch.find((obj) => obj.id === "20");
-  // Вытаскиваем значение данного объека из свойства phone
-  const phoneValue = phoneDataMatch ? phoneDataMatch.phone : "";
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []); // Анимация будет стартовать после монтирования компонента
-
-  useEffect(() => {
-    // Находим объект массива по ID вопроса (формы)
-    const currentDataMatch = dataMatch.find((obj) => obj.id === String(id));
-    // Вытаскиваем значение данного объека из свойства, которое совпадает с typeForm (чтобы сделать checked выбранный ранее вариант ответа)
-    const valueProperty = currentDataMatch ? currentDataMatch[typeForm] : "";
-    setInputValue(valueProperty);
-  }, [typeForm]);
-
   const nextPageProperty = answerArray[0].nextPage;
 
   return (
-    <>
-      <div
-        className={`${styles.container} ${
-          isVisible ? animation.visible : animation.hidden
-        }`}
-      >
-        <div className={styles.wrap}>
-          <div onClick={handlePrevStep} className={styles.wrapIcon}>
-            <Image
-              width={20}
-              height={20}
-              alt="Назад"
-              src="/img/icon/CaretLeft.svg"
-              className={styles.iconBack}
-            />
-            Назад
-          </div>
-          <div className={styles.title}>{question}</div>
-          <div className={styles.description}>
-            {answerArray[0].title} +7{phoneValue}
-          </div>
+    <div
+      className={`${styles.container} ${
+        isVisible ? animation.visible : animation.hidden
+      }`}
+    >
+      <div className={styles.wrap}>
+        <div onClick={handlePrevStep} className={styles.wrapIcon}>
+          <Image
+            width={20}
+            height={20}
+            alt="Назад"
+            src="/img/icon/CaretLeft.svg"
+            className={styles.iconBack}
+          />
+          Назад
+        </div>
+        <div className={styles.title}>{question}</div>
+        <div className={styles.description}>
+          {answerArray[0].title} +7{phoneValue}
+        </div>
 
-          <form
-            autoComplete="one-time-code"
-            className={styles.inputCodeConfirmContainer}
-          >
-            {codes.map((value, index) => (
-              <input
-                key={index}
-                type="tel"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                autoComplete={index === 0 ? "one-time-code" : "off"} // ✅ Только первый
-                placeholder="•"
-                value={value}
-                maxLength={1}
-                ref={(el) => {
-                  inputRefs.current[index] = el;
-                }}
-                onChange={(e) => handleChange(e.target.value, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onKeyPress={(e) => handleKeyPress(e, index)}
-                className={clsx(
-                  styles.inputCodeConfirm,
-                  errorInput ? styles.errorInput : ""
-                )}
-                disabled={index !== activeIndex}
-              />
-            ))}
-          </form>
-          <TimerSms />
-        </div>
-        <div className={styles.wrapButton}>
-          <button
-            type="button"
-            onClick={() => handleNextStep(nextPageProperty)}
-            className={styles.continueButton}
-            disabled={codes.join("").length < 4 || !isSuccess || loadingAuth}
-          >
-            Продолжить
-            {loadingAuth && (
-              <div className={styles.spinner}>
-                <Spinner />
-              </div>
-            )}
-          </button>
-        </div>
+        <form
+          autoComplete="one-time-code"
+          className={styles.inputCodeConfirmContainer}
+        >
+          {codes.map((value, index) => (
+            <input
+              key={index}
+              type="tel"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              autoComplete={index === 0 ? "one-time-code" : "off"}
+              placeholder="•"
+              value={value}
+              maxLength={1}
+              // ref={(el) => (inputRefs.current[index] = el)}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              onChange={(e) => handleChange(e.target.value, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onKeyPress={(e) => handleKeyPress(e)}
+              className={clsx(
+                styles.inputCodeConfirm,
+                errorInput ? styles.errorInput : ""
+              )}
+              disabled={index !== activeIndex}
+            />
+          ))}
+        </form>
+
+        <TimerSms />
       </div>
-    </>
+
+      <div className={styles.wrapButton}>
+        <button
+          type="button"
+          onClick={() => handleNextStep(nextPageProperty)}
+          className={styles.continueButton}
+          disabled={codes.join("").length < 4 || !isSuccess || loadingAuth}
+        >
+          Продолжить
+          {loadingAuth && (
+            <div className={styles.spinner}>
+              <Spinner />
+            </div>
+          )}
+        </button>
+      </div>
+    </div>
   );
 };

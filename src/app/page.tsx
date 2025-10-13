@@ -2,9 +2,6 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import clsx from "clsx";
 import { SelectSubject } from "@/components/SelectSubject/SelectSubject";
-import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
-import { HeaderMenu } from "@/components/HeaderMenu/HeaderMenu";
-import Link from "next/link";
 import { Header } from "@/components/Header/Header";
 
 export const metadata = {

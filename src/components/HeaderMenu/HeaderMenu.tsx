@@ -8,8 +8,16 @@ import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
-import { setTutorLogout } from "@/store/features/tutorSlice";
-import { setStudentLogout } from "@/store/features/studentSlice";
+import { getCurrentTutor, setTutorLogout } from "@/store/features/tutorSlice";
+import {
+  getCurrentStudent,
+  setStudentLogout,
+} from "@/store/features/studentSlice";
+import { tryRestoreSession } from "@/utils/session/tryRestoreSession";
+import { baseUrl } from "@/api/server/configApi";
+import httpClient from "@/api/server/httpClient";
+import { logoutUser, setLogout } from "@/store/features/authSlice";
+import { getAccessToken } from "@/api/server/auth";
 
 export const HeaderMenu = () => {
   const dispatch = useAppDispatch();
@@ -60,17 +68,84 @@ export const HeaderMenu = () => {
     nextPage = "/student/orders";
   }
 
-  useEffect(() => {
-    const token = getTokenFromCookie();
+  // useEffect(() => {
+  //   const token = getTokenFromCookie();
 
-    if (!token) {
-      console.log("Токен отсутствует. Очищаем localStorage...");
-      dispatch(setTutorLogout());
-      dispatch(setStudentLogout());
-      localStorage.removeItem("tutor");
-      localStorage.removeItem("student");
-      //name = "";
-    }
+  //   if (!token) {
+  //     console.log("Токен отсутствует. Очищаем localStorage...");
+  //     dispatch(setTutorLogout());
+  //     dispatch(setStudentLogout());
+  //     localStorage.removeItem("tutor");
+  //     localStorage.removeItem("student");
+  //     //name = "";
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    (async () => {
+      const token = getAccessToken();
+
+      if (!token) {
+        console.log(
+          "Access token отсутствует, пропускаем восстановление сессии"
+        );
+        return;
+      }
+
+      // Проверка, истёк ли access token
+      let tokenExpired = false;
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp < now) tokenExpired = true;
+      } catch {
+        tokenExpired = true; // Если токен невалидный — считаем его протухшим
+      }
+
+      if (!tokenExpired) {
+        console.log(
+          "Access token действителен, восстановление сессии не требуется"
+        );
+        return;
+      }
+
+      // === Access token протух, пробуем восстановить сессию через refresh token ===
+      const ok = await tryRestoreSession();
+
+      if (!ok) {
+        console.log(
+          "Не удалось восстановить сессию, очищаем состояние и localStorage"
+        );
+        dispatch(setTutorLogout());
+        dispatch(setStudentLogout());
+        dispatch(setLogout());
+        return;
+      }
+
+      // === Сессия восстановлена, получаем активную роль и данные пользователя ===
+      try {
+        const res = await httpClient.get("sessions", { withCredentials: true });
+        const { sessions } = res.data;
+
+        const activeSession = sessions?.[0];
+        const role = activeSession?.activeRole;
+
+        if (!role) {
+          console.warn("Роль не найдена в сессии");
+          return;
+        }
+
+        if (role === "tutor") {
+          dispatch(getCurrentTutor());
+        } else if (role === "student") {
+          dispatch(getCurrentStudent());
+        } else {
+          console.warn("Неизвестная роль:", role);
+        }
+      } catch (err) {
+        console.error("Ошибка восстановления профиля:", err);
+      }
+    })();
   }, []);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
