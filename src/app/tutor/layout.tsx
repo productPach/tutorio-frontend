@@ -296,7 +296,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             (isActive("/tutor/responses") && chat && showHeader) ||
             !isActive("/tutor/responses")) && (
             <header>
-              {warning && (
+              {warning && !isActive("/tutor/responses") && (
                 <WarningNotification
                   message={warning.message}
                   href={warning.href}

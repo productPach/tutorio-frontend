@@ -1,7 +1,7 @@
 "use client";
 import styles from "../../../app/student/layout.module.css";
 import clsx from "clsx";
-import { setLogout } from "@/store/features/authSlice";
+import { logoutUser, setLogout } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { Modal } from "@/components/Modal/Modal";
@@ -32,8 +32,15 @@ const SettingsPage: React.FC = () => {
   const isModalDelete = useAppSelector((state) => state.modal.isModalDelete);
 
   // Функция выхода
+  // const logout = () => {
+  //   dispatch(setLogout());
+  //   dispatch(setStudentLogout());
+  //   router.push("/");
+  // };
+
+  // Функция выхода
   const logout = () => {
-    dispatch(setLogout());
+    dispatch(logoutUser({ logoutAllDevices: false }));
     dispatch(setStudentLogout());
     router.push("/");
   };

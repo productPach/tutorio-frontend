@@ -3,7 +3,7 @@ import styles from "../../../app/tutor/layout.module.css";
 import clsx from "clsx";
 import LeftBar from "@/components/Tutor/LeftBar/LeftBar";
 import { Settings } from "@/components/Tutor/Settings/Settings";
-import { setLogout } from "@/store/features/authSlice";
+import { logoutUser, setLogout } from "@/store/features/authSlice";
 import { setTutorLogout } from "@/store/features/tutorSlice";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -55,7 +55,7 @@ const SettingsPage: React.FC = () => {
 
   // Функция выхода
   const logout = () => {
-    dispatch(setLogout());
+    dispatch(logoutUser({ logoutAllDevices: false }));
     dispatch(setTutorLogout());
     router.push("/");
   };

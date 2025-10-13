@@ -31,6 +31,6 @@ export const removeCookie = (name: string, options = {}) => {
 
 // Функция загрузки токена из куки
 export const getTokenFromCookie = () => {
-  const token = getCookie("user");
+  const token = getCookie("accessToken");
   return token;
 };

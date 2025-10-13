@@ -7,11 +7,9 @@ import clsx from "clsx";
 import Image from "next/image";
 import ReCaptcha from "@/components/reCapcha/reCapcha";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
-import { sendSms } from "@/utils/sensSms/sendSms";
-import { securePinGenerator } from "@/utils/securePinGenerator/securePinGenerator";
-import { performActionBasedOnUserExistence } from "@/utils/match/performActionBasedOnUserExistence/performActionBasedOnUserExistence";
 import { Spinner } from "@/components/Spinner/Spinner";
 import Link from "next/link";
+import { useSmsTimer } from "@/hooks/sms/useSmsTimer";
 
 interface Answer {
   id: number;
@@ -44,141 +42,30 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   answerArray,
 }) => {
   const route = useRouter();
-  // Состояние для содержимого в поле номер телефона
   const [inputValue, setInputValue] = useState("");
-  // Состояние для ошибки
   const [errorInput, setErrorInput] = useState(false);
-  // Состояние для reCaptcha
   const [verified, setVerified] = useState(false);
-  // Состояние для фиксации фокусирования на поле с вводом телефона
   const [isFocused, setIsFocused] = useState(false);
-  // Добавляем в состояние неформатированный номер телефона
   const [to, setTo] = useState("");
-  // Состояние для ошибки сети
   const [errorNet, setErrorNet] = useState(false);
-  // Состояние для лоадера
-  const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isShowTimer, setIsShowTimer] = useState(false);
 
-  const initialTimeLS = localStorage.getItem("confirm-time"); // Начальное количество минут
-  const initialTime = initialTimeLS
-    ? JSON.parse(initialTimeLS)
-    : { minutes: 0, seconds: 0, index: 0 };
+  const {
+    sendSms,
+    isActive: isTimerActive,
+    secondsLeft,
+    loading,
+  } = useSmsTimer(to);
 
-  const [minutes, setMinutes] = useState(initialTime.minutes); // Состояние для отображения минут
-  const [seconds, setSeconds] = useState(initialTime.seconds); // Состояние для отображения секунд
-  const [index, setIndex] = useState(initialTime.index); // Состояние для количества попыток повторной отправки
-  // Состояние для таймера
-  const [isTimerActive, setIsTimerActive] = useState(true);
-
-  // Функция для добавления ведущих нулей к числам меньше 10
-  const formatTime = (time: number) => {
-    return time < 10 ? `0${time}` : time;
+  // Форматируем секунды в MM:SS
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    const pad = (num: number) => (num < 10 ? `0${num}` : num);
+    return `${pad(minutes)}:${pad(sec)}`;
   };
-
-  // Кладем в LS оригинальный номер телефона без форматирования каждый раз при изменении to
-  useEffect(() => {
-    if (to) {
-      localStorage.setItem("origin-phone", JSON.stringify(to));
-    }
-  }, [to]);
-
-  useEffect(() => {
-    let interval = setInterval(() => {
-      // Уменьшаем счетчик времени каждую секунду
-      if (seconds > 0) {
-        setSeconds(seconds - 1);
-      }
-      if (seconds === 0) {
-        if (minutes === 0) {
-          setIsTimerActive(false);
-          clearInterval(interval);
-          // Действия по завершению таймера (например, вызов функции или обработка события)
-        } else {
-          setMinutes(minutes - 1);
-          setSeconds(59);
-        }
-      }
-    }, 1000);
-
-    // Очистка интервала при размонтировании компонента
-    return () => clearInterval(interval);
-  }, [minutes, seconds]);
-
-  useEffect(() => {
-    const confirmTime = {
-      minutes,
-      seconds,
-      index,
-    };
-    localStorage.setItem("confirm-time", JSON.stringify(confirmTime));
-  }, [minutes, seconds, index]);
-
-  // Отправляем SMS
-  const onClickSms = async () => {
-    try {
-      setIsLoading(true); // Включаем лоадер
-      setErrorNet(false); // Очищаем предыдущие ошибки
-
-      // Генерируем проверочный код
-      const confirmCode = securePinGenerator();
-      // Проверяем есть ли пользователь: если есть, обновляем секретный код, если нет - регистрируем
-      await performActionBasedOnUserExistence(to, confirmCode);
-      // Временно добавляем код в LocalStorage
-      localStorage.setItem("confirm-code", JSON.stringify(confirmCode));
-      sendSms(to, confirmCode);
-
-      if (index === 0) {
-        setMinutes(0);
-        setSeconds(59);
-        setIndex(1);
-      }
-      if (index === 1) {
-        setMinutes(1);
-        setSeconds(59);
-        setIndex(2);
-      }
-      if (index === 2) {
-        setMinutes(4);
-        setSeconds(59);
-        setIndex(3);
-      }
-      if (index >= 3) {
-        setMinutes(14);
-        setSeconds(59);
-        setIndex(4);
-      }
-      if (index >= 4) {
-        setMinutes(29);
-        setSeconds(59);
-      }
-      const confirmTime = {
-        minutes,
-        seconds,
-        index,
-      };
-      localStorage.setItem("confirm-time", JSON.stringify(confirmTime));
-    } catch (error) {
-      setErrorNet(true); // Показываем ошибку
-      console.error("Произошла ошибка, попробуйте позже: ", error);
-    } finally {
-      handleNextStep(nextPageProperty, inputValue, to);
-    }
-  };
-
-  // Функция для обновления состояния reCaptcha
-  const handleVerify = (token: string | null) => {
-    setVerified(!!token);
-  };
-
-  // Функция ввода и форматирования номера телефона в поле инпута
-  const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    const formattedPhoneNumber = formatPhoneNumber(e.target.value);
-    setInputValue(formattedPhoneNumber.formatted);
-    setTo(formattedPhoneNumber.original);
-  };
-
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
 
   // Достаем массив с данными заявки
   const getDataMatchLS = localStorage.getItem("currentMatch");
@@ -191,10 +78,24 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
     obj.hasOwnProperty(typeForm)
   );
 
+  const handleVerify = (token: string | null) => setVerified(!!token);
+
+  const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
+    const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+    setInputValue(formattedPhoneNumber.formatted);
+    setTo(formattedPhoneNumber.original);
+  };
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
   const handleNextStep = useCallback(
     (link: string, inputValue: string, originValue: string) => {
       setIsDisabled(true);
       setIsVisible(false);
+
+      // Кладем в LS оригинальный номер телефона без форматирования
+      localStorage.setItem("origin-phone", JSON.stringify(originValue));
 
       const newData = {
         id: id,
@@ -215,10 +116,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
         localStorage.setItem("currentMatch", JSON.stringify(dataToSave));
       }
 
-      setTimeout(() => {
-        route.push(link);
-        setIsLoading(false); // Выключаем лоадер
-      }, 400);
+      setTimeout(() => route.push(link), 400);
     },
     [route, typeForm]
   );
@@ -229,11 +127,9 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
     setTimeout(() => route.back(), 400);
   };
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-
   useEffect(() => {
     setIsVisible(true);
+    setIsShowTimer(true);
   }, []);
 
   useEffect(() => {
@@ -245,6 +141,21 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   }, [typeForm]);
 
   const nextPageProperty = answerArray[0].nextPage;
+
+  const onClickSms = async () => {
+    try {
+      setErrorNet(false);
+      setIsShowTimer(false);
+
+      await sendSms();
+      console.log(to);
+
+      handleNextStep(nextPageProperty, inputValue, to);
+    } catch (error) {
+      console.error("Ошибка при отправке SMS:", error);
+      setErrorNet(true);
+    }
+  };
 
   return (
     <>
@@ -292,27 +203,16 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
               maxLength={15}
             />
           </div>
-          <div
-            className={clsx(
-              styles.sendAgainContainer,
-              isTimerActive && (minutes !== 0 || seconds !== 0)
-                ? ""
-                : styles.sendAgainActive
-            )}
-          >
-            {isTimerActive && (minutes !== 0 || seconds !== 0) ? (
-              <>
-                Изменить телефон можно через{" "}
-                <span className={styles.wsNoWrap}>
-                  {formatTime(minutes)}:{formatTime(seconds)}
-                </span>
-              </>
-            ) : (
-              <div className={styles.reCaptchaContainer}>
-                <ReCaptcha onVerify={handleVerify} />
-              </div>
-            )}
-          </div>
+          {isShowTimer && secondsLeft > 0 ? (
+            <div className={styles.sendAgainContainer}>
+              Изменить телефон можно через{" "}
+              <span className={styles.wsNoWrap}>{formatTime(secondsLeft)}</span>
+            </div>
+          ) : (
+            <div className={styles.reCaptchaContainer}>
+              <ReCaptcha onVerify={handleVerify} />
+            </div>
+          )}
         </div>
         <div className={clsx(styles.wrapButton, styles.forWrap)}>
           <button
@@ -320,11 +220,11 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             onClick={onClickSms}
             className={clsx(styles.continueButton, styles.positionInit)}
             disabled={
-              inputValue.length < 15 || errorInput || !verified || isLoading
+              inputValue.length < 15 || errorInput || !verified || isTimerActive
             }
           >
             Продолжить
-            {isLoading && (
+            {loading && (
               <div className={styles.spinner}>
                 <Spinner />
               </div>

@@ -435,7 +435,26 @@
   top: 18px;
   right: 26px;
 }
-
+.spinnerFotTimer {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  top: 2px;
+  left: 8px;
+}
+.resendLink {
+  display: flex;
+  flex-direction: row;
+  text-decoration: underline;
+}
+.sendingLoader {
+  display: flex;
+  flex-direction: row;
+}
+.sendingLoader span {
+  text-decoration: none !important;
+  cursor: default;
+}
 .selectedValues {
   width: 100%;
   display: flex;
