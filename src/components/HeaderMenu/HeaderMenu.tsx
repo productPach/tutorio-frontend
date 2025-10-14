@@ -1,85 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import { useRouter } from "next/navigation";
 import styles from "./HeaderMenu.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { Student, Tutor } from "@/types/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { getCurrentTutor, setTutorLogout } from "@/store/features/tutorSlice";
 import {
   getCurrentStudent,
   setStudentLogout,
 } from "@/store/features/studentSlice";
 import { tryRestoreSession } from "@/utils/session/tryRestoreSession";
-import { baseUrl } from "@/api/server/configApi";
 import httpClient from "@/api/server/httpClient";
-import { logoutUser, setLogout } from "@/store/features/authSlice";
+import { setLogout } from "@/store/features/authSlice";
 import { getAccessToken } from "@/api/server/auth";
 
 export const HeaderMenu = () => {
   const dispatch = useAppDispatch();
-
-  // Получаем студента из Redux
-  const student: Student | null = useAppSelector(
-    (state) => state.student.student
-  );
-  const tutor: Tutor | null = useAppSelector((state) => state.tutor.tutor);
-  let nextPage = "";
-  let name = "";
-  if (tutor) {
-    tutor.name ? (name = tutor.name) : "Личный кабинет";
-  }
-  if (student) {
-    name = "Личный кабинет";
-  }
-
-  if (tutor?.status === "Rega: Fullname") {
-    nextPage = "/sign-in-tutor/fio";
-  }
-  if (tutor?.status === "Rega: Subjects") {
-    nextPage = "/sign-in-tutor/subjects";
-  }
-  if (tutor?.status === "Rega: Locations") {
-    nextPage = "/sign-in-tutor/locations";
-  }
-  if (tutor?.status === "Rega: Email") {
-    nextPage = "/sign-in-tutor/email";
-  }
-  if (tutor?.status === "Rega: Photo") {
-    nextPage = "/sign-in-tutor/photo";
-  }
-  if (
-    tutor?.status === "Pending" ||
-    tutor?.status === "Active" ||
-    tutor?.status === "Canceled delete" ||
-    tutor?.status === "Deleted" // Сделать в ЛК какое то уведомление-плашку с датой удаления и возможностью отмены
-  ) {
-    nextPage = "/tutor/orders";
-  }
-  if (
-    student?.status === "Pending" ||
-    student?.status === "Active" ||
-    student?.status === "Canceled delete" ||
-    student?.status === "Deleted" // Сделать в ЛК какое то уведомление-плашку с датой удаления и возможностью отмены
-  ) {
-    nextPage = "/student/orders";
-  }
-
-  // useEffect(() => {
-  //   const token = getTokenFromCookie();
-
-  //   if (!token) {
-  //     console.log("Токен отсутствует. Очищаем localStorage...");
-  //     dispatch(setTutorLogout());
-  //     dispatch(setStudentLogout());
-  //     localStorage.removeItem("tutor");
-  //     localStorage.removeItem("student");
-  //     //name = "";
-  //   }
-  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -87,8 +25,11 @@ export const HeaderMenu = () => {
 
       if (!token) {
         console.log(
-          "Access token отсутствует, пропускаем восстановление сессии"
+          "Access token отсутствует, пропускаем восстановление сессии, очищаем редакс"
         );
+        dispatch(setTutorLogout());
+        dispatch(setStudentLogout());
+        dispatch(setLogout());
         return;
       }
 
@@ -147,6 +88,52 @@ export const HeaderMenu = () => {
       }
     })();
   }, []);
+
+  // Получаем студента из Redux
+  const student: Student | null = useAppSelector(
+    (state) => state.student.student
+  );
+  const tutor: Tutor | null = useAppSelector((state) => state.tutor.tutor);
+  let nextPage = "";
+  let name = "";
+  if (tutor) {
+    tutor.name ? (name = tutor.name) : "Личный кабинет";
+  }
+  if (student) {
+    name = "Личный кабинет";
+  }
+
+  if (tutor?.status === "Rega: Fullname") {
+    nextPage = "/sign-in-tutor/fio";
+  }
+  if (tutor?.status === "Rega: Subjects") {
+    nextPage = "/sign-in-tutor/subjects";
+  }
+  if (tutor?.status === "Rega: Locations") {
+    nextPage = "/sign-in-tutor/locations";
+  }
+  if (tutor?.status === "Rega: Email") {
+    nextPage = "/sign-in-tutor/email";
+  }
+  if (tutor?.status === "Rega: Photo") {
+    nextPage = "/sign-in-tutor/photo";
+  }
+  if (
+    tutor?.status === "Pending" ||
+    tutor?.status === "Active" ||
+    tutor?.status === "Canceled delete" ||
+    tutor?.status === "Deleted" // Сделать в ЛК какое то уведомление-плашку с датой удаления и возможностью отмены
+  ) {
+    nextPage = "/tutor/orders";
+  }
+  if (
+    student?.status === "Pending" ||
+    student?.status === "Active" ||
+    student?.status === "Canceled delete" ||
+    student?.status === "Deleted" // Сделать в ЛК какое то уведомление-плашку с датой удаления и возможностью отмены
+  ) {
+    nextPage = "/student/orders";
+  }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

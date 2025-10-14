@@ -4,7 +4,7 @@ import styles from "../tutor/layout.module.css";
 import clsx from "clsx";
 import Head from "next/head";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setToken } from "@/store/features/authSlice";
+import { setLogout, setToken } from "@/store/features/authSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/cookies/cookies";
 import { Spinner } from "@/components/Spinner/Spinner";
@@ -34,25 +34,72 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
 
+  // useEffect(() => {
+  //   const token = getAccessToken(); // берём из localStorage
+  //   if (token) {
+  //     // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
+  //     // в личный кабинет не активной роли для мультипользователя
+  //     // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
+  //     const payload: { activeRole: Role; userID: string } = jwtDecode(token);
+  //     if (payload.activeRole !== "student") {
+  //       // Если токен существует, но активная роль не репетитор → редирект
+  //       router.push("/");
+  //       return;
+  //     }
+  //     dispatch(setToken(token));
+  //     dispatch(getCurrentStudent());
+  //   } else {
+  //     router.push("/");
+  //     return;
+  //   }
+  //   setIsLoadedPage(true);
+  // }, [dispatch, router]);
+
   useEffect(() => {
-    const token = getAccessToken(); // берём из localStorage
-    if (token) {
-      // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
-      // в личный кабинет не активной роли для мультипользователя
-      // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
-      const payload: { activeRole: Role; userID: string } = jwtDecode(token);
-      if (payload.activeRole !== "student") {
-        // Если токен существует, но активная роль не репетитор → редирект
-        router.push("/");
+    const initAuth = () => {
+      const token = getAccessToken(); // берём из localStorage
+      if (!token) {
+        console.log("Токена нет");
+        router.push("/"); // токена нет → редирект
         return;
       }
-      dispatch(setToken(token));
-      dispatch(getCurrentStudent());
-    } else {
-      router.push("/");
-      return;
-    }
-    setIsLoadedPage(true);
+
+      try {
+        const payload: any = jwtDecode(token); // Используйте any для отладки
+        // console.log("Полный payload токена:", payload);
+        // console.log("activeRole из токена:", payload.activeRole);
+        // console.log("Все свойства токена:", Object.keys(payload));
+
+        if (payload.activeRole !== "student") {
+          console.log("Не та роль. Роль пользователя:", payload.activeRole);
+          console.log("Ожидаемая роль: student");
+          dispatch(setLogout());
+          router.push("/");
+          return;
+        }
+
+        dispatch(setToken(token));
+        dispatch(getCurrentStudent())
+          .unwrap()
+          // Разворачиваем Promise для обработки отклонённого случая
+          .catch(() => {
+            console.log("Ошибка");
+            // Если запрос завершился ошибкой (например, 500), разлогиниваем пользователя
+            dispatch(setLogout());
+
+            router.push("/");
+          });
+
+        setIsLoadedPage(true);
+      } catch (error) {
+        // Некорректный токен → разлогиниваем
+        console.log("Некорректный токен");
+        dispatch(setLogout());
+        router.push("/");
+      }
+    };
+
+    initAuth();
   }, [dispatch, router]);
 
   useEffect(() => {
