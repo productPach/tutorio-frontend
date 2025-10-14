@@ -3,18 +3,18 @@ import "dotenv/config";
 
 // Для окружения Docker-compose
 
-// const nextConfig = {
-//   images: {
-//     remotePatterns: [
-//       {
-//         protocol: "http",
-//         hostname: process.env.NEXT_IMAGE_HOST || "tutorio-express",
-//         port: "3000",
-//         pathname: "/uploads/**",
-//       },
-//     ],
-//   },
-// };
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: process.env.NEXT_IMAGE_HOST || "tutorio-express",
+        port: "3000",
+        pathname: "/uploads/**",
+      },
+    ],
+  },
+};
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -41,18 +41,18 @@ import "dotenv/config";
 // export default nextConfig;
 
 // Для окружения фронт локально, сервер локально в докере
-const nextConfig = {
-  images: {
-    domains: ["localhost"], // разрешаем загрузку картинок с localhost
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3000", // тот же порт, что проброшен в docker-compose
-        pathname: "/uploads/**", // доступ к картинкам в uploads
-      },
-    ],
-  },
-};
+// const nextConfig = {
+//   images: {
+//     domains: ["localhost"], // разрешаем загрузку картинок с localhost
+//     remotePatterns: [
+//       {
+//         protocol: "http",
+//         hostname: "localhost",
+//         port: "3000", // тот же порт, что проброшен в docker-compose
+//         pathname: "/uploads/**", // доступ к картинкам в uploads
+//       },
+//     ],
+//   },
+// };
 
 export default nextConfig;
