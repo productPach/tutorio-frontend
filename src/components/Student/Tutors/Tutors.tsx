@@ -84,27 +84,6 @@ export const TutorsComponent = ({
     setOpenLightboxIndex(null); // Закрываем Lightbox
   };
 
-  const { scrollPosition, scrollHeight } = useAppSelector(
-    (state) => state.orders
-  );
-
-  // useEffect(() => {
-  //   // dispatch(setComponentMenu(2));
-  //   setTimeout(() => {
-  //     window.scrollTo({
-  //       top: scrollPosition,
-  //       behavior: "smooth", // Плавный скролл
-  //     });
-  //   }, 500); // Задержка для плавного скролла
-  // }, [scrollPosition]);
-
-  // Для сохранения позиции
-  // const saveScrollPosition = () => {
-  //   const scrollPosition = window.scrollY;
-  //   const scrollHeight = document.documentElement.scrollHeight; // Получаем высоту документа
-  //   dispatch(updateScrollPosition({ scrollPosition, scrollHeight }));
-  // };
-
   if (loading && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
@@ -202,6 +181,11 @@ export const TutorsComponent = ({
           );
           const chat = chats.find((chat) => chat.tutorId === tutor.id);
 
+          const reviews =
+            tutor.reviews?.filter((r) => r.status === "Active") || [];
+          // Количество отзывов
+          const reviewsCount = reviews.length;
+
           return (
             <div
               key={tutor.id}
@@ -276,15 +260,10 @@ export const TutorsComponent = ({
                         &nbsp;рейтинг
                       </div>
                     )}
-                    {tutor.reviewsCount > 0 && (
+                    {reviewsCount > 0 && (
                       <div>
-                        {tutor.reviewsCount}&nbsp;
-                        {pluralize(
-                          tutor.reviewsCount,
-                          "отзыв",
-                          "отзыва",
-                          "отзывов"
-                        )}
+                        {reviewsCount}&nbsp;
+                        {pluralize(reviewsCount, "отзыв", "отзыва", "отзывов")}
                       </div>
                     )}
                   </div>

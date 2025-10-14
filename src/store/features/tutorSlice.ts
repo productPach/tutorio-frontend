@@ -12,6 +12,7 @@ import {
   fetchTutorGoalsBySubject,
   fetchTutorIncompletePrices,
   fetchTutorSelectedGoalsGrouped,
+  fetchTutorsForOrderById,
   fetchTutorSubjectsWithGoals,
   fetchUpdateSubjectPrice,
   fetchUpdateTutor,
@@ -559,6 +560,27 @@ export const getTutorIncompletePrices = createAsyncThunk<
   }
 );
 
+// Получение репетиторов по предмету и цели (для заказов)
+export const getTutorsForOrderById = createAsyncThunk<
+  Tutor[], // или можешь уточнить тип, если у тебя есть тип Tutor
+  { orderId: string; },
+  { rejectValue: string }
+>(
+  "tutor/getTutorsForOrderById",
+  async ({ orderId }, { rejectWithValue }) => {
+    try {
+      const tutors = await fetchTutorsForOrderById(orderId);
+      return tutors;
+    } catch (error: any) {
+      console.error(
+        `❌ Ошибка при получении репетиторов по orderId=${orderId}:`,
+        error
+      );
+      return rejectWithValue("Не удалось загрузить репетиторов по предмету и цели");
+    }
+  }
+);
+
 type GoalMini = { id: string; title: string };
 type GoalWithSelected = { id: string; title: string; selected: boolean };
 
@@ -1011,6 +1033,20 @@ const tutorSlice = createSlice({
     builder.addCase(getTutorIncompletePrices.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+    })
+
+    // Получение репетиторов по предмету и цели (для заказов)
+     .addCase(getTutorsForOrderById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(getTutorsForOrderById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.tutors = action.payload;
+    })
+    .addCase(getTutorsForOrderById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Ошибка загрузки репетиторов";
     });
   },
 });
