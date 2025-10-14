@@ -223,6 +223,7 @@ export type Order = {
   studentId: string;
   subject?: string;
   goal?: string;
+  goalId: string;
   studentClass?: string;
   studentType?: string;
   studentYears?: string;

@@ -432,3 +432,24 @@ export const updateTutorGoalsBySubject = async (
     throw new Error(`Не удалось обновить цели репетитора`);
   }
 };
+
+// Получение репетиторов по предмету и цели (для заказов)
+export const fetchTutorsForOrderById = async (orderId: string) => {
+  try {
+    const response = await httpClient.get(`tutors/order/${orderId}`);
+
+    return response.data; // массив репетиторов
+  } catch (error: any) {
+    console.error(
+      `❌ Ошибка при получении репетиторов по orderId=${orderId}:`,
+      error.response?.status,
+      error.response?.data || error.message
+    );
+
+    if (error.response?.status === 404) {
+      throw new Error("Репетиторы не найдены");
+    }
+
+    throw new Error("Не удалось загрузить репетиторов");
+  }
+};

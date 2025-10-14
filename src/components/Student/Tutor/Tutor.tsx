@@ -519,7 +519,7 @@ export const TutorComponent = ({
       )}
 
       {reviews.length > 0 && (
-        <div id={"#отзывы"} className={styles.containerOrderInfo}>
+        <div id={"отзывы"} className={styles.containerOrderInfo}>
           <span className={styles.titleTutorInfo}>Отзывы</span>
 
           <div

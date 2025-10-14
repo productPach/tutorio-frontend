@@ -12,7 +12,6 @@ import { OrderComponent } from "@/components/Student/Order/Order";
 import { ResponseSidbar } from "@/components/Student/SideBar/ResponseSidbar";
 import LeftBarOrder from "@/components/Student/LeftBar/LeftBarOrder";
 import { TutorsComponent } from "@/components/Student/Tutors/Tutors";
-import { getAllTutors } from "@/store/features/tutorSlice";
 import { ResponseStudentToTutorModal } from "@/components/Student/Modal/Response/ResponseStudentToTutorModal";
 import { WikiForOrderComponent } from "@/components/Student/Wiki/WikiForOrderComponent";
 import { ChatComponent } from "@/components/Student/Chat/Chat";
@@ -30,6 +29,7 @@ import {
   setIsSheetUpdateReviewByStudent,
 } from "@/store/features/modalSlice";
 import { UpdateReviewByStudentModal } from "../Modal/Review/UpdateReviewByStudentModal";
+import { getTutorsForOrderById } from "@/store/features/tutorSlice";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -90,91 +90,93 @@ const OrderPage: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [component]);
 
-  const tutorsForOrder = tutorsForOrderNotFilter
-    .filter((tutor) => tutor.status === "Active")
-    .filter(
-      (tutor) => orderById?.subject && tutor.subject.includes(orderById.subject)
-    )
-    .filter((tutor) => {
-      // Если не указано место занятия у ученика, показываем всех
-      if (!orderById?.studentPlace || orderById.studentPlace.length === 0)
-        return true;
+  const tutorsForOrder = tutorsForOrderNotFilter;
+  // ТЕПЕРЬ ФИЛЬТРУЕМ ПОЛНОСТЬЮ НА БЭКЕ
+  // .filter((tutor) => tutor.status === "Active")
+  // .filter(
+  //   (tutor) => orderById?.subject && tutor.subject.includes(orderById.subject)
+  // )
+  // .filter((tutor) => {
+  //   // Если не указано место занятия у ученика, показываем всех
+  //   if (!orderById?.studentPlace || orderById.studentPlace.length === 0)
+  //     return true;
 
-      // Преобразуем места занятия из строки в коды
-      const studentPlacesMapped = orderById.studentPlace
-        .map((place) => placeMapping[place])
-        .filter(Boolean);
+  //   // Преобразуем места занятия из строки в коды
+  //   const studentPlacesMapped = orderById.studentPlace
+  //     .map((place) => placeMapping[place])
+  //     .filter(Boolean);
 
-      // Если у репетитора нет ни одного места из указанных у ученика — исключаем
-      if (
-        !tutor.tutorPlace.some((place) => studentPlacesMapped.includes(place))
-      ) {
-        return false;
-      }
+  //   // Если у репетитора нет ни одного места из указанных у ученика — исключаем
+  //   if (
+  //     !tutor.tutorPlace.some((place) => studentPlacesMapped.includes(place))
+  //   ) {
+  //     return false;
+  //   }
 
-      // Проверяем, какие места выбраны у ученика
-      const includesRemote = orderById.studentPlace.includes("Дистанционно");
-      const includesAtTutor = orderById.studentPlace.includes("У репетитора");
-      const includesAtStudent = orderById.studentPlace.includes("У меня дома");
+  //   // Проверяем, какие места выбраны у ученика
+  //   const includesRemote = orderById.studentPlace.includes("Дистанционно");
+  //   const includesAtTutor = orderById.studentPlace.includes("У репетитора");
+  //   const includesAtStudent = orderById.studentPlace.includes("У меня дома");
 
-      // Проверяем, какие места поддерживает репетитор
-      const hasRemote = tutor.tutorPlace.includes("1");
-      const hasAtTutor = tutor.tutorPlace.includes("2");
-      const hasAtStudent = tutor.tutorPlace.includes("3");
+  //   // Проверяем, какие места поддерживает репетитор
+  //   const hasRemote = tutor.tutorPlace.includes("1");
+  //   const hasAtTutor = tutor.tutorPlace.includes("2");
+  //   const hasAtStudent = tutor.tutorPlace.includes("3");
 
-      // Локации ученика
-      let studentTrip = orderById.studentTrip ? [...orderById.studentTrip] : [];
-      const studentHomeLoc = orderById.studentHomeLoc || [];
+  //   // Локации ученика
+  //   let studentTrip = orderById.studentTrip ? [...orderById.studentTrip] : [];
+  //   const studentHomeLoc = orderById.studentHomeLoc || [];
 
-      // Локации репетитора
-      const tutorHomeLoc = tutor.tutorHomeLoc || [];
-      const tutorTripCity = tutor.tutorTripCity || [];
-      const tutorTripArea = tutor.tutorTripArea || [];
+  //   // Локации репетитора
+  //   const tutorHomeLoc = tutor.tutorHomeLoc || [];
+  //   const tutorTripCity = tutor.tutorTripCity || [];
+  //   const tutorTripArea = tutor.tutorTripArea || [];
 
-      // --- ВАЖНО ---
-      // Если выбрано "У репетитора", добавляем локации studentHomeLoc в studentTrip,
-      // если их там нет, чтобы учитывать совпадения, когда ученик не указал эти локации в trip.
-      if (includesAtTutor && studentHomeLoc.length > 0) {
-        studentHomeLoc.forEach((loc) => {
-          if (!studentTrip.includes(loc)) {
-            studentTrip.push(loc);
-          }
-        });
-      }
+  //   // --- ВАЖНО ---
+  //   // Если выбрано "У репетитора", добавляем локации studentHomeLoc в studentTrip,
+  //   // если их там нет, чтобы учитывать совпадения, когда ученик не указал эти локации в trip.
+  //   if (includesAtTutor && studentHomeLoc.length > 0) {
+  //     studentHomeLoc.forEach((loc) => {
+  //       if (!studentTrip.includes(loc)) {
+  //         studentTrip.push(loc);
+  //       }
+  //     });
+  //   }
 
-      // 1. Дистанционно: совпадение если и ученик, и репетитор поддерживают
-      const matchRemote = includesRemote && hasRemote;
+  //   // 1. Дистанционно: совпадение если и ученик, и репетитор поддерживают
+  //   const matchRemote = includesRemote && hasRemote;
 
-      // 2. У репетитора: репетитор готов принимать, ученик готов приехать,
-      // и локации пересекаются (тут учитываем homeLoc, tripCity и tripArea репетитора)
-      const matchAtTutor =
-        includesAtTutor &&
-        hasAtTutor &&
-        [...tutorHomeLoc, ...tutorTripCity, ...tutorTripArea].some((loc) =>
-          studentTrip.includes(loc)
-        );
+  //   // 2. У репетитора: репетитор готов принимать, ученик готов приехать,
+  //   // и локации пересекаются (тут учитываем homeLoc, tripCity и tripArea репетитора)
+  //   const matchAtTutor =
+  //     includesAtTutor &&
+  //     hasAtTutor &&
+  //     [...tutorHomeLoc, ...tutorTripCity, ...tutorTripArea].some((loc) =>
+  //       studentTrip.includes(loc)
+  //     );
 
-      // 3. У ученика: ученик хочет заниматься у себя, репетитор готов ездить,
-      // и локации ученика пересекаются с локациями репетитора для выезда (город и область)
-      const matchAtStudent =
-        includesAtStudent &&
-        hasAtStudent &&
-        studentHomeLoc.some((loc) =>
-          [...tutorTripCity, ...tutorTripArea].includes(loc)
-        );
+  //   // 3. У ученика: ученик хочет заниматься у себя, репетитор готов ездить,
+  //   // и локации ученика пересекаются с локациями репетитора для выезда (город и область)
+  //   const matchAtStudent =
+  //     includesAtStudent &&
+  //     hasAtStudent &&
+  //     studentHomeLoc.some((loc) =>
+  //       [...tutorTripCity, ...tutorTripArea].includes(loc)
+  //     );
 
-      // 4. Нейтральная территория: оба готовы выехать в одну и ту же локацию
-      // учитываем локации tutorTripCity и tutorTripArea
-      // Тут не проверяем tutorPlace, так как это нейтральная зона, все согласны
-      const matchNeutralPlace =
-        includesAtTutor &&
-        studentTrip.some((loc) =>
-          [...tutorTripCity, ...tutorTripArea].includes(loc)
-        );
+  //   // 4. Нейтральная территория: оба готовы выехать в одну и ту же локацию
+  //   // учитываем локации tutorTripCity и tutorTripArea
+  //   // Тут не проверяем tutorPlace, так как это нейтральная зона, все согласны
+  //   const matchNeutralPlace =
+  //     includesAtTutor &&
+  //     studentTrip.some((loc) =>
+  //       [...tutorTripCity, ...tutorTripArea].includes(loc)
+  //     );
 
-      // Возвращаем true если хотя бы один из кейсов совпал
-      return matchRemote || matchAtTutor || matchAtStudent || matchNeutralPlace;
-    });
+  //   // Возвращаем true если хотя бы один из кейсов совпал
+  //   return matchRemote || matchAtTutor || matchAtStudent || matchNeutralPlace;
+  // }) // 👇 СОРТИРОВКА по рейтингу
+  // .sort((a, b) => (b.totalRating || 0) - (a.totalRating || 0));
 
   // Получаем список регионов
   const citiesAndRegions = useAppSelector((state) => state.locations.city);
@@ -186,9 +188,14 @@ const OrderPage: React.FC = () => {
   }, [dispatch, order]);
 
   useEffect(() => {
-    dispatch(getAllTutors());
+    orderById?.id &&
+      dispatch(
+        getTutorsForOrderById({
+          orderId: orderById.id,
+        })
+      );
     dispatch(getThemesByTopic({ topicId: "67d090b401144e8d6f4eba88" }));
-  }, [dispatch]);
+  }, [dispatch, orderById]);
 
   const [isDataLoaded, setIsDataLoaded] = useState(false); // флаг для загрузки данны
 

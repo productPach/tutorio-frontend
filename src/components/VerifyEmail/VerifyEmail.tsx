@@ -1,6 +1,6 @@
 "use client";
 import styles from "./VerifyEmail.module.css";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { verifyEmail } from "@/store/features/tutorSlice";
 import { useAppDispatch } from "@/store/store";
@@ -91,17 +91,33 @@ export default function VerifyEmailPage() {
     return text.split("\n").map((line, index) => <div key={index}>{line}</div>);
   };
 
+  const router = useRouter();
+
+  const handleOnIndex = () => {
+    router.push("../");
+  };
+
   if (isLoading) return <div>Загрузка...</div>;
   if (isVerified)
     return (
       <div className={clsx(styles.container, styles.center)}>
         <div className={styles.content_block}>
-          <p className={styles.title}>🎉 Бам! Почта подтверждена! 🚀</p>
-          <p className={styles.description}>
-            Ваш email теперь на связи! 📩 Готовьтесь получать уведомления о
-            новых заказах и откликах от учеников! 💌<br></br>
-            <br></br> Время для новых возможностей — не пропустите! ⏰
+          <p className={styles.title}>
+            🎉 Бам! Почта&nbsp;подтверждена!&nbsp;🚀
           </p>
+          <p className={styles.description}>
+            Ваш email теперь на&nbsp;связи!&nbsp;📩 Готовьтесь получать
+            уведомления о&nbsp;новых заказах и&nbsp;откликах
+            от&nbsp;учеников!&nbsp;💌<br></br>
+            <br></br> Время для&nbsp;новых возможностей
+            —&nbsp;не&nbsp;пропустите!&nbsp;⏰
+          </p>
+          <button
+            onClick={() => handleOnIndex()}
+            className={clsx(styles.content_block_button, styles.buttonYlw)}
+          >
+            На главную
+          </button>
         </div>
       </div>
     );
@@ -111,11 +127,17 @@ export default function VerifyEmailPage() {
       <div className={styles.content_block}>
         {error && (
           <>
-            <p className={styles.title}>Упс, ошибка! 😟</p>{" "}
+            <p className={styles.title}>Упс,&nbsp;ошибка!&nbsp;😟</p>{" "}
             <p className={styles.description}>
-              Мы попробуем разобраться.<br></br> Попробуйте позже или свяжитесь
-              с нами! 💬
+              Мы попробуем разобраться.<br></br> Попробуйте позже
+              или&nbsp;свяжитесь с&nbsp;нами!&nbsp;💬
             </p>
+            <button
+              onClick={() => handleOnIndex()}
+              className={clsx(styles.content_block_button, styles.buttonYlw)}
+            >
+              На главную
+            </button>
           </>
         )}
       </div>

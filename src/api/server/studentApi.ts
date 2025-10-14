@@ -1,32 +1,6 @@
 import { baseUrl } from "./configApi";
 import httpClient from "./httpClient";
 
-// // Регистрация ученика
-// export const fetchCreateStudent = async (
-//   name: string,
-//   phone: string,
-//   avatarUrl: string,
-//   region: string,
-//   token: string
-// ) => {
-//   const response = await fetch(`${baseUrl}students`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify({
-//       name: name,
-//       phone: phone,
-//       avatarUrl: avatarUrl,
-//       region: region,
-//       status: "Active",
-//     }),
-//   });
-
-//   const data = await response.json();
-//   return data;
-// };
 // Регистрация ученика
 export const fetchCreateStudent = async (
   name: string,
@@ -49,24 +23,6 @@ export const fetchCreateStudent = async (
   }
 };
 
-
-// // Получение ученика по токену
-// export const fetchCurrentStudent = async (token: string) => {
-//   const response = await fetch(`${baseUrl}currentStudent`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Студент не существует");
-//   }
-
-//   const data = await response.json();
-//   return data;
-// };
 // Получение ученика по токену
 export const fetchCurrentStudent = async () => {
   try {
@@ -78,24 +34,6 @@ export const fetchCurrentStudent = async () => {
   }
 };
 
-
-// // Получение телефона ученика по ID
-// export const fetchStudentPhoneById = async (token: string, id: string) => {
-//   const response = await fetch(`${baseUrl}students/${id}/phone`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Не удалось получить номер телефона ученика");
-//   }
-
-//   const data = await response.json();
-//   return data.phone as string;
-// };
 // Получение телефона ученика по ID
 export const fetchStudentPhoneById = async (id: string): Promise<string> => {
   try {
@@ -107,24 +45,6 @@ export const fetchStudentPhoneById = async (id: string): Promise<string> => {
   }
 };
 
-
-// // Получение ученика по ID
-// export const fetchStudentById = async (token: string, id: string) => {
-//   const response = await fetch(`${baseUrl}students/${id}`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Студент не существует");
-//   }
-
-//   const data = await response.json();
-//   return data.student;
-// };
 // Получение ученика по ID
 export const fetchStudentById = async (id: string) => {
   try {
@@ -136,32 +56,6 @@ export const fetchStudentById = async (id: string) => {
   }
 };
 
-
-// // Изменение репетитора
-// export const fetchUpdateStudent = async (data: {
-//   id: string;
-//   token: string;
-//   status: string;
-//   name?: string;
-//   email?: string;
-//   phone?: string;
-//   region?: string;
-//   lastOnline?: Date;
-// }) => {
-//   const { id, token, ...fields } = data;
-
-//   const response = await fetch(`${baseUrl}students/${id}`, {
-//     method: "PATCH",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(fields), // Отправляем только переданные поля
-//   });
-
-//   const responseData = await response.json();
-//   return responseData;
-// };
 // Изменение студента
 export const fetchUpdateStudent = async (data: {
   id: string;
@@ -183,25 +77,6 @@ export const fetchUpdateStudent = async (data: {
   }
 };
 
-
-// export const fetchDeleteRequest = async (
-//   studentId: string,
-//   answer: string,
-//   token: string
-// ): Promise<void> => {
-//   const res = await fetch(`${baseUrl}students/delete-request/${studentId}`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify({ answer }),
-//   });
-
-//   if (!res.ok) {
-//     throw new Error("Ошибка при создании запроса на удаление ученика");
-//   }
-// };
 // Создание запроса на удаление ученика
 export const fetchDeleteRequest = async (studentId: string, answer: string): Promise<void> => {
   try {
@@ -212,30 +87,6 @@ export const fetchDeleteRequest = async (studentId: string, answer: string): Pro
   }
 };
 
-
-// export const sendVerificationEmail = async (
-//   studentId: string,
-//   token: string
-// ) => {
-//   const response = await fetch(`${baseUrl}send-verification-email`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`, // Передаем токен в заголовке
-//     },
-//     body: JSON.stringify({ id: studentId, userType: "student" }), // Передаем ID в теле запроса
-//   });
-
-//   const data = await response.json();
-
-//   if (!response.ok) {
-//     throw new Error(
-//       `Ошибка при отправке письма: ${data.error || "Неизвестная ошибка"}`
-//     );
-//   }
-
-//   return data;
-// };
 // Отправка письма для подтверждения email ученика
 export const sendVerificationEmail = async (studentId: string) => {
   try {
@@ -250,19 +101,6 @@ export const sendVerificationEmail = async (studentId: string) => {
   }
 };
 
-
-// // Функция для подтверждения email
-// export const fetchVerifyEmail = async (token: string) => {
-//   const response = await fetch(
-//     `${baseUrl}students/verify-email?token=${token}`,
-//     {
-//       method: "GET",
-//     }
-//   );
-
-//   const responseData = await response.json();
-//   return responseData;
-// };
 // Подтверждение email ученика
 export const fetchVerifyEmail = async (token: string) => {
   try {
@@ -276,3 +114,25 @@ export const fetchVerifyEmail = async (token: string) => {
   }
 };
 
+// Проверка ученика по номеру телефона
+export const fetchExistStudent = async (phone: string) => {
+  const response = await fetch(`${baseUrl}students-phone`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      phone: phone,
+    }),
+  });
+  if (response.status == 200) {
+    // Ученика не существует
+    const data = true;
+    return data;
+  }
+  if (response.status == 400) {
+    // Ученик существует
+    const data = false;
+    return data;
+  }
+};
