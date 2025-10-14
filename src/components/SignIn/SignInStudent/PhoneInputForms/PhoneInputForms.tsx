@@ -9,6 +9,8 @@ import ReCaptcha from "@/components/reCapcha/reCapcha";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Link from "next/link";
 import { useSmsTimer } from "@/hooks/sms/useSmsTimer";
+import { fetchExistUser } from "@/api/server/userApi";
+import { fetchExistStudent } from "@/api/server/studentApi";
 
 interface ComponentRenderProps {
   id: number;
@@ -70,6 +72,7 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
     const formattedPhoneNumber = formatPhoneNumber(e.target.value);
     setInputValue(formattedPhoneNumber.formatted);
+    setErrorInput(false);
     setTo(formattedPhoneNumber.original);
   };
 
@@ -142,6 +145,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
   }, []);
 
   const onClickSms = async () => {
+    // Проверяем есть ли такой ученик. Если нет, тогда не даем идти дальше
+    const existUser = await fetchExistStudent(to);
+    if (existUser) {
+      setErrorInput(true);
+      return;
+    }
     setIsShowTimer(false);
     await sendSms();
     handleNextStep(nextPage, inputValue, to);
@@ -192,7 +201,12 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
             maxLength={15}
           />
         </div>
-
+        {errorInput && (
+          <div className={styles.errorInputText}>
+            Ой! Кажется, ученика с таким номером не существует 🤔 <br></br>
+            Проверьте ещё раз — вдруг закралась опечатка! ✨
+          </div>
+        )}
         {isShowTimer && secondsLeft > 0 ? (
           <div className={styles.sendAgainContainer}>
             Изменить телефон можно через{" "}

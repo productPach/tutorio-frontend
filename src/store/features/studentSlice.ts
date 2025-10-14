@@ -158,7 +158,6 @@ const studentSlice = createSlice({
       state.student = action.payload;
     },
     setStudentLogout: (state) => {
-      removeLocalStorage("student");
       state.student = null;
     },
     resetDeleteRequest: (state) => {
