@@ -19,8 +19,8 @@ import Link from "next/link";
 
 const SideBar = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor) as Tutor;
+  const page = useAppSelector((state) => state.orders.page); // текущая страница в пагинации
 
   const selectedPlaceFilters = useSelector(
     (state: RootState) => state.orders.filters.selectedPlaceFilters
@@ -140,7 +140,7 @@ const SideBar = () => {
         setInputRegionValue("");
         setRegionList(regionList);
       }, 500);
-      dispatch(getAllOrders());
+      dispatch(getAllOrders({ page: page, limit: 10 }));
     }
   };
 
