@@ -59,7 +59,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../");
+                      route.push("../tab=1");
                     }}
                   >
                     <Text
@@ -90,7 +90,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../");
+                      route.push("../tab=7");
                     }}
                   >
                     <Send
@@ -124,7 +124,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../");
+                      route.push("../tab=2");
                     }}
                   >
                     <Users
@@ -154,7 +154,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../");
+                      route.push("../tab=3");
                     }}
                   >
                     <MessageCircleQuestionMark
@@ -180,6 +180,8 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     })}
                     onClick={() => {
                       dispatch(setComponentMenu(1));
+                      // меняем URL, добавляем query-параметр tab
+                      route.push(`?tab=1`, { scroll: false });
                       dispatch(setChat(null));
                     }}
                   >
@@ -204,6 +206,8 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     })}
                     onClick={() => {
                       dispatch(setComponentMenu(7));
+                      // меняем URL, добавляем query-параметр tab
+                      route.push(`?tab=7`, { scroll: false });
                       dispatch(setChat(null));
                     }}
                   >
@@ -234,6 +238,8 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     })}
                     onClick={() => {
                       dispatch(setComponentMenu(2));
+                      // меняем URL, добавляем query-параметр tab
+                      route.push(`?tab=2`, { scroll: false });
                       dispatch(setChat(null));
                     }}
                   >
@@ -257,6 +263,8 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                     })}
                     onClick={() => {
                       dispatch(setComponentMenu(3));
+                      // меняем URL, добавляем query-параметр tab
+                      route.push(`?tab=3`, { scroll: false });
                       dispatch(setChat(null));
                     }}
                   >

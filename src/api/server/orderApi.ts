@@ -145,9 +145,11 @@ export const fetchCreateOrder = async (
 //   }
 // }
 // Получение списка всех заказов
-export const fetchGetAllOrders = async () => {
+export const fetchGetAllOrders = async (page: number = 1, limit: number = 10) => {
   try {
-    const response = await httpClient.get(`orders`);
+    const response = await httpClient.get(`orders`, {
+      params: { page, limit },
+    });
     return response.data;
   } catch (error: any) {
     console.error('❌ Ошибка при получении списка заказов:', error.response?.status, error.response?.data || error.message);

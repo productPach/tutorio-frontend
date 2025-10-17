@@ -94,88 +94,133 @@ export const OrderComponent = ({
           <div className={styles.containerOrderInfo}>
             <span className={styles.titleOrderInfo}>Выбранные репетиторы</span>
             <div className={styles.listContractTutor}>
-              {orderById.selectedTutors.map((tutor) => (
-                <div key={tutor.id}>
-                  <div className={styles.tutorImgFioContainerTP}>
-                    <div className={clsx(styles.flex1, styles.pstnRltv)}>
-                      <Link
-                        href={`./${orderById.id}/tutor/${tutor.id}`}
-                        target="_blank"
-                      >
-                        <Image
-                          className={clsx(styles.tutorImg, styles.tutorImgM)}
-                          src={
-                            `${getBackendUrl()}${tutor.avatarUrl}` ||
-                            "/img/avatar-default.jpg"
-                          }
-                          width={120}
-                          height={120}
-                          alt={tutor.name}
-                        />
-                      </Link>
-                    </div>
-
-                    <div
-                      className={clsx(
-                        styles.flex4,
-                        styles.tutorFioBagesContainer
-                      )}
-                    >
-                      <div
-                        className={clsx(
-                          styles.containerFlxRw,
-                          styles.jtfCntSpBtwn,
-                          styles.gap6
-                        )}
-                      >
+              {orderById.selectedTutors.map((tutor) => {
+                const reviews =
+                  tutor.reviews?.filter((r) => r.status === "Active") || [];
+                // Количество отзывов
+                const reviewsCount = reviews.length;
+                return (
+                  <div key={tutor.id}>
+                    <div className={styles.tutorImgFioContainerTP}>
+                      <div className={clsx(styles.flex1, styles.pstnRltv)}>
                         <Link
                           href={`./${orderById.id}/tutor/${tutor.id}`}
                           target="_blank"
                         >
-                          <h3>{tutor.name}</h3>
+                          <Image
+                            className={clsx(styles.tutorImg, styles.tutorImgM)}
+                            src={
+                              `${getBackendUrl()}${tutor.avatarUrl}` ||
+                              "/img/avatar-default.jpg"
+                            }
+                            width={120}
+                            height={120}
+                            alt={tutor.name}
+                          />
                         </Link>
                       </div>
 
                       <div
                         className={clsx(
-                          styles.containerIsOnline,
-                          styles.mt6px,
-                          styles.tutorPlaces,
-                          styles.lnHgt18
+                          styles.flex4,
+                          styles.tutorFioBagesContainer
                         )}
                       >
-                        <div>
-                          &nbsp;{tutor.userRating?.toFixed(1) || "—"}
-                          &nbsp;рейтинг
-                        </div>
-                        {tutor.reviewsCount > 0 && (
+                        <div
+                          className={clsx(
+                            styles.containerFlxRw,
+                            styles.jtfCntSpBtwn,
+                            styles.gap6
+                          )}
+                        >
                           <Link
-                            href={`./${orderById.id}/tutor/${tutor.id}#отзывы`}
+                            href={`./${orderById.id}/tutor/${tutor.id}`}
                             target="_blank"
                           >
-                            <div>
-                              {tutor.reviewsCount}&nbsp;
-                              {pluralize(
-                                tutor.reviewsCount,
-                                "отзыв",
-                                "отзыва",
-                                "отзывов"
-                              )}
-                            </div>
+                            <h3>{tutor.name}</h3>
                           </Link>
-                        )}
+                        </div>
+
+                        <div
+                          className={clsx(
+                            styles.containerIsOnline,
+                            styles.mt6px,
+                            styles.tutorPlaces,
+                            styles.lnHgt18
+                          )}
+                        >
+                          {tutor.userRating > 0.1 && (
+                            <div>
+                              &nbsp;{tutor.userRating?.toFixed(1) || "—"}
+                              &nbsp;рейтинг
+                            </div>
+                          )}
+                          {reviewsCount > 0 && (
+                            <Link
+                              href={`./${orderById.id}/tutor/${tutor.id}#отзывы`}
+                              target="_blank"
+                            >
+                              <div>
+                                {reviewsCount}&nbsp;
+                                {pluralize(
+                                  reviewsCount,
+                                  "отзыв",
+                                  "отзыва",
+                                  "отзывов"
+                                )}
+                              </div>
+                            </Link>
+                          )}
+                        </div>
                       </div>
+                      {tutor.reviewStatus !== "withMessage" && (
+                        <button
+                          className={styles.buttonContract}
+                          onClick={(e) => {
+                            e.preventDefault();
+
+                            const isMobile = window.innerWidth < 769;
+
+                            if (tutor.reviewStatus === "noReview") {
+                              dispatch(setIsValueCreateReview(tutor.id));
+                              if (isMobile) {
+                                dispatch(setIsSheetCreateReviewByStudent(true));
+                              } else {
+                                dispatch(setIsModalCreateReviewByStudent(true));
+                              }
+                            } else {
+                              // "ratingOnly"
+                              dispatch(setIsValueCreateReview(tutor.id));
+                              dispatch(
+                                setIsReviewIdCreateReview(tutor.reviewId)
+                              );
+                              if (isMobile) {
+                                dispatch(setIsSheetUpdateReviewByStudent(true));
+                              } else {
+                                dispatch(setIsModalUpdateReviewByStudent(true));
+                              }
+                            }
+                          }}
+                          type="button"
+                        >
+                          <span className={styles.textButton}>
+                            {tutor.reviewStatus === "noReview"
+                              ? "Оставить отзыв"
+                              : "Дополнить отзыв"}
+                          </span>
+                        </button>
+                      )}
                     </div>
                     {tutor.reviewStatus !== "withMessage" && (
                       <button
-                        className={styles.buttonContract}
+                        className={styles.buttonContractM}
                         onClick={(e) => {
                           e.preventDefault();
+                          dispatch(setIsValueCreateReview(tutor.id));
 
                           const isMobile = window.innerWidth < 769;
 
                           if (tutor.reviewStatus === "noReview") {
-                            dispatch(setIsValueCreateReview(tutor.id));
                             if (isMobile) {
                               dispatch(setIsSheetCreateReviewByStudent(true));
                             } else {
@@ -183,8 +228,6 @@ export const OrderComponent = ({
                             }
                           } else {
                             // "ratingOnly"
-                            dispatch(setIsValueCreateReview(tutor.id));
-                            dispatch(setIsReviewIdCreateReview(tutor.reviewId));
                             if (isMobile) {
                               dispatch(setIsSheetUpdateReviewByStudent(true));
                             } else {
@@ -198,46 +241,13 @@ export const OrderComponent = ({
                           {tutor.reviewStatus === "noReview"
                             ? "Оставить отзыв"
                             : "Дополнить отзыв"}
+                          {/* Подтвердить договоренность */}
                         </span>
                       </button>
                     )}
                   </div>
-                  {tutor.reviewStatus !== "withMessage" && (
-                    <button
-                      className={styles.buttonContractM}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        dispatch(setIsValueCreateReview(tutor.id));
-
-                        const isMobile = window.innerWidth < 769;
-
-                        if (tutor.reviewStatus === "noReview") {
-                          if (isMobile) {
-                            dispatch(setIsSheetCreateReviewByStudent(true));
-                          } else {
-                            dispatch(setIsModalCreateReviewByStudent(true));
-                          }
-                        } else {
-                          // "ratingOnly"
-                          if (isMobile) {
-                            dispatch(setIsSheetUpdateReviewByStudent(true));
-                          } else {
-                            dispatch(setIsModalUpdateReviewByStudent(true));
-                          }
-                        }
-                      }}
-                      type="button"
-                    >
-                      <span className={styles.textButton}>
-                        {tutor.reviewStatus === "noReview"
-                          ? "Оставить отзыв"
-                          : "Дополнить отзыв"}
-                        {/* Подтвердить договоренность */}
-                      </span>
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

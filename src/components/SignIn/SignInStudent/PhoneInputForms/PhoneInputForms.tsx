@@ -61,12 +61,6 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
     return `${pad(minutes)}:${pad(sec)}`;
   };
 
-  // useEffect(() => {
-  //   if (to) {
-  //     localStorage.setItem("origin-phone", JSON.stringify(to));
-  //   }
-  // }, [to]);
-
   const handleVerify = (token: string | null) => setVerified(!!token);
 
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {

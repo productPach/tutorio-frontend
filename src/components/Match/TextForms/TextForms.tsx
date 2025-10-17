@@ -255,7 +255,7 @@ export const TextForms: React.FC<ComponentRenderProps> = ({
           // Обновляем состояния для красивого эффекта перехода
           setIsDisabled(true);
           setIsVisible(false);
-          setTimeout(() => route.push(`/student/order/${data.id}`), 400);
+          setTimeout(() => route.push(`/student/order/${data.id}?tab=2`), 400);
         })
         .catch((error) => {
           console.error("Ошибка при создании заказа:", error);

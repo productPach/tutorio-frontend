@@ -317,7 +317,7 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
           infoDataMatch
         );
 
-        handleNextStep(answerArray[0].nextPage + orderData.id);
+        handleNextStep(answerArray[0].nextPage + orderData.id + `?tab=2`);
       } catch (error) {
         console.error("Ошибка при создании заказа:", error);
       }

@@ -434,9 +434,14 @@ export const updateTutorGoalsBySubject = async (
 };
 
 // Получение репетиторов по предмету и цели (для заказов)
-export const fetchTutorsForOrderById = async (orderId: string) => {
+export const fetchTutorsForOrderById = async (orderId: string,  page: number = 1, limit: number = 20) => {
   try {
-    const response = await httpClient.get(`tutors/order/${orderId}`);
+    const response = await httpClient.get(`tutors/order/${orderId}`, {
+      params: { page, limit },
+    });
+
+    // ✅ Ожидаем, что сервер вернёт:
+    // { tutors: [...], pagination: { page, limit, total, totalPages } }
 
     return response.data; // массив репетиторов
   } catch (error: any) {

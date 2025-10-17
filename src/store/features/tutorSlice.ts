@@ -560,17 +560,27 @@ export const getTutorIncompletePrices = createAsyncThunk<
   }
 );
 
-// Получение репетиторов по предмету и цели (для заказов)
+// Тип возвращаемых данных
+interface TutorsWithPagination {
+  tutors: Tutor[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export const getTutorsForOrderById = createAsyncThunk<
-  Tutor[], // или можешь уточнить тип, если у тебя есть тип Tutor
-  { orderId: string; },
+  TutorsWithPagination,
+  { orderId: string; page?: number; limit?: number },
   { rejectValue: string }
 >(
   "tutor/getTutorsForOrderById",
-  async ({ orderId }, { rejectWithValue }) => {
+  async ({ orderId, page = 1, limit = 20 }, { rejectWithValue }) => {
     try {
-      const tutors = await fetchTutorsForOrderById(orderId);
-      return tutors;
+      const data = await fetchTutorsForOrderById(orderId, page, limit);
+      return data; // { tutors, pagination }
     } catch (error: any) {
       console.error(
         `❌ Ошибка при получении репетиторов по orderId=${orderId}:`,
@@ -589,6 +599,8 @@ type TutorStateType = {
   tutorById: null | Tutor;
   tutors: Tutor[];
   loading: boolean;
+  isLoad: boolean,
+  skipTutorsReload: boolean,
   error: null | string;
   updateStatus: string;
   selectedValuesCity: (District | Metro)[];
@@ -616,6 +628,11 @@ type TutorStateType = {
   subjectsWithGoalsError: string | null;
 
   incompletePrices: { hasIncompletePrices: boolean, subjectsWithoutFullPrices: string[] },
+
+  // пагинация
+  page: number;
+  totalPages: number;
+  totalTutors: number;
 };
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -626,6 +643,8 @@ const initialState: TutorStateType = {
   tutorById: initialTutor, 
   tutors: [] as Tutor[],
   loading: false,
+  isLoad: false,
+  skipTutorsReload: false,
   error: null as string | null,
   updateStatus: "idle", // idle | loading | success | failed
   selectedValuesCity: [],
@@ -649,6 +668,11 @@ const initialState: TutorStateType = {
   subjectsWithGoalsError: null,
 
   incompletePrices: { hasIncompletePrices: false, subjectsWithoutFullPrices: [] },
+
+  // пагинация
+  page: 1,
+  totalPages: 1,
+  totalTutors: 0,
 };
 
 const tutorSlice = createSlice({
@@ -657,6 +681,16 @@ const tutorSlice = createSlice({
   reducers: {
     setTutor: (state, action: PayloadAction<Tutor>) => {
       state.tutor = action.payload;
+    },
+    clearTutors: (state) => {
+      state.tutors = [];
+      state.page = 1;
+      state.totalPages = 1;
+      state.totalTutors = 0;
+      state.skipTutorsReload = false;
+    },
+    setSkipTutorsReload: (state, action) => {
+      state.skipTutorsReload = action.payload;
     },
     setTutorLogout: (state) => {
       state.tutor = null;
@@ -1038,14 +1072,26 @@ const tutorSlice = createSlice({
     // Получение репетиторов по предмету и цели (для заказов)
      .addCase(getTutorsForOrderById.pending, (state) => {
       state.loading = true;
+      state.isLoad = false;
       state.error = null;
     })
-    .addCase(getTutorsForOrderById.fulfilled, (state, action) => {
-      state.loading = false;
-      state.tutors = action.payload;
+     .addCase(getTutorsForOrderById.fulfilled, (state, action: PayloadAction<{
+      tutors: Tutor[];
+      pagination?: { page?: number; limit?: number; total?: number; totalPages?: number };
+      }>) => {
+        // console.log("FULFILLED PAYLOAD:", action.payload);
+        state.loading = false;
+        state.tutors = action.payload.tutors || [];
+        state.isLoad = true;
+
+        // Безопасное присвоение с дефолтами
+        state.page = action.payload.pagination?.page || 1;
+        state.totalPages = action.payload.pagination?.totalPages || 1;
+        state.totalTutors = action.payload.pagination?.total || 0;
     })
     .addCase(getTutorsForOrderById.rejected, (state, action) => {
       state.loading = false;
+      state.isLoad = true;
       state.error = action.payload || "Ошибка загрузки репетиторов";
     });
   },
@@ -1053,6 +1099,8 @@ const tutorSlice = createSlice({
 
 export const {
   setTutor,
+  clearTutors,
+  setSkipTutorsReload,
   setTutorLogout,
   setSelectedValuesCity,
   setSelectedValuesArea,
