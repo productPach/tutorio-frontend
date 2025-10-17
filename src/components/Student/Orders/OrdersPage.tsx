@@ -13,10 +13,13 @@ import {
 
 const OrdersPage: React.FC = () => {
   const page = "Orders";
+  const router = useRouter();
   const dispatch = useAppDispatch();
   // Выполнение dispatch в useEffect, чтобы избежать выполнения в процессе рендеринга
   useEffect(() => {
     dispatch(setComponentMenu(1));
+    // меняем URL, добавляем query-параметр tab
+    router.push(`?tab=1`, { scroll: false });
     dispatch(updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 }));
   }, [dispatch]);
 
@@ -28,8 +31,6 @@ const OrdersPage: React.FC = () => {
     localStorage.removeItem("_cr-tripData");
     localStorage.removeItem("currentMatch");
   }, []);
-
-  const router = useRouter();
 
   useEffect(() => {
     router.prefetch("/orders");

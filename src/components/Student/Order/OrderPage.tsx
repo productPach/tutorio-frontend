@@ -29,7 +29,10 @@ import {
   setIsSheetUpdateReviewByStudent,
 } from "@/store/features/modalSlice";
 import { UpdateReviewByStudentModal } from "../Modal/Review/UpdateReviewByStudentModal";
-import { getTutorsForOrderById } from "@/store/features/tutorSlice";
+import {
+  clearTutors,
+  getTutorsForOrderById,
+} from "@/store/features/tutorSlice";
 
 const OrderPage: React.FC = () => {
   const page = "Main";
@@ -70,7 +73,8 @@ const OrderPage: React.FC = () => {
   const { orderById, loading, error } = useAppSelector((state) => state.orders);
 
   // Получаем всех репетиторов (фильтровать будем на клиенте)
-  const tutorsForOrderNotFilter = useAppSelector((state) => state.tutor.tutors);
+  // const tutorsForOrderNotFilter = useAppSelector((state) => state.tutor.tutors);
+  const tutorsForOrder = useAppSelector((state) => state.tutor.tutors);
   const placeMapping: Record<string, string> = {
     Дистанционно: "1",
     "У репетитора": "2",
@@ -90,8 +94,8 @@ const OrderPage: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [component]);
 
-  const tutorsForOrder = tutorsForOrderNotFilter;
   // ТЕПЕРЬ ФИЛЬТРУЕМ ПОЛНОСТЬЮ НА БЭКЕ
+  //const tutorsForOrder = tutorsForOrderNotFilter
   // .filter((tutor) => tutor.status === "Active")
   // .filter(
   //   (tutor) => orderById?.subject && tutor.subject.includes(orderById.subject)
@@ -188,12 +192,6 @@ const OrderPage: React.FC = () => {
   }, [dispatch, order]);
 
   useEffect(() => {
-    orderById?.id &&
-      dispatch(
-        getTutorsForOrderById({
-          orderId: orderById.id,
-        })
-      );
     dispatch(getThemesByTopic({ topicId: "67d090b401144e8d6f4eba88" }));
   }, [dispatch, orderById]);
 
@@ -259,7 +257,6 @@ const OrderPage: React.FC = () => {
           {component === 2 || component === 4 ? (
             <TutorsComponent
               chats={chats}
-              tutorsForOrder={tutorsForOrder}
               citiesAndRegions={citiesAndRegions}
               loading={loading}
               student={student}

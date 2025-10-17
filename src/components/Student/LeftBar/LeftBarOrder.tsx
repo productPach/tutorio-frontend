@@ -9,7 +9,7 @@ import {
   setComponentMenu,
   updateScrollPosition,
 } from "@/store/features/orderSlice";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { setChat } from "@/store/features/chatSlice";
 
 interface LeftBarOrderProps {
@@ -18,6 +18,18 @@ interface LeftBarOrderProps {
 
 const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
   const route = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Получаем текущий таб из query
+    const tab = searchParams.get("tab");
+
+    if (tab) {
+      // Синхронизируем стейт component с табом
+      dispatch(setComponentMenu(Number(tab)));
+    }
+  }, [searchParams]);
+
   const dispatch = useAppDispatch();
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
@@ -33,10 +45,8 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
     }
   }, []);
 
-  const router = useRouter();
-
   const handleBack = () => {
-    router.back(); // Возврат на предыдущую страницу
+    route.back(); // Возврат на предыдущую страницу
   };
 
   return (
@@ -91,7 +101,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );
                   dispatch(setChat(null));
-                  route.push("../");
+                  route.push("../?tab=7");
                 }}
               >
                 <Image
@@ -115,7 +125,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );
                   dispatch(setChat(null));
-                  route.push("../");
+                  route.push("../?tab=1");
                 }}
               >
                 <Image
@@ -136,7 +146,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                 onClick={() => {
                   dispatch(setComponentMenu(2));
                   dispatch(setChat(null));
-                  route.push("../");
+                  route.push("../?tab=2");
                 }}
               >
                 <Image
@@ -160,7 +170,7 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );
                   dispatch(setChat(null));
-                  route.push("../");
+                  route.push("../?tab=3");
                 }}
               >
                 <Image
@@ -184,6 +194,8 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                 className={styles.responseMenuM}
                 onClick={() => {
                   dispatch(setComponentMenu(7));
+                  // меняем URL, добавляем query-параметр tab
+                  route.push(`?tab=7`, { scroll: false });
                   dispatch(setChat(null));
                 }}
               >
@@ -205,6 +217,8 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                 onClick={() => {
                   dispatch(setComponentMenu(1));
                   dispatch(setChat(null));
+                  // меняем URL, добавляем query-параметр tab
+                  route.push(`?tab=1`, { scroll: false });
                 }}
               >
                 <Image
@@ -225,6 +239,8 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                 onClick={() => {
                   dispatch(setComponentMenu(2));
                   dispatch(setChat(null));
+                  // меняем URL, добавляем query-параметр tab
+                  route.push(`?tab=2`, { scroll: false });
                 }}
               >
                 <Image
@@ -245,6 +261,8 @@ const LeftBarOrder: React.FC<LeftBarOrderProps> = ({ page }) => {
                 onClick={() => {
                   dispatch(setComponentMenu(3));
                   dispatch(setChat(null));
+                  // меняем URL, добавляем query-параметр tab
+                  route.push(`?tab=3`, { scroll: false });
                   dispatch(
                     updateScrollPosition({ scrollPosition: 0, scrollHeight: 0 })
                   );

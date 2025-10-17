@@ -37,7 +37,7 @@ import {
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { CreateContractByStudentModal } from "../Modal/Response/CreateContractByStudentModal";
 import { HiddenOrderModal } from "../Modal/Response/HiddenOrderModal";
-import { CreateReviewByStudentModal } from "../Modal/Review/CreateReviewByStudentModal";
+import { useRouter } from "next/navigation";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -69,6 +69,7 @@ export const ChatComponent = ({
     });
   }, []);
 
+  const route = useRouter();
   const dispatch = useAppDispatch();
   const student = useAppSelector((state) => state.student.student);
   // Получаем чат из редакса
@@ -142,79 +143,13 @@ export const ChatComponent = ({
     }
   }, [inputValue, chat]);
 
-  // useEffect(() => {
-  //   if (chat?.messages && student?.id && token) {
-  //     const noReadMessagesFromOther = chat.messages.filter(
-  //       (message) => !message.isRead && message.senderId !== student.id
-  //     );
-
-  //     if (noReadMessagesFromOther.length === 0) return;
-
-  //     Promise.all(
-  //       noReadMessagesFromOther.map((message) =>
-  //         dispatch(
-  //           updateMessage({
-  //             messageId: message.id,
-  //             studentId: student.id,
-  //             isRead: true,
-  //             token,
-  //           })
-  //         ).unwrap()
-  //       )
-  //     )
-  //       .then(() => {
-  //         // После успешного обновления сообщений обновляем чат в заказе
-  //         const updatedMessages = chat.messages.map((message) =>
-  //           noReadMessagesFromOther.some((m) => m.id === message.id)
-  //             ? { ...message, isRead: true }
-  //             : message
-  //         );
-
-  //         dispatch(
-  //           updateChatInOrder({
-  //             chatId: chat.id,
-  //             updatedChat: {
-  //               ...chat,
-  //               messages: updatedMessages,
-  //             },
-  //           })
-  //         );
-  //       })
-  //       .catch((error) => {
-  //         console.error("Ошибка при обновлении сообщений:", error);
-  //       });
-  //   }
-  // }, [chat]);
-
   useEffect(() => {
     dispatch(setComponentMenu(5));
+    // меняем URL, добавляем query-параметр tab
+    route.push(`?tab=5`, { scroll: false });
     textareaRef.current?.focus();
     setInputValue("");
   }, [dispatch, chat?.id]);
-
-  // Блокируем скролл самой страницы при открытой клавиатуре
-  // useEffect(() => {
-  //   const lockScroll = () => {
-  //     document.body.style.position = "fixed";
-  //     document.body.style.top = `-${window.scrollY}px`;
-  //     document.body.style.width = "100%";
-  //   };
-
-  //   const unlockScroll = () => {
-  //     const scrollY = document.body.style.top;
-  //     document.body.style.position = "";
-  //     document.body.style.top = "";
-  //     window.scrollTo(0, parseInt(scrollY || "0") * -1);
-  //   };
-
-  //   window.addEventListener("focusin", lockScroll);
-  //   window.addEventListener("focusout", unlockScroll);
-
-  //   return () => {
-  //     window.removeEventListener("focusin", lockScroll);
-  //     window.removeEventListener("focusout", unlockScroll);
-  //   };
-  // }, []);
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -483,7 +418,9 @@ export const ChatComponent = ({
         <div className={styles.contBackM}>
           <div
             onClick={() => {
-              dispatch(setComponentMenu(7));
+              //dispatch(setComponentMenu(7));
+              // меняем URL, добавляем query-параметр tab
+              route.back();
               dispatch(setChat(null));
             }}
             className={styles.backImg}
@@ -507,6 +444,8 @@ export const ChatComponent = ({
                 href={`./${chat?.orderId}/tutor/${chat?.tutor.id}`}
                 onClick={() => {
                   dispatch(setComponentMenu(6));
+                  // меняем URL, добавляем query-параметр tab
+                  route.push(`?tab=6`, { scroll: false });
                 }}
               >
                 <Image
@@ -530,6 +469,8 @@ export const ChatComponent = ({
                   href={`./${orderById?.id}/tutor/${chat && chat.tutor.id}`}
                   onClick={() => {
                     dispatch(setComponentMenu(6));
+                    // меняем URL, добавляем query-параметр tab
+                    route.push(`?tab=6`, { scroll: false });
                   }} // Сохраняем скролл при клике
                 >
                   <span>{chat && chat.tutor.name}</span>

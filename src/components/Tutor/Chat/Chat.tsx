@@ -385,12 +385,12 @@ export const ChatComponent = React.memo(
             <div
               className={clsx(
                 chatStyles.content__chat,
-                { [chatStyles.content__chat_with_warning]: warning },
+                // { [chatStyles.content__chat_with_warning]: warning },
                 { [chatStyles.content__chat_with_cookies]: !cookiesAccepted },
-                {
-                  [chatStyles.content__chat_with_cookiesAndWarning]:
-                    !cookiesAccepted && warning,
-                },
+                // {
+                //   [chatStyles.content__chat_with_cookiesAndWarning]:
+                //     !cookiesAccepted && warning,
+                // },
                 chatStyles.flx1,
                 chatStyles.flxClmn,
                 chatStyles.jstContSpcBtwn

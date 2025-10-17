@@ -34,27 +34,6 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
   // Получаем стейт храниения компонента для отображения
   const component = useAppSelector((state) => state.orders.componentMenu);
 
-  // useEffect(() => {
-  //   const token = getAccessToken(); // берём из localStorage
-  //   if (token) {
-  //     // Вытаскиваем активную роль пользователя из токена, чтобы исключить переход
-  //     // в личный кабинет не активной роли для мультипользователя
-  //     // (когда мультипользователь под авторизацией ученика переходит в личный кабинет репетитора и наоборот)
-  //     const payload: { activeRole: Role; userID: string } = jwtDecode(token);
-  //     if (payload.activeRole !== "student") {
-  //       // Если токен существует, но активная роль не репетитор → редирект
-  //       router.push("/");
-  //       return;
-  //     }
-  //     dispatch(setToken(token));
-  //     dispatch(getCurrentStudent());
-  //   } else {
-  //     router.push("/");
-  //     return;
-  //   }
-  //   setIsLoadedPage(true);
-  // }, [dispatch, router]);
-
   useEffect(() => {
     const initAuth = () => {
       const token = getAccessToken(); // берём из localStorage

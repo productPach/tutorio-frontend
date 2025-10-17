@@ -256,7 +256,8 @@ export type SelectedTutors = {
   name: string;
   avatarUrl: string;
   userRating: number;
-  reviewsCount: number;
+  reviews: Review[];
+  // reviewsCount: number; // не нужно
   reviewId: string;
   reviewStatus: string;
 };

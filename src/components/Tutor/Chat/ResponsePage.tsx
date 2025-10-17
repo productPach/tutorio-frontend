@@ -53,8 +53,7 @@ const ResponsesPage: React.FC = () => {
   // Стейт для эмодзи в чате
   const [visibleEmoji, setVisibleEmoji] = useState(false);
 
-  const { chats, loadChats, chatsLoaded, setChatsLoaded, chatsLoading } =
-    useChat();
+  const { chats, loadChats } = useChat();
   const searchParams = useSearchParams();
 
   useEffect(() => {

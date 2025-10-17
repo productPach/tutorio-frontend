@@ -9,7 +9,7 @@ import Image from "next/image";
 import { getBackendUrl, host } from "@/api/server/configApi";
 import Lightbox, { SlideImage } from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatTimeAgo } from "@/utils/date/date";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
@@ -23,10 +23,15 @@ import { setChat } from "@/store/features/chatSlice";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import { ResponseStudentToTutorModal } from "../Modal/Response/ResponseStudentToTutorModal";
 import { pluralize } from "numeralize-ru";
+import {
+  clearTutors,
+  getTutorsForOrderById,
+} from "@/store/features/tutorSlice";
+import { Pagination } from "@/components/Pagination/Pagination";
+import { useRouter } from "next/navigation";
 
 type OrderProps = {
   chats: Chat[];
-  tutorsForOrder: Tutor[];
   citiesAndRegions: City[];
   loading: boolean;
   student: Student | null;
@@ -37,7 +42,6 @@ type OrderProps = {
 
 export const TutorsComponent = ({
   chats,
-  tutorsForOrder,
   citiesAndRegions,
   loading,
   student,
@@ -45,6 +49,39 @@ export const TutorsComponent = ({
   error,
 }: OrderProps) => {
   const dispatch = useAppDispatch();
+  const route = useRouter();
+  // Получаем всех репетиторов
+  const tutorsForOrder = useAppSelector((state) => state.tutor.tutors || []); // репетиторы по параметрам заказа
+  const isLoad = useAppSelector((state) => state.tutor.isLoad); // флаг окончания загрузки репетиторов
+  const page = useAppSelector((state) => state.tutor.page); // текущая страница в пагинации
+  const totalPages = useAppSelector((state) => state.tutor.totalPages); // всего страниц с репетиторами
+  const skipTutorsReload = useAppSelector(
+    (state) => state.tutor.skipTutorsReload
+  ); // флаг для понимания нужно ли загружать заного репетиторов или нет (чтобы не перезагружать список при создании чата при отклике)
+
+  const loadTutors = (pageNumber: number = 1) => {
+    if (!orderById?.id) return;
+    dispatch(
+      getTutorsForOrderById({
+        orderId: orderById.id,
+        page: pageNumber,
+        limit: 20,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (orderById?.id && !skipTutorsReload) {
+      loadTutors(1); // ОБНОВЛЯЕМ СПИСОК ТОЛЬКО В СЛУЧЕ, ЕСЛИ skipTutorsReload FALSE (УСТАНОВЛЕНО В СЛАЙСЕ РЕПЕТИТОРОВ ПО ДЕФОЛТУ). ОБНОВЛЯЕМ skipTutorsReload НА TRUE В МОДАЛКЕ ПРИ ОТКЛИКЕ, КОГДА НУЖНО ОБНОВЛЯТЬ orderById, НО НЕ НУЖНО ЗАНОГО ДЕРГАТЬ СПИСОК РЕПЕТИТОРОВ, ИНАЧЕ БУДЕТ СКРОЛЛ НАВЕРХ
+    }
+  }, [dispatch, orderById, skipTutorsReload]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearTutors()); // ОЧИЩАЕМ СПИСОК РЕПЕТИТОРОВ ПРИ ВЫХОДЕ ИЗ КОМПОНЕНТА
+    };
+  }, []);
+
   const isSheetOpen = useAppSelector((state) => state.modal.isSheetOpen);
   const [openLightboxIndex, setOpenLightboxIndex] = useState<number | null>(
     null
@@ -84,7 +121,7 @@ export const TutorsComponent = ({
     setOpenLightboxIndex(null); // Закрываем Lightbox
   };
 
-  if (loading && !student?.name)
+  if (loading && !isLoad && !student?.name)
     return (
       <div className={generalStyles.container__spinner}>
         <div className={generalStyles.spinner}>
@@ -97,208 +134,401 @@ export const TutorsComponent = ({
 
   return (
     <>
-      {tutorsForOrder.length > 0 ? (
-        tutorsForOrder.map((tutor, tutorIndex) => {
-          const avatars = [
-            "/img/icon/student/avatar/animal1.svg",
-            "/img/icon/student/avatar/animal2.svg",
-            "/img/icon/student/avatar/animal3.svg",
-            "/img/icon/student/avatar/animal4.svg",
-            "/img/icon/student/avatar/animal5.svg",
-            "/img/icon/student/avatar/animal6.svg",
-            "/img/icon/student/avatar/animal7.svg",
-          ];
+      {isLoad &&
+        (tutorsForOrder.length > 0 ? (
+          <>
+            {tutorsForOrder.map((tutor, tutorIndex) => {
+              const avatars = [
+                "/img/icon/student/avatar/animal1.svg",
+                "/img/icon/student/avatar/animal2.svg",
+                "/img/icon/student/avatar/animal3.svg",
+                "/img/icon/student/avatar/animal4.svg",
+                "/img/icon/student/avatar/animal5.svg",
+                "/img/icon/student/avatar/animal6.svg",
+                "/img/icon/student/avatar/animal7.svg",
+              ];
 
-          const randomAvatar =
-            avatars[Math.floor(Math.random() * avatars.length)];
-          const tutorAvatar = tutor.avatarUrl
-            ? `${getBackendUrl()}${tutor.avatarUrl}`
-            : randomAvatar;
+              const randomAvatar =
+                avatars[Math.floor(Math.random() * avatars.length)];
+              const tutorAvatar = tutor.avatarUrl
+                ? `${getBackendUrl()}${tutor.avatarUrl}`
+                : randomAvatar;
 
-          const regionIndex = citiesAndRegions.findIndex(
-            (location) => location.title === tutor.region
-          );
-
-          // Получаем текущее время
-          const currentTime = new Date();
-
-          // Проверяем, был ли репетитор онлайн в последние 5 минут
-          const lastOnlineTime = tutor.lastOnline
-            ? new Date(tutor.lastOnline)
-            : null;
-
-          let onlineStatus = "";
-          let timeDifference = 0;
-
-          if (lastOnlineTime) {
-            timeDifference = currentTime.getTime() - lastOnlineTime.getTime(); // Получаем разницу во времени в миллисекундах
-            if (timeDifference <= 5 * 60 * 1000) {
-              onlineStatus = "В сети";
-            } else {
-              onlineStatus = `был ${formatTimeAgo(lastOnlineTime)}`;
-            }
-          }
-
-          let hasPassportValid = null;
-          let hasGoodReviews = null;
-          let hasDocsEducation = null;
-          if (tutor.badges.length > 0) {
-            if (tutor.badges.includes("Паспорт проверен")) {
-              hasPassportValid = (
-                <div
-                  className={clsx(styles.passportControl, tutorsStyles.flxWrp)}
-                >
-                  ✅&nbsp;Паспорт проверен
-                </div>
+              const regionIndex = citiesAndRegions.findIndex(
+                (location) => location.title === tutor.region
               );
-            }
-            if (tutor.badges.includes("Хорошие отзывы")) {
-              hasGoodReviews = (
-                <div className={clsx(styles.goodReviews, tutorsStyles.flxWrp)}>
-                  ❤️&nbsp;Хорошие отзывы
-                </div>
-              );
-            }
-            if (tutor.badges.includes("Документы об образовании")) {
-              hasDocsEducation = (
-                <div
-                  className={clsx(styles.docsEducation, tutorsStyles.flxWrp)}
-                >
-                  🪪&nbsp;Образование
-                </div>
-              );
-            }
-          }
 
-          // Фильтруем цены по предмету заказа
-          const relevantPrices = tutor.subjectPrices.filter(
-            (price) => price.subjectId === orderById?.subject
-          );
+              // Получаем текущее время
+              const currentTime = new Date();
 
-          // Проверяем есть ли чат с этим репетитором
-          const hasChatWithTutor = orderById?.chats.some(
-            (chat) => chat.tutorId === tutor.id
-          );
-          const chat = chats.find((chat) => chat.tutorId === tutor.id);
+              // Проверяем, был ли репетитор онлайн в последние 5 минут
+              const lastOnlineTime = tutor.lastOnline
+                ? new Date(tutor.lastOnline)
+                : null;
 
-          const reviews =
-            tutor.reviews?.filter((r) => r.status === "Active") || [];
-          // Количество отзывов
-          const reviewsCount = reviews.length;
+              let onlineStatus = "";
+              let timeDifference = 0;
 
-          return (
-            <div
-              key={tutor.id}
-              className={clsx(
-                generalStyles.content_block,
-                generalStyles.order_block,
-                generalStyles.crsr_pntr,
-                styles.order_gap
-              )}
-            >
-              <div className={styles.tutorImgFioContainerTP}>
-                <div className={clsx(styles.flex1, styles.pstnRltv)}>
-                  <Link
-                    href={`./${orderById?.id}/tutor/${tutor.id}`}
-                    target="_blank"
-                    // onClick={() => {
-                    //   saveScrollPosition();
-                    //   dispatch(setComponentMenu(4));
-                    // }} // Сохраняем скролл при клике
-                  >
-                    <Image
-                      className={clsx(styles.tutorImg, styles.tutorImgM)}
-                      src={tutorAvatar}
-                      width={120}
-                      height={120}
-                      alt=""
-                    />
-                  </Link>
-                </div>
+              if (lastOnlineTime) {
+                timeDifference =
+                  currentTime.getTime() - lastOnlineTime.getTime(); // Получаем разницу во времени в миллисекундах
+                if (timeDifference <= 5 * 60 * 1000) {
+                  onlineStatus = "В сети";
+                } else {
+                  onlineStatus = `был ${formatTimeAgo(lastOnlineTime)}`;
+                }
+              }
 
-                <div
-                  className={clsx(styles.flex4, styles.tutorFioBagesContainer)}
-                >
-                  <div
-                    className={clsx(
-                      styles.containerFlxRw,
-                      styles.jtfCntSpBtwn,
-                      styles.gap6
-                    )}
-                  >
-                    <Link
-                      href={`./${orderById?.id}/tutor/${tutor.id}`}
-                      target="_blank"
-                      // onClick={() => {
-                      //   saveScrollPosition();
-                      //   dispatch(setComponentMenu(4));
-                      // }} // Сохраняем скролл при клике
+              let hasPassportValid = null;
+              let hasGoodReviews = null;
+              let hasDocsEducation = null;
+              if (tutor.badges.length > 0) {
+                if (tutor.badges.includes("Паспорт проверен")) {
+                  hasPassportValid = (
+                    <div
+                      className={clsx(
+                        styles.passportControl,
+                        tutorsStyles.flxWrp
+                      )}
                     >
-                      <h3>{tutor.name}</h3>
-                    </Link>
-                    {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
-                      <div className={styles.containerIsOnline}>
-                        <div className={styles.isOnline}></div>
-                        <span className={tutorsStyles.onlineStatus}>
-                          {onlineStatus}
-                        </span>
+                      ✅&nbsp;Паспорт проверен
+                    </div>
+                  );
+                }
+                if (tutor.badges.includes("Хорошие отзывы")) {
+                  hasGoodReviews = (
+                    <div
+                      className={clsx(styles.goodReviews, tutorsStyles.flxWrp)}
+                    >
+                      ❤️&nbsp;Хорошие отзывы
+                    </div>
+                  );
+                }
+                if (tutor.badges.includes("Документы об образовании")) {
+                  hasDocsEducation = (
+                    <div
+                      className={clsx(
+                        styles.docsEducation,
+                        tutorsStyles.flxWrp
+                      )}
+                    >
+                      🪪&nbsp;Образование
+                    </div>
+                  );
+                }
+              }
+
+              // Фильтруем цены по предмету заказа
+              const relevantPrices = tutor.subjectPrices.filter(
+                (price) => price.subjectId === orderById?.subject
+              );
+
+              // Проверяем есть ли чат с этим репетитором
+              const hasChatWithTutor = orderById?.chats.some(
+                (chat) => chat.tutorId === tutor.id
+              );
+              const chat = chats.find((chat) => chat.tutorId === tutor.id);
+
+              const reviews =
+                tutor.reviews?.filter((r) => r.status === "Active") || [];
+              // Количество отзывов
+              const reviewsCount = reviews.length;
+
+              return (
+                <div
+                  key={tutor.id}
+                  className={clsx(
+                    generalStyles.content_block,
+                    generalStyles.order_block,
+                    generalStyles.crsr_pntr,
+                    styles.order_gap
+                  )}
+                >
+                  <div className={styles.tutorImgFioContainerTP}>
+                    <div className={clsx(styles.flex1, styles.pstnRltv)}>
+                      <Link
+                        href={`./${orderById?.id}/tutor/${tutor.id}`}
+                        target="_blank"
+                        // onClick={() => {
+                        //   saveScrollPosition();
+                        //   dispatch(setComponentMenu(4));
+                        // }} // Сохраняем скролл при клике
+                      >
+                        <Image
+                          className={clsx(styles.tutorImg, styles.tutorImgM)}
+                          src={tutorAvatar}
+                          width={120}
+                          height={120}
+                          alt=""
+                        />
+                      </Link>
+                    </div>
+
+                    <div
+                      className={clsx(
+                        styles.flex4,
+                        styles.tutorFioBagesContainer
+                      )}
+                    >
+                      <div
+                        className={clsx(
+                          styles.containerFlxRw,
+                          styles.jtfCntSpBtwn,
+                          styles.gap6
+                        )}
+                      >
+                        <Link
+                          href={`./${orderById?.id}/tutor/${tutor.id}`}
+                          target="_blank"
+                          // onClick={() => {
+                          //   saveScrollPosition();
+                          //   dispatch(setComponentMenu(4));
+                          // }} // Сохраняем скролл при клике
+                        >
+                          <h3>{tutor.name}</h3>
+                        </Link>
+                        {onlineStatus && timeDifference <= 5 * 60 * 1000 && (
+                          <div className={styles.containerIsOnline}>
+                            <div className={styles.isOnline}></div>
+                            <span className={tutorsStyles.onlineStatus}>
+                              {onlineStatus}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    )}
+
+                      <div
+                        className={clsx(
+                          styles.containerIsOnline,
+                          styles.mt6px,
+                          styles.tutorPlaces,
+                          styles.lnHgt18
+                        )}
+                      >
+                        {tutor.userRating > 0.1 && (
+                          <div>
+                            &nbsp;{tutor.userRating?.toFixed(1) || "—"}
+                            &nbsp;рейтинг
+                          </div>
+                        )}
+                        {reviewsCount > 0 && (
+                          <div>
+                            {reviewsCount}&nbsp;
+                            {pluralize(
+                              reviewsCount,
+                              "отзыв",
+                              "отзыва",
+                              "отзывов"
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
+
+                  {tutor.tutorPlace.length > 0 && (
+                    <div
+                      className={clsx(
+                        styles.containerIsOnline,
+                        styles.mt6px,
+                        styles.tutorPlaces,
+                        styles.lnHgt18
+                      )}
+                    >
+                      {tutor.tutorPlace.includes("1") && (
+                        <div>🖥️&nbsp;Дистанционно</div>
+                      )}
+                      {tutor.tutorPlace.includes("2") && (
+                        <div>🏠&nbsp;У&nbsp;себя</div>
+                      )}
+                      {tutor.tutorPlace.includes("3") && (
+                        <div>📍Выезд&nbsp;к&nbsp;ученику&nbsp;</div>
+                      )}
+                      {hasPassportValid}
+                      {hasGoodReviews}
+                      {hasDocsEducation}
+                    </div>
+                  )}
+
+                  {/* Кнопка предложения для моб версии */}
+                  {chat?.status !== "Rejected" && (
+                    <div
+                      className={clsx(
+                        styles.dsplBlcM,
+                        tutorsStyles.buttonGoChat
+                      )}
+                    >
+                      {chat?.status !== "Rejected" ? (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+
+                            // Если чат с репетитором существует
+                            if (hasChatWithTutor && chat) {
+                              // Логика для существующего чата
+                              dispatch(setComponentMenu(5));
+                              // меняем URL, добавляем query-параметр tab
+                              route.push(`?tab=5`, { scroll: false });
+                              dispatch(setChat(chat));
+                              //saveScrollPosition();
+                              // Можно добавить другие действия, если чат уже существует
+                            } else {
+                              // Логика для нового чата (если чата нет)
+                              // dispatch(setIsModalResponseStudentToTutor(true));
+                              dispatch(
+                                setTutorIdForResponseStudentToTutor(tutor.id)
+                              );
+                              dispatch(setIsSheetOpen(true)); // Открываем шторку
+
+                              // Можно добавить другие действия для нового чата
+                            }
+                          }}
+                          className={clsx(
+                            generalStyles.content_block_button,
+                            {
+                              [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
+                              [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
+                            },
+                            generalStyles.buttonWthCnt, // Этот класс всегда применяется
+                            generalStyles.agnCntr,
+                            tutorsStyles.buttonGoChat
+                          )}
+                        >
+                          {hasChatWithTutor
+                            ? "Перейти в чат"
+                            : "Предложить заказ"}
+                        </button>
+                      ) : (
+                        false
+                        // <div>
+                        //   К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
+                        // </div>
+                      )}
+                    </div>
+                  )}
+                  {/* Окончание */}
+
+                  {tutor.educations.length > 0 && (
+                    <div
+                      className={clsx(
+                        styles.containerOrderInfo,
+                        styles.containerOrderInfoBG
+                      )}
+                    >
+                      <span className={styles.titleTutorInfo}>образование</span>
+
+                      <ul>
+                        {tutor.educations.map((education) => (
+                          <li
+                            key={education.id}
+                            className={styles.listEducation}
+                          >
+                            {education.educationInfo} (
+                            {education.educationStartYear}-
+                            {education.educationEndYear})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {slidesPerTutor[tutorIndex].length > 0 && (
+                    <div
+                      className={clsx(
+                        styles.containerOrderInfo,
+                        styles.containerOrderDiploms
+                      )}
+                    >
+                      {/* <span className={styles.titleTutorInfo}>
+                    Диплом, сертификаты и другие документы
+                  </span> */}
+
+                      <div
+                        className={clsx(styles.scrollContainer, styles.gap3)}
+                      >
+                        {slidesPerTutor[tutorIndex]
+                          .slice(0, 6)
+                          .map((slide, index) => (
+                            <Image
+                              key={index}
+                              onClick={() =>
+                                handleImageClick(tutorIndex, index)
+                              }
+                              src={slide.src}
+                              alt="Документ об образовании"
+                              width={100}
+                              height={100}
+                              className={styles.imageDiplomas}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div
                     className={clsx(
-                      styles.containerIsOnline,
-                      styles.mt6px,
-                      styles.tutorPlaces,
-                      styles.lnHgt18
+                      styles.containerOrderInfo,
+                      styles.containerOrderInfoBG
                     )}
                   >
-                    {tutor.userRating > 0.1 && (
-                      <div>
-                        &nbsp;{tutor.userRating?.toFixed(1) || "—"}
-                        &nbsp;рейтинг
-                      </div>
-                    )}
-                    {reviewsCount > 0 && (
-                      <div>
-                        {reviewsCount}&nbsp;
-                        {pluralize(reviewsCount, "отзыв", "отзыва", "отзывов")}
-                      </div>
-                    )}
+                    <span className={styles.titleTutorInfo}>
+                      местоположение
+                    </span>
+                    <div className={styles.profileInfoText}>
+                      <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              {tutor.tutorPlace.length > 0 && (
-                <div
-                  className={clsx(
-                    styles.containerIsOnline,
-                    styles.mt6px,
-                    styles.tutorPlaces,
-                    styles.lnHgt18
-                  )}
-                >
-                  {tutor.tutorPlace.includes("1") && (
-                    <div>🖥️&nbsp;Дистанционно</div>
-                  )}
-                  {tutor.tutorPlace.includes("2") && (
-                    <div>🏠&nbsp;У&nbsp;себя</div>
-                  )}
-                  {tutor.tutorPlace.includes("3") && (
-                    <div>📍Выезд&nbsp;к&nbsp;ученику&nbsp;</div>
-                  )}
-                  {hasPassportValid}
-                  {hasGoodReviews}
-                  {hasDocsEducation}
-                </div>
-              )}
+                  {relevantPrices.length > 0 && (
+                    <div
+                      className={clsx(
+                        styles.containerOrderInfo,
+                        styles.containerOrderInfoBG
+                      )}
+                    >
+                      <span className={styles.titleTutorInfo}>
+                        стоимость занятий
+                      </span>
 
-              {/* Кнопка предложения для моб версии */}
-              {chat?.status !== "Rejected" && (
-                <div
-                  className={clsx(styles.dsplBlcM, tutorsStyles.buttonGoChat)}
-                >
+                      <table className={generalStyles.table}>
+                        <tbody>
+                          {relevantPrices.map((price) => (
+                            <tr key={price.id} className={generalStyles.tr}>
+                              <td className={generalStyles.td}>
+                                {price.format === "online" && "Дистанционно"}
+                                {price.format === "home" && "У себя дома"}
+                                {price.format === "travel" && "Выезд к ученику"}
+                                {price.format === "group" && "В группе"}
+                              </td>
+                              <td className={generalStyles.td}>
+                                <b>{price.price} ₽</b>{" "}
+                                <span className={generalStyles.text14px}>
+                                  за {price.duration} минут
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {tutor.profileInfo && (
+                    <div
+                      className={clsx(
+                        styles.containerOrderInfo,
+                        styles.containerOrderInfoBG
+                      )}
+                    >
+                      <span className={styles.titleTutorInfo}>о себе</span>
+                      <div className={styles.profileInfoText}>
+                        {tutor.profileInfo.length > 250
+                          ? `${tutor.profileInfo.slice(0, 250)}...`
+                          : tutor.profileInfo}
+                      </div>
+                    </div>
+                  )}
+
                   {chat?.status !== "Rejected" ? (
                     <button
                       onClick={(e) => {
@@ -308,17 +538,17 @@ export const TutorsComponent = ({
                         if (hasChatWithTutor && chat) {
                           // Логика для существующего чата
                           dispatch(setComponentMenu(5));
+                          // меняем URL, добавляем query-параметр tab
+                          route.push(`?tab=5`, { scroll: false });
                           dispatch(setChat(chat));
                           //saveScrollPosition();
                           // Можно добавить другие действия, если чат уже существует
                         } else {
                           // Логика для нового чата (если чата нет)
-                          // dispatch(setIsModalResponseStudentToTutor(true));
+                          dispatch(setIsModalResponseStudentToTutor(true));
                           dispatch(
                             setTutorIdForResponseStudentToTutor(tutor.id)
                           );
-                          dispatch(setIsSheetOpen(true)); // Открываем шторку
-
                           // Можно добавить другие действия для нового чата
                         }
                       }}
@@ -330,197 +560,53 @@ export const TutorsComponent = ({
                         },
                         generalStyles.buttonWthCnt, // Этот класс всегда применяется
                         generalStyles.agnCntr,
-                        tutorsStyles.buttonGoChat
+                        styles.dsplNoneM
                       )}
                     >
                       {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
                     </button>
                   ) : (
-                    false
-                    // <div>
-                    //   К сожалению, репетитор отклонил ваш&nbsp;заказ&nbsp;❌
-                    // </div>
+                    <div className={styles.tutorRejectedOrder}>
+                      К сожалению, репетитор отклонил ваш заказ ❌
+                    </div>
                   )}
                 </div>
-              )}
-              {/* Окончание */}
+              );
+            })}
 
-              {tutor.educations.length > 0 && (
-                <div
-                  className={clsx(
-                    styles.containerOrderInfo,
-                    styles.containerOrderInfoBG
-                  )}
-                >
-                  <span className={styles.titleTutorInfo}>образование</span>
-
-                  <ul>
-                    {tutor.educations.map((education) => (
-                      <li key={education.id} className={styles.listEducation}>
-                        {education.educationInfo} (
-                        {education.educationStartYear}-
-                        {education.educationEndYear})
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {slidesPerTutor[tutorIndex].length > 0 && (
-                <div
-                  className={clsx(
-                    styles.containerOrderInfo,
-                    styles.containerOrderDiploms
-                  )}
-                >
-                  {/* <span className={styles.titleTutorInfo}>
-                    Диплом, сертификаты и другие документы
-                  </span> */}
-
-                  <div className={clsx(styles.scrollContainer, styles.gap3)}>
-                    {slidesPerTutor[tutorIndex]
-                      .slice(0, 6)
-                      .map((slide, index) => (
-                        <Image
-                          key={index}
-                          onClick={() => handleImageClick(tutorIndex, index)}
-                          src={slide.src}
-                          alt="Документ об образовании"
-                          width={100}
-                          height={100}
-                          className={styles.imageDiplomas}
-                        />
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              <div
-                className={clsx(
-                  styles.containerOrderInfo,
-                  styles.containerOrderInfoBG
-                )}
-              >
-                <span className={styles.titleTutorInfo}>местоположение</span>
-                <div className={styles.profileInfoText}>
-                  <span>{`${citiesAndRegions[regionIndex]?.title} и ${citiesAndRegions[regionIndex]?.area}`}</span>
-                </div>
+            {/* --- Постраничная навигация --- */}
+            {totalPages > 1 && (
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page} // из redux
+                onPageChange={(page) => loadTutors(page)}
+              />
+            )}
+          </>
+        ) : (
+          <div
+            className={clsx(
+              generalStyles.content_block,
+              generalStyles.order_block,
+              generalStyles.crsr_pntr,
+              styles.order_gap
+            )}
+          >
+            <div className={styles.containerOrderInfo}>
+              <div className={styles.subjectName}>
+                <h3>Нет подходящих репетиторов 😔</h3>
               </div>
-
-              {relevantPrices.length > 0 && (
-                <div
-                  className={clsx(
-                    styles.containerOrderInfo,
-                    styles.containerOrderInfoBG
-                  )}
-                >
-                  <span className={styles.titleTutorInfo}>
-                    стоимость занятий
-                  </span>
-
-                  <table className={generalStyles.table}>
-                    <tbody>
-                      {relevantPrices.map((price) => (
-                        <tr key={price.id} className={generalStyles.tr}>
-                          <td className={generalStyles.td}>
-                            {price.format === "online" && "Дистанционно"}
-                            {price.format === "home" && "У себя дома"}
-                            {price.format === "travel" && "Выезд к ученику"}
-                            {price.format === "group" && "В группе"}
-                          </td>
-                          <td className={generalStyles.td}>
-                            <b>{price.price} ₽</b>{" "}
-                            <span className={generalStyles.text14px}>
-                              за {price.duration} минут
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              {tutor.profileInfo && (
-                <div
-                  className={clsx(
-                    styles.containerOrderInfo,
-                    styles.containerOrderInfoBG
-                  )}
-                >
-                  <span className={styles.titleTutorInfo}>о себе</span>
-                  <div className={styles.profileInfoText}>
-                    {tutor.profileInfo.length > 250
-                      ? `${tutor.profileInfo.slice(0, 250)}...`
-                      : tutor.profileInfo}
-                  </div>
-                </div>
-              )}
-
-              {chat?.status !== "Rejected" ? (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-
-                    // Если чат с репетитором существует
-                    if (hasChatWithTutor && chat) {
-                      // Логика для существующего чата
-                      dispatch(setComponentMenu(5));
-                      dispatch(setChat(chat));
-                      //saveScrollPosition();
-                      // Можно добавить другие действия, если чат уже существует
-                    } else {
-                      // Логика для нового чата (если чата нет)
-                      dispatch(setIsModalResponseStudentToTutor(true));
-                      dispatch(setTutorIdForResponseStudentToTutor(tutor.id));
-                      // Можно добавить другие действия для нового чата
-                    }
-                  }}
-                  className={clsx(
-                    generalStyles.content_block_button,
-                    {
-                      [generalStyles.buttonBlc]: hasChatWithTutor, // Если chat с репетитором есть, добавим этот класс
-                      [generalStyles.buttonYlw]: !hasChatWithTutor, // Для случая, когда нет чата с репетитором, можно оставить кнопки желтого цвета
-                    },
-                    generalStyles.buttonWthCnt, // Этот класс всегда применяется
-                    generalStyles.agnCntr,
-                    styles.dsplNoneM
-                  )}
-                >
-                  {hasChatWithTutor ? "Перейти в чат" : "Предложить заказ"}
-                </button>
-              ) : (
-                <div className={styles.tutorRejectedOrder}>
-                  К сожалению, репетитор отклонил ваш заказ ❌
-                </div>
-              )}
-            </div>
-          );
-        })
-      ) : (
-        <div
-          className={clsx(
-            generalStyles.content_block,
-            generalStyles.order_block,
-            generalStyles.crsr_pntr,
-            styles.order_gap
-          )}
-        >
-          <div className={styles.containerOrderInfo}>
-            <div className={styles.subjectName}>
-              <h3>Нет подходящих репетиторов 😔</h3>
-            </div>
-            <div className={styles.goal}>
-              Сейчас нет репетиторов, которые подходят под ваш запрос.
-              <br></br>
-              <br></br>
-              Попробуйте изменить параметры заказа — например, добавить
-              возможность онлайн-занятий, если это удобно. Так найти подходящего
-              репетитора будет проще! 🎯
+              <div className={styles.goal}>
+                Сейчас нет репетиторов, которые подходят под ваш запрос.
+                <br></br>
+                <br></br>
+                Попробуйте изменить параметры заказа — например, добавить
+                возможность онлайн-занятий, если это удобно. Так найти
+                подходящего репетитора будет проще! 🎯
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        ))}
 
       {openLightboxIndex !== null && (
         <Lightbox

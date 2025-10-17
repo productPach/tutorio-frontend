@@ -28,6 +28,7 @@ import { useViewedOrders } from "@/hooks/useViewedOrders";
 import { ListFilter } from "lucide-react";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import SideBar from "../SideBar/SideBar";
+import { Pagination } from "@/components/Pagination/Pagination";
 
 const Orders = () => {
   const route = useRouter();
@@ -39,6 +40,8 @@ const Orders = () => {
   const { orders, loading, error, filters } = useSelector(
     (state: RootState) => state.orders
   );
+  const page = useAppSelector((state) => state.orders.page); // текущая страница в пагинации
+  const totalPages = useAppSelector((state) => state.orders.totalPages); // всего страниц с репетиторами
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
   const { selectedPlaceFilters, selectedGoalFilters } = filters;
   const { chats, chatsLoading, setChatsLoaded } = useChat();
@@ -46,6 +49,8 @@ const Orders = () => {
   const isSheetFiltersOrdersForTutor = useAppSelector(
     (state) => state.modal.isSheetFiltersOrdersForTutor
   );
+
+  console.log(page);
 
   const isMobile = window.innerWidth < 769;
 
@@ -58,8 +63,12 @@ const Orders = () => {
     dispatch(getAllSubjects());
   }, [dispatch]);
 
+  const loadOrders = (pageNumber: number = 1) => {
+    dispatch(getAllOrders({ page: pageNumber, limit: 10 }));
+  };
+
   useEffect(() => {
-    dispatch(getAllOrders());
+    loadOrders(1);
   }, [dispatch]);
 
   useEffect(() => {
@@ -242,8 +251,9 @@ const Orders = () => {
         <ListFilter />
         Фильтры
       </div>
-      {activeOrders.length > 0
-        ? activeOrders.map((order) => {
+      {activeOrders.length > 0 ? (
+        <>
+          {activeOrders.map((order) => {
             if (
               chats.find((chat) => chat.orderId === order.id)?.status ===
               "Rejected"
@@ -695,29 +705,41 @@ const Orders = () => {
                 </Link>
               </div>
             );
-          })
-        : !loading && (
-            <div
-              className={clsx(styles.content_block, styles.info_block, {
-                [styles.visible]: !loading,
-                [styles.hidden]: loading,
-              })}
-            >
-              <h3>Нет доступных заказов 😔</h3>
-              <p className={styles.content_block_p}>
-                К сожалению, сейчас нет заказов, которые подходят под ваши
-                условия. Пожалуйста, упростите критерии поиска в меню фильтров
-                справа.
-              </p>
-              <p>
-                Добавьте дополнительные предметы, которые вы преподаете. Это
-                поможет увеличить количество доступных заказов.
-              </p>
-              {/* <button className={styles.buttonBlc} type="button">
+          })}
+          {/* ----------------- Пагинация ----------------- */}
+          {/* Добавлено после списка заказов */}
+          {totalPages > 1 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={page} // текущая страница из redux или локального state
+              onPageChange={(page) => loadOrders(page)} // функция загрузки заказов для выбранной страницы
+            />
+          )}
+        </>
+      ) : (
+        !loading && (
+          <div
+            className={clsx(styles.content_block, styles.info_block, {
+              [styles.visible]: !loading,
+              [styles.hidden]: loading,
+            })}
+          >
+            <h3>Нет доступных заказов 😔</h3>
+            <p className={styles.content_block_p}>
+              К сожалению, сейчас нет заказов, которые подходят под ваши
+              условия. Пожалуйста, упростите критерии поиска в меню фильтров
+              справа.
+            </p>
+            <p>
+              Добавьте дополнительные предметы, которые вы преподаете. Это
+              поможет увеличить количество доступных заказов.
+            </p>
+            {/* <button className={styles.buttonBlc} type="button">
             Сбросить фильтры
           </button> */}
-            </div>
-          )}
+          </div>
+        )
+      )}
       <BottomSheet
         isOpen={isSheetFiltersOrdersForTutor}
         onClose={() => dispatch(setIsSheetFiltersOrdersForTutor(false))}

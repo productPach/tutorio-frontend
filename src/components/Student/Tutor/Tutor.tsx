@@ -305,10 +305,12 @@ export const TutorComponent = ({
                 if (hasChatWithTutor && chat) {
                   // Логика для существующего чата
                   dispatch(setComponentMenu(5));
+                  // меняем URL, добавляем query-параметр tab
+                  route.push(`?tab=5`, { scroll: false });
                   dispatch(setChat(chat));
 
                   if (page && page === "Tutor") {
-                    route.push("../");
+                    route.push("../tab=5");
                   }
                   //saveScrollPosition();
                   // Можно добавить другие действия, если чат уже существует

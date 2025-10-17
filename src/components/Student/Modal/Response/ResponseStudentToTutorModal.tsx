@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getOrderById } from "@/store/features/orderSlice";
 import { getAllSubjects } from "@/store/features/subjectSlice";
+import { setSkipTutorsReload } from "@/store/features/tutorSlice";
 
 export const ResponseStudentToTutorModal = () => {
   const dispatch = useAppDispatch();
@@ -86,6 +87,7 @@ export const ResponseStudentToTutorModal = () => {
             })
           ).unwrap();
 
+          dispatch(setSkipTutorsReload(true));
           // Даем рендеру отработать — и только потом пуш и сет
           setTimeout(async () => {
             try {

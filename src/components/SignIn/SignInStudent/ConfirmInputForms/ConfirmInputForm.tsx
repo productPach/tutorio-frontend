@@ -162,68 +162,6 @@ export const ConfirmInputForm: React.FC<ComponentRenderProps> = ({
     }
   }, [codes, handleVerifyCode]);
 
-  // Авторизация и логика репетитора
-  // const handleGetToken = async (secretCode: string) => {
-  //   try {
-  //     const jsonPhone = localStorage.getItem("origin-phone");
-  //     const phone = jsonPhone ? JSON.parse(jsonPhone) : "";
-  //     const role: Role = "tutor";
-  //     if (!phone) return;
-
-  //     const token = await dispatch(
-  //       getToken({ phone, secretCode, role })
-  //     ).unwrap();
-  //     if (token) {
-  //       setIsSuccess(true);
-  //       setErrorInput(false);
-  //       let updatedTutor;
-  //       try {
-  //         updatedTutor = await dispatch(getCurrentTutor()).unwrap();
-  //       } catch {
-  //         await dispatch(createTutor({ phone })).unwrap();
-  //         updatedTutor = await dispatch(getCurrentTutor()).unwrap();
-  //       }
-
-  //       switch (updatedTutor?.status) {
-  //         case "Rega: Fullname":
-  //           handleNextStep("fio");
-  //           break;
-  //         case "Rega: Subjects":
-  //           handleNextStep("subjects");
-  //           break;
-  //         case "Rega: Locations":
-  //           handleNextStep("locations");
-  //           break;
-  //         case "Rega: Email":
-  //           handleNextStep("email");
-  //           break;
-  //         case "Rega: Photo":
-  //           handleNextStep("photo");
-  //           break;
-  //         case "Pending":
-  //         case "Active":
-  //         case "Canceled delete":
-  //           handleNextStep("../tutor/orders");
-  //           break;
-  //         case "Deleted":
-  //           await dispatch(
-  //             updateTutor({ id: updatedTutor?.id, status: "Canceled delete" })
-  //           );
-  //           dispatch(resetDeleteRequest());
-  //           handleNextStep("../tutor/orders");
-  //           break;
-  //         default:
-  //           console.warn("Неизвестный статус репетитора");
-  //       }
-  //     } else {
-  //       setErrorInput(true);
-  //     }
-  //   } catch (error) {
-  //     if (!isLoggedIn) setErrorInput(true);
-  //     else console.warn("Ошибка получения токена:", error);
-  //   }
-  // };
-
   // Авторизация пользователя
   // НОВАЯ ВЕРСИЯ ОТ 25.01.2025
   const handleGetToken = async (secretCode: string) => {

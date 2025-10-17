@@ -57,7 +57,6 @@ export const ResponseSidbar = ({
   isChatWithTutor,
 }: ResponseSidbarProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.auth.token);
   //const chats = useAppSelector((state) => state.chat.chats);
   const selectChat = useAppSelector((state) => state.chat.chat);
   const student = useAppSelector((state) => state.student.student);
@@ -278,11 +277,13 @@ export const ResponseSidbar = ({
                         <div
                           onClick={() => {
                             dispatch(setComponentMenu(5));
+                            // меняем URL, добавляем query-параметр tab
+                            route.push(`?tab=5`, { scroll: false });
                             dispatch(setChat(chat));
                             // Закрываем блок с эмодзи
                             setVisibleEmoji && setVisibleEmoji(false);
                             if (page && page === "Tutor") {
-                              route.push("../");
+                              route.push("../tab=5");
                             }
                           }}
                           className={clsx(

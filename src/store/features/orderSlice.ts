@@ -4,17 +4,27 @@ import { getFiltersOrdersForTutorFromLocalStorage, setLocalStorage } from "@/uti
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
+interface OrdersResponse {
+  orders: Order[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export const getAllOrders = createAsyncThunk<
-  Order[], // Тип возвращаемых данных - массив заказов
-  void,
+  OrdersResponse, // Тип возвращаемых данных - массив заказов
+  { page?: number; limit?: number },
   { rejectValue: string } // Тип для ошибки
 >(
   'order/getAllOrders',
-  async (_, { rejectWithValue }) => {
+  async ({page = 1, limit = 10}, { rejectWithValue }) => {
     try {
       // Запрос списка заказов
-      const orders = await fetchGetAllOrders();
-      return orders; // Возвращаем массив заказов
+      const orders = await fetchGetAllOrders(page, limit);
+      return orders;  // { orders, pagination }
     } catch (error) {
       // Обрабатываем ошибку и передаем ее сообщение через rejectWithValue
       const errorMessage = error instanceof Error ? error.message : 'Ошибка при получении заказов';
@@ -133,8 +143,13 @@ type OrdersStateType =  {
     orderByIdDefault: null | Order;
     componentMenu: number;
     scrollPosition: number; // Положение скролла
-  scrollHeight: number;   // Общая высота страницы
-  hasChatWithTutor: boolean | null;
+    scrollHeight: number;   // Общая высота страницы
+    hasChatWithTutor: boolean | null;
+
+    // пагинация
+    page: number;
+    totalPages: number;
+    totalTutors: number;
 }
 
 // Получаем данные репетитора из localStorage, если они есть
@@ -152,8 +167,12 @@ const initialState: OrdersStateType = {
     orderByIdDefault: null,
     componentMenu: 1,
     scrollPosition: 0, // Начальное положение скролла
-  scrollHeight: 0,   // Начальная высота страницы
-  hasChatWithTutor: null,
+    scrollHeight: 0,   // Начальная высота страницы
+    hasChatWithTutor: null,
+    // пагинация
+    page: 1,
+    totalPages: 1,
+    totalTutors: 0,
 };
 
 const ordersSlice = createSlice({
@@ -215,9 +234,17 @@ const ordersSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllOrders.fulfilled, (state, action) => {
+      .addCase(getAllOrders.fulfilled, (state, action: PayloadAction<{
+        orders: Order[];
+        pagination?: { page?: number; limit?: number; total?: number; totalPages?: number };
+      }>) => {
         state.loading = false;
-        state.orders = action.payload;
+        state.orders = action.payload.orders || [];
+
+        // Безопасное присвоение с дефолтами
+        state.page = action.payload.pagination?.page || 1;
+        state.totalPages = action.payload.pagination?.totalPages || 1;
+        state.totalTutors = action.payload.pagination?.total || 0;
       })
       .addCase(getAllOrders.rejected, (state, action) => {
         state.loading = false;
