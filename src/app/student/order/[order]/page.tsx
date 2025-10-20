@@ -10,7 +10,6 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   const orderId = params.order;
 
   const order = await fetchGetPublicOrderById(orderId);
-  //const subjects = await fetchGetAllSubjects();
 
   let subjects: Subject[] = [];
   try {
@@ -23,7 +22,7 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   if (!order) {
     return {
       title: "Заказ не найден — Tutorio",
-      description: "Такой заказ не найден или он был удалён.",
+      description: "Такой заказ не найден или он был удалён",
       robots: { index: false, follow: false },
     };
   }

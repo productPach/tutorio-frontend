@@ -1,6 +1,7 @@
 "use client";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import styles from "../../../Match/Match.module.css";
+import locationsStyles from "../../../../app/tutor/locations.module.css";
 import animation from "../../../../app/match/layout.module.css";
 import clsx from "clsx";
 import { getLocation } from "@/api/addresses/addresses";
@@ -178,6 +179,7 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
     existingData.locationsTripCity = selectedValuesCity.map((item) => ({
       id: item.id,
       title: item.title,
+      lineNumber: item.lineNumber,
     }));
 
     // Удаляем старую запись с тем же id и добавляем обновленную запись
@@ -241,7 +243,26 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
                       }}
                     >
                       <div className={styles.selectedItemText2}>
-                        <div className={styles.itemTitle}>{item.title}</div>
+                        <div className={styles.itemTitle}>
+                          {/* Кружок с цветом линии метро */}
+                          <div className={locationsStyles.crcl_mtr_wrap}>
+                            <div className={locationsStyles.crcl_mtr_container}>
+                              <div
+                                className={clsx(
+                                  locationsStyles.crcl_mtr,
+                                  item?.lineNumber
+                                    ? locationsStyles[
+                                        `crcl_mtr_msk_${item.lineNumber}`
+                                      ]
+                                    : locationsStyles.crcl_mtr_noneSB
+                                )}
+                              />
+                            </div>
+                          </div>
+                          {/* Кружок с цветом линии метро */}
+
+                          {item.title}
+                        </div>
                         {item.displayType && (
                           <div
                             className={clsx(
@@ -264,7 +285,26 @@ export const LocationCityMultiDropdownForms: React.FC<ComponentRenderProps> = ({
             {selectedValuesCity.map((item, index) => (
               <div key={index} className={styles.selectedItemLkT}>
                 <div className={styles.selectedItemText}>
-                  <div className={styles.itemTitle}>{item.title}</div>
+                  <div className={styles.itemTitle}>
+                    {/* Кружок с цветом линии метро */}
+                    <div className={locationsStyles.crcl_mtr_wrap}>
+                      <div className={locationsStyles.crcl_mtr_container}>
+                        <div
+                          className={clsx(
+                            locationsStyles.crcl_mtr,
+                            item?.lineNumber
+                              ? locationsStyles[
+                                  `crcl_mtr_msk_${item.lineNumber}`
+                                ]
+                              : locationsStyles.crcl_mtr_noneSB
+                          )}
+                        />
+                      </div>
+                    </div>
+                    {/* Кружок с цветом линии метро */}
+
+                    {item.title}
+                  </div>
                   {item.displayType && (
                     <div className={styles.selectedItemTextType}>
                       {item.displayType}

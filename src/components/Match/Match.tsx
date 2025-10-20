@@ -81,6 +81,7 @@ const Match: React.FC = () => {
   }>();
 
   const ComponentsList: ComponentsList = {
+    subject: RadioListForms,
     goal: RadioListForms,
     class: RadioListForms,
     studentType: RadioListForms,

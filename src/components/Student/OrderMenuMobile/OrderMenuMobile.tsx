@@ -59,7 +59,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../tab=1");
+                      route.push("..?tab=1");
                     }}
                   >
                     <Text
@@ -90,7 +90,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../tab=7");
+                      route.push("..?tab=7");
                     }}
                   >
                     <Send
@@ -124,7 +124,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../tab=2");
+                      route.push("..?tab=2");
                     }}
                   >
                     <Users
@@ -154,7 +154,7 @@ const OrderMenuMobile: React.FC<LeftBarOrderProps> = ({ page }) => {
                         })
                       );
                       dispatch(setChat(null));
-                      route.push("../tab=3");
+                      route.push("..?tab=3");
                     }}
                   >
                     <MessageCircleQuestionMark

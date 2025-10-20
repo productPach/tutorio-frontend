@@ -139,7 +139,7 @@ const LeftBar: React.FC<{ page: string; pageName?: string }> = ({
                   [styles.undrln]: page === "Wiki",
                 })}
               >
-                База знаний
+                Помощь
               </span>
             </li>
           </Link>

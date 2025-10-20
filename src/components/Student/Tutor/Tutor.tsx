@@ -15,7 +15,6 @@ import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocation
 import { setComponentMenu } from "@/store/features/orderSlice";
 import { setChat } from "@/store/features/chatSlice";
 import {
-  setIsModalResponseStudentToTutor,
   setIsSheetOpen,
   setTutorIdForResponseStudentToTutor,
 } from "@/store/features/modalSlice";
@@ -45,12 +44,6 @@ export const TutorComponent = ({
   locations,
   tutor, // принимаем tutorId
 }: OrderProps) => {
-  // useEffect(() => {
-  //   //dispatch(setComponentMenu(4));
-  //   window.scrollTo({
-  //     top: 0,
-  //   });
-  // }, []);
   const page = "Tutor";
   const route = useRouter();
   const dispatch = useAppDispatch();
@@ -203,7 +196,14 @@ export const TutorComponent = ({
 
   const chat = chats.find((chat) => chat.tutorId === tutor.id);
 
-  const reviews = tutor.reviews?.filter((r) => r.status === "Active") || [];
+  const reviews =
+    tutor.reviews
+      ?.filter((r) => r.status === "Active")
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ) || [];
+
   // Количество отзывов
   const reviewsCount = reviews.length;
 

@@ -45,7 +45,7 @@ type LocationData = {
   locations: string[];
   locationsTrip: string[];
   locationsTripArea: { id: string; title: string }[];
-  locationsTripCity: { id: string; title: string }[];
+  locationsTripCity: { id: string; title: string; lineNumber: string }[];
   locationsTripCityData: string;
 };
 
