@@ -59,6 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
     let region = null;
     try {
       region = await fetchDetectUserRegion(); // { title, area, shortTitle }
+      console.log(region);
     } catch (err) {
       console.error("Ошибка при определении региона:", err);
     }
