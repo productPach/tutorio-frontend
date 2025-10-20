@@ -227,7 +227,7 @@ const Orders = () => {
               >
                 <Link
                   onClick={() => dispatch(setChat(null))}
-                  href={`order/${order.id}`}
+                  href={`order/${order.id}?tab=1`}
                 >
                   <div className={styles.order_block_flx_rw_spbtw}>
                     <h3>{subject?.title}</h3>

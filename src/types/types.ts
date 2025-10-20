@@ -294,7 +294,9 @@ export type District = {
   title: string;
   type: string;
   metros?: Metro[]; // надо убрать
-  displayTitle?: string; displayType?: string // для UI
+  displayTitle?: string; 
+  displayType?: string // для UI
+  lineNumber?: string
 };
 
 export type Metro = {
@@ -304,14 +306,17 @@ export type Metro = {
   lineName: string;
   lineNumber: string;
   cityPrefix?: string;
-  displayTitle?: string; displayType?: string // для UI
+  displayTitle?: string; 
+  displayType?: string // для UI
 };
 
 export type RegionalCity = {
   id: string;
   title: string;
   type?: string;
-  displayTitle?: string; displayType?: string // для UI
+  displayTitle?: string; 
+  displayType?: string // для UI
+  lineNumber?: string
 }
 
 export type WelcomeScreen = {

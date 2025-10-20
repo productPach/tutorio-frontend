@@ -154,6 +154,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
             id: metro.id,
             title: metro.title,
             displayType: "метро",
+            lineNumber: metro.lineNumber,
           } as Metro);
         }
 

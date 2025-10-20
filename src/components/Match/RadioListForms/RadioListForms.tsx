@@ -50,16 +50,25 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ({
 
   // Функция для перехода на следующий шаг
   const handleNextStep = useCallback(
-    (link: string, title: string) => {
+    (link: string, title: string, id_p?: string) => {
       // Обновляем состояния для красивого эффекта перехода
       setIsDisabled(true);
       setIsVisible(false);
 
-      // Создаем новый объект, который нужно положить в массив с данными формы
-      const newData = {
-        id: id,
-        [typeForm]: title,
-      };
+      let newData;
+      if (typeForm === "subject") {
+        // Создаем новый объект, который нужно положить в массив с данными формы
+        newData = {
+          id: id,
+          [typeForm]: id_p,
+        };
+      } else {
+        // Создаем новый объект, который нужно положить в массив с данными формы
+        newData = {
+          id: id,
+          [typeForm]: title,
+        };
+      }
 
       // Если typeForm текущей формы уже содержится в массиве, значит клиент уже отвечал на данный вопрос, и значит нужно удалить все последующие ответы (элементы массива с индексом больше индекса текущего объекта)
       if (containsClassProperty) {
@@ -110,6 +119,7 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ({
   const nextPagePropertyArr = answerArray.find(
     (obj) => obj.title === valueProperty
   );
+  const id_p = answerArray.find((obj) => obj.title === valueProperty)?.id;
   const nextPageProperty = nextPagePropertyArr
     ? nextPagePropertyArr?.nextPage
     : "";
@@ -146,8 +156,15 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ({
               return (
                 <React.Fragment key={answer.id}>
                   <div
-                    onClick={() =>
-                      handleNextStep(answer.nextPage, answer.title)
+                    onClick={
+                      typeForm === `subject`
+                        ? () =>
+                            handleNextStep(
+                              answer.nextPage,
+                              answer.title,
+                              String(answer.id)
+                            )
+                        : () => handleNextStep(answer.nextPage, answer.title)
                     }
                     className={styles.answer}
                   >
@@ -176,7 +193,16 @@ export const RadioListForms: React.FC<ComponentRenderProps> = ({
           <button
             type="button"
             disabled={isAnyRadioSelected ? false : true}
-            onClick={() => handleNextStep(nextPageProperty, valueProperty)}
+            onClick={
+              typeForm === `subject` && id_p
+                ? () =>
+                    handleNextStep(
+                      nextPageProperty,
+                      valueProperty,
+                      String(id_p)
+                    )
+                : () => handleNextStep(nextPageProperty, valueProperty)
+            }
             className={styles.continueButton}
           >
             Продолжить

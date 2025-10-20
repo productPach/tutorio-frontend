@@ -1,5 +1,94 @@
 export const listQuestionsAnswers = [
   {
+    id: 0,
+    typeForm: "subject",
+    question: "Выберите предмет",
+    description: "",
+    page: [
+      {
+        id: 1,
+        type: "ege",
+        answers: [
+          {
+            id: 614,
+            title: "Русский язык",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 366,
+            title: "Математика",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 506,
+            title: "Обществознание",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 235,
+            title: "Информатика",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 43,
+            title: "Биология",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 625,
+            title: "Физика",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 685,
+            title: "Химия",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 289,
+            title: "История",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 5,
+            title: "Английский язык",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 490,
+            title: "Немецкий язык",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 672,
+            title: "Французский язык",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 282,
+            title: "Испанский язык",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 309,
+            title: "Китайский язык",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 113,
+            title: "География",
+            nextPage: "/match/class/10-11",
+          },
+          {
+            id: 319,
+            title: "Литература",
+            nextPage: "/match/class/10-11",
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 1,
     typeForm: "goal",
     question: "Какая цель занятий?",
@@ -1937,4 +2026,5 @@ export const listQuestionsAnswers = [
       },
     ],
   },
+    
 ];
