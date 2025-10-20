@@ -38,16 +38,26 @@ export const fetchGetAllCities = async () => {
 
 
 // Определяет регион пользователя через backend
-export const fetchDetectUserRegion = async () => {
+// export const fetchDetectUserRegion = async () => {
+//   try {
+//     const response = await httpClient.get("region");
+//     return response.data; // объект City из БД
+//   } catch (error: any) {
+//     console.error(
+//       "❌ Ошибка при определении региона пользователя:",
+//       error.response?.status,
+//       error.response?.data || error.message
+//     );
+//     throw error;
+//   }
+// };
+export async function fetchDetectUserRegion() {
   try {
-    const response = await httpClient.get("region");
-    return response.data; // объект City из БД
-  } catch (error: any) {
-    console.error(
-      "❌ Ошибка при определении региона пользователя:",
-      error.response?.status,
-      error.response?.data || error.message
-    );
-    throw error;
+    const res = await fetch(`${baseUrl}region`);
+    if (!res.ok) throw new Error(`Status: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error("Ошибка fetchDetectUserRegion:", err);
+    throw err;
   }
-};
+}
