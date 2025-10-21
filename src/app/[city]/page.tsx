@@ -5,6 +5,9 @@ import { Footer } from "@/components/Footer/Footer";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // ✅ Валидные slugs (должны совпадать с slug в БД)
 const validCities = ["spb", "ekb", "novosibirsk", "kazan", "nn", "chelyabinsk"];
 
@@ -65,11 +68,4 @@ export default async function CityPage(context: any) {
       <Footer />
     </>
   );
-}
-
-// ✅ Статическая генерация для популярных городов
-export async function generateStaticParams() {
-  return validCities.map((city) => ({
-    city: city,
-  }));
 }
