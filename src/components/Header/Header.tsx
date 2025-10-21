@@ -2,12 +2,13 @@ import styles from "./Header.module.css";
 import { HeaderMenu } from "../HeaderMenu/HeaderMenu";
 import { SelectCityModal } from "../SelectCity/SelectCityModal";
 import clsx from "clsx";
+import { RegionalLink } from "../RegionalLink/RegionalLink";
 
 export const Header = () => {
   return (
     <header>
       <div className={clsx(styles.header, styles.center)}>
-        <a href="#">
+        <RegionalLink href="/">
           <div className={styles.header__logo}>
             tutorio
             <span className={styles.header__underLogo}>
@@ -17,7 +18,7 @@ export const Header = () => {
               Подбор репетиторов
             </span>
           </div>
-        </a>
+        </RegionalLink>
         <SelectCityModal />
         <HeaderMenu />
       </div>

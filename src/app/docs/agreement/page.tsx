@@ -3,6 +3,8 @@ import clsx from "clsx";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 import { HeaderMenu } from "@/components/HeaderMenu/HeaderMenu";
 import Link from "next/link";
+import { Header } from "@/components/Header/Header";
+import { RegionalLink } from "@/components/RegionalLink/RegionalLink";
 
 export const metadata = {
   title: "Пользовательское соглашение — Tutorio",
@@ -34,26 +36,13 @@ export const metadata = {
 export default function Agreement() {
   return (
     <>
-      <header>
-        <div className={clsx(styles.header, styles.center)}>
-          <Link href="/">
-            <div className={styles.header__logo}>
-              tutorio
-              <span className={styles.header__underLogo}>
-                Онлайн-сервис подбора репетиторов
-              </span>
-            </div>
-          </Link>
-          <SelectCityModal />
-          <HeaderMenu />
-        </div>
-      </header>
+      <Header />
       <main>
         <section className={clsx(styles.center, styles.containerPublicPage)}>
           <div className={styles.content}>
             <div className={styles.content_block}>
               <span className={styles.breadcrumbs}>
-                <Link href={"../"}>Главная</Link>
+                <RegionalLink href="/">Главная</RegionalLink>
                 <span>→</span>
                 <span>Пользовательское соглашение</span>
               </span>

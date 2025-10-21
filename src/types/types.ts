@@ -26,6 +26,7 @@ export type User = {
 export type UserRegion = {
   city: string;
   area: string;
+  slug?: string;
 };
 
 export type Student = {
@@ -284,6 +285,8 @@ export type City = {
   title: string;
   area: string;
   shortTitle: string;
+  region_name_dative?: string;
+  slug?: string;
   metros: Metro[];
   districts: District[];
   regionalCities: RegionalCity[]

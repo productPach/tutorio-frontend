@@ -38,10 +38,11 @@ export const SelectCity = () => {
   const handleSelectCity = async (
     cityId: string,
     city: string,
-    area: string
+    area: string,
+    slug: string
   ) => {
     try {
-      console.log("🎯 Выбран город:", { cityId, city, area }); // ✅ Логи
+      console.log("🎯 Выбран город:", { cityId, city, area, slug }); // ✅ Логи
 
       dispatch(setScrollY(0));
 
@@ -58,7 +59,7 @@ export const SelectCity = () => {
       }
 
       // ✅ 2. Сохраняем в localStorage и Redux
-      const userRegion = { city, area };
+      const userRegion = { city, area, slug };
       localStorage.setItem("region-user", JSON.stringify(userRegion));
       dispatch(setRegionUser(userRegion));
 
@@ -139,7 +140,10 @@ export const SelectCity = () => {
         {locationList.map((item) => (
           <React.Fragment key={item.id}>
             <div
-              onClick={() => handleSelectCity(item.id, item.title, item.area)}
+              onClick={() =>
+                item.slug &&
+                handleSelectCity(item.id, item.title, item.area, item.slug)
+              }
               className={styles.answer}
             >
               <input
