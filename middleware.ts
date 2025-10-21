@@ -26,12 +26,12 @@ const nonRegionalRoutes = [
   '/api'
 ];
 
+// ✅ Региональные slug (кроме Москвы)
+const regionalSlugs = ['spb', 'ekb', 'novosibirsk', 'kazan', 'nn', 'chelyabinsk'];
+
 export const config = {
   matcher: [
-    // ✅ Главная страница
-    '/',
-    
-    // ✅ Все SEO-маршруты
+    '/',    
     '/tutors/:path*',
     '/subjects/:path*', 
     '/about/:path*',
@@ -40,8 +40,6 @@ export const config = {
     '/blog/:path*',
     '/docs/:path*',
     '/sign-in-tutor/:path*',
-    
-    // ✅ Все служебные маршруты
     '/sign-in-student/:path*', 
     '/student/:path*',
     '/tutor/:path*',
@@ -49,94 +47,84 @@ export const config = {
     '/dashboard/:path*',
     '/settings/:path*',
     '/payment/:path*',
-    
-    // ✅ Региональные префиксы
     '/:region(spb|ekb|novosibirsk|kazan|nn|chelyabinsk)/:path*'
   ],
 };
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log('🔧 MIDDLEWARE TRIGGERED for:', request.nextUrl.pathname);
+  console.log('🔧 MIDDLEWARE TRIGGERED for:', pathname);
 
   // ✅ Получаем текущий регион из куки
   const regionCookie = request.cookies.get('region-id');
-  let currentRegionSlug = 'msk'; // По умолчанию Москва
-  
+  let currentRegionSlug = 'msk'; // Москва по умолчанию
+
   if (regionCookie?.value) {
     try {
-      const response = await fetch(
-        `${baseUrl}/api/cities/${regionCookie.value}`
-      );
-      if (response.ok) {
-        const cityData = await response.json();
+      const res = await fetch(`${baseUrl}/api/cities/${regionCookie.value}`);
+      if (res.ok) {
+        const cityData = await res.json();
         currentRegionSlug = cityData.slug || 'msk';
-        console.log('📍 Текущий регион:', currentRegionSlug);
+        console.log('📍 Текущий регион из куки:', currentRegionSlug);
       }
-    } catch (error) {
-      console.error('Ошибка получения slug:', error);
+    } catch (err) {
+      console.error('Ошибка получения slug:', err);
     }
   }
-  
-  // ✅ Получаем все slugs КРОМЕ Москвы (только региональные)
-  const regionalSlugs = ['spb', 'ekb', 'novosibirsk', 'kazan', 'nn', 'chelyabinsk'];
-  const hasRegionalPrefix = regionalSlugs.some(slug => 
-    pathname.startsWith(`/${slug}/`) || pathname === `/${slug}`
-  );
-  
-  // 🔄 ЛОГИКА ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
-  if (pathname === '/') {
-    // ✅ Если регион НЕ Москва - редирект на региональную главную
-    if (currentRegionSlug !== 'msk') {
-      console.log('🔄 Главная: Редирект на', `/${currentRegionSlug}`);
-      return NextResponse.redirect(new URL(`/${currentRegionSlug}`, request.url));
-    }
-    // ✅ Если регион Москва - остаемся на /
-    console.log('🏠 Главная: Остаемся на / (Москва)');
-    return NextResponse.next();
-  }
-  
-  // ✅ Проверяем относится ли путь к SEO-маршрутам
+
+  const hasRegionalPrefix = regionalSlugs.some(slug => pathname === `/${slug}` || pathname.startsWith(`/${slug}/`));
   const isSeoRoute = seoRoutes.some(route => pathname.startsWith(route));
   const isNonRegional = nonRegionalRoutes.some(route => pathname.startsWith(route));
-  
-  // 🔄 ЛОГИКА ДЛЯ SEO-МАРШРУТОВ
-  if (isSeoRoute) {
-    // ✅ Если регион НЕ Москва и путь еще не имеет регионального префикса - добавляем
-    if (currentRegionSlug !== 'msk' && !hasRegionalPrefix) {
-      console.log('🔄 SEO: Добавляем префикс', currentRegionSlug, 'к', pathname);
-      const newUrl = new URL(`/${currentRegionSlug}${pathname}`, request.url);
-      return NextResponse.redirect(newUrl);
+
+  // 🔄 Главная страница
+  if (pathname === '/') {
+    if (currentRegionSlug !== 'msk') {
+      console.log('🔄 Главная: редирект на региональную главную', `/${currentRegionSlug}`);
+      return NextResponse.redirect(new URL(`/${currentRegionSlug}`, request.url));
     }
-    
-    // ✅ Если регион Москва, но URL имеет региональный префикс - убираем
+    console.log('🏠 Главная: Москва, остаёмся на /');
+    return NextResponse.next();
+  }
+
+  // 🔄 SEO-маршруты
+  if (isSeoRoute) {
+    // ❗ Если регион НЕ Москва и нет префикса → добавляем
+    if (currentRegionSlug !== 'msk' && !hasRegionalPrefix) {
+      console.log('🔄 SEO: Добавляем региональный префикс', currentRegionSlug, 'к', pathname);
+      return NextResponse.redirect(new URL(`/${currentRegionSlug}${pathname}`, request.url));
+    }
+
+    // ❗ Если регион НЕ Москва и URL имеет другой региональный префикс → исправляем на правильный
+    if (currentRegionSlug !== 'msk' && hasRegionalPrefix) {
+      const regionInPath = regionalSlugs.find(slug => pathname === `/${slug}` || pathname.startsWith(`/${slug}/`));
+      if (regionInPath && regionInPath !== currentRegionSlug) {
+        const newPath = pathname.replace(`/${regionInPath}`, `/${currentRegionSlug}`);
+        console.log('🔄 SEO: Меняем префикс', regionInPath, '→', currentRegionSlug, 'для', pathname);
+        return NextResponse.redirect(new URL(newPath, request.url));
+      }
+    }
+
+    // ❗ Если регион Москва и есть префикс → убираем
     if (currentRegionSlug === 'msk' && hasRegionalPrefix) {
-      const regionInPath = regionalSlugs.find(slug => 
-        pathname.startsWith(`/${slug}/`) || pathname === `/${slug}`
-      );
+      const regionInPath = regionalSlugs.find(slug => pathname === `/${slug}` || pathname.startsWith(`/${slug}/`));
       if (regionInPath) {
-        console.log('🔄 SEO: Убираем префикс', regionInPath, 'с', pathname);
-        const newPathname = pathname.replace(`/${regionInPath}`, '') || '/';
-        const newUrl = new URL(newPathname, request.url);
-        return NextResponse.redirect(newUrl);
+        const newPath = pathname.replace(`/${regionInPath}`, '') || '/';
+        console.log('🔄 SEO: Убираем префикс', regionInPath, 'с', pathname, '→', newPath);
+        return NextResponse.redirect(new URL(newPath, request.url));
       }
     }
   }
-  
-  // 🔄 ЛОГИКА ДЛЯ СЛУЖЕБНЫХ МАРШРУТОВ
+
+  // 🔄 Служебные маршруты
   if (isNonRegional && hasRegionalPrefix) {
-    // ✅ Убираем региональный префикс со служебных маршрутов
-    const regionInPath = regionalSlugs.find(slug => 
-      pathname.startsWith(`/${slug}/`) || pathname === `/${slug}`
-    );
+    const regionInPath = regionalSlugs.find(slug => pathname === `/${slug}` || pathname.startsWith(`/${slug}/`));
     if (regionInPath) {
-      console.log('🔄 Служебные: Убираем префикс', regionInPath, 'с', pathname);
-      const newPathname = pathname.replace(`/${regionInPath}`, '') || '/';
-      const newUrl = new URL(newPathname, request.url);
-      return NextResponse.redirect(newUrl);
+      const newPath = pathname.replace(`/${regionInPath}`, '') || '/';
+      console.log('🔄 Служебные: Убираем префикс', regionInPath, 'с', pathname, '→', newPath);
+      return NextResponse.redirect(new URL(newPath, request.url));
     }
   }
-  
+
   console.log('➡️ Middleware пропускает запрос');
   return NextResponse.next();
 }
