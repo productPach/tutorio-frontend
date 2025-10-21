@@ -13,6 +13,7 @@ import {
 } from "@/utils/locations/getGeolocation";
 import { useEffect, useState } from "react";
 import { getAllLocations } from "@/store/features/locationSlice";
+import { fetchDetectUserRegion } from "@/api/server/locationApi";
 
 export const SelectCityModal = () => {
   const dispatch = useAppDispatch();
@@ -29,46 +30,80 @@ export const SelectCityModal = () => {
     dispatch(getAllLocations());
   }, [dispatch]);
 
+  // useEffect(() => {
+  //   if (regionUser) return;
+
+  //   const detectRegion = async () => {
+  //     try {
+  //       const regionUserLS = localStorage.getItem("region-user");
+  //       if (regionUserLS) {
+  //         const parsed = JSON.parse(regionUserLS) as UserRegion;
+  //         dispatch(setRegionUser(parsed));
+  //         setLocalRegion(parsed);
+  //         return;
+  //       }
+
+  //       const pos = await getGeolocation();
+  //       const { latitude, longitude } = pos.coords;
+
+  //       const locationData = await getAreaByCoordinates(latitude, longitude);
+  //       if (!locationData || !locationData.area) {
+  //         console.error("Ошибка: Не удалось найти область");
+  //         return;
+  //       }
+
+  //       const foundCity = locations.find(
+  //         (city) => city.area === locationData.area
+  //       );
+
+  //       if (foundCity) {
+  //         const userRegion = { city: foundCity.title, area: foundCity.area };
+  //         localStorage.setItem("region-user", JSON.stringify(userRegion));
+  //         dispatch(setRegionUser(userRegion));
+  //         setLocalRegion(userRegion);
+  //       } else {
+  //         console.error("Область не найдена в объекте locations");
+  //       }
+  //     } catch (error) {
+  //       console.error("Ошибка при определении местоположения:", error);
+  //     }
+  //   };
+
+  //   detectRegion();
+  // }, [dispatch, locations, regionUser]);
+
   useEffect(() => {
     if (regionUser) return;
 
-    const detectRegion = async () => {
+    const syncRegionWithClient = async () => {
       try {
+        // ✅ Всегда запрашиваем актуальный регион с бэкенда
+        const regionData = await fetchDetectUserRegion();
+
+        if (regionData) {
+          const userRegion: UserRegion = {
+            city: regionData.title,
+            area: regionData.area,
+          };
+
+          // ✅ Перезаписываем localStorage данными с бэкенда
+          localStorage.setItem("region-user", JSON.stringify(userRegion));
+          dispatch(setRegionUser(userRegion));
+          setLocalRegion(userRegion);
+        }
+      } catch (error) {
+        // ✅ Фолбэк на localStorage если бэкенд недоступен
         const regionUserLS = localStorage.getItem("region-user");
         if (regionUserLS) {
           const parsed = JSON.parse(regionUserLS) as UserRegion;
           dispatch(setRegionUser(parsed));
           setLocalRegion(parsed);
-          return;
         }
-
-        const pos = await getGeolocation();
-        const { latitude, longitude } = pos.coords;
-
-        const locationData = await getAreaByCoordinates(latitude, longitude);
-        if (!locationData || !locationData.area) {
-          console.error("Ошибка: Не удалось найти область");
-          return;
-        }
-
-        const foundCity = locations.find(
-          (city) => city.area === locationData.area
-        );
-
-        if (foundCity) {
-          const userRegion = { city: foundCity.title, area: foundCity.area };
-          localStorage.setItem("region-user", JSON.stringify(userRegion));
-          dispatch(setRegionUser(userRegion));
-          setLocalRegion(userRegion);
-        } else {
-          console.error("Область не найдена в объекте locations");
-        }
-      } catch (error) {
-        console.error("Ошибка при определении местоположения:", error);
+        console.error("Ошибка при синхронизации региона:", error);
       }
     };
 
-    detectRegion();
+    syncRegionWithClient();
   }, [dispatch, locations, regionUser]);
 
   return (
