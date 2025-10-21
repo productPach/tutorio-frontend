@@ -5,17 +5,13 @@ import { Footer } from "@/components/Footer/Footer";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { Metadata } from "next";
 
-interface Props {
-  params: {
-    city: string;
-  };
-}
-
 // ✅ Валидные slugs (должны совпадать с slug в БД)
 const validCities = ["spb", "ekb", "novosibirsk", "kazan", "nn", "chelyabinsk"];
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { city } = params;
+export async function generateMetadata(context: any): Promise<Metadata> {
+  // ✅ Принудительно ждём params (как в твоем примере)
+  const params = await Promise.resolve(context.params);
+  const city = params.city;
 
   // Проверяем что city валидный
   if (!validCities.includes(city)) {
@@ -52,8 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function CityPage({ params }: Props) {
-  const { city } = params;
+export default async function CityPage(context: any) {
+  // ✅ Принудительно ждём params
+  const params = await Promise.resolve(context.params);
+  const city = params.city;
 
   // Проверяем что city валидный
   if (!validCities.includes(city)) {
