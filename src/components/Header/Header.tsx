@@ -4,11 +4,15 @@ import { SelectCityModal } from "../SelectCity/SelectCityModal";
 import clsx from "clsx";
 import { RegionalLink } from "../RegionalLink/RegionalLink";
 
-export const Header = () => {
+interface HeaderProps {
+  city?: string; // передаём из страницы SSR
+}
+
+export const Header = ({ city }: HeaderProps) => {
   return (
     <header>
       <div className={clsx(styles.header, styles.center)}>
-        <RegionalLink href="/">
+        <RegionalLink href="/" citySlug={city}>
           <div className={styles.header__logo}>
             tutorio
             <span className={styles.header__underLogo}>
@@ -19,6 +23,7 @@ export const Header = () => {
             </span>
           </div>
         </RegionalLink>
+
         <SelectCityModal />
         <HeaderMenu />
       </div>

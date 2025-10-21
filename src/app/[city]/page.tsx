@@ -63,9 +63,9 @@ export default async function CityPage(context: any) {
 
   return (
     <>
-      <Header />
+      <Header city={city} />
       <Index />
-      <Footer />
+      <Footer city={city} />
     </>
   );
 }

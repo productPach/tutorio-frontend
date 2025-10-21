@@ -1,19 +1,30 @@
 import styles from "../../app/page.module.css";
 import clsx from "clsx";
+import { RegionalLink } from "../RegionalLink/RegionalLink";
+import { validSlug } from "@/utils/region/validSlug";
+import { notFound } from "next/navigation";
 
-export const Footer = () => {
+interface FooterProps {
+  city?: string; // передаём из SSR или страницы
+}
+
+export const Footer = ({ city }: FooterProps) => {
+  if (!city || !validSlug.includes(city)) {
+    return notFound(); // 404 если невалидный slug
+  }
+
   return (
     <footer className={clsx(styles.footer, styles.center)}>
       <div className={styles.footer__left}>
         <div className={styles.footer__rightM}>
-          <a href="#">
+          <RegionalLink href="/" citySlug={city}>
             <div className={styles.footer__right__logo}>
               tutorio
               <span className={styles.footer__right__underLogo}>
                 Онлайн-сервис подбора репетиторов
               </span>
             </div>
-          </a>
+          </RegionalLink>
         </div>
         <div className={styles.footer__menu}>
           <a href="">Найти репетитора</a>
@@ -24,7 +35,9 @@ export const Footer = () => {
           <a href="">Стать репетитором</a>
           <a href="">Личный кабинет</a>
           <br />
-          <a href="">Условия использования</a>
+          <RegionalLink href="/" citySlug={city}>
+            Пользовательское соглашение
+          </RegionalLink>
           <a href="">Обработка информации</a>
           <a href="">Защита персональных данных</a>
         </div>

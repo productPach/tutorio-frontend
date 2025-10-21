@@ -7,7 +7,8 @@ import { UserRegion } from "@/types/types";
 
 interface RegionalLinkProps extends LinkProps {
   children: ReactNode;
-  seo?: boolean; // если true — добавляем региональный префикс
+  seo?: boolean; // добавлять региональный префикс
+  citySlug?: string; // если передан явно (SSR)
 }
 
 const getRegionFromLocalStorage = (): UserRegion | null => {
@@ -25,6 +26,7 @@ export const RegionalLink = ({
   href,
   seo = true,
   children,
+  citySlug,
   ...props
 }: RegionalLinkProps) => {
   const regionUserRedux = useAppSelector((state) => state.auth.regionUser);
@@ -32,26 +34,22 @@ export const RegionalLink = ({
   const regionalHref = useMemo(() => {
     let path = typeof href === "string" ? href : href.toString();
 
-    // ✅ Берём регион из Redux, если нет — из localStorage
-    const regionUser = regionUserRedux || getRegionFromLocalStorage();
-    const citySlug = regionUser?.slug || "msk"; // используем slug из UserRegion
+    // приоритет: переданный citySlug > Redux > localStorage > Москва
+    const city =
+      citySlug ||
+      regionUserRedux?.slug ||
+      getRegionFromLocalStorage()?.slug ||
+      "msk";
 
-    // ✅ Если SEO и регион не Москва
-    if (seo && citySlug !== "msk") {
-      // Добавляем префикс, если его ещё нет
-      const hasPrefix =
-        path.startsWith(`/${citySlug}/`) || path === `/${citySlug}`;
+    if (seo && city !== "msk") {
+      const hasPrefix = path.startsWith(`/${city}/`) || path === `/${city}`;
       if (!hasPrefix) {
-        if (path.startsWith("/")) {
-          path = `/${citySlug}${path}`;
-        } else {
-          path = `/${citySlug}/${path}`;
-        }
+        path = path.startsWith("/") ? `/${city}${path}` : `/${city}/${path}`;
       }
     }
 
     return path;
-  }, [href, regionUserRedux, seo]);
+  }, [href, regionUserRedux, citySlug, seo]);
 
   return (
     <Link href={regionalHref} {...props}>
