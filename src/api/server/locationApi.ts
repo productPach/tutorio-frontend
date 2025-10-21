@@ -51,9 +51,34 @@ export const fetchGetAllCities = async () => {
 //     throw error;
 //   }
 // };
-export async function fetchDetectUserRegion() {
+
+interface FetchRegionParams {
+  set_cookie?: boolean;
+  region_id?: number;
+}
+
+// export async function fetchDetectUserRegion(params?: FetchRegionParams) {
+//   try {
+//     const res = await fetch(`${baseUrl}region`);
+//     if (!res.ok) throw new Error(`Status: ${res.status}`);
+//     return await res.json();
+//   } catch (err) {
+//     console.error("Ошибка fetchDetectUserRegion:", err);
+//     throw err;
+//   }
+// }
+
+export async function fetchDetectUserRegion(params?: FetchRegionParams) {
   try {
-    const res = await fetch(`${baseUrl}region`);
+    const urlParams = new URLSearchParams();
+    
+    if (params?.set_cookie) urlParams.append('set_cookie', 'true');
+    if (params?.region_id) urlParams.append('region_id', params.region_id.toString());
+    
+    const queryString = urlParams.toString();
+    const url = `${baseUrl}region${queryString ? `?${queryString}` : ''}`;
+    
+    const res = await fetch(url);
     if (!res.ok) throw new Error(`Status: ${res.status}`);
     return await res.json();
   } catch (err) {

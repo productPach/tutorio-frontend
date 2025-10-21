@@ -16,9 +16,12 @@ import {
   setSelectedValuesCity,
   updateTutor,
 } from "@/store/features/tutorSlice";
+import { fetchDetectUserRegion } from "@/api/server/locationApi";
+import { useRouter } from "next/navigation";
 
 export const SelectCity = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [inputSearch, setInputSearch] = useState("");
   const regionUser: UserRegion | null = useAppSelector(
     (state) => state.auth.regionUser
@@ -33,32 +36,74 @@ export const SelectCity = () => {
     setInputSearch(value);
   };
 
-  const handleSelectCity = (city: string, area: string) => {
-    dispatch(setScrollY(0));
-    localStorage.setItem("region-user", JSON.stringify({ city, area }));
-    dispatch(setModalSelectCity(false));
-    dispatch(setIsSheetSelectCity(false));
-    dispatch(setRegionUser({ city, area }));
-    dispatch(setSelectedValues([]));
-    dispatch(setSelectedValuesCity([]));
-    dispatch(setSelectedValuesArea([]));
+  const handleSelectCity = async (
+    cityId: number,
+    city: string,
+    area: string
+  ) => {
+    try {
+      dispatch(setScrollY(0));
 
-    if (token && tutor) {
-      const id = tutor.id;
-      const region = city;
-      dispatch(updateTutor({ id, region })).unwrap;
-    }
-
-    // Удаляем данные о городе из Local Storage, если выбран другой регион
-    const storedData = JSON.parse(localStorage.getItem("current-user") || "[]");
-    if (Array.isArray(storedData)) {
-      const updatedData = storedData.map((obj) => {
-        if (obj.locationsTripCity) {
-          obj.locationsTripCity = []; // Очищаем поле с городом
-        }
-        return obj;
+      // ✅ 1. Устанавливаем регион через API + устанавливаем куку
+      const regionData = await fetchDetectUserRegion({
+        region_id: cityId,
+        set_cookie: true,
       });
-      localStorage.setItem("current-user", JSON.stringify(updatedData));
+
+      if (!regionData) {
+        throw new Error("Не удалось установить регион");
+      }
+
+      // ✅ 2. Сохраняем в localStorage и Redux
+      const userRegion = { city, area };
+      localStorage.setItem("region-user", JSON.stringify(userRegion));
+      dispatch(setRegionUser(userRegion));
+
+      // ✅ 3. Закрываем модалку и сбрасываем фильтры
+      dispatch(setModalSelectCity(false));
+      dispatch(setIsSheetSelectCity(false));
+      dispatch(setSelectedValues([]));
+      dispatch(setSelectedValuesCity([]));
+      dispatch(setSelectedValuesArea([]));
+
+      // ✅ 4. Обновляем регион репетитора (если авторизован) ДОБАВИТЬ СТУДЕНТА!!
+      if (tutor) {
+        const id = tutor.id;
+        const region = city;
+        dispatch(updateTutor({ id, region })).unwrap;
+      }
+
+      // ✅ 5. Удаляем данные о городе из Local Storage, если выбран другой регион
+      const storedData = JSON.parse(
+        localStorage.getItem("current-user") || "[]"
+      );
+      if (Array.isArray(storedData)) {
+        const updatedData = storedData.map((obj) => {
+          if (obj.locationsTripCity) {
+            obj.locationsTripCity = []; // Очищаем поле с городом
+          }
+          return obj;
+        });
+        localStorage.setItem("current-user", JSON.stringify(updatedData));
+      }
+
+      // ✅ 6. ДЕЛАЕМ РЕДИРЕКТ ЧЕРЕЗ NEXT.JS ROUTER
+      const targetPath =
+        regionData.slug === "msk" ? "/" : `/${regionData.slug}`;
+
+      console.log(`🔄 Редирект на: ${targetPath}`);
+      router.push(targetPath);
+    } catch (error) {
+      console.error("Ошибка при смене региона:", error);
+
+      // ✅ Фолбэк: сохраняем в localStorage даже если API недоступно
+      const userRegion = { city, area };
+      localStorage.setItem("region-user", JSON.stringify(userRegion));
+      dispatch(setRegionUser(userRegion));
+      dispatch(setModalSelectCity(false));
+
+      // Показываем сообщение об ошибке
+      alert("Не удалось сменить регион. Попробуйте еще раз.");
     }
   };
 
@@ -91,7 +136,9 @@ export const SelectCity = () => {
         {locationList.map((item) => (
           <React.Fragment key={item.id}>
             <div
-              onClick={() => handleSelectCity(item.title, item.area)}
+              onClick={() =>
+                handleSelectCity(Number(item.id), item.title, item.area)
+              }
               className={styles.answer}
             >
               <input
