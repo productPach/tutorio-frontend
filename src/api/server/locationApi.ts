@@ -68,6 +68,25 @@ interface FetchRegionParams {
 //   }
 // }
 
+// export async function fetchDetectUserRegion(params?: FetchRegionParams) {
+//   try {
+//     const urlParams = new URLSearchParams();
+    
+//     if (params?.set_cookie) urlParams.append('set_cookie', 'true');
+//     if (params?.region_id) urlParams.append('region_id', params.region_id);
+    
+//     const queryString = urlParams.toString();
+//     const url = `${baseUrl}region${queryString ? `?${queryString}` : ''}`;
+    
+//     const res = await fetch(url);
+//     if (!res.ok) throw new Error(`Status: ${res.status}`);
+//     return await res.json();
+//   } catch (err) {
+//     console.error("Ошибка fetchDetectUserRegion:", err);
+//     throw err;
+//   }
+// }
+
 export async function fetchDetectUserRegion(params?: FetchRegionParams) {
   try {
     const urlParams = new URLSearchParams();
@@ -78,7 +97,34 @@ export async function fetchDetectUserRegion(params?: FetchRegionParams) {
     const queryString = urlParams.toString();
     const url = `${baseUrl}region${queryString ? `?${queryString}` : ''}`;
     
-    const res = await fetch(url);
+    // ✅ На сервере передаем куки из headers
+    const headers: HeadersInit = {};
+    
+    if (typeof window === 'undefined') {
+      // Это SSR - получаем куки из next/headers
+      const { cookies } = await import('next/headers');
+      const cookieStore = await cookies();
+      const regionCookie = await cookieStore.get('region-id');
+      
+      console.log('🔍 SSR Debug - regionCookie:', regionCookie); // ✅ Логи
+      
+      if (regionCookie) {
+        headers.Cookie = `region-id=${regionCookie.value}`;
+        console.log('🍪 SSR: Передаем куку в API:', regionCookie.value);
+      } else {
+        console.log('❌ SSR: Кука region-id не найдена');
+      }
+    } else {
+      console.log('🌐 Клиентский запрос');
+    }
+    
+    console.log('🔍 Заголовки запроса:', headers); // ✅ Логи
+    
+    const res = await fetch(url, { 
+      headers,
+      cache: 'no-store'
+    });
+    
     if (!res.ok) throw new Error(`Status: ${res.status}`);
     return await res.json();
   } catch (err) {
