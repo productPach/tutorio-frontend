@@ -84,6 +84,7 @@ export const SelectCityModal = () => {
           const userRegion: UserRegion = {
             city: regionData.title,
             area: regionData.area,
+            slug: regionData.slug,
           };
 
           // ✅ Перезаписываем localStorage данными с бэкенда

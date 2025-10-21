@@ -48,7 +48,7 @@ export default async function Home() {
     <>
       <Header />
       <Index />
-      <Footer />
+      <Footer city="msk" />
     </>
   );
 }
