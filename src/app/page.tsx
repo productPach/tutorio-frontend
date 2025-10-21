@@ -56,7 +56,7 @@ import { redirect } from "next/navigation";
 let regionData: any = null;
 
 async function getRegionData() {
-  if (regionData) return regionData; // Кешируем на время запроса
+  if (regionData) return regionData;
 
   try {
     regionData = await fetchDetectUserRegion({ set_cookie: true });
@@ -85,13 +85,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const region = await getRegionData();
-  console.log("📍 Region data:", region);
-  console.log("📍 Region slug:", region?.slug);
+  console.log("📍 Главная: Region data:", region);
 
-  if (region && region.slug !== "msk") {
-    console.log("🔄 Redirecting to:", `/${region.slug}`);
-    redirect(`/${region.slug}`);
-  }
+  // ❌ УБРАЛИ РЕДИРЕКТ - теперь этим занимается middleware
+  // Если пользователь попал на эту страницу - значит он из Москвы
+  // или middleware решил что нужно показать главную Москвы
 
   return (
     <>

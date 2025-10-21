@@ -28,6 +28,9 @@ const nonRegionalRoutes = [
 
 export const config = {
   matcher: [
+    // ✅ Главная страница
+    '/',
+    
     // ✅ Все SEO-маршруты
     '/tutors/:path*',
     '/subjects/:path*', 
@@ -56,7 +59,6 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log('🔧 MIDDLEWARE TRIGGERED for:', request.nextUrl.pathname);
 
-  
   // ✅ Получаем текущий регион из куки
   const regionCookie = request.cookies.get('region-id');
   let currentRegionSlug = 'msk'; // По умолчанию Москва
@@ -69,6 +71,7 @@ export async function middleware(request: NextRequest) {
       if (response.ok) {
         const cityData = await response.json();
         currentRegionSlug = cityData.slug || 'msk';
+        console.log('📍 Текущий регион:', currentRegionSlug);
       }
     } catch (error) {
       console.error('Ошибка получения slug:', error);
@@ -81,6 +84,18 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith(`/${slug}/`) || pathname === `/${slug}`
   );
   
+  // 🔄 ЛОГИКА ДЛЯ ГЛАВНОЙ СТРАНИЦЫ
+  if (pathname === '/') {
+    // ✅ Если регион НЕ Москва - редирект на региональную главную
+    if (currentRegionSlug !== 'msk') {
+      console.log('🔄 Главная: Редирект на', `/${currentRegionSlug}`);
+      return NextResponse.redirect(new URL(`/${currentRegionSlug}`, request.url));
+    }
+    // ✅ Если регион Москва - остаемся на /
+    console.log('🏠 Главная: Остаемся на / (Москва)');
+    return NextResponse.next();
+  }
+  
   // ✅ Проверяем относится ли путь к SEO-маршрутам
   const isSeoRoute = seoRoutes.some(route => pathname.startsWith(route));
   const isNonRegional = nonRegionalRoutes.some(route => pathname.startsWith(route));
@@ -89,6 +104,7 @@ export async function middleware(request: NextRequest) {
   if (isSeoRoute) {
     // ✅ Если регион НЕ Москва и путь еще не имеет регионального префикса - добавляем
     if (currentRegionSlug !== 'msk' && !hasRegionalPrefix) {
+      console.log('🔄 SEO: Добавляем префикс', currentRegionSlug, 'к', pathname);
       const newUrl = new URL(`/${currentRegionSlug}${pathname}`, request.url);
       return NextResponse.redirect(newUrl);
     }
@@ -99,6 +115,7 @@ export async function middleware(request: NextRequest) {
         pathname.startsWith(`/${slug}/`) || pathname === `/${slug}`
       );
       if (regionInPath) {
+        console.log('🔄 SEO: Убираем префикс', regionInPath, 'с', pathname);
         const newPathname = pathname.replace(`/${regionInPath}`, '') || '/';
         const newUrl = new URL(newPathname, request.url);
         return NextResponse.redirect(newUrl);
@@ -113,11 +130,13 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith(`/${slug}/`) || pathname === `/${slug}`
     );
     if (regionInPath) {
+      console.log('🔄 Служебные: Убираем префикс', regionInPath, 'с', pathname);
       const newPathname = pathname.replace(`/${regionInPath}`, '') || '/';
       const newUrl = new URL(newPathname, request.url);
       return NextResponse.redirect(newUrl);
     }
   }
   
+  console.log('➡️ Middleware пропускает запрос');
   return NextResponse.next();
 }
