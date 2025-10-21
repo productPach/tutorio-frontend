@@ -36,6 +36,27 @@ export const fetchGetAllCities = async () => {
   }
 };
 
+// Получение города по ID (пока используем только для мидлвара подставления slug в url - spb/ekb/kzn/novgorod и тд)
+export const fetchGetCitySlugById = async (cityId: string): Promise<string> => {
+  try {
+    const response = await fetch(`${baseUrl}cities/${cityId}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка ${response.status}: ${response.statusText}`);
+    }
+
+    const cityData = await response.json();
+    return cityData.slug || 'msk'; // ✅ Возвращаем slug или Москву по умолчанию
+    
+  } catch (error) {
+    console.error("Ошибка при получении slug города:", error);
+    return 'msk'; // ✅ Фолбэк на Москву при ошибке
+  }
+};
+
 
 // Определяет регион пользователя через backend
 // export const fetchDetectUserRegion = async () => {
@@ -56,36 +77,6 @@ interface FetchRegionParams {
   set_cookie?: boolean;
   region_id?: string;
 }
-
-// export async function fetchDetectUserRegion(params?: FetchRegionParams) {
-//   try {
-//     const res = await fetch(`${baseUrl}region`);
-//     if (!res.ok) throw new Error(`Status: ${res.status}`);
-//     return await res.json();
-//   } catch (err) {
-//     console.error("Ошибка fetchDetectUserRegion:", err);
-//     throw err;
-//   }
-// }
-
-// export async function fetchDetectUserRegion(params?: FetchRegionParams) {
-//   try {
-//     const urlParams = new URLSearchParams();
-    
-//     if (params?.set_cookie) urlParams.append('set_cookie', 'true');
-//     if (params?.region_id) urlParams.append('region_id', params.region_id);
-    
-//     const queryString = urlParams.toString();
-//     const url = `${baseUrl}region${queryString ? `?${queryString}` : ''}`;
-    
-//     const res = await fetch(url);
-//     if (!res.ok) throw new Error(`Status: ${res.status}`);
-//     return await res.json();
-//   } catch (err) {
-//     console.error("Ошибка fetchDetectUserRegion:", err);
-//     throw err;
-//   }
-// }
 
 export async function fetchDetectUserRegion(params?: FetchRegionParams) {
   try {
