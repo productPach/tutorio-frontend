@@ -1,4 +1,5 @@
 import { baseUrl } from '@/api/server/configApi';
+import { validSlug } from '@/utils/region/validSlug';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -27,7 +28,7 @@ const nonRegionalRoutes = [
 ];
 
 // ✅ Региональные slug (кроме Москвы)
-const regionalSlugs = ['spb', 'ekb', 'novosibirsk', 'kazan', 'nn', 'chelyabinsk'];
+const regionalSlugs = validSlug;
 
 export const config = {
   matcher: [
