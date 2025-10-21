@@ -54,7 +54,7 @@ export const fetchGetAllCities = async () => {
 
 interface FetchRegionParams {
   set_cookie?: boolean;
-  region_id?: number;
+  region_id?: string;
 }
 
 // export async function fetchDetectUserRegion(params?: FetchRegionParams) {
@@ -73,7 +73,7 @@ export async function fetchDetectUserRegion(params?: FetchRegionParams) {
     const urlParams = new URLSearchParams();
     
     if (params?.set_cookie) urlParams.append('set_cookie', 'true');
-    if (params?.region_id) urlParams.append('region_id', params.region_id.toString());
+    if (params?.region_id) urlParams.append('region_id', params.region_id);
     
     const queryString = urlParams.toString();
     const url = `${baseUrl}region${queryString ? `?${queryString}` : ''}`;

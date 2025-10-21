@@ -29,7 +29,6 @@ export const SelectCity = () => {
 
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
-  const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
 
   const handleSearch = (value: string) => {
@@ -37,11 +36,13 @@ export const SelectCity = () => {
   };
 
   const handleSelectCity = async (
-    cityId: number,
+    cityId: string,
     city: string,
     area: string
   ) => {
     try {
+      console.log("🎯 Выбран город:", { cityId, city, area }); // ✅ Логи
+
       dispatch(setScrollY(0));
 
       // ✅ 1. Устанавливаем регион через API + устанавливаем куку
@@ -49,6 +50,8 @@ export const SelectCity = () => {
         region_id: cityId,
         set_cookie: true,
       });
+
+      console.log("📦 Ответ от API:", regionData); // ✅ Логи
 
       if (!regionData) {
         throw new Error("Не удалось установить регион");
@@ -136,9 +139,7 @@ export const SelectCity = () => {
         {locationList.map((item) => (
           <React.Fragment key={item.id}>
             <div
-              onClick={() =>
-                handleSelectCity(Number(item.id), item.title, item.area)
-              }
+              onClick={() => handleSelectCity(item.id, item.title, item.area)}
               className={styles.answer}
             >
               <input
