@@ -26,8 +26,36 @@ const nonRegionalRoutes = [
   '/api'
 ];
 
+export const config = {
+  matcher: [
+    // ✅ Все SEO-маршруты
+    '/tutors/:path*',
+    '/subjects/:path*', 
+    '/about/:path*',
+    '/reviews/:path*',
+    '/pricing/:path*',
+    '/blog/:path*',
+    '/docs/:path*',
+    
+    // ✅ Все служебные маршруты
+    '/sign-in-tutor/:path*',
+    '/sign-in-student/:path*', 
+    '/student/:path*',
+    '/tutor/:path*',
+    '/admin/:path*',
+    '/dashboard/:path*',
+    '/settings/:path*',
+    '/payment/:path*',
+    
+    // ✅ Региональные префиксы
+    '/:region(spb|ekb|novosibirsk|kazan|nn|chelyabinsk)/:path*'
+  ],
+};
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  console.log('🔧 MIDDLEWARE TRIGGERED for:', request.nextUrl.pathname);
+
   
   // ✅ Получаем текущий регион из куки
   const regionCookie = request.cookies.get('region-id');
