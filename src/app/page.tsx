@@ -85,8 +85,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const region = await getRegionData();
+  console.log("📍 Region data:", region);
+  console.log("📍 Region slug:", region?.slug);
 
   if (region && region.slug !== "msk") {
+    console.log("🔄 Redirecting to:", `/${region.slug}`);
     redirect(`/${region.slug}`);
   }
 
