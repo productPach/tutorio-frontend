@@ -1,6 +1,6 @@
+import { baseUrl } from '@/api/server/configApi';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { baseUrl } from './api/server/configApi';
 
 // ✅ Пути которые ДОЛЖНЫ иметь региональные префиксы (для SEO)
 const seoRoutes = [
