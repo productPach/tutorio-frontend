@@ -4,19 +4,20 @@ import { Index } from "@/components/Landing/Index/Index";
 import { Footer } from "@/components/Footer/Footer";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { Metadata } from "next";
+import { validSlug } from "@/utils/region/validSlug";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-// ✅ Валидные slugs (должны совпадать с slug в БД)
-const validCities = ["spb", "ekb", "novosibirsk", "kazan", "nn", "chelyabinsk"];
+const validCities = validSlug;
 
-export async function generateMetadata(context: any): Promise<Metadata> {
-  // ✅ Принудительно ждём params (как в твоем примере)
-  const params = await Promise.resolve(context.params);
+export async function generateMetadata({
+  params,
+}: {
+  params: { city: string };
+}): Promise<Metadata> {
   const city = params.city;
 
-  // Проверяем что city валидный
   if (!validCities.includes(city)) {
     return {
       title: "Tutorio — репетиторы по всей России",
@@ -24,42 +25,28 @@ export async function generateMetadata(context: any): Promise<Metadata> {
     };
   }
 
+  // Можно дернуть API, чтобы получить название города для мета-тегов
+  let region;
   try {
-    let region = null;
-    try {
-      region = await fetchDetectUserRegion({ set_cookie: true });
-    } catch (err) {
-      console.error("Ошибка при определении региона:", err);
-    }
-
-    if (!region) {
-      return {
-        title: "Tutorio — репетиторы по всей России",
-        description: "Найди репетитора для занятий в любом регионе России",
-      };
-    }
-
-    return {
-      title: `Репетиторы в ${region.region_name_dative} — Tutorio`,
-      description: `Найди репетитора для занятий в ${region.region_name_dative}`,
-    };
+    region = await fetchDetectUserRegion({ set_cookie: false });
   } catch (err) {
-    return {
-      title: "Tutorio — репетиторы по всей России",
-      description: "Найди репетитора для занятий в любом регионе России",
-    };
+    console.error("Ошибка при определении региона:", err);
   }
+
+  return {
+    title: region
+      ? `Репетиторы в ${region.region_name_dative} — Tutorio`
+      : "Tutorio — репетиторы по всей России",
+    description: region
+      ? `Найди репетитора для занятий в ${region.region_name_dative}`
+      : "Найди репетитора для занятий в любом регионе России",
+  };
 }
 
-export default async function CityPage(context: any) {
-  // ✅ Принудительно ждём params
-  const params = await Promise.resolve(context.params);
+export default function CityPage({ params }: { params: { city: string } }) {
   const city = params.city;
 
-  // Проверяем что city валидный
-  if (!validCities.includes(city)) {
-    notFound(); // Покажет 404 если slug невалидный
-  }
+  if (!validCities.includes(city)) notFound();
 
   return (
     <>

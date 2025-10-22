@@ -3,50 +3,20 @@ import { Index } from "@/components/Landing/Index/Index";
 import { Footer } from "@/components/Footer/Footer";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 
-// ✅ Один вызов на весь запрос
-let regionData: any = null;
-
-async function getRegionData() {
-  if (regionData) return regionData;
-
-  try {
-    regionData = await fetchDetectUserRegion({ set_cookie: true });
-    return regionData;
-  } catch (err) {
-    console.error("Ошибка при определении региона:", err);
-    return null;
-  }
-}
-
+// Главная всегда Москва для SEO
 export async function generateMetadata(): Promise<Metadata> {
-  const region = await getRegionData();
-
-  if (!region) {
-    return {
-      title: "Tutorio — репетиторы по всей России",
-      description: "Найди репетитора для занятий в любом регионе России",
-    };
-  }
-
   return {
-    title: `Репетиторы в ${region.region_name_dative} — Tutorio`,
-    description: `Найди репетитора для занятий в ${region.region_name_dative}`,
+    title: "Tutorio — репетиторы в Москве",
+    description: "Найди репетитора для занятий в Москве",
   };
 }
 
-export default async function Home() {
-  const region = await getRegionData();
-  console.log("📍 Главная: Region data:", region);
-
-  if (region && region.slug !== "msk") {
-    redirect(`/${region.slug}`);
-  }
-
+export default function Home() {
+  // Редирект убрали — middleware делает это
   return (
     <>
-      <Header />
+      <Header city="msk" />
       <Index />
       <Footer city="msk" />
     </>
