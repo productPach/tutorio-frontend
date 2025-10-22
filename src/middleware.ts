@@ -1,4 +1,5 @@
 import { baseUrl } from '@/api/server/configApi';
+import { validSlug } from '@/utils/region/validSlug';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -24,8 +25,7 @@ const nonRegionalRoutes = [
   '/api',
 ];
 
-const regionalSlugs = ["msk", "spb", "ekb", "novosibirsk", "kazan", "nn", "chelyabinsk"];
-
+const regionalSlugs = validSlug;
 
 export const config = {
   matcher: [
@@ -47,6 +47,7 @@ export const config = {
     '/payment/:path*',
     '/:region(spb|ekb|novosibirsk|kazan|nn|chelyabinsk)/:path*',
   ],
+  runtime: 'nodejs',
 };
 
 // --- функция для определения региона ---
