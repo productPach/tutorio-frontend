@@ -7,15 +7,24 @@ export const config = {
 
 export function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
-
-  // Получаем куку
   const regionCookie = request.cookies.get("region-id");
+  const SPB_ID = "68590ba2d7197f4bb273d216";
 
-  // Принудительный редирект на /spb если кука = id Питера
-  const SPB_ID = "68590ba2d7197f4bb273d216"; // <-- подставь настоящий id из куки
+  // Создаем базовый response
+  let response = NextResponse.next();
+  
+  // Добавляем заголовки для отладки
+  response.headers.set("x-middleware-executed", "true");
+  response.headers.set("x-debug-path", pathname);
+  response.headers.set("x-debug-cookie", regionCookie?.value || "not-found");
+  response.headers.set("x-should-redirect", (pathname === "/" && regionCookie?.value === SPB_ID).toString());
+
+  // Проверяем условие редиректа
   if (pathname === "/" && regionCookie?.value === SPB_ID) {
+    response.headers.set("x-actual-redirect", "true");
     return NextResponse.redirect(`${origin}/spb`);
   }
 
-  return NextResponse.next();
+  // Возвращаем response с нашими заголовками
+  return response;
 }
