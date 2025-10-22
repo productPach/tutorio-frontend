@@ -1,5 +1,4 @@
 import { baseUrl } from '@/api/server/configApi';
-import { validSlug } from '@/utils/region/validSlug';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -25,7 +24,8 @@ const nonRegionalRoutes = [
   '/api',
 ];
 
-const regionalSlugs = validSlug;
+const regionalSlugs = ["msk", "spb", "ekb", "novosibirsk", "kazan", "nn", "chelyabinsk"];
+
 
 export const config = {
   matcher: [
