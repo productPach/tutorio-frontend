@@ -40,10 +40,15 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   };
 }
 
-export default function CityPage({ params }: { params: { city: string } }) {
+export default async function CityPage(context: any) {
+  // ✅ Принудительно ждём params
+  const params = await Promise.resolve(context.params);
   const city = params.city;
 
-  if (!validCities.includes(city)) notFound();
+  // Проверяем что city валидный
+  if (!validCities.includes(city)) {
+    notFound(); // Покажет 404 если slug невалидный
+  }
 
   return (
     <>
