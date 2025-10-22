@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const baseUrl = `https://dev-tutorio.ru/api/`
+
 const seoRoutes = [
   '/tutors',
   '/subjects',
@@ -46,12 +48,13 @@ export const config = {
     '/payment/:path*',
     '/:region(spb|ekb|novosibirsk|kazan|nn|chelyabinsk)/:path*',
   ],
+  runtime: 'nodejs',
 };
 
 // --- функция для определения региона ---
 async function getRegionFromApi() {
   try {
-    const res = await fetch(`https://dev-tutorio.ru:/api/region?set_cookie=true`);
+    const res = await fetch(`${baseUrl}region?set_cookie=true`);
     console.log('отправляем запрос на определение региона!');
     if (!res.ok) return { slug: 'msk', cityId: null };
     const data = await res.json();
@@ -96,7 +99,7 @@ export async function middleware(request: NextRequest) {
 
   if (regionCookie?.value) {
     try {
-      const res = await fetch(`https://dev-tutorio.ru:/api/cities/${regionCookie.value}`);
+      const res = await fetch(`${baseUrl}cities/${regionCookie.value}`);
       if (res.ok) {
         const cityData = await res.json();
         currentRegionSlug = cityData.slug || 'msk';
