@@ -64,8 +64,7 @@ async function getRegionFromApi() {
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname, origin } = request.nextUrl;
-  console.log('🔧 Middleware triggered:', pathname);
+  const { pathname, origin, searchParams } = request.nextUrl;
 
   let currentRegionSlug = 'msk'; // Москва по умолчанию
   const regionCookie = request.cookies.get('region-id');
@@ -77,13 +76,11 @@ export async function middleware(request: NextRequest) {
         const cityData = await res.json();
         currentRegionSlug = cityData.slug || 'msk';
       }
-    } catch (err) {
-      console.error('Ошибка получения региона из куки:', err);
+    } catch {
+      currentRegionSlug = 'msk';
     }
   } else {
-    // Если куки нет — определяем регион через бэкенд
     currentRegionSlug = await getRegionFromApi();
-    console.log('📍 Определили регион через API:', currentRegionSlug);
   }
 
   const hasRegionalPrefix = regionalSlugs.some(
@@ -92,18 +89,32 @@ export async function middleware(request: NextRequest) {
   const isSeoRoute = seoRoutes.some(route => pathname.startsWith(route));
   const isNonRegional = nonRegionalRoutes.some(route => pathname.startsWith(route));
 
+  const debug = searchParams.get('debug') === '1'; // включение отладки через ?debug=1
+
+  // функция для добавления debug-заголовков
+  const setDebugHeaders = (res: NextResponse) => {
+    if (debug) {
+      res.headers.set('x-debug-region', currentRegionSlug);
+      res.headers.set('x-debug-path', pathname);
+      res.headers.set('x-debug-hasPrefix', hasRegionalPrefix.toString());
+      res.headers.set('x-debug-isSeo', isSeoRoute.toString());
+      res.headers.set('x-debug-isNonRegional', isNonRegional.toString());
+    }
+    return res;
+  };
+
   // 🔄 Главная
   if (pathname === '/') {
     if (currentRegionSlug !== 'msk') {
-      return NextResponse.redirect(`${origin}/${currentRegionSlug}`);
+      return setDebugHeaders(NextResponse.redirect(`${origin}/${currentRegionSlug}`));
     }
-    return NextResponse.next();
+    return setDebugHeaders(NextResponse.next());
   }
 
   // 🔄 SEO-страницы
   if (isSeoRoute) {
     if (currentRegionSlug !== 'msk' && !hasRegionalPrefix) {
-      return NextResponse.redirect(`${origin}/${currentRegionSlug}${pathname}`);
+      return setDebugHeaders(NextResponse.redirect(`${origin}/${currentRegionSlug}${pathname}`));
     }
 
     if (currentRegionSlug !== 'msk' && hasRegionalPrefix) {
@@ -112,7 +123,7 @@ export async function middleware(request: NextRequest) {
       );
       if (regionInPath && regionInPath !== currentRegionSlug) {
         const newPath = pathname.replace(`/${regionInPath}`, `/${currentRegionSlug}`);
-        return NextResponse.redirect(`${origin}${newPath}`);
+        return setDebugHeaders(NextResponse.redirect(`${origin}${newPath}`));
       }
     }
 
@@ -122,7 +133,7 @@ export async function middleware(request: NextRequest) {
       );
       if (regionInPath) {
         const newPath = pathname.replace(`/${regionInPath}`, '') || '/';
-        return NextResponse.redirect(`${origin}${newPath}`);
+        return setDebugHeaders(NextResponse.redirect(`${origin}${newPath}`));
       }
     }
   }
@@ -134,9 +145,9 @@ export async function middleware(request: NextRequest) {
     );
     if (regionInPath) {
       const newPath = pathname.replace(`/${regionInPath}`, '') || '/';
-      return NextResponse.redirect(`${origin}${newPath}`);
+      return setDebugHeaders(NextResponse.redirect(`${origin}${newPath}`));
     }
   }
 
-  return NextResponse.next();
+  return setDebugHeaders(NextResponse.next());
 }
