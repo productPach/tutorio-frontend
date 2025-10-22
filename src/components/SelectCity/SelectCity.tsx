@@ -18,6 +18,7 @@ import {
 } from "@/store/features/tutorSlice";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export const SelectCity = () => {
   const dispatch = useAppDispatch();
@@ -45,6 +46,17 @@ export const SelectCity = () => {
       console.log("🎯 Выбран город:", { cityId, city, area, slug }); // ✅ Логи
 
       dispatch(setScrollY(0));
+
+      // // Сначала перезаписываем куку вручную
+      // Cookies.remove("region-id", {
+      //   path: "/",
+      // });
+      // Cookies.set("region-id", cityId.toString(), {
+      //   expires: 365,
+      //   path: "/",
+      //   secure: process.env.NODE_ENV === "production",
+      //   sameSite: "lax",
+      // });
 
       // ✅ 1. Устанавливаем регион через API + устанавливаем куку
       const regionData = await fetchDetectUserRegion({
