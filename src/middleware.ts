@@ -54,7 +54,7 @@ export const config = {
 
 async function getRegionFromApi() {
   try {
-    const res = await fetch(`${baseUrl}/api/detectUserRegion?set_cookie=true`);
+    const res = await fetch(`${baseUrl}detectUserRegion?set_cookie=true`);
     if (!res.ok) return null;
     const data = await res.json();
     return data.slug || 'msk';
@@ -71,7 +71,7 @@ export async function middleware(request: NextRequest) {
 
   if (regionCookie?.value) {
     try {
-      const res = await fetch(`${baseUrl}/api/cities/${regionCookie.value}`);
+      const res = await fetch(`${baseUrl}cities/${regionCookie.value}`);
       if (res.ok) {
         const cityData = await res.json();
         currentRegionSlug = cityData.slug || 'msk';
