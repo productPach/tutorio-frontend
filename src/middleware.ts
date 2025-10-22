@@ -52,7 +52,7 @@ export const config = {
 // --- функция для определения региона ---
 async function getRegionFromApi() {
   try {
-    const res = await fetch(`${baseUrl}region?set_cookie=false`);
+    const res = await fetch(`${baseUrl}region?set_cookie=true`);
     console.log('отправляем запрос на определение региона!');
     if (!res.ok) return { slug: 'msk', cityId: null };
     const data = await res.json();
