@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 
 export const config = {
   matcher: ["/"], // только главная
-  runtime: 'edge', // ← явно указываем runtime
 };
 
 export function middleware(request: NextRequest) {
