@@ -11,11 +11,8 @@ export const revalidate = 0;
 
 const validCities = validSlug;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { city: string };
-}): Promise<Metadata> {
+export async function generateMetadata(context: any): Promise<Metadata> {
+  const params = await Promise.resolve(context.params);
   const city = params.city;
 
   if (!validCities.includes(city)) {
