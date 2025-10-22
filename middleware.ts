@@ -3,12 +3,15 @@ import type { NextRequest } from "next/server";
 
 export const config = {
   matcher: ["/"], // только главная
+  runtime: 'edge', // ← явно указываем runtime
 };
 
 export function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
   const regionCookie = request.cookies.get("region-id");
   const SPB_ID = "68590ba2d7197f4bb273d216";
+
+   console.log(">>> MIDDLEWARE TRIGGERED");
 
   // Создаем базовый response
   let response = NextResponse.next();
