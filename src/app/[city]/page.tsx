@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header/Header";
 import { Index } from "@/components/Landing/Index/Index";
 import { Footer } from "@/components/Footer/Footer";
-import { fetchDetectUserRegion } from "@/api/server/locationApi";
+import {
+  fetchDetectUserRegion,
+  fetchGetCityBySlug,
+} from "@/api/server/locationApi";
 import { Metadata } from "next";
 import { validSlug } from "@/utils/region/validSlug";
 
@@ -25,7 +28,7 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   // Можно дернуть API, чтобы получить название города для мета-тегов
   let region;
   try {
-    region = await fetchDetectUserRegion({ set_cookie: false });
+    region = await fetchGetCityBySlug(city);
   } catch (err) {
     console.error("Ошибка при определении региона:", err);
   }

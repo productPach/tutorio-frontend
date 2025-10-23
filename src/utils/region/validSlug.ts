@@ -83,3 +83,23 @@ export const validSlug = [
   "yakutsk",
   "yaroslavl",
 ];
+
+
+export type ValidSlugType = typeof validSlug[number];
+
+export function getCitySlug(city: string | undefined): ValidSlugType | null {
+  // Если city undefined - это корневой маршрут (Москва по умолчанию)
+  if (city === undefined) return 'msk';
+  
+  // Если city есть в списке валидных
+  if (validSlug.includes(city as ValidSlugType)) {
+    return city as ValidSlugType;
+  }
+  
+  // Невалидный slug
+  return null;
+}
+
+export function isValidSlug(city: string | undefined): boolean {
+  return getCitySlug(city) !== null;
+}

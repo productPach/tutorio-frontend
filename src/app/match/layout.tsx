@@ -6,6 +6,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { SelectCityModal } from "@/components/SelectCity/SelectCityModal";
 import { useAppSelector } from "@/store/store";
+import { RegionalLink } from "@/components/RegionalLink/RegionalLink";
 
 type LayoutComponent = {
   children: ReactNode;
@@ -25,14 +26,14 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
       <header>
         <div className={clsx(styles.header, styles.center)}>
           <SelectCityModal />
-          <Link href="/">
+          <RegionalLink href="/">
             <div className={styles.header__logo}>
               tutorio
               <span className={styles.header__underLogo}>
                 Cервис подбора репетиторов
               </span>
             </div>
-          </Link>
+          </RegionalLink>
         </div>
       </header>
 

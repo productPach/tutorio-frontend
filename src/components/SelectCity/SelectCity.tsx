@@ -8,7 +8,7 @@ import {
   setScrollY,
 } from "@/store/features/modalSlice";
 import { setSelectedValues } from "@/store/features/matchSlice";
-import { UserRegion } from "@/types/types";
+import { City, UserRegion } from "@/types/types";
 import { setRegionUser } from "@/store/features/authSlice";
 
 import {
@@ -19,6 +19,9 @@ import {
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { useDetectRegion } from "@/hooks/detectRegion/useDetectRegion";
+import { validSlug } from "@/utils/region/validSlug";
+import { handleRegionRedirect } from "@/utils/region/regionRedirectUtils";
 
 export const SelectCity = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +31,9 @@ export const SelectCity = () => {
     (state) => state.auth.regionUser
   );
 
+  const { city, isRegionTooltip, saveRegion, confirmRegion, rejectRegion } =
+    useDetectRegion();
+
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
   const tutor = useAppSelector((state) => state.tutor.tutor);
@@ -36,91 +42,46 @@ export const SelectCity = () => {
     setInputSearch(value);
   };
 
-  const handleSelectCity = async (
-    cityId: string,
-    city: string,
-    area: string,
-    slug: string
-  ) => {
-    try {
-      console.log("🎯 Выбран город:", { cityId, city, area, slug }); // ✅ Логи
+  const handleSelectCity = async (selectCity: City) => {
+    if (!selectCity) return;
+    // console.log("🎯 Выбран город:", {
+    //   id: selectCity.id,
+    //   area: selectCity.area,
+    //   slug: selectCity.slug,
+    // }); // ✅ Логи
+    dispatch(setScrollY(0));
 
-      dispatch(setScrollY(0));
+    // ✅ 2. Сохраняем города в Cookie, localStorage и Redux
+    saveRegion(selectCity);
 
-      // // Сначала перезаписываем куку вручную
-      // Cookies.remove("region-id", {
-      //   path: "/",
-      // });
-      // Cookies.set("region-id", cityId.toString(), {
-      //   expires: 365,
-      //   path: "/",
-      //   secure: process.env.NODE_ENV === "production",
-      //   sameSite: "lax",
-      // });
+    // ✅ 3. Закрываем модалку и сбрасываем фильтры
+    dispatch(setModalSelectCity(false));
+    dispatch(setIsSheetSelectCity(false));
+    dispatch(setSelectedValues([]));
+    dispatch(setSelectedValuesCity([]));
+    dispatch(setSelectedValuesArea([]));
 
-      // ✅ 1. Устанавливаем регион через API + устанавливаем куку
-      const regionData = await fetchDetectUserRegion({
-        region_id: cityId,
-        set_cookie: true,
-      });
-
-      console.log("📦 Ответ от API:", regionData); // ✅ Логи
-
-      if (!regionData) {
-        throw new Error("Не удалось установить регион");
-      }
-
-      // ✅ 2. Сохраняем в localStorage и Redux
-      const userRegion = { city, area, slug };
-      localStorage.setItem("region-user", JSON.stringify(userRegion));
-      dispatch(setRegionUser(userRegion));
-
-      // ✅ 3. Закрываем модалку и сбрасываем фильтры
-      dispatch(setModalSelectCity(false));
-      dispatch(setIsSheetSelectCity(false));
-      dispatch(setSelectedValues([]));
-      dispatch(setSelectedValuesCity([]));
-      dispatch(setSelectedValuesArea([]));
-
-      // ✅ 4. Обновляем регион репетитора (если авторизован) ДОБАВИТЬ СТУДЕНТА!!
-      if (tutor) {
-        const id = tutor.id;
-        const region = city;
-        dispatch(updateTutor({ id, region })).unwrap;
-      }
-
-      // ✅ 5. Удаляем данные о городе из Local Storage, если выбран другой регион
-      const storedData = JSON.parse(
-        localStorage.getItem("current-user") || "[]"
-      );
-      if (Array.isArray(storedData)) {
-        const updatedData = storedData.map((obj) => {
-          if (obj.locationsTripCity) {
-            obj.locationsTripCity = []; // Очищаем поле с городом
-          }
-          return obj;
-        });
-        localStorage.setItem("current-user", JSON.stringify(updatedData));
-      }
-
-      // ✅ 6. ДЕЛАЕМ РЕДИРЕКТ ЧЕРЕЗ NEXT.JS ROUTER
-      const targetPath =
-        regionData.slug === "msk" ? "/" : `/${regionData.slug}`;
-
-      console.log(`🔄 Редирект на: ${targetPath}`);
-      router.push(targetPath);
-    } catch (error) {
-      console.error("Ошибка при смене региона:", error);
-
-      // ✅ Фолбэк: сохраняем в localStorage даже если API недоступно
-      const userRegion = { city, area };
-      localStorage.setItem("region-user", JSON.stringify(userRegion));
-      dispatch(setRegionUser(userRegion));
-      dispatch(setModalSelectCity(false));
-
-      // Показываем сообщение об ошибке
-      alert("Не удалось сменить регион. Попробуйте еще раз.");
+    // ✅ 4. Обновляем регион репетитора (если авторизован) ДОБАВИТЬ СТУДЕНТА!!
+    if (tutor) {
+      const id = tutor.id;
+      const region = selectCity.title;
+      dispatch(updateTutor({ id, region })).unwrap;
     }
+
+    // ✅ 5. Удаляем данные о городе из Local Storage, если выбран другой регион
+    const storedData = JSON.parse(localStorage.getItem("current-user") || "[]");
+    if (Array.isArray(storedData)) {
+      const updatedData = storedData.map((obj) => {
+        if (obj.locationsTripCity) {
+          obj.locationsTripCity = []; // Очищаем поле с городом
+        }
+        return obj;
+      });
+      localStorage.setItem("current-user", JSON.stringify(updatedData));
+    }
+
+    // ✅ 6. ДЕЛАЕМ РЕДИРЕКТ ЧЕРЕЗ NEXT.JS ROUTER
+    handleRegionRedirect(selectCity, router);
   };
 
   const locationList =
@@ -152,10 +113,7 @@ export const SelectCity = () => {
         {locationList.map((item) => (
           <React.Fragment key={item.id}>
             <div
-              onClick={() =>
-                item.slug &&
-                handleSelectCity(item.id, item.title, item.area, item.slug)
-              }
+              onClick={() => item.slug && handleSelectCity(item)}
               className={styles.answer}
             >
               <input

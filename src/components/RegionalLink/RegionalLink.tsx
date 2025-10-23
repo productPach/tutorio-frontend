@@ -34,10 +34,12 @@ export const RegionalLink = ({
   const regionalHref = useMemo(() => {
     let path = typeof href === "string" ? href : href.toString();
 
-    // приоритет: переданный citySlug > Redux > localStorage > Москва
+    // console.log(`слаг из хедер = ` + regionUserRedux?.slug);
+
+    // приоритет: переданный Redux > citySlug > localStorage > Москва
     const city =
-      citySlug ||
       regionUserRedux?.slug ||
+      citySlug ||
       getRegionFromLocalStorage()?.slug ||
       "msk";
 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setCookies } from "@/store/features/generalSlice";
+import { RegionalLink } from "../RegionalLink/RegionalLink";
 
 export default function CookieBanner() {
   const dispatch = useAppDispatch();
@@ -64,9 +65,9 @@ export default function CookieBanner() {
     <div className={styles.cookie_container}>
       <div className={styles.cookie_text}>
         Мы используем cookie. Подробнее&nbsp;—&nbsp;
-        <Link className={styles.cookie_link} href={"/docs/privacy-policy"}>
-          политика
-        </Link>
+        <RegionalLink href={"/docs/privacy-policy"}>
+          <span className={styles.cookie_link}>политика</span>
+        </RegionalLink>
       </div>
       <button
         onClick={acceptCookies}

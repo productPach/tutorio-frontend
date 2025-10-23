@@ -2,42 +2,51 @@ import styles from "../../page.module.css";
 import clsx from "clsx";
 import { Header } from "@/components/Header/Header";
 import { RegionalLink } from "@/components/RegionalLink/RegionalLink";
-import { validSlug } from "@/utils/region/validSlug";
+import { getCitySlug, validSlug } from "@/utils/region/validSlug";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer/Footer";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "Пользовательское соглашение — Tutorio",
-  description:
-    "Пользовательское соглашение сервиса Tutorio — правила использования платформы для учеников и репетиторов",
-  keywords: [
-    "пользовательское соглашение",
-    "Tutorio",
-    "правила сервиса",
-    "условия использования",
-    "договор оферта",
-    "репетиторский сервис",
-    "онлайн обучение",
-    "поиск репетиторов",
-    "поиск учеников",
-    "платформа для репетиторов",
-    "услуги онлайн-обучения",
-    "обязанности пользователя",
-    "ответственность сторон",
-    "согласие с условиями",
-    "регистрация на платформе",
-    "использование сайта",
-    "дистанционное обучение",
-    "взаимодействие с учениками",
-    "взаимодействие с репетиторами",
-  ],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Пользовательское соглашение — Tutorio",
+    description:
+      "Пользовательское соглашение сервиса Tutorio — правила использования платформы для учеников и репетиторов",
+    keywords: [
+      "пользовательское соглашение",
+      "Tutorio",
+      "правила сервиса",
+      "условия использования",
+      "договор оферта",
+      "репетиторский сервис",
+      "онлайн обучение",
+      "поиск репетиторов",
+      "поиск учеников",
+      "платформа для репетиторов",
+      "услуги онлайн-обучения",
+      "обязанности пользователя",
+      "ответственность сторон",
+      "согласие с условиями",
+      "регистрация на платформе",
+      "использование сайта",
+      "дистанционное обучение",
+      "взаимодействие с учениками",
+      "взаимодействие с репетиторами",
+    ],
+  };
+}
 
 export default function AgreementPage({ params }: any) {
-  const city = params.city;
+  // const city = params.city;
 
-  if (!validSlug.includes(city)) {
-    return notFound(); // 404 если невалидный slug
+  // if (!validSlug.includes(city)) {
+  //   return notFound(); // 404 если невалидный slug
+  // }
+
+  const city = getCitySlug(params.city);
+
+  if (!city) {
+    return notFound();
   }
 
   return (

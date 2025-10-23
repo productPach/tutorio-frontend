@@ -1,3 +1,7 @@
+.header__geoContainer {
+  position: relative;
+}
+
 .header__geo {
   cursor: pointer;
 }
@@ -139,4 +143,64 @@
 .areaCity {
   font-size: 14px;
   color: #666;
+}
+
+.regionTooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  z-index: 1000;
+}
+
+.regionTooltip__content {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+}
+
+.regionTooltip__text {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+}
+
+.regionTooltip__buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.regionTooltip__buttonConfirm {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.regionTooltip__buttonConfirm:hover {
+  background: #0056b3;
+}
+
+.regionTooltip__buttonReject {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.regionTooltip__buttonReject:hover {
+  background: #545b62;
 }

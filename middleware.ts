@@ -55,7 +55,7 @@ export const config = {
 async function getRegionFromApi() {
   try {
     const res = await fetch(`${baseUrl}region?set_cookie=true`);
-    console.log('отправляем запрос на определение региона!');
+    // console.log('отправляем запрос на определение региона!');
     if (!res.ok) return { slug: 'msk', cityId: null };
     const data = await res.json();
     return {
@@ -137,7 +137,7 @@ export async function middleware(request: NextRequest) {
       //   path: '/',
       // });
 
-      console.log('🍪 Cookie set + redirect to:', redirectUrl);
+      // console.log('🍪 Cookie set + redirect to:', redirectUrl);
       return setDebugHeaders(redirectResponse, { debug: true, pathname, currentRegionSlug, cityId });
     }
   }

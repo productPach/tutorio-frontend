@@ -25,7 +25,7 @@ export type User = {
 
 export type UserRegion = {
   city: string;
-  area: string;
+  area?: string;
   slug?: string;
 };
 

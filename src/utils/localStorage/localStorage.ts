@@ -25,6 +25,20 @@
   export const removeLocalStorage = (key: string) => {
     localStorage.removeItem(key);
   };
+
+  // Функция загрузки названия города из Local Storage
+  export const getCityFromLocalStorage = () => {
+    try {
+      const regionFromLS = getLocalStorage("region-user");
+      if (regionFromLS) {
+        const region = JSON.parse(regionFromLS);
+        return region.city; // значение по умолчанию
+      }
+    } catch (error) {
+      console.error('Error parsing region from localStorage:', error);
+    }
+    return 'Москва'; // значение по умолчанию
+  }
   
   // Функция загрузки студента из Local Storage
   export const getStudentFromLocalStorage = () => {

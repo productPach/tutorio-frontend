@@ -65,6 +65,7 @@ type ModalStateType = {
   isValueCreateReview: string | null;
   isReviewIdCreateReview: string | null;
   isSheetFiltersOrdersForTutor: boolean;
+  isRegionTooltip: boolean;
 };
 
 const initialState: ModalStateType = {
@@ -132,6 +133,7 @@ const initialState: ModalStateType = {
   isValueCreateReview: null,
   isReviewIdCreateReview: null,
   isSheetFiltersOrdersForTutor: false,
+  isRegionTooltip: false,
 };
 
 const modalSlice = createSlice({
@@ -332,6 +334,9 @@ const modalSlice = createSlice({
     setIsSheetFiltersOrdersForTutor(state, action: PayloadAction<boolean>) {
       state.isSheetFiltersOrdersForTutor = action.payload;
     },
+    setIsRegionTooltip(state, action: PayloadAction<boolean>) {
+      state.isRegionTooltip = action.payload;
+    },
   },
 });
 
@@ -400,5 +405,6 @@ export const {
   setIsValueCreateReview,
   setIsReviewIdCreateReview,
   setIsSheetFiltersOrdersForTutor,
+  setIsRegionTooltip,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;
