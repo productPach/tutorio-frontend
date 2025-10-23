@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
     let region = null;
     try {
       // ✅ Первый заход: устанавливаем куку
-      region = await fetchDetectUserRegion({ set_cookie: true });
+      region = await fetchDetectUserRegion();
     } catch (err) {
       console.error("Ошибка при определении региона:", err);
     }
@@ -61,8 +61,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
     // ✅ Используем region_name_dative для title
     return {
-      title: `Репетиторы в ${region.region_name_dative} — Tutorio`,
-      description: `Найди репетитора для занятий в ${region.region_name_dative}`,
+      title: `Репетиторы в ${region.city.region_name_dative} — Tutorio`,
+      description: `Найди репетитора для занятий в ${region.city.region_name_dative}`,
       robots: { index: true, follow: true },
     };
   } catch (err) {
