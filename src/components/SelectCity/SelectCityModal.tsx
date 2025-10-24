@@ -3,12 +3,16 @@ import styles from "../SelectCity/SelectCityModal.module.css";
 import Image from "next/image";
 import { Modal } from "../Modal/Modal";
 import { SelectCity } from "./SelectCity";
-import { setModalSelectCity } from "@/store/features/modalSlice";
+import {
+  setIsSheetSelectCity,
+  setModalSelectCity,
+} from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect } from "react";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { useDetectRegion } from "@/hooks/detectRegion/useDetectRegion";
 import { getLocalStorage } from "@/utils/localStorage/localStorage";
+import { BottomSheet } from "../BottomSheet/BottomSheet";
 
 export const SelectCityModal = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +21,9 @@ export const SelectCityModal = () => {
   const regionUser = useAppSelector((state) => state.auth.regionUser);
   const isModalSelectCity = useAppSelector(
     (state) => state.modal.isModalSelectCity
+  );
+  const isSheetSelectCity = useAppSelector(
+    (state) => state.modal.isSheetSelectCity
   );
 
   const { cityAtSlug, isRegionTooltip, confirmRegion } = useDetectRegion();
@@ -29,7 +36,14 @@ export const SelectCityModal = () => {
     <>
       <div className={styles.header__geoContainer}>
         <div
-          onClick={() => dispatch(setModalSelectCity(true))}
+          onClick={(e) => {
+            e.preventDefault();
+            if (window.innerWidth < 769) {
+              dispatch(setIsSheetSelectCity(true)); // Открываем шторку
+            } else {
+              dispatch(setModalSelectCity(true));
+            }
+          }}
           className={styles.header__geo}
         >
           <Image
@@ -58,7 +72,14 @@ export const SelectCityModal = () => {
                   Да
                 </button>
                 <button
-                  onClick={() => dispatch(setModalSelectCity(true))}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (window.innerWidth < 769) {
+                      dispatch(setIsSheetSelectCity(true)); // Открываем шторку
+                    } else {
+                      dispatch(setModalSelectCity(true));
+                    }
+                  }}
                   className={styles.regionTooltip__buttonReject}
                 >
                   Нет
@@ -75,6 +96,13 @@ export const SelectCityModal = () => {
         isModal={isModalSelectCity}
         modalId={"selectCity"}
       />
+
+      <BottomSheet
+        isOpen={isSheetSelectCity}
+        onClose={() => dispatch(setIsSheetSelectCity(false))}
+      >
+        <SelectCity />
+      </BottomSheet>
     </>
   );
 };
