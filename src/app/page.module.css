@@ -535,7 +535,7 @@
   min-width: 320px;
   background: rgba(255, 255, 255, 0.6);
   color: #222;
-  padding: 16px 24px;
+  padding: 12px 24px;
   z-index: 999;
   display: flex;
   flex-direction: row;
@@ -554,6 +554,16 @@
 .cookie_link {
   color: #111;
   text-decoration: underline;
+}
+.cookie_button {
+  padding: 6px 12px;
+  font-weight: 400;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: "Source Sans 3", sans-serif;
 }
 .content_block_button {
   padding: 12px 20px;

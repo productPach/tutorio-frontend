@@ -71,7 +71,7 @@ export default function CookieBanner() {
       </div>
       <button
         onClick={acceptCookies}
-        className={clsx(styles.content_block_button, styles.buttonYlw)}
+        className={clsx(styles.cookie_button, styles.buttonYlw)}
       >
         Согласен
       </button>

@@ -187,11 +187,12 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  font-family: "Source Sans 3", sans-serif;
   /* transition: background-color 0.2s; */
   transition: all 0.3s;
 }
 
-.regionTooltip__buttonConfirm:hover {
+.regionTooltip__buttonConfirm:focus {
   /* background: #0056b3; */
   transform: scale(0.98);
 }
@@ -206,11 +207,12 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  font-family: "Source Sans 3", sans-serif;
   /* transition: background-color 0.2s; */
   transition: all 0.3s;
 }
 
-.regionTooltip__buttonReject:hover {
+.regionTooltip__buttonReject:focus {
   /* background: #545b62; */
   transform: scale(0.98);
 }
