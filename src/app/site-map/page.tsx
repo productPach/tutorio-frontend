@@ -3,83 +3,49 @@ import { Index } from "@/components/Landing/Index/Index";
 import { Footer } from "@/components/Footer/Footer";
 import { Metadata } from "next";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
+import { getCitySlug } from "@/utils/region/validSlug";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
-  // try {
-  //   // --------------------------
-  //   // 1️⃣ Определяем регион через backend
-  //   // --------------------------
-  //   let region = null;
-  //   try {
-  //     region = await fetchDetectUserRegion(); // { title, area, shortTitle }
-  //     console.log(region);
-  //   } catch (err) {
-  //     console.error("Ошибка при определении региона:", err);
-  //   }
-
-  //   if (!region) {
-  //     return {
-  //       title: "Tutorio — репетиторы по всей России",
-  //       description: "Найди репетитора для занятий в любом регионе России",
-  //       robots: { index: true, follow: true },
-  //     };
-  //   }
-
-  //   // --------------------------
-  //   // 2️⃣ Формируем метаданные с регионом
-  //   // --------------------------
-  //   return {
-  //     title: `Репетиторы в ${region.shortTitle} — Tutorio`,
-  //     description: `Найди репетитора для занятий в ${region.shortTitle}`,
-  //     robots: { index: true, follow: true },
-  //   };
-  // } catch (err) {
-  //   console.error("Ошибка при генерации metadata:", err);
-  //   return {
-  //     title: "Tutorio — репетиторы по всей России",
-  //     description: "Найди репетитора для занятий в любом регионе России",
-  //     robots: { index: true, follow: true },
-  //   };
-  // }
-
-  try {
-    let region = null;
-    try {
-      // ✅ Первый заход: устанавливаем куку
-      region = await fetchDetectUserRegion();
-    } catch (err) {
-      console.error("Ошибка при определении региона:", err);
-    }
-
-    if (!region) {
-      return {
-        title: "Tutorio — репетиторы по всей России",
-        description: "Найди репетитора для занятий в любом регионе России",
-        robots: { index: true, follow: true },
-      };
-    }
-
-    // ✅ Используем region_name_dative для title
-    return {
-      title: `Репетиторы в ${region.city.region_name_dative} — Tutorio`,
-      description: `Найди репетитора для занятий в ${region.city.region_name_dative}`,
-      robots: { index: true, follow: true },
-    };
-  } catch (err) {
-    return {
-      title: "Tutorio — репетиторы по всей России",
-      description: "Найди репетитора для занятий в любом регионе России",
-      robots: { index: true, follow: true },
-    };
-  }
+  return {
+    title: "Карта сайта — Tutorio",
+    description:
+      "Пользовательское соглашение сервиса Tutorio — правила использования платформы для учеников и репетиторов",
+    keywords: [
+      "пользовательское соглашение",
+      "Tutorio",
+      "правила сервиса",
+      "условия использования",
+      "договор оферта",
+      "репетиторский сервис",
+      "онлайн обучение",
+      "поиск репетиторов",
+      "поиск учеников",
+      "платформа для репетиторов",
+      "услуги онлайн-обучения",
+      "обязанности пользователя",
+      "ответственность сторон",
+      "согласие с условиями",
+      "регистрация на платформе",
+      "использование сайта",
+      "дистанционное обучение",
+      "взаимодействие с учениками",
+      "взаимодействие с репетиторами",
+    ],
+  };
 }
 
-export default function Home() {
+export default function Home({ params }: any) {
+  const city = getCitySlug(params.city);
+
+  if (!city) {
+    return notFound();
+  }
   return (
     <>
-      <Header />
+      <Header city={city} />
       <Index />
-      <Footer />
+      <Footer city={city} />
     </>
   );
 }

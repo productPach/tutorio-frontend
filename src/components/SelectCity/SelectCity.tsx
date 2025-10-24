@@ -31,8 +31,7 @@ export const SelectCity = () => {
     (state) => state.auth.regionUser
   );
 
-  const { city, isRegionTooltip, saveRegion, confirmRegion, rejectRegion } =
-    useDetectRegion();
+  const { saveRegion } = useDetectRegion();
 
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);

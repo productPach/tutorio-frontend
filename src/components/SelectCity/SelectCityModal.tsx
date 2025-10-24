@@ -5,8 +5,7 @@ import { Modal } from "../Modal/Modal";
 import { SelectCity } from "./SelectCity";
 import { setModalSelectCity } from "@/store/features/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { UserRegion } from "@/types/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getAllLocations } from "@/store/features/locationSlice";
 import { useDetectRegion } from "@/hooks/detectRegion/useDetectRegion";
 import { getLocalStorage } from "@/utils/localStorage/localStorage";
@@ -20,16 +19,7 @@ export const SelectCityModal = () => {
     (state) => state.modal.isModalSelectCity
   );
 
-  const {
-    city,
-    cityAtSlug,
-    isRegionTooltip,
-    saveRegion,
-    confirmRegion,
-    rejectRegion,
-  } = useDetectRegion();
-
-  const [localRegion, setLocalRegion] = useState<UserRegion | null>(null);
+  const { cityAtSlug, isRegionTooltip, confirmRegion } = useDetectRegion();
 
   useEffect(() => {
     dispatch(getAllLocations());
@@ -58,7 +48,7 @@ export const SelectCityModal = () => {
           <div className={styles.regionTooltip}>
             <div className={styles.regionTooltip__content}>
               <p className={styles.regionTooltip__text}>
-                Ваш регион {cityAtSlug.title}?
+                Ваш регион {cityAtSlug.shortTitle}?
               </p>
               <div className={styles.regionTooltip__buttons}>
                 <button

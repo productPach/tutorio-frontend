@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import styles from "./layout.module.css";
 import clsx from "clsx";
 import Link from "next/link";
@@ -12,20 +12,28 @@ type LayoutComponent = {
 };
 
 const Layout: React.FC<LayoutComponent> = ({ children }) => {
+  // Для решения проблемы гидрации
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const cookiesAccepted = useAppSelector((state) => state.general.cookies);
   return (
     <>
       <header>
         <div className={clsx(styles.header, styles.center)}>
           <SelectCityModal />
-          <RegionalLink href="/">
-            <div className={styles.header__logo}>
-              tutorio
-              <span className={styles.header__underLogo}>
-                Cервис подбора репетиторов
-              </span>
-            </div>
-          </RegionalLink>
+          {isClient && (
+            <RegionalLink href="/">
+              <div className={styles.header__logo}>
+                tutorio
+                <span className={styles.header__underLogo}>
+                  Cервис подбора репетиторов
+                </span>
+              </div>
+            </RegionalLink>
+          )}
         </div>
       </header>
 

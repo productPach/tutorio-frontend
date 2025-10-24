@@ -14,7 +14,7 @@ export const setCookie = (
     //secure: true, // кука будет передана только по HTTPS
     secure: process.env.NODE_ENV === "production", // Убираем secure для localhost
     //httpOnly: true, // Однако важно помнить, что библиотека js-cookie не поддерживает установку HttpOnly со стороны клиента
-    sameSite: "Strict", // кука будет отправляться только в том случае, если запрос происходит с того же сайта, что и кука
+    sameSite: "Lax", // кука будет отправляться только в том случае, если запрос происходит с того же сайта, что и кука
     ...options,
   });
 };

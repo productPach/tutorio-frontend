@@ -12,13 +12,11 @@ import { validSlug } from "@/utils/region/validSlug";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const validCities = validSlug;
-
 export async function generateMetadata(context: any): Promise<Metadata> {
   const params = await Promise.resolve(context.params);
   const city = params.city;
 
-  if (!validCities.includes(city)) {
+  if (!validSlug.includes(city)) {
     return {
       title: "Tutorio — репетиторы по всей России",
       description: "Найди репетитора для занятий в любом регионе России",
@@ -49,7 +47,7 @@ export default async function CityPage(context: any) {
   const city = params.city;
 
   // Проверяем что city валидный
-  if (!validCities.includes(city)) {
+  if (!validSlug.includes(city)) {
     notFound(); // Покажет 404 если slug невалидный
   }
 

@@ -159,7 +159,7 @@
   border-radius: 8px;
   padding: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
+  min-width: max-content;
 }
 
 .regionTooltip__text {
@@ -176,31 +176,39 @@
 }
 
 .regionTooltip__buttonConfirm {
-  background: #007bff;
-  color: white;
+  /* background: #007bff; */
+  background: #fad949;
+  /* color: white; */
+  color: black;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s;
+  /* transition: background-color 0.2s; */
+  transition: all 0.3s;
 }
 
 .regionTooltip__buttonConfirm:hover {
-  background: #0056b3;
+  /* background: #0056b3; */
+  transform: scale(0.98);
 }
 
 .regionTooltip__buttonReject {
-  background: #6c757d;
-  color: white;
+  /* background: #6c757d;
+  color: white; */
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0, rgba(69, 72, 77, 1));
+  color: #dddddd;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s;
+  /* transition: background-color 0.2s; */
+  transition: all 0.3s;
 }
 
 .regionTooltip__buttonReject:hover {
-  background: #545b62;
+  /* background: #545b62; */
+  transform: scale(0.98);
 }

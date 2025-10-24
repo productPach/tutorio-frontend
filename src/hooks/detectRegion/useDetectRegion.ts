@@ -6,6 +6,7 @@ import { City, UserRegion } from "@/types/types";
 import { getCookie, setCookie } from "@/utils/cookies/cookies";
 import { getLocalStorage, setLocalStorage } from "@/utils/localStorage/localStorage";
 import { handleRegionRedirect } from "@/utils/region/regionRedirectUtils";
+import { getRegionFromUrl } from "@/utils/region/urlParser";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -18,10 +19,20 @@ export function useDetectRegion() {
 
   // Определяем текущий slug региона из URL
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
-  const parts = pathname.split("/").filter(Boolean);
-  const cities = ['msk', 'spb', 'ekb', 'kazan', 'kaliningrad'];
-  const currentSlug = parts.length > 0 && cities.includes(parts[0]) ? parts[0] : "msk";
-  const isCitySlug = parts.length === 0 || (parts.length > 0 && cities.includes(parts[0]));
+//   const parts = pathname.split("/").filter(Boolean);
+//   const cities = ['msk', 'spb', 'ekb', 'kazan', 'kaliningrad'];
+//   const currentSlug = parts.length > 0 && cities.includes(parts[0]) ? parts[0] : "msk";
+//   const isCitySlug = parts.length === 0 || (parts.length > 0 && cities.includes(parts[0]));
+
+// В компоненте:
+const { slug: currentSlug, isRegional: isCitySlug } = getRegionFromUrl(pathname);
+
+// console.log('🔍 URL Analysis:');
+// console.log('pathname:', pathname);
+// console.log('currentSlug:', currentSlug);
+// console.log('isCitySlug:', isCitySlug);
+  
+  
   
   useEffect(() => {
     const cookieRegion = getCookie("region-id");
@@ -41,11 +52,15 @@ export function useDetectRegion() {
 
     // ✅ Выполняем код только если это slug города
     if (!isCitySlug) {
-        // console.log("Текущий URL не содержит слаг города, пропускаем определение региона");
+        console.log("Текущий URL не содержит слаг города, пропускаем определение региона. Подставляем в редакс данные региона из LS");
+        if (regionFromLS) {
+            const userRegion: UserRegion = JSON.parse(regionFromLS);
+            dispatch(setRegionUser(userRegion));
+        }
         return;
     }
 
-    // console.log("куки нет, дергаем запрос");
+     console.log("куки нет, дергаем запрос");
     // console.log("Текущий слаг города = " + currentSlug);
     
     fetchDetectUserRegion(currentSlug)
@@ -70,10 +85,10 @@ export function useDetectRegion() {
    */
   const updateRegionFromSlug = async (slug: string) => {
     // ✅ Дополнительная проверка на случай вызова извне
-    if (!cities.includes(slug)) {
-        // console.log("❌ Slug не является городом, пропускаем обновление:", slug);
-        return;
-    }
+    // if (!cities.includes(slug)) {
+    //     // console.log("❌ Slug не является городом, пропускаем обновление:", slug);
+    //     return;
+    // }
 
     try {
         const res = await fetchGetCityBySlug(slug);
