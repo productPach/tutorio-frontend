@@ -201,27 +201,77 @@ export function middleware(request: NextRequest) {
   const regionSlug = regionMap[regionId];
   if (regionSlug === undefined) return NextResponse.next();
 
-  // === Проверяем, есть ли уже slug региона в пути
-  const allSlugs = Object.values(regionMap)
-    .filter((v): v is string => !!v)
-    .join("|");
+  // // === Проверяем, есть ли уже slug региона в пути
+  // const allSlugs = Object.values(regionMap)
+  //   .filter((v): v is string => !!v)
+  //   .join("|");
 
-  const slugRegex = new RegExp(`^/(${allSlugs})(/|$)`);
-  const isAlreadyRegional = slugRegex.test(pathname);
+  // const slugRegex = new RegExp(`^/(${allSlugs})(/|$)`);
+  // const isAlreadyRegional = slugRegex.test(pathname);
 
-  // === Москва (без слага)
-  if (regionSlug === null) {
-    if (isAlreadyRegional) {
-      const newPath = pathname.replace(slugRegex, "");
-      return NextResponse.redirect(`${origin}/${newPath || "/"}`);
-    }
-    return NextResponse.next();
+  // // === Москва (без слага)
+  // if (regionSlug === null) {
+  //   if (isAlreadyRegional) {
+  //     const newPath = pathname.replace(slugRegex, "");
+  //     return NextResponse.redirect(`${origin}/${newPath || "/"}`);
+  //   }
+  //   return NextResponse.next();
+  // }
+
+  // // === Остальные регионы
+  // if (!isAlreadyRegional) {
+  //   return NextResponse.redirect(`${origin}/${regionSlug}${pathname}`);
+  // }
+
+//   // === Москва (без слага)
+// if (regionSlug === null) {
+//   if (isAlreadyRegional) {
+//     const newPath = pathname.replace(slugRegex, "");
+//     const cleanPath = newPath?.replace(/^\/+/, "") || "";
+//     const redirectUrl = cleanPath ? `${origin}/${cleanPath}` : origin;
+//     return NextResponse.redirect(redirectUrl);
+//   }
+//   return NextResponse.next();
+// }
+
+// // === Остальные регионы
+// if (!isAlreadyRegional) {
+//   // Убираем возможный двойной слеш, если pathname = "/"
+//   const cleanPath = pathname.replace(/^\/+/, "");
+//   return NextResponse.redirect(`${origin}/${regionSlug}${cleanPath ? `/${cleanPath}` : ""}`);
+// }
+
+// === Проверяем, есть ли уже slug региона в пути
+const allSlugs = Object.values(regionMap).filter((v): v is string => !!v);
+const slugRegex = new RegExp(`^/(${allSlugs.join("|")})(/|$)`);
+const match = pathname.match(slugRegex);
+const currentSlugInPath = match?.[1] || null;
+const isAlreadyRegional = !!currentSlugInPath;
+
+// === Москва (без слага)
+if (regionSlug === null) {
+  if (isAlreadyRegional) {
+    const newPath = pathname.replace(slugRegex, "");
+    const cleanPath = newPath?.replace(/^\/+/, "") || "";
+    const redirectUrl = cleanPath ? `${origin}/${cleanPath}` : origin;
+    return NextResponse.redirect(redirectUrl);
   }
+  return NextResponse.next();
+}
 
-  // === Остальные регионы
-  if (!isAlreadyRegional) {
-    return NextResponse.redirect(`${origin}/${regionSlug}${pathname}`);
-  }
+// === Остальные регионы
+if (!isAlreadyRegional) {
+  // регион не указан вовсе
+  const cleanPath = pathname.replace(/^\/+/, "");
+  return NextResponse.redirect(`${origin}/${regionSlug}${cleanPath ? `/${cleanPath}` : ""}`);
+}
+
+// === Если регион в URL есть, но он другой — редиректим на правильный
+if (currentSlugInPath && currentSlugInPath !== regionSlug) {
+  const newPath = pathname.replace(slugRegex, `/${regionSlug}/`);
+  const redirectUrl = `${origin}${newPath}`.replace(/\/+$/, ""); // убрать лишние /
+  return NextResponse.redirect(redirectUrl);
+}
 
   return NextResponse.next();
 }
