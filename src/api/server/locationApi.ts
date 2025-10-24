@@ -164,7 +164,11 @@ export const fetchDetectUserRegion = async (slug?: string, test_ip?: string) => 
     const res = await fetch(url, { cache: "no-store" });
 
     // Проверяем ответ
-    if (!res.ok) throw new Error(`Status: ${res.status}`);
+    if (!res.ok) {
+      const error: any = new Error(`Status: ${res.status}`);
+      error.status = res.status;  // добавляем статус в объект ошибки
+      throw error;
+    }
 
     // Парсим JSON
     const data: DetectRegionResponse = await res.json();

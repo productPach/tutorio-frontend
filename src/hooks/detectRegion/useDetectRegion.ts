@@ -63,7 +63,7 @@ const { slug: currentSlug, isRegional: isCitySlug } = getRegionFromUrl(pathname)
      console.log("куки нет, дергаем запрос");
     // console.log("Текущий слаг города = " + currentSlug);
     
-    fetchDetectUserRegion(currentSlug)
+    fetchDetectUserRegion(`${currentSlug}`, `8.8.8.8`)
         .then((res) => {
             const detectedCity = res.city;
             setCity(detectedCity);
@@ -82,6 +82,8 @@ const { slug: currentSlug, isRegional: isCitySlug } = getRegionFromUrl(pathname)
 
           // ✅ Если сервер вернул 404 — обновляем регион по slug
           if (error?.response?.status === 404 || error?.status === 404) {
+            console.log("404!");
+            
             updateRegionFromSlug(currentSlug);
             dispatch(setIsRegionTooltip(true));
           }
