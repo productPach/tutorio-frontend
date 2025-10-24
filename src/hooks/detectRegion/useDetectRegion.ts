@@ -63,7 +63,8 @@ const { slug: currentSlug, isRegional: isCitySlug } = getRegionFromUrl(pathname)
      console.log("куки нет, дергаем запрос");
     // console.log("Текущий слаг города = " + currentSlug);
     
-    fetchDetectUserRegion(`${currentSlug}`, `8.8.8.8`)
+    //fetchDetectUserRegion(`${currentSlug}`, `8.8.8.8`) // для тестов
+    fetchDetectUserRegion(currentSlug)
         .then((res) => {
             const detectedCity = res.city;
             setCity(detectedCity);
