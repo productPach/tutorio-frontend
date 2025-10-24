@@ -9,6 +9,7 @@ import ReCaptcha from "@/components/reCapcha/reCapcha";
 import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import Link from "next/link";
 import { useSmsTimer } from "@/hooks/sms/useSmsTimer";
+import { RegionalLink } from "@/components/RegionalLink/RegionalLink";
 
 interface ComponentRenderProps {
   id: number;
@@ -218,9 +219,9 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
         </button>
         <div className={styles.policyPrivacyContainer}>
           Нажимая на кнопку ты соглашаешься с условиями{" "}
-          <Link target="blank" href={"/docs/agreement"}>
+          <RegionalLink target="blank" href="/docs/agreement">
             пользовательского соглашения
-          </Link>
+          </RegionalLink>
         </div>
       </div>
     </div>

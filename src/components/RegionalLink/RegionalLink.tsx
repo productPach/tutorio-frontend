@@ -7,8 +7,11 @@ import { UserRegion } from "@/types/types";
 
 interface RegionalLinkProps extends LinkProps {
   children: ReactNode;
-  seo?: boolean; // добавлять региональный префикс
-  citySlug?: string; // если передан явно (SSR)
+  seo?: boolean;
+  citySlug?: string;
+  target?: string;
+  rel?: string;
+  className?: string;
 }
 
 const getRegionFromLocalStorage = (): UserRegion | null => {
@@ -27,6 +30,9 @@ export const RegionalLink = ({
   seo = true,
   children,
   citySlug,
+  target,
+  rel,
+  className,
   ...props
 }: RegionalLinkProps) => {
   const regionUserRedux = useAppSelector((state) => state.auth.regionUser);
@@ -34,9 +40,6 @@ export const RegionalLink = ({
   const regionalHref = useMemo(() => {
     let path = typeof href === "string" ? href : href.toString();
 
-    // console.log(`слаг из хедер = ` + regionUserRedux?.slug);
-
-    // приоритет: переданный Redux > citySlug > localStorage > Москва
     const city =
       regionUserRedux?.slug ||
       citySlug ||
@@ -54,7 +57,13 @@ export const RegionalLink = ({
   }, [href, regionUserRedux, citySlug, seo]);
 
   return (
-    <Link href={regionalHref} {...props}>
+    <Link
+      href={regionalHref}
+      target={target}
+      rel={rel ?? (target === "_blank" ? "noopener noreferrer" : undefined)}
+      className={className}
+      {...props}
+    >
       {children}
     </Link>
   );

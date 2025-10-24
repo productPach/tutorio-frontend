@@ -10,6 +10,7 @@ import { formatPhoneNumber } from "@/utils/phoneFormat/phoneFormat";
 import { Spinner } from "@/components/Spinner/Spinner";
 import Link from "next/link";
 import { useSmsTimer } from "@/hooks/sms/useSmsTimer";
+import { RegionalLink } from "@/components/RegionalLink/RegionalLink";
 
 interface Answer {
   id: number;
@@ -232,9 +233,9 @@ export const PhoneInputForms: React.FC<ComponentRenderProps> = ({
           </button>
           <div className={styles.policyPrivacyContainer}>
             Нажимая на кнопку ты соглашаешься с условиями{" "}
-            <Link target="blank" href={"/docs/agreement"}>
+            <RegionalLink target="blank" href="/docs/agreement">
               пользовательского соглашения
-            </Link>
+            </RegionalLink>
           </div>
         </div>
       </div>

@@ -77,7 +77,15 @@ const { slug: currentSlug, isRegional: isCitySlug } = getRegionFromUrl(pathname)
                 saveRegion(detectedCity);
             }
         })
-        .catch(console.error);
+        .catch((error: any) => {
+          console.error("Ошибка определения региона:", error);
+
+          // ✅ Если сервер вернул 404 — обновляем регион по slug
+          if (error?.response?.status === 404 || error?.status === 404) {
+            updateRegionFromSlug(currentSlug);
+            dispatch(setIsRegionTooltip(true));
+          }
+        });
   }, [dispatch, currentSlug, isCitySlug]); // ✅ Добавляем isCitySlug в зависимости
 
   /**
