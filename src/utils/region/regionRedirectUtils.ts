@@ -12,7 +12,7 @@ const EXCLUDED_PATHS = [
 // Пути, которые ДОЛЖНЫ редиректиться с регионами
 const ALLOWED_PATHS = [
   "", // главная
-  "tutors",
+  "repetitors",
   "subjects",
   "categories",
   "blog",

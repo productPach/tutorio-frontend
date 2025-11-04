@@ -205,6 +205,8 @@ export type Subject = {
 export type Goal = {
   id: string;
   title: string;
+  goalSlug: string;
+  for_request: string
   subjectId: string;
   isGoalInOrder: boolean;
   isTutorFilter: boolean;

@@ -1,19 +1,39 @@
+/* === Базовые стили === */
 .bg {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* === Анимация фона === */
+.bgEnter,
+.bgLeave {
   transition: opacity 300ms ease-out;
 }
 
+.bgEnterFrom,
+.bgLeaveTo {
+  opacity: 0;
+}
+
+.bgEnterTo,
+.bgLeaveFrom {
+  opacity: 1;
+}
+
+/* === Обёртка === */
 .popupWrapper {
   position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 10000;
 }
 
+/* === Модальное окно === */
 .popup {
+  position: relative;
   width: 470px;
   max-height: fit-content;
   overflow-y: auto;
@@ -23,21 +43,49 @@
   transition:
     transform 300ms ease-out,
     opacity 300ms ease-out;
-
-  max-height: 86dvh; /* Ограничиваем высоту окна */
+  max-height: 86dvh;
 }
 
 .popup::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
+/* === Анимация появления и скрытия popup === */
+.popupEnter,
+.popupLeave {
+  transition:
+    transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.popupEnterFrom {
+  opacity: 0;
+  transform: translateY(155px) scale(0.97);
+}
+
+.popupEnterTo {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.popupLeaveFrom {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.popupLeaveTo {
+  opacity: 0;
+  transform: translateY(155px) scale(0.97);
+}
+
+/* === Заголовок === */
 .title {
   font-size: 24px;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0 0 8px 0;
   font-weight: 600;
 }
 
+/* === Фон и слой диалога === */
 .dialogOverlay {
   position: fixed;
   inset: 0;
@@ -47,74 +95,35 @@
   align-items: center;
 }
 
-/* Анимации для модального окна и фона */
-.enter {
-  opacity: 0;
-  transform: scale(0.95);
-}
-
-.enterTo {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.leave {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* .leaveTo {
-    opacity: 0;
-    transform: scale(0.95);
-  } */
-
-.enterFrom {
-  opacity: 0;
-  transform: scale(1);
-}
-
-.leaveFrom {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.leaveTo {
-  opacity: 0;
-}
-
+/* === Кнопка закрытия === */
 .closeButton {
   border: none;
   cursor: pointer;
   background: none;
-  color: red;
+  color: #ff4d4d;
   font-weight: bold;
-  font-size: larger;
+  font-size: 22px;
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 18px;
+  right: 18px;
+  transition: transform 0.2s ease;
 }
-/* ******************************************************
-******************************************************
-******************************************************
-                        480px
-******************************************************
-******************************************************
-****************************************************** */
+
+.closeButton:hover {
+  transform: scale(1.2);
+}
+
+/* === Адаптив === */
 @media (max-width: 480px) {
   .popup {
     width: 100%;
+    padding: 24px;
   }
   .title {
     font-size: 20px;
   }
 }
-/* ******************************************************
-******************************************************
-******************************************************
-                        320px
-******************************************************
-******************************************************
-****************************************************** */
+
 @media (max-width: 320px) {
   .popup {
     width: 90%;

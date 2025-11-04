@@ -1,10 +1,10 @@
 import { Header } from "@/components/Header/Header";
-import { Index } from "@/components/Landing/Index/Index";
 import { Footer } from "@/components/Footer/Footer";
 import { Metadata } from "next";
 import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { getCitySlug } from "@/utils/region/validSlug";
 import { notFound } from "next/navigation";
+import { IndexServer } from "@/components/Landing/Index/IndexServer";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -44,7 +44,7 @@ export default function Home({ params }: any) {
   return (
     <>
       <Header city={city} />
-      <Index />
+      {/* <IndexServer /> */}
       <Footer city={city} />
     </>
   );

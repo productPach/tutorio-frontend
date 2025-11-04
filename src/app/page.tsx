@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header/Header";
-import { Index } from "@/components/Landing/Index/Index";
 import { Footer } from "@/components/Footer/Footer";
 import { Metadata } from "next";
+import { IndexServer } from "@/components/Landing/Index/IndexServer";
 
 // Главная всегда Москва для SEO
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       <Header city="msk" />
-      <Index />
+      <IndexServer region_name_dative={"Москве и области"} />
       <Footer city="msk" />
     </>
   );
