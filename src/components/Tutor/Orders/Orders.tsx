@@ -50,8 +50,6 @@ const Orders = () => {
     (state) => state.modal.isSheetFiltersOrdersForTutor
   );
 
-  console.log(page);
-
   const isMobile = window.innerWidth < 769;
 
   // Стейт для предметов
