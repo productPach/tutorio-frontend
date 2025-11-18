@@ -38,7 +38,7 @@ const Layout: React.FC<LayoutComponent> = ({ children }) => {
     const initAuth = () => {
       const token = getAccessToken(); // берём из localStorage
       if (!token) {
-        console.log("Токена нет");
+        // console.log("Токена нет");
         router.push("/"); // токена нет → редирект
         return;
       }
