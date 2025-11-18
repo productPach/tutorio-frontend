@@ -6,7 +6,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import styles from "../Modal/Modal.module.css";
 import { useAppDispatch } from "@/store/store";
 import {
@@ -221,121 +221,149 @@ export const Modal: React.FC<ModalProps> = ({
     // }
   };
 
-  useEffect(() => {
-    if (isModal) {
-      // Получаем текущую позицию скролла
-      dispatch(setScrollY(window.scrollY));
-    }
-  }, [isModal]);
+  //   useEffect(() => {
+  //     if (isModal) {
+  //       // Получаем текущую позицию скролла
+  //       dispatch(setScrollY(window.scrollY));
+  //     }
+  //   }, [isModal]);
 
-  // return isModal
-  //   ? createPortal(
-  //       <>
-  //         <Transition show={isModal} as={Fragment}>
+  //   return isModal
+  //     ? createPortal(
+  //         <Transition show={isModal} as={Fragment} appear>
   //           <Dialog
   //             as="div"
   //             className={styles.dialogOverlay}
-  //             onClose={() => closeModal()}
+  //             onClose={closeModal}
   //           >
-  //             <TransitionChild
+  //             {/* === Фон (затемнение) === */}
+  //             <Transition.Child
   //               as={Fragment}
-  //               enter={styles.enter}
-  //               enterFrom={styles.enterFrom}
-  //               enterTo={styles.enterTo}
-  //               leave={styles.leave}
-  //               leaveFrom={styles.leaveFrom}
-  //               leaveTo={styles.leaveTo}
+  //               enter={styles.bgEnter}
+  //               enterFrom={styles.bgEnterFrom}
+  //               enterTo={styles.bgEnterTo}
+  //               leave={styles.bgLeave}
+  //               leaveFrom={styles.bgLeaveFrom}
+  //               leaveTo={styles.bgLeaveTo}
   //             >
-  //               <div className={styles.bg}></div>
-  //             </TransitionChild>
+  //               <div className={styles.bg} />
+  //             </Transition.Child>
 
+  //             {/* === Popup === */}
   //             <div className={styles.popupWrapper}>
-  //               <TransitionChild
+  //               <Transition.Child
   //                 as={Fragment}
-  //                 enter={styles.enter}
-  //                 enterFrom={styles.enterFrom}
-  //                 enterTo={styles.enterTo}
-  //                 leave={styles.leave}
-  //                 leaveFrom={styles.leaveFrom}
-  //                 leaveTo={styles.leaveTo}
+  //                 enter={styles.popupEnter}
+  //                 enterFrom={styles.popupEnterFrom}
+  //                 enterTo={styles.popupEnterTo}
+  //                 leave={styles.popupLeave}
+  //                 leaveFrom={styles.popupLeaveFrom}
+  //                 leaveTo={styles.popupLeaveTo}
   //               >
   //                 <DialogPanel
-  //                   className={
-  //                     modalId !== "loadingPageModal" ? styles.popup : ""
-  //                   }
+  //                   className={modalId !== "loadingPageModal" ? styles.popup : ""}
   //                 >
   //                   <DialogTitle className={styles.title}>
   //                     {titleModal}
   //                   </DialogTitle>
   //                   {contentModal}
+
   //                   {modalId !== "loadingPageModal" && (
-  //                     <button
-  //                       className={styles.closeButton}
-  //                       onClick={() => closeModal()}
-  //                     >
+  //                     <button className={styles.closeButton} onClick={closeModal}>
   //                       ✕
   //                     </button>
   //                   )}
   //                 </DialogPanel>
-  //               </TransitionChild>
+  //               </Transition.Child>
   //             </div>
   //           </Dialog>
-  //         </Transition>
-  //       </>,
-  //       document.body // Указываем container для портала
-  //     )
-  //   : null;
-  return isModal
-    ? createPortal(
-        <Transition show={isModal} as={Fragment} appear>
-          <Dialog
-            as="div"
-            className={styles.dialogOverlay}
-            onClose={closeModal}
-          >
-            {/* === Фон (затемнение) === */}
-            <Transition.Child
-              as={Fragment}
-              enter={styles.bgEnter}
-              enterFrom={styles.bgEnterFrom}
-              enterTo={styles.bgEnterTo}
-              leave={styles.bgLeave}
-              leaveFrom={styles.bgLeaveFrom}
-              leaveTo={styles.bgLeaveTo}
-            >
-              <div className={styles.bg} />
-            </Transition.Child>
+  //         </Transition>,
+  //         document.body
+  //       )
+  //     : null;
+  // };
 
-            {/* === Popup === */}
-            <div className={styles.popupWrapper}>
-              <Transition.Child
-                as={Fragment}
-                enter={styles.popupEnter}
-                enterFrom={styles.popupEnterFrom}
-                enterTo={styles.popupEnterTo}
-                leave={styles.popupLeave}
-                leaveFrom={styles.popupLeaveFrom}
-                leaveTo={styles.popupLeaveTo}
-              >
-                <DialogPanel
-                  className={modalId !== "loadingPageModal" ? styles.popup : ""}
-                >
-                  <DialogTitle className={styles.title}>
-                    {titleModal}
-                  </DialogTitle>
-                  {contentModal}
+  const [show, setShow] = useState(false);
+  const [animationState, setAnimationState] = useState<
+    "enterFrom" | "enterTo" | "leaveFrom" | "leaveTo"
+  >("enterFrom");
+  const scrollYRef = useRef(0);
 
-                  {modalId !== "loadingPageModal" && (
-                    <button className={styles.closeButton} onClick={closeModal}>
-                      ✕
-                    </button>
-                  )}
-                </DialogPanel>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition>,
-        document.body
-      )
-    : null;
+  useEffect(() => {
+    if (isModal) {
+      scrollYRef.current = window.scrollY; // сохраняем текущий скролл
+      setShow(true);
+      setAnimationState("enterFrom");
+
+      // небольшой таймаут для перехода в To
+      const enterTimeout = setTimeout(() => setAnimationState("enterTo"), 20);
+
+      // фиксируем скролл
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+
+      return () => clearTimeout(enterTimeout);
+    } else {
+      setAnimationState("leaveFrom");
+      const leaveTimeout = setTimeout(() => setAnimationState("leaveTo"), 20);
+
+      const removeTimeout = setTimeout(() => {
+        setShow(false);
+
+        // восстанавливаем скролл
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        window.scrollTo(0, scrollYRef.current);
+      }, 350); // ждем окончания анимации
+
+      return () => {
+        clearTimeout(leaveTimeout);
+        clearTimeout(removeTimeout);
+      };
+    }
+  }, [isModal]);
+
+  if (!show) return null;
+
+  return createPortal(
+    <div className={styles.dialogOverlay}>
+      <div
+        className={`${styles.bg} ${
+          animationState === "enterFrom" || animationState === "enterTo"
+            ? animationState === "enterTo"
+              ? styles.bgEnterTo
+              : styles.bgEnterFrom
+            : animationState === "leaveTo"
+              ? styles.bgLeaveTo
+              : styles.bgLeaveFrom
+        }`}
+        onClick={closeModal}
+      />
+
+      <div className={styles.popupWrapper}>
+        <div
+          className={`${styles.popup} ${
+            animationState === "enterFrom" || animationState === "enterTo"
+              ? animationState === "enterTo"
+                ? styles.popupEnterTo
+                : styles.popupEnterFrom
+              : animationState === "leaveTo"
+                ? styles.popupLeaveTo
+                : styles.popupLeaveFrom
+          }`}
+        >
+          <h2 className={styles.title}>{titleModal}</h2>
+          {contentModal}
+          <button className={styles.closeButton} onClick={closeModal}>
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
 };
