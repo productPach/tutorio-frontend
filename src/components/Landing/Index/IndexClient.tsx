@@ -12,9 +12,6 @@ interface Props {
   label: string;
   description?: string;
   size?: "small" | "medium";
-  variant?: "first" | "second";
-  /** Для второго блока: массив подкатегорий */
-  subcategories?: string[];
 }
 
 export const IndexClient = ({
@@ -24,8 +21,6 @@ export const IndexClient = ({
   label,
   description,
   size,
-  variant = "first",
-  subcategories,
 }: Props) => {
   const router = useRouter();
 
@@ -43,55 +38,29 @@ export const IndexClient = ({
     router.push(link);
   }, [id_p, subject, link, router]);
 
-  if (variant === "first") {
-    // === Первый блок ===
-    return (
-      <div
-        onClick={handleSubject}
-        className={clsx(
-          styles.firstSection__snippet,
-          size === "medium" ? styles.snippetMedium : styles.snippetSmall
-        )}
-      >
-        <div
-          className={size === "medium" ? undefined : styles.fs_SnippetItemEmj}
-        >
-          {label}
-        </div>
-        {description && (
-          <p
-            className={
-              size === "medium"
-                ? styles.firstSection__snippetL
-                : styles.firstSection__snippetM
-            }
-          >
-            {description}
-          </p>
-        )}
-      </div>
-    );
-  }
-
-  // === Второй блок (сеточная секция) ===
+  // === Первый блок ===
   return (
-    <div className={styles.tutorsIn__subject}>
-      <h4>{label}</h4>
-      <ul>
-        {(subcategories || ["Общий курс"]).map((sub, idx) => (
-          <li key={idx}>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                handleSubject();
-              }}
-            >
-              {sub}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div
+      onClick={handleSubject}
+      className={clsx(
+        styles.firstSection__snippet,
+        size === "medium" ? styles.snippetMedium : styles.snippetSmall
+      )}
+    >
+      <div className={size === "medium" ? undefined : styles.fs_SnippetItemEmj}>
+        {label}
+      </div>
+      {description && (
+        <p
+          className={
+            size === "medium"
+              ? styles.firstSection__snippetL
+              : styles.firstSection__snippetM
+          }
+        >
+          {description}
+        </p>
+      )}
     </div>
   );
 };

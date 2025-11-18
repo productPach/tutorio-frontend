@@ -2026,5 +2026,24 @@ export const listQuestionsAnswers = [
       },
     ],
   },
+  {
+    id: 23,
+    typeForm: "main",
+    question: "Выберите предмет",
+    description: "Выберите предмет, по которому нужно найти репетитора",
+    page: [
+      {
+        id: 1,
+        type: "subject",
+        answers: [
+          {
+            id: 1,
+            title: "Выберите предмет, по которому нужно найти репетитора",
+            nextPage: "",
+          },
+        ],
+      },
+    ],
+  },
     
 ];

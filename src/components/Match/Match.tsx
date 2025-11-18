@@ -18,6 +18,7 @@ import { setToken } from "@/store/features/authSlice";
 import { setStudent } from "@/store/features/studentSlice";
 import { getStudentFromLocalStorage } from "@/utils/localStorage/localStorage";
 import { LocationMultiDropdownForm } from "@/components/Match/LocationMultiDropdownForm/LocationMultiDropdownForm";
+import { SubjectInputForms } from "./SubjectInputForms/SubjectInputForms";
 
 interface Answer {
   id: number;
@@ -81,6 +82,7 @@ const Match: React.FC = () => {
   }>();
 
   const ComponentsList: ComponentsList = {
+    main: SubjectInputForms,
     subject: RadioListForms,
     goal: RadioListForms,
     class: RadioListForms,

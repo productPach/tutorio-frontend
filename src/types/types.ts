@@ -118,6 +118,7 @@ export type LessonFormat = "online" | "home" | "travel" | "group";
 
 // Новая модель хранения цен для репетитора
 export type TutorSubjectPrice = {
+  _id?: { $oid: string };
   id: string;
   tutorId: string; // id репетитора
   subjectId: string; // id предмета
@@ -471,3 +472,29 @@ export type CreateCommentPayload = {
   reviewId: string;
   text: string;
 };
+
+// ЛЕНДИНГИ
+
+export interface SubcategoryItem {
+  name: string;
+  link: string;
+  goal?: string;
+  id_p: string;
+}
+
+export interface FirstBlockSubject {
+  link: string;
+  id_p?: string;
+  subject?: string;
+  label: string;
+  description?: string;
+  size?: "small" | "medium";
+}
+
+export interface SecondBlockSubject {
+  mainLink: string;
+  mainLabel: string;
+  goal?: string;
+  id_p?: string;
+  subcategories: SubcategoryItem[];
+}

@@ -3,9 +3,14 @@
 import clsx from "clsx";
 import styles from "../VerifyEmail/VerifyEmail.module.css";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const NotFound: React.FC = () => {
   const router = useRouter();
+  useEffect(() => {
+    // Принудительно устанавливаем title при монтировании
+    document.title = "Упс, такой страницы не существует — Tutorio";
+  }, []);
   return (
     <>
       {/* <Header /> */}

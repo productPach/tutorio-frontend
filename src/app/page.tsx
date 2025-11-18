@@ -6,8 +6,8 @@ import { IndexServer } from "@/components/Landing/Index/IndexServer";
 // Главная всегда Москва для SEO
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Tutorio — репетиторы в Москве и области",
-    description: "Найди репетитора для занятий в Москве и области",
+    title: "Репетиторы в Москве и области — Tutorio",
+    description: "Найти репетитора для занятий в Москве и области",
   };
 }
 

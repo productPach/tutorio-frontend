@@ -283,7 +283,7 @@ export const ResponseSidbar = ({
                             // Закрываем блок с эмодзи
                             setVisibleEmoji && setVisibleEmoji(false);
                             if (page && page === "Tutor") {
-                              route.push("../tab=5");
+                              route.push("..?tab=5");
                             }
                           }}
                           className={clsx(

@@ -5,13 +5,14 @@ export const config = {
   matcher: [
     "/",
     "/repetitors/:path*",
+    "/repetitor/:path*",
     "/subjects/:path*",
     "/about/:path*",
     "/reviews/:path*",
     "/pricing/:path*",
     "/blog/:path*",
     "/docs/:path*",
-    "/site-map/:path*",
+    "/sitemap/:path*",
     "/:region(spb|ekb|novosibirsk|kazan|nn|chelyabinsk|abakan|anadyr|arkhangelsk|astrakhan|barnaul|belgorod|birobidzhan|blagoveshchensk|bryansk|velikiy-novgorod|vladivostok|vladikavkaz|vladimir|volgograd|vologda|voronezh|gorno-altaysk|grozny|ivanovo|izhevsk|irkutsk|yoshkar-ola|kaliningrad|kaluga|kemerovo|kirov|kostroma|krasnodar|krasnoyarsk|kurgan|kursk|kyzyl|lipetsk|magadan|maykop|makhachkala|murmansk|nazran|nalchik|naryan-mar|omsk|orel|orenburg|penza|perm|petrozavodsk|petropavlovsk-kamchatskiy|pskov|rostov-na-donu|ryazan|salekhard|samara|saransk|saratov|sevastopol|simferopol|smolensk|stavropol|syktyvkar|tambov|tver|tomsk|tula|tyumen|ulan-ude|ulyanovsk|ufa|khabarovsk|khanty-mansiysk|cheboksary|cherkessk|chita|elista|yuzhno-sakhalinsk|yakutsk|yaroslavl)/:path*",
   ],
 };

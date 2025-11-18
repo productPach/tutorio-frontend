@@ -151,6 +151,11 @@
   margin: -10px 0 24px 0;
   white-space: pre-line;
 }
+.description2 {
+  font-size: 16px;
+  margin: 24px 0;
+  white-space: pre-line;
+}
 
 .answer {
   background-color: white;
@@ -525,6 +530,17 @@
 }
 .wsNoWrap {
   white-space: nowrap;
+}
+.containerSubject {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+.containerSubjectItem {
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /* Адаптивные стили под разрешения экранов */
