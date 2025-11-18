@@ -9,18 +9,14 @@ import {
 } from "@/store/features/modalSlice";
 import { setSelectedValues } from "@/store/features/matchSlice";
 import { City, UserRegion } from "@/types/types";
-import { setRegionUser } from "@/store/features/authSlice";
 
 import {
   setSelectedValuesArea,
   setSelectedValuesCity,
   updateTutor,
 } from "@/store/features/tutorSlice";
-import { fetchDetectUserRegion } from "@/api/server/locationApi";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { useDetectRegion } from "@/hooks/detectRegion/useDetectRegion";
-import { validSlug } from "@/utils/region/validSlug";
 import { handleRegionRedirect } from "@/utils/region/regionRedirectUtils";
 
 export const SelectCity = () => {

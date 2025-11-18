@@ -10,7 +10,11 @@ import { RootState, useAppDispatch } from "@/store/store";
 import { useSelector } from "react-redux";
 import { getAllSubjects } from "@/store/features/subjectSlice";
 
-export const SelectSubject = () => {
+interface Props {
+  inputBgBlue?: boolean;
+}
+
+export const SelectSubject = ({ inputBgBlue }: Props) => {
   // Состояние для отслеживания строки поиска предмета
   const [inputSearchTutor, setInputSearchTutor] = useState("");
   // Состояние для получения результатов поиска
@@ -154,7 +158,7 @@ export const SelectSubject = () => {
   }, [inputSearchTutor]);
 
   return (
-    <div className={styles.firstSection__tutorSearch}>
+    <div className={clsx(styles.firstSection__tutorSearch)}>
       <div className={styles.searchContainer}>
         <div className={styles.searchWrapper}>
           <input
@@ -164,7 +168,10 @@ export const SelectSubject = () => {
             autoComplete="off"
             value={inputSearchTutor}
             onChange={(e) => handleSearchTutor(e.target.value)}
-            className={errorSubject ? styles.errorInput : undefined}
+            className={clsx(
+              errorSubject && styles.errorInput,
+              inputBgBlue && styles.inputBgBlue
+            )}
           />
           <span
             className={`${styles.searchIcon} ${isLoading ? styles.searchIconNone : ""}`}

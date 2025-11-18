@@ -229,15 +229,18 @@
 }
 
 .firstSection h1 {
-  font-size: 66px;
+  /* font-size: 66px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1; */
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.2;
   letter-spacing: -1.1px;
   margin: 84px 0 0 0;
 }
 
 .firstSection h2 {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 400;
   line-height: 1.2;
   margin: 15px 0 40px 0;
@@ -262,41 +265,50 @@
   margin-top: 114px;
 }
 .howWork__title {
-  font-size: 48px;
+  font-size: 36px;
   font-weight: 600;
   letter-spacing: -1.1px;
 }
 .howWork__step {
-  background-color: #2a2a2a;
+  /* background-color: #2a2a2a;
   min-height: 245px;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
   color: white;
+  padding: 20px 60px; */
+  background-color: white;
+  min-height: 245px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   padding: 20px 60px;
 }
 .howWork .stepNumber {
-  font-weight: 600;
-  font-size: 28px;
   height: 140px;
+  color: #d9dee8;
+  font-size: 45px;
+  font-weight: 600;
+  letter-spacing: -1.1px;
 }
 .howWork h3 {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 400;
   margin: 0;
 }
 .howWork .stepDescription {
-  padding: 0 100px;
+  padding: 0 100px 0 32px;
   height: 140px;
 }
 .howWork__text {
   font-family: "Source Sans 3", sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
 }
 .howWork__text span {
-  color: #fad949;
+  font-weight: 700;
 }
 
 .tutorsIn {
@@ -442,19 +454,23 @@
 }
 
 .footer__left {
-  width: 690px;
+  max-width: 690px;
 }
 .footer__menu {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  overflow: hidden;
 }
 .footer__menu a {
   margin-right: 32px;
   line-height: 38px;
   color: #777777;
-  white-space: nowrap;
   transition: all 0.3s;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .footer__menu a:hover {
   color: #999999;
@@ -610,8 +626,10 @@
 }
 
 .titleH1Page {
-  font-size: 24px;
   margin: 0 0 28px 0;
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -1.1px;
 }
 .containerPublicPage {
   margin-top: 18px;
@@ -626,10 +644,46 @@
 .sidebar {
   grid-column: span 9;
 }
+.sidebarAppPage {
+  grid-column: span 9;
+}
 .breadcrumbs {
   display: flex;
   flex-direction: row;
   gap: 12px;
+}
+.content_block_button_section {
+  margin: 60px 0;
+  text-align: center;
+}
+.yourAreTutor__container {
+  background-color: #d9dee8;
+  min-height: 245px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 60px;
+}
+.faqSection__container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+  max-width: 960px;
+}
+.faqSection__itemTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.faqSection__itemText {
+  margin: 0;
+}
+.seoSection {
+  margin-top: 104px;
+  color: #666;
+  max-width: 960px;
 }
 .content_block {
   background-color: #ffffff;
@@ -667,6 +721,94 @@
 .fs_SnippetItemImg {
   margin-top: 4px;
 }
+.tutorsList {
+  margin-top: 92px;
+}
+.section2 {
+  margin: 88px 0;
+  text-align: center;
+}
+.tutorsWrapper {
+  width: 100%;
+}
+.tableSubjectPrices {
+  max-width: 370px;
+}
+.wrapNameTutorAndActionButton {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.fioTutor {
+  margin: 0;
+}
+.content_block {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 18px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  opacity: 0; /* Начальная прозрачность */
+  animation: fadeIn 0.6s forwards; /* Анимация появления */
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.sectionSitemapList {
+  margin: 60px 0;
+}
+.sectionSitemapListUl {
+  display: flex;
+  margin-left: 18px;
+  flex-direction: column;
+  gap: 18px;
+}
+.sectionSitemapListLi1 {
+  list-style-type: square !important;
+}
+.sectionSitemapListLi2 {
+  list-style-type: square !important;
+  margin-left: 18px;
+}
+.sectionSitemapListLi {
+  list-style-type: square !important;
+  margin-left: 36px;
+}
+.toc {
+}
+.versionDocument {
+  font-style: italic;
+  margin-bottom: 32px;
+}
+.ol {
+  padding: 0;
+  margin: 0;
+}
+.olLi {
+  list-style-type: none !important;
+  padding: 8px 0;
+}
+.olLiLink {
+  color: blue;
+  text-decoration: underline;
+}
+.olLiLink:hover {
+  text-decoration: underline;
+}
+
 /* Стили для 404 */
 
 /* Адаптивные стили под разрешения экранов */
@@ -733,6 +875,9 @@
     padding-left: 30px;
     padding-right: 30px;
   }
+  .footer__left {
+    width: 100%;
+  }
   .footer__right {
     display: none;
   }
@@ -744,6 +889,29 @@
   }
   .footer__right__socialM {
     display: block;
+  }
+  .sidebarAppPage {
+    display: none;
+  }
+  .containerPublicPage {
+    grid-template-columns: 1fr;
+  }
+  .contentAppPage {
+    grid-column: 1;
+  }
+  .content {
+    grid-column: span 1;
+  }
+  .howWork__step {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .howWork .stepNumber {
+    height: auto;
+  }
+  .howWork .stepDescription {
+    padding: 0 100px 0 0;
+    height: auto;
   }
 }
 /* ******************************************************
@@ -792,6 +960,26 @@
     font-weight: 500;
     font-size: 17px;
   }
+  .tutorActionButton {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .content_block {
+    opacity: initial; /* Начальная прозрачность */
+    animation: none; /* Анимация появления */
+  }
+  /* .footer {
+    margin-top: 0px;
+  } */
+  .titleH1Page {
+    font-size: 22px;
+  }
+  .howWork__step {
+    padding: 20px;
+  }
+  .howWork .stepDescription {
+    padding: 0;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -839,5 +1027,16 @@
   .tutorsIn__subjects {
     grid-template-columns: repeat(4, 1fr);
     margin-top: 20px;
+  }
+  .howWork {
+    margin-top: 46px;
+  }
+
+  .howWork h3 {
+    font-size: 24px;
+  }
+  .howWork__img {
+    width: 90%;
+    height: 90%;
   }
 }

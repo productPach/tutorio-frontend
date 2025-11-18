@@ -21,25 +21,31 @@ export const Footer = ({ city }: FooterProps) => {
             <div className={styles.footer__right__logo}>
               tutorio
               <span className={styles.footer__right__underLogo}>
-                Онлайн-сервис подбора репетиторов
+                Платформа подбора репетиторов
               </span>
             </div>
           </RegionalLink>
         </div>
         <div className={styles.footer__menu}>
-          <a href="">Найти репетитора</a>
-          <a href="">Заказы учеников</a>
-          <a href="">Каталог репетиторов</a>
+          <a href="/match/main/subject">Найти репетитора</a>
+          <a href="/repetitors">Каталог репетиторов</a>
           <br />
-          <a href="">Блог</a>
-          <a href="">Стать репетитором</a>
-          <a href="">Личный кабинет</a>
+          {/* <a href="">Блог</a> */}
+          <a href="/sitemap">Карта сайта</a>
+          <a href="/sign-in-tutor/phone">Репетиторам</a>
+          <a href="/sign-in-student/phone">Ученикам</a>
           <br />
-          <RegionalLink href="/" citySlug={city}>
+          <RegionalLink href="/docs/agreement" citySlug={city}>
             Пользовательское соглашение
           </RegionalLink>
-          <a href="">Обработка информации</a>
-          <a href="">Защита персональных данных</a>
+
+          <RegionalLink href="/docs/privacy-policy" citySlug={city}>
+            Политика конфиденциальности
+          </RegionalLink>
+
+          <RegionalLink href="/docs/public-offer" citySlug={city}>
+            Публичная оферта
+          </RegionalLink>
         </div>
 
         <div className={styles.footer__right__socialM}>
@@ -101,13 +107,14 @@ export const Footer = ({ city }: FooterProps) => {
         </div>
 
         <div className={styles.footer__copiright}>
-          © 2011–2024, ООО «Туторио». При использовании материалов гиперссылка
-          на tutorio.ru обязательна. ИНН 7710718303, ОГРН 1087746642774. 109544,
-          г. Москва, бульвар Энтузиастов, дом 2, 26 этаж.
+          © 2011–2024, «Туторио». При использовании материалов гиперссылка на
+          tutorio.ru обязательна. ИНН 772161785163, ОГРН 324508100346247.
+          140093, Московская область, г. Дзержинский, ул. Угрешская, дом 26А,
+          кв. 65.
         </div>
         <div className={styles.footer__description}>
           ООО «Туторио» осуществляет деятельность в сфере IT: сервис
-          предоставляет онлайн - услуги по подбору финансовых продуктов, а также
+          предоставляет онлайн - услуги по подбору репетиторов, а также
           распространению рекламы организаций - партнеров в сети Интернет
         </div>
         <div className={styles.footer__cookie}>
@@ -121,7 +128,7 @@ export const Footer = ({ city }: FooterProps) => {
           <div className={styles.footer__right__logo}>
             tutorio
             <span className={styles.footer__right__underLogo}>
-              Онлайн-сервис подбора репетиторов
+              Платформа подбора репетиторов
             </span>
           </div>
         </a>

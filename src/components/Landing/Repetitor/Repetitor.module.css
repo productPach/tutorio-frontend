@@ -1,82 +1,26 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html {
-  height: 100%;
-}
-
-body {
-  padding: 0px;
-  margin: 0;
-  font-family: "Source Sans 3", sans-serif;
-  background-color: #f1f2f4;
-  color: #444444;
-  font-size: 16px;
-  overflow: auto;
-  -ms-overflow-style: none; /* Для Internet Explorer и Edge */
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100%;
-  min-width: 280px;
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-body::-webkit-scrollbar {
-  display: none; /* Для Webkit-браузеров (Chrome, Safari и др.) */
-}
-
-span {
-  font-family: "Source Sans 3", sans-serif;
-}
-
-a {
-  color: #333333;
-  text-decoration: none;
-}
-
-ul {
-  list-style-type: none;
-  padding-left: 0;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  list-style-type: none;
-}
-
-main {
+.center {
   padding-left: calc(50% - 600px);
   padding-right: calc(50% - 600px);
-  flex: 1 0 auto;
 }
-@media (max-width: 1280px) {
-  main {
-    padding-left: calc(50% - 480px);
-    padding-right: calc(50% - 480px);
-  }
+.container {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(27, 1fr);
+  gap: 18px;
 }
-@media (max-width: 1024px) {
-  main {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
+.grid19 {
+  grid-column: span 19;
 }
-@media (max-width: 480px) {
-  main {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
+.grid8 {
+  grid-column: span 8;
 }
-input {
-  font-family: "Source Sans 3", sans-serif;
+.titleActionSidebar {
+  font-size: 18px !important;
+  margin: 0 0 18px 0 !important;
 }
-button:active {
-  transform: scale(0.98);
+.buttonActionSidebar {
+  width: 100%;
+  margin: 18px 0 0 0;
 }
 
 /* Адаптивные стили под разрешения экранов */
@@ -107,6 +51,27 @@ button:active {
 ****************************************************** */
 
 @media (max-width: 1280px) {
+  .header {
+    padding-left: calc(50% - 480px);
+    padding-right: calc(50% - 480px);
+  }
+  .leftbar {
+    grid-column: span 7;
+  }
+  .content {
+    grid-column: span 20;
+  }
+  .contentFull {
+    grid-column: span 20;
+  }
+  .sidebarResponse {
+    display: none;
+  }
+  .sidebarResponseM {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -116,6 +81,12 @@ button:active {
 ******************************************************
 ****************************************************** */
 @media (max-width: 1024px) {
+  .grid19 {
+    grid-column: span 17;
+  }
+  .grid8 {
+    grid-column: span 10;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -125,8 +96,18 @@ button:active {
 ******************************************************
 ****************************************************** */
 @media (max-width: 768px) {
-  body {
-    font-size: 17px;
+  .container {
+    display: block;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .paddingBottM {
+    padding-bottom: 70px;
+  }
+  .grid19 {
+    grid-column: span 1;
+  }
+  .grid8 {
+    grid-column: span 1;
   }
 }
 /* ******************************************************
@@ -155,6 +136,17 @@ button:active {
 ******************************************************
 ****************************************************** */
 @media (max-width: 480px) {
+  .center {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .main {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .container {
+    margin-top: 10px;
+  }
 }
 /* ******************************************************
 ******************************************************
@@ -163,5 +155,5 @@ button:active {
 ******************************************************
 ******************************************************
 ****************************************************** */
-@media (max-width: 340px) {
+@media (max-width: 360px) {
 }

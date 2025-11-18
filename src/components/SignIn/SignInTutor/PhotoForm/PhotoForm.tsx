@@ -67,7 +67,7 @@ export const PhotoForm: React.FC<ComponentRenderProps> = ({
     }
 
     if (selectedFile.size > 5 * 1024 * 1024) {
-      setUploadError("Размер файла не должен превышать 5MB.");
+      setUploadError("Размер файла не должен превышать 5 мегабайт.");
       return;
     }
 

@@ -2,6 +2,14 @@ import Match from "@/components/Match/Match";
 import { Metadata } from "next";
 
 const formMetaMap: Record<string, { title: string; description: string }> = {
+  main: {
+    title: "Выбор предмета — Tutorio",
+    description: "Выберите предмет, по которому нужно найти репетитора",
+  },
+  subject: {
+    title: "Выбор предмета — Tutorio",
+    description: "Выберите предмет, по которому нужно найти репетитора",
+  },
   goal: {
     title: "Цель занятий — Tutorio",
     description:

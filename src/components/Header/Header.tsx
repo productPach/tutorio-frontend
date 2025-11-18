@@ -25,7 +25,7 @@ export const Header = ({ city }: HeaderProps) => {
           <div className={styles.header__logo}>
             tutorio
             <span className={styles.header__underLogo}>
-              Онлайн-сервис подбора репетиторов
+              Платформа подбора репетиторов
             </span>
             <span className={styles.header__underLogoMob}>
               Подбор репетиторов

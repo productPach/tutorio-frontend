@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
 import { Metadata } from "next";
-import { validSlug } from "@/utils/region/validSlug";
+import { getCitySlug, validSlug } from "@/utils/region/validSlug";
 import { fetchRegionBySlug } from "@/utils/region/fetchRegion";
 import { RepetitorsServer } from "@/components/Landing/Repetitors/RepetitorsServer";
 import { fetchGetTutorsByFilters } from "@/api/server/landingApi";
@@ -82,7 +82,11 @@ export async function generateMetadata(context: any): Promise<Metadata> {
   }
 
   const region = await fetchRegionBySlug(citySlug);
-  if (!region) return { title: "Репетиторы на Tutorio", description: "" };
+  if (!region)
+    return {
+      title: "Репетиторы на Tutorio",
+      description: "Найди репетитора для занятий в любом регионе России",
+    };
 
   let data;
   try {
@@ -95,7 +99,12 @@ export async function generateMetadata(context: any): Promise<Metadata> {
       1
     );
   } catch (e) {
-    data = null;
+    return {
+      title: "Страница не найдена — Tutorio",
+      description:
+        "К сожалению, страница не найдена. Возможно, она была удалена или перемещена.",
+      robots: "noindex, nofollow", // чтобы поисковики не индексировали 404 страницы
+    };
   }
 
   const subjectTitle = data?.subject?.for_request || "";
@@ -189,27 +198,37 @@ export async function generateMetadata(context: any): Promise<Metadata> {
 
 export default async function RepetitorsPage(context: any) {
   const params = await Promise.resolve(context.params);
-  const citySlug = params.city || "msk";
+  const city = getCitySlug(params.city);
+  if (!city) {
+    return notFound();
+  }
   const { subjectSlug, goalSlug, placeSlug } = parseParams(params.params);
+  const searchParams = await Promise.resolve(context.searchParams);
+  const page = parseInt(searchParams.page) || 1;
 
-  if (!validSlug.includes(citySlug)) notFound();
-
-  const region = await fetchRegionBySlug(citySlug);
+  const region = await fetchRegionBySlug(city);
   if (!region) notFound();
 
-  // ✅ SSR: получаем первых 10 репетиторов
-  const tutorsData = await fetchGetTutorsByFilters(
-    citySlug,
-    subjectSlug,
-    goalSlug,
-    placeSlug,
-    1,
-    10
-  );
+  let tutorsData;
+  try {
+    // ✅ SSR: получаем репетиторов
+    tutorsData = await fetchGetTutorsByFilters(
+      city,
+      subjectSlug,
+      goalSlug,
+      placeSlug,
+      page,
+      10
+    );
+  } catch (error) {
+    // Если API возвращает ошибку (например, 404 для невалидных слагов) - показываем 404
+    console.error("Error fetching tutors:", error);
+    notFound();
+  }
 
   return (
     <>
-      <Header city={citySlug} />
+      <Header city={city} />
       <RepetitorsServer
         region_name_dative={region?.region_name_dative || "Москве и области"}
         tutors={tutorsData.tutors}
@@ -227,8 +246,9 @@ export default async function RepetitorsPage(context: any) {
             : undefined
         }
         place={tutorsData.place || undefined}
+        city={city}
       />
-      <Footer city={citySlug} />
+      <Footer city={city} />
     </>
   );
 }

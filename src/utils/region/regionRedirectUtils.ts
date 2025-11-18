@@ -13,12 +13,14 @@ const EXCLUDED_PATHS = [
 const ALLOWED_PATHS = [
   "", // главная
   "repetitors",
+  "repetitor",
   "subjects",
   "categories",
   "blog",
   "about",
   "contacts",
   "docs",
+  "sitemap",
   // добавьте другие пути которые поддерживают регионы
 ];
 
