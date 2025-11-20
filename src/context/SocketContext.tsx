@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { host, port, socketHost } from "@/api/server/configApi";
+import { socketHost } from "@/api/server/configApi";
 import { useAppSelector, useAppDispatch } from "@/store/store";
 import { getCurrentStudent } from "@/store/features/studentSlice";
 import { getCurrentTutor } from "@/store/features/tutorSlice"; // Получаем экшен для репетитора
@@ -38,10 +38,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         auth: { token },
         transports: ["websocket"], // 🧠 важно
       });
-      // const socket = io("http://localhost:3000", {
-      //   auth: { token },
-      //   transports: ["websocket"],
-      // });
 
       socket.on("connect", () => {
         //console.log("✅ Socket connected:", socket.id);
