@@ -32,8 +32,6 @@ export const OrderComponent = ({
   error,
   locations,
 }: OrderProps) => {
-  //console.log(process.env.NODE_ENV);
-
   // Стейт для предметов
   const dispatch = useAppDispatch();
   const subjects = useAppSelector((state) => state.subject.subjects);

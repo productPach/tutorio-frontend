@@ -12,7 +12,7 @@ export const setCookie = (
     expires: days,
     path: "/", // путь куки на корень
     //secure: true, // кука будет передана только по HTTPS
-    secure: process.env.NODE_ENV === "production", // Убираем secure для localhost
+    secure: process.env.NEXT_PUBLIC_ENV === "production", // Убираем secure для localhost
     //httpOnly: true, // Однако важно помнить, что библиотека js-cookie не поддерживает установку HttpOnly со стороны клиента
     sameSite: "Lax", // кука будет отправляться только в том случае, если запрос происходит с того же сайта, что и кука
     ...options,
