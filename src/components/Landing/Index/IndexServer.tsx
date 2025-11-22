@@ -418,13 +418,13 @@ export const IndexServer = ({ region_name_dative }: IndexServerProps) => {
             </p>
           </div>
           <div>
-            <Image
+            {/* <Image
               src="/img/icon/im-service-step1@2x.webp"
               alt="Создание заказа"
               width={300}
               height={215}
               className={styles.howWork__img}
-            />
+            /> */}
           </div>
         </div>
         <div className={styles.howWork__step}>
@@ -438,13 +438,13 @@ export const IndexServer = ({ region_name_dative }: IndexServerProps) => {
             </p>
           </div>
           <div>
-            <Image
+            {/* <Image
               src="/img/icon/im-service-step2@2x.webp"
               alt="Получите отклики"
               width={300}
               height={215}
               className={styles.howWork__img}
-            />
+            /> */}
           </div>
         </div>
         <div className={styles.howWork__step}>
@@ -458,13 +458,13 @@ export const IndexServer = ({ region_name_dative }: IndexServerProps) => {
             </p>
           </div>
           <div>
-            <Image
+            {/* <Image
               src="/img/icon/im-service-step3@2x.webp"
               alt="Договоритесь о занятиях"
               width={300}
               height={215}
               className={styles.howWork__img}
-            />
+            /> */}
           </div>
         </div>
         <div className={styles.howWork__step}>
@@ -478,13 +478,13 @@ export const IndexServer = ({ region_name_dative }: IndexServerProps) => {
             </p>
           </div>
           <div>
-            <Image
+            {/* <Image
               src="/img/icon/im-service-step5@2x.webp"
               alt="Мы всегда на связи"
               width={300}
               height={215}
               className={styles.howWork__img}
-            />
+            /> */}
           </div>
         </div>
       </section>
