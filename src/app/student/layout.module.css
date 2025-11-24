@@ -768,6 +768,15 @@
 .textGr {
   color: #777777;
 }
+.textTitle {
+  font-size: 24px;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+.textGry14 {
+  color: #777;
+  font-size: 14px;
+}
 .containerTextAndLoader {
   display: flex;
   flex-direction: row;

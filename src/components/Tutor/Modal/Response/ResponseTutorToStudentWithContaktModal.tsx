@@ -3,6 +3,8 @@
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "../Profil/ProfileInfo/ProfileInfo.module.css";
+import stylesStudent from "../../../Student/Student.module.css";
+import generalStyles from "../../../../app/student/layout.module.css";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   setIsModalResponseTutorToStudentWithContakt,
@@ -164,6 +166,13 @@ export const ResponseTutorToStudentWithContaktModal = () => {
           maxLength={5000}
         />
       </div>
+
+      <br></br>
+      <div className={stylesStudent.containerEntityTitleDescription}>
+        <div className={generalStyles.textGry14}>К оплате</div>
+      </div>
+
+      <div className={generalStyles.textTitle}>{order?.responseCost} ₽</div>
 
       {valid && (
         <p className={styles.error}>
