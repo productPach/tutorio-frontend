@@ -265,7 +265,17 @@
   cursor: pointer;
   transition: all 0.3s;
 }
-
+.buttonFlex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+}
+.buttonFlexSpn400 {
+  font-weight: 400;
+  font-size: 14px;
+}
 .content_block_chat {
   margin-bottom: 18px;
 }

@@ -634,7 +634,8 @@ const Orders = () => {
                         className={clsx(
                           styles.content_block_button,
                           existingChat ? styles.buttonBlc : styles.buttonYlw,
-                          generalStyles.width100M480px
+                          generalStyles.width100M480px,
+                          styles.buttonFlex
                         )}
                         onClick={(e) => {
                           if (existingChat) {
@@ -676,11 +677,23 @@ const Orders = () => {
                         }}
                         type="button"
                       >
-                        {chats.find((chat) => chat.orderId === order.id)
-                          ? "Перейти в чат"
-                          : order.autoContactsOnResponse
-                            ? "Получить контакты"
-                            : "Откликнуться"}
+                        {chats.find((chat) => chat.orderId === order.id) ? (
+                          "Перейти в чат"
+                        ) : order.autoContactsOnResponse ? (
+                          <>
+                            <span>Получить контакты</span>
+                            <span className={styles.buttonFlexSpn400}>
+                              {order.responseCost} руб.
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Откликнуться</span>
+                            <span className={styles.buttonFlexSpn400}>
+                              {order.responseCost} руб.
+                            </span>
+                          </>
+                        )}
                       </button>
 
                       {order.autoContactsOnResponse && !existingChat && (

@@ -208,11 +208,12 @@ export const ResponseTutorToStudentModal = () => {
           <div className={generalStyles.textBlc}>
             Отправить номер телефона ученику
           </div>
-          <span className={generalStyles.textGr}>
+          {/* <span className={generalStyles.textGr}>
             Ученик получит ваш номер и сможет связаться с&nbsp;вами
             напрямую&nbsp;☎️
-          </span>
+          </span> */}
         </div>
+
         <div className={stylesStudent.inputContainer}>
           <label className={stylesStudent.iosSwitch}>
             <input
@@ -224,6 +225,13 @@ export const ResponseTutorToStudentModal = () => {
           </label>
         </div>
       </div>
+      <br></br>
+      <div className={stylesStudent.containerEntityTitleDescription}>
+        <div className={generalStyles.textGry14}>К оплате</div>
+      </div>
+
+      <div className={generalStyles.textTitle}>{order?.responseCost} ₽</div>
+
       {valid && (
         <p className={styles.error}>
           📫 Отклик не доставлен! Ученик уже закрыл заказ или временно
