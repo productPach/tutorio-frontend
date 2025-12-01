@@ -1,9 +1,15 @@
+import { BalanceTransaction } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ModalStateType = {
   isModalSelectCity: boolean;
   isSheetSelectCity: boolean;
   isModalBalanceBoost: boolean;
+  isSheetBalanceBoost: boolean;
+
+  isModalBalanceBoostNotEmail: boolean;
+  isSheetBalanceBoostNotEmail: boolean;
+
   valueModalBalanceBoost: string;
   scrollY: number;
   isModalFio: boolean;
@@ -66,12 +72,24 @@ type ModalStateType = {
   isReviewIdCreateReview: string | null;
   isSheetFiltersOrdersForTutor: boolean;
   isRegionTooltip: boolean;
+
+  isModalDepositBalanceYookassa: boolean;
+  isSheetDepositBalanceYookassa: boolean;
+
+  isModalPaymentDetails: boolean;
+  isSheetPaymentDetails: boolean;
+  paymentData: BalanceTransaction | null;
 };
 
 const initialState: ModalStateType = {
   isModalSelectCity: false,
   isSheetSelectCity: false,
   isModalBalanceBoost: false,
+  isSheetBalanceBoost: false,
+
+  isModalBalanceBoostNotEmail: false,
+  isSheetBalanceBoostNotEmail: false,
+
   valueModalBalanceBoost: "",
   scrollY: 0,
   isModalFio: false,
@@ -134,6 +152,13 @@ const initialState: ModalStateType = {
   isReviewIdCreateReview: null,
   isSheetFiltersOrdersForTutor: false,
   isRegionTooltip: false,
+
+  isModalDepositBalanceYookassa: false,
+  isSheetDepositBalanceYookassa: false,
+
+  isModalPaymentDetails: false,
+  isSheetPaymentDetails: false,
+  paymentData: null,
 };
 
 const modalSlice = createSlice({
@@ -149,6 +174,17 @@ const modalSlice = createSlice({
     setIsModalBalanceBoost: (state, action: PayloadAction<boolean>) => {
       state.isModalBalanceBoost = action.payload;
     },
+    setIsSheetBalanceBoost: (state, action: PayloadAction<boolean>) => {
+      state.isSheetBalanceBoost = action.payload;
+    },
+
+    setIsModalBalanceBoostNotEmail: (state, action: PayloadAction<boolean>) => {
+      state.isModalBalanceBoostNotEmail = action.payload;
+    },
+    setIsSheetBalanceBoostNotEmail: (state, action: PayloadAction<boolean>) => {
+      state.isSheetBalanceBoostNotEmail = action.payload;
+    },
+
     setValueModalBalanceBoost: (state, action: PayloadAction<string>) => {
       state.valueModalBalanceBoost = action.payload;
     },
@@ -337,6 +373,24 @@ const modalSlice = createSlice({
     setIsRegionTooltip(state, action: PayloadAction<boolean>) {
       state.isRegionTooltip = action.payload;
     },
+
+    setIsModalDepositBalanceYookassa: (state, action: PayloadAction<boolean>) => {
+      state.isModalDepositBalanceYookassa = action.payload;
+    },
+    setIsSheetDepositBalanceYookassa: (state, action: PayloadAction<boolean>) => {
+      state.isSheetDepositBalanceYookassa = action.payload;
+    },
+
+    setIsModalPaymentDetails: (state, action: PayloadAction<boolean>) => {
+      state.isModalPaymentDetails = action.payload;
+    },
+    setIsSheetPaymentDetails: (state, action: PayloadAction<boolean>) => {
+      state.isSheetPaymentDetails = action.payload;
+    },
+    setIsModalPaymentData: (state, action: PayloadAction<BalanceTransaction>) => {
+      state.paymentData = action.payload;
+    },
+
   },
 });
 
@@ -344,6 +398,9 @@ export const {
   setModalSelectCity,
   setIsSheetSelectCity,
   setIsModalBalanceBoost,
+  setIsSheetBalanceBoost,
+  setIsModalBalanceBoostNotEmail,
+  setIsSheetBalanceBoostNotEmail,
   setValueModalBalanceBoost,
   setScrollY,
   setIsModalFio,
@@ -406,5 +463,10 @@ export const {
   setIsReviewIdCreateReview,
   setIsSheetFiltersOrdersForTutor,
   setIsRegionTooltip,
+  setIsModalDepositBalanceYookassa,
+  setIsSheetDepositBalanceYookassa,
+  setIsModalPaymentDetails,
+  setIsSheetPaymentDetails,
+  setIsModalPaymentData,
 } = modalSlice.actions;
 export const modalReducer = modalSlice.reducer;

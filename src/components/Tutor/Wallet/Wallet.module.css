@@ -1,0 +1,241 @@
+.order_block {
+  composes: content__block from global;
+}
+
+.mrgn_bt_10 {
+  margin-bottom: 10px;
+}
+
+.mrgn_tp_10 {
+  margin-top: 10px;
+}
+
+.mrgn_rt_20 {
+  margin-right: 20px;
+}
+
+.order_block_inf {
+  composes: order-block__inf from global;
+}
+
+.order_block_ordr_itm {
+  composes: order-block__ordr-itm from global;
+}
+
+.order_block_ordr_itm_text {
+  margin: 0;
+}
+
+.crsr_pntr {
+  cursor: pointer;
+}
+
+.undrln_hover {
+  text-decoration: none;
+}
+
+.undrln_hover:hover {
+  text-decoration: underline;
+}
+
+.buttonYlw {
+  composes: buttonYlw from global;
+  composes: mrgn-tp-10 from global;
+}
+
+.positive_amount {
+  color: #00a046;
+  font-weight: 500;
+}
+
+.negative_amount {
+  color: #ff3b30;
+  font-weight: 500;
+}
+
+.pending_amount {
+  color: #888;
+  font-weight: 500;
+}
+
+/* Стили для секции пополнения */
+.top_up_section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.amount_input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 150px;
+}
+
+/* Стили для таблицы транзакций */
+.transaction_headers {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 15px;
+  padding: 10px 0;
+  margin-bottom: 15px;
+  font-weight: 500;
+  color: #666;
+}
+
+.transaction_header {
+  font-size: 14px;
+}
+
+.transaction_row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 15px;
+  padding: 15px 0;
+  align-items: center;
+}
+
+.transaction_info {
+  display: flex;
+  align-items: center;
+}
+
+.transaction_main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transaction_details {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+.dsplCntnt {
+  display: contents;
+}
+.transaction_title {
+  cursor: pointer;
+}
+
+.transaction_time {
+  font-size: 12px;
+  color: #888;
+}
+
+.transaction_amount {
+  font-weight: 500;
+  text-align: right;
+}
+
+.transaction_status {
+  display: flex;
+  justify-content: center;
+}
+
+.transaction_time_full {
+  text-align: right;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Стили для дат */
+.date_section {
+  margin: 20px 0 10px 0;
+  padding-bottom: 5px;
+}
+
+.date_header {
+  color: #777;
+}
+
+/* Стили для статусов */
+.status_badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 80px;
+}
+
+.status_success {
+  background-color: #e6f7ee;
+  color: #00a046;
+}
+
+.status_pending {
+  background-color: #fff4e6;
+  color: #ff9500;
+}
+
+.status_failed {
+  background-color: #ffe6e6;
+  color: #ff3b30;
+}
+.blcFlxClmnMob {
+  display: none;
+}
+@media (max-width: 1280px) {
+  .blcFlxRwDsktp {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .blcFlxClmnMob {
+    display: block;
+  }
+  .button {
+    width: 100%;
+    margin: 18px 0 0 0;
+    padding: 18px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: #fad949;
+    color: black;
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .blcFlxRwDsktp {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .transaction_headers {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .transaction_row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .transaction_time_full {
+    display: none;
+  }
+
+  .transaction_time {
+    display: block;
+  }
+
+  .transaction_status {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 480px) {
+  .blcFlxClmnMob {
+    width: 100%;
+  }
+}

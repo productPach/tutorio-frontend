@@ -1,11 +1,19 @@
 "use client";
 
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import styles from "./BalanceBoost.module.css";
 import { ChangeEvent, useEffect, useState } from "react";
+import {
+  setIsModalBalanceBoost,
+  setIsModalDepositBalanceYookassa,
+  setIsSheetBalanceBoost,
+  setIsSheetDepositBalanceYookassa,
+  setValueModalBalanceBoost,
+} from "@/store/features/modalSlice";
 
 export const BalanceBoost = ({ description }: { description?: string }) => {
+  const dispatch = useAppDispatch();
   // Вытаскиваем стоимость отклика на заказ из Redux
   const valueBoost = useAppSelector(
     (state) => state.modal.valueModalBalanceBoost
@@ -13,8 +21,15 @@ export const BalanceBoost = ({ description }: { description?: string }) => {
   // Стейт для знаения инпута с суммой пополнения
   const [inputValue, setInputValue] = useState(valueBoost);
   const handleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ""); // Убираем нечисловые символы
+    // Оставляем только цифры и ограничиваем длину до 5 символов
+    const value = e.target.value.replace(/\D/g, "").slice(0, 5);
+
     setInputValue(value);
+
+    // Сброс ошибки, если >= 100
+    if (Number(value) >= 100) {
+      setErrorInput(false);
+    }
   };
   // Состояние для ошибки текстового поля
   const [errorInput, setErrorInput] = useState(false);
@@ -33,6 +48,24 @@ export const BalanceBoost = ({ description }: { description?: string }) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
+
+  const handleOpenModal = () => {
+    const amount = Number(inputValue);
+    if (amount < 100) {
+      setErrorInput(true);
+      return;
+    }
+
+    dispatch(setValueModalBalanceBoost(inputValue));
+    if (window.innerWidth < 769) {
+      dispatch(setIsSheetBalanceBoost(false));
+      dispatch(setIsSheetDepositBalanceYookassa(true));
+    } else {
+      dispatch(setIsModalBalanceBoost(false));
+      dispatch(setIsModalDepositBalanceYookassa(true));
+    }
+  };
+
   return (
     <>
       <div className={styles.description}>
@@ -63,7 +96,7 @@ export const BalanceBoost = ({ description }: { description?: string }) => {
             [styles.focused]: isFocused || inputValue.length > 0,
             [styles.errorInput]: errorInput,
           })}
-          maxLength={7}
+          maxLength={5}
         />
         <div
           className={clsx(styles.minValueBoost, { [styles.error]: errorInput })}
@@ -72,7 +105,7 @@ export const BalanceBoost = ({ description }: { description?: string }) => {
         </div>
       </div>
       <div className={styles.button}>
-        <button type="button" disabled={errorInput}>
+        <button onClick={handleOpenModal} type="button" disabled={errorInput}>
           Пополнить баланс
         </button>
       </div>

@@ -22,6 +22,7 @@ import { useChat } from "@/context/ChatContext";
 import { Spinner } from "@/components/Spinner/Spinner";
 import { getAllSubjects } from "@/store/features/subjectSlice";
 import { fetchTutorPhoneById } from "@/api/server/tutorApi";
+import { withdrawBalance } from "@/store/features/paymentSlice";
 
 export const ResponseTutorToStudentModal = () => {
   const dispatch = useAppDispatch();
@@ -58,6 +59,25 @@ export const ResponseTutorToStudentModal = () => {
   const subjectForRequest = subjects.find(
     (item) => item.id_p === order?.subject
   )?.for_request;
+
+  const handleResponse = async () => {
+    if (order) {
+      try {
+        await dispatch(
+          withdrawBalance({
+            amount: Number(order.responseCost) * 100, // БАЛАНС В КОПЕЙКАХ
+            reason: `Оплата отклика на заказ №${order.orderNumber}`,
+          })
+        ).unwrap();
+
+        // Вызываем update только если списание прошло успешно
+        update();
+      } catch (error) {
+        console.error("Ошибка при списании:", error);
+        // НУЖНО показать ошибку пользователю!
+      }
+    }
+  };
 
   const update = async () => {
     setIsLoading(true);
@@ -245,7 +265,7 @@ export const ResponseTutorToStudentModal = () => {
       <div className={styles.button}>
         <button
           disabled={isLoading || valid || inputValue.length < 1}
-          onClick={update}
+          onClick={handleResponse}
           type="button"
         >
           Отправить

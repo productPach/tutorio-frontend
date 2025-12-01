@@ -83,6 +83,20 @@ export const fetchExistUser = async (phone: string) => {
   }
 };
 
+// Получение баланса пользователя
+export const fetchUserBalance = async (): Promise<{ balance: number; updatedAt: string }> => {
+  try {
+    const response = await httpClient.get(`users-balance`);
+    return {
+      balance: response.data.balance,
+      updatedAt: response.data.updatedAt
+    };
+  } catch (error: any) {
+    console.error('❌ Ошибка запроса users/balance:', error.response?.status, error.response?.data || error.message);
+    throw new Error("Не удалось получить баланс пользователя");
+  }
+};
+
 export const fetchUpdatePhoneUser = async ({
   id: userId,
   phone,

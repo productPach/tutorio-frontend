@@ -8,6 +8,7 @@ import {
   setIsModalBalanceBoost,
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetBalanceBoost,
   setIsSheetResponseTutorToStudent,
   setIsSheetResponseTutorToStudentWithContakt,
   setValueModalBalanceBoost,
@@ -18,6 +19,8 @@ import { setChat } from "@/store/features/chatSlice";
 import { useRouter } from "next/navigation";
 import { setOrderByIdDefault } from "@/store/features/orderSlice";
 import clsx from "clsx";
+import { Order } from "@/types/types";
+import { getUserBalance } from "@/store/features/paymentSlice";
 
 export const ResponseSidbar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,6 +46,57 @@ export const ResponseSidbar = () => {
   const { chats, chatsLoading, setChatsLoaded } = useChat();
 
   const existingChat = chats.find((chat) => chat.orderId === orderById?.id);
+
+  // Выносим логику в отдельную функцию
+  const handleResponseClick = async (e: React.MouseEvent, order: Order) => {
+    e.preventDefault();
+
+    // Если чат уже существует
+    if (existingChat) {
+      route.push(`responses`);
+      dispatch(setChat(existingChat));
+      return;
+    }
+
+    // Получаем актуальный баланс
+    try {
+      const balanceData = await dispatch(getUserBalance()).unwrap();
+      const currentBalance = balanceData.balance / 100; // если баланс в копейках
+
+      // Проверяем достаточно ли средств
+      if (currentBalance < Number(order.responseCost)) {
+        // Показываем модалку пополнения баланса
+        if (window.innerWidth < 769) {
+          dispatch(setIsSheetBalanceBoost(true));
+        } else {
+          dispatch(setIsModalBalanceBoost(true));
+        }
+        dispatch(setValueModalBalanceBoost(order.responseCost));
+        return;
+      }
+
+      // Достаточно средств - показываем соответствующую модалку
+      if (order.autoContactsOnResponse) {
+        if (window.innerWidth < 769) {
+          dispatch(setIsSheetResponseTutorToStudentWithContakt(true));
+        } else {
+          dispatch(setIsModalResponseTutorToStudentWithContakt(true));
+        }
+      } else {
+        if (window.innerWidth < 769) {
+          dispatch(setIsSheetResponseTutorToStudent(true));
+        } else {
+          dispatch(setIsModalResponseTutorToStudent(true));
+        }
+      }
+
+      dispatch(setOrderByIdDefault(order));
+      setChatsLoaded(true);
+    } catch (error) {
+      console.error("Ошибка при получении баланса:", error);
+      // Можно показать toast с ошибкой
+    }
+  };
 
   return (
     <>
@@ -75,26 +129,7 @@ export const ResponseSidbar = () => {
                     <div className={styles.button}>
                       <button
                         className={clsx(styles.jtfCntSpBtwn, styles.buttonYlw)}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // Если не достаточно средств, то должна быть оплата
-                          //dispatch(setIsModalBalanceBoost(true));
-                          //orderById?.responseCost &&
-                          //dispatch(
-                          //</div>setValueModalBalanceBoost(orderById?.responseCost)
-                          //);
-                          if (window.innerWidth < 769) {
-                            dispatch(
-                              setIsSheetResponseTutorToStudentWithContakt(true)
-                            );
-                          } else {
-                            dispatch(
-                              setIsModalResponseTutorToStudentWithContakt(true)
-                            );
-                          }
-                          orderById && dispatch(setOrderByIdDefault(orderById));
-                          setChatsLoaded(true);
-                        }}
+                        onClick={(e) => handleResponseClick(e, orderById)}
                         type="button"
                       >
                         <span className={styles.textButton}>
@@ -137,22 +172,9 @@ export const ResponseSidbar = () => {
                     <div className={styles.button}>
                       <button
                         className={clsx(styles.jtfCntSpBtwn, styles.buttonYlw)}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // Если не достаточно средств, то должна быть оплата
-                          //dispatch(setIsModalBalanceBoost(true));
-                          //orderById?.responseCost &&
-                          //dispatch(
-                          //</div>setValueModalBalanceBoost(orderById?.responseCost)
-                          //);
-                          if (window.innerWidth < 769) {
-                            dispatch(setIsSheetResponseTutorToStudent(true));
-                          } else {
-                            dispatch(setIsModalResponseTutorToStudent(true));
-                          }
-                          orderById && dispatch(setOrderByIdDefault(orderById));
-                          setChatsLoaded(true);
-                        }}
+                        onClick={(e) =>
+                          orderById && handleResponseClick(e, orderById)
+                        }
                         type="button"
                       >
                         <span className={styles.textButton}>Откликнуться</span>

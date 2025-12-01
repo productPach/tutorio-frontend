@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import styles from "../../../app/tutor/layout.module.css";
 import componentStyles from "./WarningNotification.module.css";
 import clsx from "clsx";
 

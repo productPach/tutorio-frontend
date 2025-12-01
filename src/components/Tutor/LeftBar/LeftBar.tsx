@@ -9,7 +9,6 @@ import { AppDispatch, useAppSelector } from "@/store/store";
 import { setSupportMenu } from "@/store/features/tutorSlice";
 import { useRouter } from "next/navigation";
 import { useTotalUnreadCount } from "@/hooks/useTotalUnreadCount";
-import { setChat } from "@/store/features/chatSlice";
 
 const LeftBar: React.FC<{
   page: string;

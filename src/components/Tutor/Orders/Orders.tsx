@@ -14,11 +14,14 @@ import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocation
 import { Order, Tutor } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
+  setIsModalBalanceBoost,
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
+  setIsSheetBalanceBoost,
   setIsSheetFiltersOrdersForTutor,
   setIsSheetResponseTutorToStudent,
   setIsSheetResponseTutorToStudentWithContakt,
+  setValueModalBalanceBoost,
 } from "@/store/features/modalSlice";
 import { useChat } from "@/context/ChatContext";
 import { setChat } from "@/store/features/chatSlice";
@@ -29,12 +32,13 @@ import { ListFilter } from "lucide-react";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import SideBar from "../SideBar/SideBar";
 import { Pagination } from "@/components/Pagination/Pagination";
+import { getUserBalance } from "@/store/features/paymentSlice";
 
 const Orders = () => {
   const route = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const token = useAppSelector((state) => state.auth.token);
   const tutor = useAppSelector((state) => state.tutor.tutor);
+
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
   const { orders, loading, error, filters } = useSelector(
@@ -383,6 +387,60 @@ const Orders = () => {
               (chat) => chat.orderId === order.id
             );
 
+            // Выносим логику в отдельную функцию
+            const handleResponseClick = async (
+              e: React.MouseEvent,
+              order: Order
+            ) => {
+              e.preventDefault();
+
+              // Если чат уже существует
+              if (existingChat) {
+                route.push(`responses`);
+                dispatch(setChat(existingChat));
+                return;
+              }
+
+              // Получаем актуальный баланс
+              try {
+                const balanceData = await dispatch(getUserBalance()).unwrap();
+                const currentBalance = balanceData.balance / 100; // если баланс в копейках
+
+                // Проверяем достаточно ли средств
+                if (currentBalance < Number(order.responseCost)) {
+                  // Показываем модалку пополнения баланса
+                  if (window.innerWidth < 769) {
+                    dispatch(setIsSheetBalanceBoost(true));
+                  } else {
+                    dispatch(setIsModalBalanceBoost(true));
+                  }
+                  dispatch(setValueModalBalanceBoost(order.responseCost));
+                  return;
+                }
+
+                // Достаточно средств - показываем соответствующую модалку
+                if (order.autoContactsOnResponse) {
+                  if (isMobile) {
+                    dispatch(setIsSheetResponseTutorToStudentWithContakt(true));
+                  } else {
+                    dispatch(setIsModalResponseTutorToStudentWithContakt(true));
+                  }
+                } else {
+                  if (isMobile) {
+                    dispatch(setIsSheetResponseTutorToStudent(true));
+                  } else {
+                    dispatch(setIsModalResponseTutorToStudent(true));
+                  }
+                }
+
+                dispatch(setOrderByIdDefault(order));
+                setChatsLoaded(true);
+              } catch (error) {
+                console.error("Ошибка при получении баланса:", error);
+                // Можно показать toast с ошибкой
+              }
+            };
+
             return (
               <div
                 key={order.id}
@@ -637,44 +695,7 @@ const Orders = () => {
                           generalStyles.width100M480px,
                           styles.buttonFlex
                         )}
-                        onClick={(e) => {
-                          if (existingChat) {
-                            e.preventDefault();
-                            // Если чат есть — редиректим на страницу чата
-                            route.push(`responses`);
-                            dispatch(setChat(existingChat));
-                          } else {
-                            e.preventDefault();
-                            if (order.autoContactsOnResponse) {
-                              if (isMobile) {
-                                dispatch(
-                                  setIsSheetResponseTutorToStudentWithContakt(
-                                    true
-                                  )
-                                );
-                              } else {
-                                dispatch(
-                                  setIsModalResponseTutorToStudentWithContakt(
-                                    true
-                                  )
-                                );
-                              }
-                            } else {
-                              if (isMobile) {
-                                dispatch(
-                                  setIsSheetResponseTutorToStudent(true)
-                                );
-                              } else {
-                                dispatch(
-                                  setIsModalResponseTutorToStudent(true)
-                                );
-                              }
-                            }
-
-                            dispatch(setOrderByIdDefault(order));
-                            setChatsLoaded(true);
-                          }
-                        }}
+                        onClick={(e) => handleResponseClick(e, order)}
                         type="button"
                       >
                         {chats.find((chat) => chat.orderId === order.id) ? (
