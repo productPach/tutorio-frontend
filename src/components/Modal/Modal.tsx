@@ -12,12 +12,14 @@ import { useAppDispatch } from "@/store/store";
 import {
   setIsModalAcceptResponse,
   setIsModalBalanceBoost,
+  setIsModalBalanceBoostNotEmail,
   setIsModalConnectTelegram,
   setIsModalCreateContractByStudent,
   setIsModalCreateContractByTutor,
   setIsModalCreateReviewByStudent,
   setIsModalCreateReviewByTutor,
   setIsModalDelete,
+  setIsModalDepositBalanceYookassa,
   setIsModalEditEducation,
   setIsModalEditSubject,
   setIsModalEditSubjectGoal,
@@ -29,6 +31,7 @@ import {
   setIsModalExperience,
   setIsModalFio,
   setIsModalHiddenOrder,
+  setIsModalPaymentDetails,
   setIsModalPhone,
   setIsModalProfileInfo,
   setIsModalRejectResponse,
@@ -214,6 +217,22 @@ export const Modal: React.FC<ModalProps> = ({
       // Обнуляем значение top в leftbar
       dispatch(setScrollY(0));
     }
+    if (modalId === "depositBalanceYookassa") {
+      dispatch(setIsModalDepositBalanceYookassa(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "paymentDetails") {
+      dispatch(setIsModalPaymentDetails(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+    if (modalId === "balanceBoostNotEmail") {
+      dispatch(setIsModalBalanceBoostNotEmail(false));
+      // Обнуляем значение top в leftbar
+      dispatch(setScrollY(0));
+    }
+
     // if (modalId === "updateReviewByTutor") {
     //   dispatch(setIsModalUpdateReviewByTutor(false));
     //   // Обнуляем значение top в leftbar

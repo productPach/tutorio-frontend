@@ -509,7 +509,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             </div>
           </div>
 
-          <div className={styles.containerEntityShowEnd}>
+          <div id={"e-mail"} className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>E-mail</div>
               <span
@@ -522,7 +522,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
                 {tutor2?.email
                   ? isVerifiedEmail
                     ? tutor2?.email
-                    : `Подтвердите почту`
+                    : `Подтвердите почту. Без этого не сможем отправлять вам уведомления о новых заказах и откликах учеников`
                   : "Не показывается в анкете. Мы будем отправлять на неё уведомления о новых заказах и откликах учеников"}
               </span>
             </div>
@@ -549,7 +549,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
             </div>
           </div>
 
-          <div className={styles.containerEntityShowEnd}>
+          {/* <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>
               <div>Telegram</div>
               <span className={componentStyle.containerSpan}>
@@ -577,7 +577,7 @@ export const Settings: FC<SettingsProps> = ({ tutor, logout }) => {
                 height={21}
               />
             </div>
-          </div>
+          </div> */}
 
           {/* <div className={styles.containerEntityShowEnd}>
             <div className={styles.containerEntityTitleDescription}>

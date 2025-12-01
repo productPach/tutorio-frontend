@@ -33,6 +33,7 @@ export type Student = {
   id: string;
   userId: string;
   user: User;
+  studentNumber: string;
   createdAt: string;
   updatedAt: string;
   name: string;
@@ -62,6 +63,7 @@ export type Tutor = {
   id: string;
   userId: string;
   user: User;
+  tutorNumber: string;
   createdAt: string;
   updatedAt: string;
   name: string;
@@ -183,6 +185,7 @@ export type Employee = {
   id: string;
   userId: string;
   user: User;
+  employeeNumber: string;
   createdAt: string;
   updatedAt: string;
   name: string;
@@ -222,6 +225,7 @@ export type GoalForSubject = {
 // Определяем тип для объекта заказа в массиве
 export type Order = {
   id: string;
+  orderNumber: string;
   createdAt: Date;
   updatedAt: Date;
   studentId: string;
@@ -362,6 +366,7 @@ export type Theme = {
 
 export type Chat = {
   id: string;
+  chatNumber: string;
   tutorId: string;
   studentId: string;
   orderId: string;
@@ -414,6 +419,7 @@ export type SelectedBy = "tutor" |"student";
 
 export type Contract = {
   id: string;
+  contractNumber: string;
   orderId: string;
   tutorId: string;
   selectedBy: SelectedBy;
@@ -423,6 +429,7 @@ export type Contract = {
 
 export type Review = {
   id: string;
+  reviewNumber: string;
   orderId: string;
   tutorId?: string;
   studentId?: string;
@@ -498,3 +505,39 @@ export interface SecondBlockSubject {
   id_p?: string;
   subcategories: SubcategoryItem[];
 }
+
+// Тип транзакции баланса
+export type BalanceTransaction = {
+  id: string;
+  balanceTransactionNumber: string;
+  userId: string;
+  type: "deposit" | "withdrawal" | "refund" | "service_purchase" | "payout";
+  amount: number; // в копейках
+  status: "pending" | "success" | "canceled";
+  meta?: Record<string, any>;
+  createdAt: string; // ISO string
+};
+
+// Тип платежа ЮKassa
+export type Payment = {
+  id: string;
+  userId: string;
+  paymentId: string; // id платежа в ЮKassa
+  amount: number; // в копейках
+  currency: string; // "RUB"
+  status: "pending" | "waiting_for_capture" | "succeeded" | "canceled";
+  meta?: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Ответ при создании платежа (для виджета)
+export type CreatePaymentResponse = {
+  paymentId: string;
+  confirmationToken: string;
+};
+
+// Ответ при списании с баланса
+export type WithdrawResponse = {
+  ok: boolean;
+};

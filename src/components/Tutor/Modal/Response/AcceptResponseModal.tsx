@@ -12,6 +12,7 @@ import {
 import { updateChat } from "@/store/features/chatSlice";
 import { useChat } from "@/context/ChatContext";
 import { Message } from "@/types/types";
+import { withdrawBalance } from "@/store/features/paymentSlice";
 
 type TempMessage = Message & { pending?: boolean; error?: boolean };
 
@@ -21,6 +22,25 @@ export const AcceptResponseModal = () => {
   const chat = useAppSelector((state) => state.chat.chat);
   const { orderById } = useAppSelector((state) => state.orders);
   const { loadChats } = useChat();
+
+  const handleResponse = async () => {
+    if (orderById) {
+      try {
+        await dispatch(
+          withdrawBalance({
+            amount: Number(orderById.responseCost) * 100, // БАЛАНС В КОПЕЙКАХ
+            reason: `Оплата отклика на заказ №${orderById.orderNumber}`,
+          })
+        ).unwrap();
+
+        // Вызываем update только если списание прошло успешно
+        handleAccept();
+      } catch (error) {
+        console.error("Ошибка при списании:", error);
+        // НУЖНО показать ошибку пользователю!
+      }
+    }
+  };
 
   const handleAccept = async () => {
     try {
@@ -54,7 +74,7 @@ export const AcceptResponseModal = () => {
       <div className={componentStyles.containerFlxRw}>
         <button
           className={buttonStyles.buttonYlw}
-          onClick={handleAccept}
+          onClick={handleResponse}
           type="button"
         >
           Принять заказ

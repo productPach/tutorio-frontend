@@ -384,6 +384,11 @@ export const OrderComponent = ({
           </div>
         )}
 
+        <div className={styles.containerOrderInfo}>
+          <span className={styles.titleOrderInfo}>ID заказа</span>
+          <span>{orderById?.orderNumber}</span>
+        </div>
+
         {orderById?.createdAt && (
           <div className={styles.containerOrderInfo}>
             <span className={styles.titleOrderInfo}>Заказ добавлен</span>
