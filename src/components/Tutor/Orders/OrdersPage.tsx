@@ -13,6 +13,9 @@ import { useRouter } from "next/navigation";
 import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
 import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal";
 import {
+  setIsSheetBalanceBoost,
+  setIsSheetBalanceBoostNotEmail,
+  setIsSheetDepositBalanceYookassa,
   setIsSheetResponseTutorToStudent,
   setIsSheetResponseTutorToStudentWithContakt,
   setLoadingPage,
@@ -20,12 +23,32 @@ import {
 } from "@/store/features/modalSlice";
 import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import { DepositBalanceYookassa } from "../Modal/DepositBalanceYookassa/DepositBalanceYookassa";
+import { BalanceBoostNotEmail } from "../Modal/BalanceBoost/BalanceBoostNotEmail";
 
 const OrdersPage: React.FC = () => {
   const page = "Orders";
+
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
   );
+  const isSheetBalanceBoost = useAppSelector(
+    (state) => state.modal.isSheetBalanceBoost
+  );
+  const isModalDepositBalanceYookassa = useAppSelector(
+    (state) => state.modal.isModalDepositBalanceYookassa
+  );
+  const isSheetDepositBalanceYookassa = useAppSelector(
+    (state) => state.modal.isSheetDepositBalanceYookassa
+  );
+
+  const isModalBalanceBoostNotEmail = useAppSelector(
+    (state) => state.modal.isModalBalanceBoostNotEmail
+  );
+  const isSheetBalanceBoostNotEmail = useAppSelector(
+    (state) => state.modal.isSheetBalanceBoostNotEmail
+  );
+
   const isModalResponseTutorToStudent = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudent
   );
@@ -99,12 +122,46 @@ const OrdersPage: React.FC = () => {
 
         {showSidebar && <SideBar />}
       </section>
+
       <Modal
-        titleModal={"Пополните баланс, чтобы откликнуться"}
+        titleModal={"Пополнить баланс, чтобы откликнуться"}
         contentModal={<BalanceBoost />}
         isModal={isModalBalanceBoost}
         modalId={"balanceBoost"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetBalanceBoost}
+        onClose={() => dispatch(setIsSheetBalanceBoost(false))}
+      >
+        <BalanceBoost />
+      </BottomSheet>
+
+      <Modal
+        titleModal={""}
+        contentModal={<DepositBalanceYookassa />}
+        isModal={isModalDepositBalanceYookassa}
+        modalId={"depositBalanceYookassa"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetDepositBalanceYookassa}
+        onClose={() => dispatch(setIsSheetDepositBalanceYookassa(false))}
+      >
+        <DepositBalanceYookassa />
+      </BottomSheet>
+
+      <Modal
+        titleModal={"Не сможем выслать чек"}
+        contentModal={<BalanceBoostNotEmail />}
+        isModal={isModalBalanceBoostNotEmail}
+        modalId={"balanceBoostNotEmail"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetBalanceBoostNotEmail}
+        onClose={() => dispatch(setIsSheetBalanceBoostNotEmail(false))}
+      >
+        <BalanceBoostNotEmail />
+      </BottomSheet>
+
       <Modal
         titleModal={"Отправить отклик"}
         contentModal={<ResponseTutorToStudentModal />}

@@ -6,10 +6,7 @@ import { SpinnerOrders } from "@/components/Spinner/SpinnerOrders";
 import clsx from "clsx";
 import { getYearWord } from "@/utils/words/getYearWord";
 import { formatTimeAgo } from "@/utils/date/date";
-import {
-  findLocTitleByIdWithDistrict,
-  findLocTitlesByIds,
-} from "@/utils/locations/getTitleLocationById";
+import { findLocTitleByIdWithDistrict } from "@/utils/locations/getTitleLocationById";
 import { City, Order, Student } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useState } from "react";
