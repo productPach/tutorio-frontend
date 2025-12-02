@@ -15,6 +15,9 @@ import { useSelector } from "react-redux";
 import { clearOrderById, getOrderById } from "@/store/features/orderSlice";
 import { fetchStudentById } from "@/api/server/studentApi";
 import {
+  setIsSheetBalanceBoost,
+  setIsSheetBalanceBoostNotEmail,
+  setIsSheetDepositBalanceYookassa,
   setIsSheetResponseTutorToStudent,
   setIsSheetResponseTutorToStudentWithContakt,
   setLoadingPage,
@@ -24,6 +27,8 @@ import { LoadingPageModal } from "@/components/Tutor/Modal/Loading/loadingModal"
 import { ResponseTutorToStudentModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentModal";
 import { ResponseTutorToStudentWithContaktModal } from "@/components/Tutor/Modal/Response/ResponseTutorToStudentWithContaktModal";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
+import { DepositBalanceYookassa } from "../Modal/DepositBalanceYookassa/DepositBalanceYookassa";
+import { BalanceBoostNotEmail } from "../Modal/BalanceBoost/BalanceBoostNotEmail";
 
 const OrderPage: React.FC = () => {
   const page = "Order";
@@ -31,8 +36,26 @@ const OrderPage: React.FC = () => {
   const isModalBalanceBoost = useAppSelector(
     (state) => state.modal.isModalBalanceBoost
   );
+  const isSheetBalanceBoost = useAppSelector(
+    (state) => state.modal.isSheetBalanceBoost
+  );
   const descriptionForModalBalanceBoost =
     "Примите заказ — после этого вы сможете пообщаться с учеником и обменяться контактами";
+
+  const isModalDepositBalanceYookassa = useAppSelector(
+    (state) => state.modal.isModalDepositBalanceYookassa
+  );
+  const isSheetDepositBalanceYookassa = useAppSelector(
+    (state) => state.modal.isSheetDepositBalanceYookassa
+  );
+
+  const isModalBalanceBoostNotEmail = useAppSelector(
+    (state) => state.modal.isModalBalanceBoostNotEmail
+  );
+  const isSheetBalanceBoostNotEmail = useAppSelector(
+    (state) => state.modal.isSheetBalanceBoostNotEmail
+  );
+
   const isModalResponseTutorToStudent = useAppSelector(
     (state) => state.modal.isModalResponseTutorToStudent
   );
@@ -130,6 +153,39 @@ const OrderPage: React.FC = () => {
         isModal={isModalBalanceBoost}
         modalId={"balanceBoost"}
       ></Modal>
+      <BottomSheet
+        isOpen={isSheetBalanceBoost}
+        onClose={() => dispatch(setIsSheetBalanceBoost(false))}
+      >
+        <BalanceBoost />
+      </BottomSheet>
+
+      <Modal
+        titleModal={""}
+        contentModal={<DepositBalanceYookassa />}
+        isModal={isModalDepositBalanceYookassa}
+        modalId={"depositBalanceYookassa"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetDepositBalanceYookassa}
+        onClose={() => dispatch(setIsSheetDepositBalanceYookassa(false))}
+      >
+        <DepositBalanceYookassa />
+      </BottomSheet>
+
+      <Modal
+        titleModal={"Не сможем выслать чек"}
+        contentModal={<BalanceBoostNotEmail />}
+        isModal={isModalBalanceBoostNotEmail}
+        modalId={"balanceBoostNotEmail"}
+      ></Modal>
+      <BottomSheet
+        isOpen={isSheetBalanceBoostNotEmail}
+        onClose={() => dispatch(setIsSheetBalanceBoostNotEmail(false))}
+      >
+        <BalanceBoostNotEmail />
+      </BottomSheet>
+
       <Modal
         titleModal={"Отправить отклик"}
         contentModal={<ResponseTutorToStudentModal />}

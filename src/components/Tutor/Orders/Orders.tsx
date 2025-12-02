@@ -15,9 +15,11 @@ import { Order, Tutor } from "@/types/types";
 import { formatTimeAgo } from "@/utils/date/date";
 import {
   setIsModalBalanceBoost,
+  setIsModalBalanceBoostNotEmail,
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
   setIsSheetBalanceBoost,
+  setIsSheetBalanceBoostNotEmail,
   setIsSheetFiltersOrdersForTutor,
   setIsSheetResponseTutorToStudent,
   setIsSheetResponseTutorToStudentWithContakt,
@@ -38,6 +40,7 @@ const Orders = () => {
   const route = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const tutor = useAppSelector((state) => state.tutor.tutor);
+  const isVerifiedEmail = tutor?.isVerifedEmail;
 
   // Получаем дату городов из Redux
   const locations = useAppSelector((state) => state.locations.city);
@@ -398,6 +401,17 @@ const Orders = () => {
               if (existingChat) {
                 route.push(`responses`);
                 dispatch(setChat(existingChat));
+                return;
+              }
+
+              // Если не подтвержденг e-mail, то не можем пополнять баланс
+              if (!isVerifiedEmail) {
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetBalanceBoostNotEmail(true));
+                } else {
+                  dispatch(setIsModalBalanceBoostNotEmail(true));
+                }
+
                 return;
               }
 

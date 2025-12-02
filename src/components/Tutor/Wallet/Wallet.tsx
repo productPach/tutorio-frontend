@@ -11,6 +11,7 @@ import { Modal } from "@/components/Modal/Modal";
 import { BottomSheet } from "@/components/BottomSheet/BottomSheet";
 import {
   setIsModalBalanceBoost,
+  setIsModalBalanceBoostNotEmail,
   setIsModalPaymentData,
   setIsModalPaymentDetails,
   setIsSheetBalanceBoost,
@@ -33,10 +34,11 @@ const statusMapping = {
   canceled: "Операция отклонена",
 } as const;
 
-// Маппинг типов операций
+// Маппинг типов операций (на бэке есть только deposit, refund и service_purchase по умолчанию в методе оплаты услуги на платформе)
 const operationTypeMapping = {
   deposit: "Пополнение баланса",
   withdrawal: "Списание средств",
+  refund: "Вывод средств с баланса",
   referral: "Зачисление по реферальной программе",
   service_purchase: "Оплата отклика на заказ",
 } as const;
@@ -136,6 +138,8 @@ const formatTime = (dateString: string) => {
 
 export const Wallet = () => {
   const dispatch = useAppDispatch();
+  const tutor = useAppSelector((state) => state.tutor.tutor); // Получаем tutor из Redux
+  const isVerifiedEmail = tutor?.isVerifedEmail;
   const transactions = useAppSelector((state) => state.payment.transactions);
   const balance = useAppSelector((state) => state.payment.balance);
 
@@ -206,6 +210,17 @@ export const Wallet = () => {
             // disabled={errorInput}
             onClick={(e) => {
               e.preventDefault();
+
+              if (!isVerifiedEmail) {
+                if (window.innerWidth < 769) {
+                  dispatch(setIsSheetBalanceBoostNotEmail(true));
+                } else {
+                  dispatch(setIsModalBalanceBoostNotEmail(true));
+                }
+
+                return;
+              }
+
               if (window.innerWidth < 769) {
                 dispatch(setIsSheetBalanceBoost(true));
               } else {

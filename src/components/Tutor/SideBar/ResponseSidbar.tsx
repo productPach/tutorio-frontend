@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, useAppSelector } from "@/store/store";
 import {
   setIsModalBalanceBoost,
+  setIsModalBalanceBoostNotEmail,
   setIsModalResponseTutorToStudent,
   setIsModalResponseTutorToStudentWithContakt,
   setIsSheetBalanceBoost,
+  setIsSheetBalanceBoostNotEmail,
   setIsSheetResponseTutorToStudent,
   setIsSheetResponseTutorToStudentWithContakt,
   setValueModalBalanceBoost,
@@ -24,6 +26,9 @@ import { getUserBalance } from "@/store/features/paymentSlice";
 
 export const ResponseSidbar = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const tutor = useAppSelector((state) => state.tutor.tutor);
+  const isVerifiedEmail = tutor?.isVerifedEmail;
+
   const route = useRouter();
   // Вытаскиваем значение сколла их redux, чтобы это значение передать в top для стиля sidebarResponse
   const scrollYForSidebarResponse = useAppSelector(
@@ -55,6 +60,17 @@ export const ResponseSidbar = () => {
     if (existingChat) {
       route.push(`responses`);
       dispatch(setChat(existingChat));
+      return;
+    }
+
+    // Если не подтвержденг e-mail, то не можем пополнять баланс
+    if (!isVerifiedEmail) {
+      if (window.innerWidth < 769) {
+        dispatch(setIsSheetBalanceBoostNotEmail(true));
+      } else {
+        dispatch(setIsModalBalanceBoostNotEmail(true));
+      }
+
       return;
     }
 
